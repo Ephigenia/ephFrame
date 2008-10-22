@@ -1,0 +1,18 @@
+changelog for ephFrame
+----------------------
+
+2008-10-21
++ started rewrite of Form and FormField classes (new validator class)
++ model uses the new validator class now
++ added structure.sql file to /app/config/ to store table structures
++ changed url parameter to __url in /webroot/.htaccess
++ changed HTTPRequest to handle POST / GET Vars depending on the Request-Method
++ fixed bug in model cache loading
+
+2008-10-20
++ added validation array that validates model data before saving
++ added third parameter for save to save only specific fields of the model
++ fixed/enhanced creation of resulting model set lists and single returns when
+  retreiving model data
++ added ModelBehavior to models that can act like plugins in model logic
+  supporting callbacks for beforeSave, afterSave ...

@@ -1,0 +1,30 @@
+@CHARSET "UTF-8";
+
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,caption,input,textarea,p,blockquote,th,td,img {  
+	margin: 0px;
+	padding: 0px;
+	vertical-align: baseline;
+	border:0;
+	text-align:left; 
+} 
+table { 
+	border-collapse:collapse; 
+	border-spacing: 0; 
+}
+address,caption,cite,code,dfn,em,strong,th,var { 
+	font-style:normal; 
+	font-weight:normal; 
+} 
+ol,ul { 
+	list-style:none; 
+} 
+h1,h2,h3,h4,h5,h6 { 
+	font-size:100%; 
+	font-weight:normal; 
+} 
+q:before,q:after { 
+	content:''; 
+} 
+abbr,acronym {
+	border:0; 
+} 

@@ -1,0 +1,420 @@
+#
+#	Main webroot htaccess file for ephFrame applications
+#	if you experience problems successive delete some of the parts
+# ----------------------------------------------------------------------------
+
+# common filetypes for download headers, missing on some servers
+AddType video/x-flv .flv
+AddType application/x-shockwave-flash .swf
+AddType application/octet-stream .chm .bz2
+AddType application/vnd.ms-excel .csv
+AddType application/x-pilot .prc .pdb
+AddType application/x-gzip .gz
+AddType image/x-icon .ico
+
+# default charset for responses
+AddDefaultCharset utf-8
+
+
+
+# Y-Slow/HTTP Request optimasion
+# ----------------------------------------------------------------------------
+
+# Caching Control
+ExpiresActive On
+ExpiresDefault A3600
+# one month
+<FilesMatch "\.(ico|gif|jpg|jpeg|png|swf|pdf|mov|mpg|mp3|wmv|ppt|csv|flv)$">
+	Header set Cache-Control "public, max-age=2419200"
+	ExpiresDefault A2419200
+</FilesMatch>
+# one week
+<FilesMatch "\.(css|js)$">
+	Header set Cache-Control "private, must-revalidate, max-age=604800"
+	ExpiresDefault A604800
+</FilesMatch>
+<FilesMatch "\.(php|cgi|pl|py|htm|html|xhtml|xml|txt)">
+	ExpiresDefault A0
+	Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+	Header set Pragma "no-cache"
+</FilesMatch>
+
+# gzip compression
+<IfModule mod_gzip.c>
+	mod_gzip_on yes
+	mod_gzip_item_include mime image/jpg
+	mod_gzip_item_include mime image/png
+	mod_gzip_item_include mime image/gif
+	mod_gzip_item_include mime text/html
+	mod_gzip_item_include mime text/plain
+	mod_gzip_item_include mime text/css
+	mod_gzip_item_include mime application/xml
+	mod_gzip_dechunk yes
+	mod_gzip_min_http 1000
+	mod_gzip_temp_dir /tmp
+	mod_gzip_keep_workfiles No
+	mod_gzip_minimum_file_size  1000
+	mod_gzip_maximum_file_size  0
+	mod_gzip_maximum_inmem_size 1000000
+	mod_gzip_can_negotiate Yes
+</IfModule>
+
+# disable ETags
+FileETag none
+
+
+
+# Anti-SPAM Rules
+# ----------------------------------------------------------------------------
+
+# known SPAM IPs hosts
+order allow,deny
+deny from 128.227
+deny from 129.33
+deny from 148.244
+deny from 192.6
+deny from 200.196
+deny from 202.188
+deny from 207.248
+deny from 208.27
+deny from 218.189
+deny from 218.189
+deny from 24.97
+deny from 62.0
+deny from 82.109
+deny from 209.167.50.22
+
+# del.icio.us SPAM
+deny from 72.14.192.13
+allow from all
+
+# known SPAM hosts and crawlers
+RewriteCond %{HTTP_REFERER} mista-x\.net [NC,OR]
+RewriteCond %{HTTP_REFERER} buy-2005\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} lot-cash\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} e-pills-4u\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} great-doctor\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} guarantee-money\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} buy-\.pl [NC,OR]
+RewriteCond %{HTTP_REFERER} buy-\.to [NC,OR]
+RewriteCond %{HTTP_REFERER} mp3\.st [NC,OR]
+RewriteCond %{HTTP_REFERER} drop\.to [NC,OR]
+RewriteCond %{HTTP_REFERER} get\.to [NC,OR]
+RewriteCond %{HTTP_REFERER} hey\.to [NC,OR]
+RewriteCond %{HTTP_REFERER} go\.to [NC,OR]
+RewriteCond %{HTTP_REFERER} dive\.to [NC,OR]
+RewriteCond %{HTTP_REFERER} switch\.to [NC,OR]
+RewriteCond %{HTTP_REFERER} online\.to [NC,OR]
+RewriteCond %{HTTP_REFERER} come\.to [NC,OR]
+RewriteCond %{HTTP_REFERER} phentermine\.to [NC,OR]
+RewriteCond %{HTTP_REFERER} online-\.to [NC,OR]
+RewriteCond %{HTTP_REFERER} mysite\.de [NC,OR]
+RewriteCond %{HTTP_REFERER} usa\.gs [NC,OR]
+RewriteCond %{HTTP_REFERER} xn\.pl [NC,OR]
+RewriteCond %{HTTP_REFERER} 18\.to [NC,OR]
+RewriteCond %{HTTP_REFERER} 10-rx\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} 1buy-phentermine-online\.blogs\.it [NC,OR]
+RewriteCond %{HTTP_REFERER} 31o\.net [NC,OR]
+RewriteCond %{HTTP_REFERER} 31p\.net [NC,OR]
+RewriteCond %{HTTP_REFERER} 37b\.net [NC,OR]
+RewriteCond %{HTTP_REFERER} autoloanfindersga\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} belinked\.info [NC,OR]
+RewriteCond %{HTTP_REFERER} betazed\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} buy-hgh\.us [NC,OR]
+RewriteCond %{HTTP_REFERER} bmwsrus\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} cancunbestbuy\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} casino\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} casinos\.biz [NC,OR]
+RewriteCond %{HTTP_REFERER} cjmtrip\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} clickbank\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} clickbank\.net [NC,OR]
+RewriteCond %{HTTP_REFERER} con\.cn [NC,OR]
+RewriteCond %{HTTP_REFERER} drcoupon\.net [NC,OR]
+RewriteCond %{HTTP_REFERER} datashaping\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} casinos4spain\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} esp\.cc [NC,OR]
+RewriteCond %{HTTP_REFERER} flirtlife\.de [NC,OR]
+RewriteCond %{HTTP_REFERER} freepay\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} freepornguide\.info [NC,OR]
+RewriteCond %{HTTP_REFERER} get\.to [NC,OR]
+RewriteCond %{HTTP_REFERER} gothicusa\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} great-money\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} greenzappedcash\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} hawaiicity\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} hgh\.us [NC,OR]
+RewriteCond %{HTTP_REFERER} i-want-credit-card\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} iloha\.net [NC,OR]
+RewriteCond %{HTTP_REFERER} including-poker\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} knuddels\.de [NC,OR]
+RewriteCond %{HTTP_REFERER} makeit2thetop\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} medicalsearchweb\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} mens-health\.tv [NC,OR]
+RewriteCond %{HTTP_REFERER} mysite\.de [NC,OR]
+RewriteCond %{HTTP_REFERER} onzekat\.nl [NC,OR]
+RewriteCond %{HTTP_REFERER} overnight-copy\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} phentermine-on-sale\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} playabestbuy\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} playarealtyexecutives\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} play-poker-online\.name [NC,OR]
+RewriteCond %{HTTP_REFERER} postjung\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} poker\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} poker-spanish\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} ringtonepop\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} splinder\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} teenrevenue\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} travel\.to [NC,OR]
+RewriteCond %{HTTP_REFERER} turincon\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} useful-pills\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} vindjehier\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} vindjehier\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} vmousetrap\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} vneighbor\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} vselling\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} vselling\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} vsymphony\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} vthought\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} wesellnewbuicks\.com [NC,OR]
+RewriteCond %{HTTP_REFERER} webpark\.pl [NC,OR]
+RewriteCond %{HTTP_REFERER} webhostips\.net [NC,OR]
+RewriteCond %{HTTP_REFERER} yourpsychic\.net [NC,OR]
+RewriteCond %{HTTP_REFERER} for\.pl [NC,OR]
+RewriteCond %{HTTP_USER_AGENT} ^Alexibot [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^asterias [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^BackDoorBot [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Black.Hole [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^BlackWidow [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^BlowFish [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^BotALot [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^BuiltBotTough [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Bullseye [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^BunnySlippers [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Cegbfeieh [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^CheeseBot [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^CherryPicker [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^ChinaClaw [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^CopyRightCheck [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^cosmos [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Crescent [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Custo [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^DISCo [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^DittoSpyder [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Download\ Demon [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^eCatch [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^EirGrabber [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^EmailCollector [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^EmailSiphon [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^EmailSiphon [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^EmailWolf [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^EmailWolf\ 1.00 [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^EroCrawler [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Express\ WebPictures [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^ExtractorPro [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^EyeNetIE [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^FlashGet [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Foobot [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^GetRight [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^GetWeb! [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Go!Zilla [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Go-Ahead-Got-It [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^GrabNet [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Grafula [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Harvest [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^hloader [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^HMView [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^httplib [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^HTTrack [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^humanlinks [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^ia_archiver [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Image\ Stripper [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Image\ Sucker [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Indy\ Library [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^InfoNaviRobot [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^InterGET [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Internet\ Ninja [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^JennyBot [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^JetCar [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^JOC\ Web\ Spider [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Kenjin.Spider [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Keyword.Density [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^larbin [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^LeechFTP [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^LexiBot [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^libWeb/clsHTTP [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^LinkextractorPro [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^LinkScan/8.1a.Unix [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^LinkWalker [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^lwp-trivial [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Mass\ Downloader [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Mata.Hari [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Microsoft.URL [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^MIDown\ tool [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^MIIxpc [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Mister\ PiX [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Mister.PiX [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^moget [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Mozilla.*NEWT [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Mozilla/2 [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Mozilla/3.Mozilla/2.01 [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Navroad [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^NearSite [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Net\ Vampire [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^NetAnts [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^NetMechanic [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^NetSpider [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^NetZIP [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^NICErsPRO [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^NPBot [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Octopus [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Openfind [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^PageGrabber [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Papa\ Foto [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^pavuk [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^pcBrowser [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^ProPowerBot/2.14 [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^ProWebWalker [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^QueryN.Metasearch [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^ReGet [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^RepoMonkey [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^RMA [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^SiteSnagger [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^SlySearch [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^SmartDownload [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^SpankBot [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^spanner [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^SuperBot [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^SuperHTTP [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Surfbot [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^suzuran [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^tAkeOut [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Teleport [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Teleport\ Pro [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Telesoft [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^The.Intraformant [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^TheNomad [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^TightTwatBot [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Titan [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^toCrawl/UrlDispatcher [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^True_Robot [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^turingos [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^TurnitinBot/1.5 [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^URLy.Warning [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^VCI [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^VoidEYE [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Web\ Image\ Collector [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Web\ Sucker [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Web.Image.Collector [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WebAuto [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WebBandit [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WebCopier [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WebEMailExtrac.* [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WebEnhancer [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WebFetch [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WebGo\ IS [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WebLeacher [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WebmasterWorldForumBot [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WebReaper [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WebSauger [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Website\ eXtractor [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Website\ Quester [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Website.Quester [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Webster.Pro [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WebStripper [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WebWhacker [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WebZip [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Wget [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Widow [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WWW-Collector-E [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^WWWOFFLE [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Xaldon\ WebSpider [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^thesubot [OR]
+RewriteCond %{HTTP_USER_AGENT} ^Xenu's [OR] 
+RewriteCond %{HTTP_USER_AGENT} ^Zeus [OR]
+RewriteCond %{REMOTE_ADDR} ^exceptionalsoftware\.com [OR]
+RewriteCond %{REMOTE_ADDR} ^195\.225\.176\. [OR] # by marcel
+RewriteCond %{REMOTE_ADDR} ^220\.184\.31\. [OR] # by marcel
+RewriteCond %{REMOTE_ADRR} ^12\. [OR] # 12.0.0.0 - 12.255.255.255 = AT&T WorldNet Services (USA)
+RewriteCond %{REMOTE_ADDR} ^61\.11\.([0-9]|[1-2][0-9]|3[0-1])\. [NC,OR] # 61.11.0.0 - 61.11.31.255 = Videsh Sanchar Nigam Ltd - India. (Indien)
+RewriteCond %{REMOTE_ADDR} ^62\.233\. [OR] # 62.233.0.0 - 62.233.255.255 = Getronics Belgium NV / SA (Belgien)
+RewriteCond %{REMOTE_ADDR} ^63\.2(2[4-9]|3[0-1])\. [NC,OR] # 63.224.0.0 - 63.231.255.255 = U S WEST Internet Services (USA)
+RewriteCond %{REMOTE_ADRR} ^64\.46\.(6[4-9]|7[0-9]|8[0-9]|9[0-5])\. [NC,OR] # 64.46.64.0 - 64.46.95.255 = Access Internet (USA)
+RewriteCond %{REMOTE_ADRR} ^64\.62\.(12[8-9]|1[3-9][0-9]|2[0-4][0-9]|25[0-5])\. [NC,OR] # 64.62.128.0 - 64.62.255.255 = Hurricane Electric (USA)
+RewriteCond %{REMOTE_ADRR} ^64\.110\. [NC,OR] # 64.110.0.0 - 64.110.191.255 = Verestar (USA)
+RewriteCond %{REMOTE_ADRR} ^65\.111\.(19[2-9]|2[0-1][0-9]|22[0-3])\. [NC,OR] # 65.111.192.0 - 65.111.223.255 = CUSTOM SOFTWARE INC (USA)
+RewriteCond %{REMOTE_ADRR} ^65\.1(6[0-9]|7[0-4])\. [NC,OR] # 65.160.0.0 - 65.174.255.255 = Sprint Sula (USA)
+RewriteCond %{REMOTE_ADDR} ^65\.(19[2-9]|2[0-1][0-9]|22[0-3])\. [NC,OR] # 65.192.0.0 - 65.223.255.255 = UUNET Technologies, Inc. (USA)
+RewriteCond %{REMOTE_ADDR} ^66\.90\.(6[4-9]|[7-9][0-9]|1[0-1][0-9]|12[0-7])\. [NC,OR] # 66.90.64.0 - 66.90.127.255 = FDCservers.net LLC (USA)
+RewriteCond %{REMOTE_ADDR} ^66\.14[4-5]\. [NC,OR] # 66.144.0.0 - 66.145.255.255 = State of Ohio Network (USA)
+RewriteCond %{REMOTE_ADRR} ^66\.23[6-9]\. [NC,OR] # 66.236.0.0 - 66.239.255.255 = XO Communications (USA)
+RewriteCond %{REMOTE_ADDR} ^68\.(9[6-9]|10[0-9]|11[0-1])\. [NC,OR] # 68.96.0.0 - 68.111.255.255 = Cox Communications Inc. (USA)
+RewriteCond %{REMOTE_ADDR} ^69\.1(4[8-9]|5[0-5])\. [NC,OR] # 69.148.0.0 - 69.155.255.255 = SBC Internet Services - Southwest (USA)
+RewriteCond %{REMOTE_ADDR} ^80\.26\. [NC,OR] # 80.26.0.0 - 80.26.255.255 = Telefonica de Espana SAU (Spanien)
+RewriteCond %{REMOTE_ADDR} ^80\.55\.195\.21[2-5] [NC,OR] # 80.55.195.212 - 80.55.195.215 = TP S.A. Hostmaster (Polen)
+RewriteCond %{REMOTE_ADRR} ^80\.227\.5[6-9]\. [NC,OR] # 80.227.56.0 - 80.227.59.255 = Dubai Internet City (Vereinigte Arabische Emirate)
+RewriteCond %{REMOTE_ADDR} ^81\.1(1[2-9]|2[0-7])\. [NC,OR] # 81.112.0.0 - 81.127.255.255 = Telecom Italia Data.Com (Italien)
+RewriteCond %{REMOTE_ADDR} ^82\.194\.(3[2-9]|[4-5][0-9]|6[0-3])\. [NC,OR] # 82.194.32.0 - 82.194.63.255 = Bahrain Telcommunication Company (Bahrain)
+RewriteCond %{REMOTE_ADDR} ^83\.148\.145\.(6[4-9]|[7-9][0-9]|1[0-1][0-9]|12[0-7]) [NC,OR] # 83.148.145.64 - 83.148.145.127 = Griffin Internet Contact Role (Gro�britannien)
+RewriteCond %{REMOTE_ADDR} ^148\.223\. [NC,OR] # 148.223.0.0 - 148.223.255.255 = Uninet S.A. de C.V. (Mexiko)
+RewriteCond %{REMOTE_ADDR} ^148\.244\. [NC,OR] # 148.244.0.0 - 148.244.255.255 = Alestra (Mexiko)
+RewriteCond %{REMOTE_ADDR} ^151\.142\. [NC,OR] # 151.142.0.0 - 151.142.255.255 = Williams Information Services Corporation (USA)
+RewriteCond %{REMOTE_ADDR} ^161\.53\. [NC,OR] # 161.53.0.0 - 161.53.255.255 = Croatian Academic and Research Network (Kroatien)
+RewriteCond %{REMOTE_ADDR} ^162\.38\. [NC,OR] # 162.38.0.0 - 162.38.255.255 = Universite Montpellier II (Frankreich)
+RewriteCond %{REMOTE_ADDR} ^163\.(1[3-9]|2[0-9]|3[0-2])\. [NC,OR] # 163.13.0.0 - 163.32.255.255 = Tamkang University (Taiwan)
+RewriteCond %{REMOTE_ADDR} ^163\.121\.128\. [NC,OR] # 163.121.128.0 - 163.121.128.255 = Comm Net Group - CNG (�gypten)
+RewriteCond %{REMOTE_ADRR} ^165\.173\. [NC,OR] # 165.173.0.0 - 165.173.255.255 = Metropolitan Community Colleges (USA)
+RewriteCond %{REMOTE_ADDR} ^193\.145\.222\. [NC,OR] # 193.145.222.0 - 193.145.222.255 = Real Academia de la Lengua (Spanien)
+RewriteCond %{REMOTE_ADDR} ^193\.188\.105\. [NC,OR] # 193.188.105.0 - 193.188.105.255 = Alnadeem Information Technology (Bahrain)
+RewriteCond %{REMOTE_ADDR} ^193\.191\.14[0-2]\. [NC,OR] # 193.191.140.0 - 193.191.142.255 = WIN ADSL network for schools in Wallonia (Belgien)
+RewriteCond %{REMOTE_ADDR} ^194\.63\.(1[6-9][0-9]|2[0-3][0-9])\. [NC,OR] # 194.63.160.0 - 194.63.239.255 = Greek High-School Internet Network (Griechenland)
+RewriteCond %{REMOTE_ADDR} ^194\.24[0-1]\. [NC,OR] # 194.240.0.0 - 194.241.255.255 = Elisa Oyj (Finnland)
+RewriteCond %{REMOTE_ADDR} ^195\.117\.196\. [NC,OR] # 195.117.196.0 - 195.117.196.255 = Krajowa Spolka Cukrowa S.A. (Polen)
+RewriteCond %{REMOTE_ADDR} ^195\.229\.2(4[0-9]|5[0-5])\. [NC,OR] # 195.229.240.0 - 195.229.255.255 = Emirates Telecommunications Corporation (Vereinigte Arabische Emirate)
+RewriteCond %{REMOTE_ADDR} ^198\.85\. [NC,OR] # 198.85.0.0 - 198.85.255.255 = North Carolina Research and Education Network (USA)
+RewriteCond %{REMOTE_ADDR} ^200\.49\.223\.1(8[4-9]|9[0-1]) [NC,OR] # 200.49.223.184 - 200.49.223.191 = Longueira Longueira SA (Argentinien)
+RewriteCond %{REMOTE_ADDR} ^200\.93\.135\.2(2[4-9]|3[0-9]) [NC,OR] # 200.93.135.224 - 200.93.135.239 = UNIVERSIDAD DE CUNDINAMARCA (Kolumbien)
+RewriteCond %{REMOTE_ADRR} ^200\.104\. [NC,OR] # 200.104.0.0 - 200.104.0.255 = VTR BANDA ANCHA S.A (Chile)
+RewriteCond %{REMOTE_ADDR} ^202\.101\.32\. [NC,OR] # 202.101.32.0 - 202.101.32.255 = Shanghai Jiading Telecom Bureau (China)
+RewriteCond %{REMOTE_ADDR} ^202\.134\.[0-3]\. [NC,OR] # 202.134.0.0 - 202.134.3.255 = PT Telekomunikasi Indonesia (PT. Telkom) (Indonesien)
+RewriteCond %{REMOTE_ADDR} ^202\.175\.(19[2-9]|2[0-4][0-9]|25[0-5])\. [NC,OR] # 202.175.192.0 - 202.175.255.255 = Eastern Telecoms Philippines (Philippinen)
+RewriteCond %{REMOTE_ADRR} ^203\.113\.(12[8-9]|1[3-8][0-9]|19[0-1])\. [NC,OR] # 203.113.128.0 - 203.113.191.255 = Vietel Corporation (Vietnam)
+RewriteCond %{REMOTE_ADRR} ^203\.197\. [NC,OR] # 203.197.0.0 - 203.197.255.255 = Videsh Sanchar Nigam Ltd - India. (Indien)
+RewriteCond %{REMOTE_ADDR} ^203\.199\. [NC,OR] # 203.199.0.0 - 203.199.255.255 = Videsh Sanchar Nigam Ltd - India. (Indien)
+RewriteCond %{REMOTE_ADDR} ^207\.248\.2(2[4-9]|[3-4][0-9]|5[0-5])\. [NC,OR] # 207.248.224.0 - 207.248.255.255 = Alestra (Mexiko)
+RewriteCond %{REMOTE_ADDR} ^208\.6[0-3]\. [NC,OR] # 208.60.0.0 - 208.63.255.255 = BellSouth.net Inc. (USA)
+RewriteCond %{REMOTE_ADRR} ^209\.19\.(19[2-9]|2[0-4][0-9]|25[0-5])\. [NC,OR] # 209.19.192.0 - 209.19.255.255 = Internet Allegiance, Inc (USA)
+RewriteCond %{REMOTE_ADRR} ^210\.0\.(1[6-9][0-9]|2[0-4][0-9]|25[0-5])\. [NC,OR] # 210.0.160.0 - 210.0.255.255 = Hutchison Global Communications (Hong Kong)
+RewriteCond %{REMOTE_ADRR} ^210\.96\.14\.([0-9]|[1-5][0-9]|6[0-3]) [NC,OR] # 210.96.14.0 - 210.96.14.63 = Seoul Soongshin Elementary School (Korea)
+RewriteCond %{REMOTE_ADRR} ^211\.126\.196\. [NC,OR] # 211.126.196.0 - 211.126.196.255 = Yamada Town Society of Commerce and Industry (Japan)
+RewriteCond %{REMOTE_ADRR} ^211\.252\.105\.(19[2-9]|2[0-4][0-9]|25[0-5]) [NC,OR] # 211.252.105.192 - 211.252.105.255 = seoulteukbyulsikyoyoukcheongjungangyuja High School (Korea)
+RewriteCond %{REMOTE_ADRR} ^212\.131\. [NC,OR] # 212.131.0.0 - 212.131.255.255 = InterBusiness (Italien)
+RewriteCond %{REMOTE_ADRR} ^212\.141\.90\.(12[8-9]|1[3-9][0-9]|2[0-4][0-9]|25[0-5]) [NC,OR] # 212.141.90.128 - 212.141.90.255 = Azienda Servizi Informativi spa (Italien)
+RewriteCond %{REMOTE_ADRR} ^212\.170\.([0-9]|1[0-9]|2[0-6])\. [NC,OR] # 212.170.0.0 - 212.170.26.255 = Telefonica de Espana SAU (Spanien)
+RewriteCond %{REMOTE_ADRR} ^213\.42\.2\. [NC,OR] # 213.42.2.0 - 213.42.2.255 = Emirates Internet (Vereinigte Arabische Emirate)
+RewriteCond %{REMOTE_ADDR} ^213\.174\.190\.2(1[6-9]|2[0-3]) [NC,OR] # 213.174.190.216 - 213.174.190.223 = SYSMATIX-ACANTHO (Italien)
+RewriteCond %{REMOTE_ADDR} ^216\.139\.16[0-1]\. [NC,OR] # 216.139.160.0 - 216.139.191.255 = Pan Am Sat (USA)
+RewriteCond %{REMOTE_ADRR} ^216\.204\. [NC,OR] # 216.204.0.0 - 216.204.255.255 = Lightship Telecom, LLC (USA)
+RewriteCond %{REMOTE_ADRR} ^216\.20[8-9]\. [NC,OR] # 216.208.0.0 - 216.209.255.255 = Bell Canada (Kanada)
+RewriteCond %{REMOTE_ADRR} ^217\.74\.213\.1(2[8-9]|3[0-5]) [NC,OR] # 217.74.213.128 - 217.74.213.135 = Danske Telecom A/S (D�nemark)
+RewriteCond %{REMOTE_ADRR} ^219\.140\. [NC,OR] # 219.140.0.0 - 219.140.255.255 = Chinanet network in Wuhan city Hubei province (China)
+RewriteCond %{REMOTE_ADRR} ^219\.235\.2(2[4-9]|[3-4][0-9]|5[0-5])\. [NC] # 219.235.224.0 - 219.235.255.255 = Shenzhen Nova Technologies
+RewriteRule ^.*$ - [F]
+
+
+
+# Custom error pages (enable this to use your own)
+# ----------------------------------------------------------------------------
+# ErrorDocument 400 /error.php?id=400
+# ErrorDocument 401 /error.php?id=401
+# ErrorDocument 403 /error.php?id=403
+# ErrorDocument 404 /error.php?id=404
+# ErrorDocument 500 /error.php?id=500
+
+
+# rewrite rule
+# ----------------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteCond %{REQUEST_FILENAME} !-f
+    # normal rewrite for all files
+	RewriteRule	^(.*)$ index.php?__url=$1 [QSA,L]
+</IfModule>
