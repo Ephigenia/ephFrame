@@ -1,6 +1,18 @@
 changelog for ephFrame
 ----------------------
 
+2008-10-24
++ form adds default action now, WEBROOT+current url
++ form fields now save their validate status (error message in formfield->error)
++ added form field password 
++ html helper now can create simple P-Elements
++ new sequence of component, model init, controller sends startup to components now after model init and after all components are attached to controller
++ validator can now replace some wilcard names (%name%) in the error messages
++ set now supports isEmpty for checking if a index is empty or the hole set is "empty"
++ missing view now renders the hole path to the missing view file
++ introducing appForm standrad form class for applications
++ javascript addFile now acts like addFiles with multiple arguments
+
 2008-10-23
 + controller send now content type from view class
 + added xml view class
