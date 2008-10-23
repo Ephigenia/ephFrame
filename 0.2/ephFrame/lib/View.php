@@ -22,7 +22,7 @@ require_once dirname(__FILE__).'/Hash.php';
  * 
  * 	The View is generated from a layout file base and rendering a view created
  * 	from the controller name and action. This is a vary deep part of the ephFrame
- * 	framwork.
+ * 	framework.
  * 
  * 	A View can render {@link Element}s by using this kind of code in a view template.
  * 	Read more about elements in the docs of {@link Element}
@@ -67,6 +67,12 @@ abstract class View extends Hash implements Renderable {
 	 * 	@var string
 	 */
 	public $viewFilename;
+	
+	/**
+	 *	Content type for this view that can be send to the client
+	 * 	@var string
+	 */
+	public $contentType = 'text/plain';
 	
 	/**
 	 *	View constructor

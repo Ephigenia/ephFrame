@@ -55,6 +55,7 @@ final class ephFrame {
 			require (FRAME_LIB_DIR.'exception/IntrusionException.php');
 			require (FRAME_LIB_DIR.'exception/TypeException.php');
 			require (FRAME_LIB_DIR.'Registry.php');
+			require (FRAME_ROOT.'config/config.php');
 			require (FRAME_LIB_DIR.'Renderable.php');
 			require (FRAME_LIB_DIR.'component/Log.php');
 			// project include stuff (some config variables can be overwritten there)

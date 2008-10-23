@@ -528,7 +528,7 @@ abstract class DBQuery extends Object implements Renderable {
 	protected function renderValues() {
 		$rendered = '';
 		foreach($this->values as $key => $value) {
-			$rendered .= '`'.$key.'`='.self::quote($value).', ';
+			$rendered .= '`'.$key.'`='.$value.', ';
 		}
 		return substr($rendered, 0, -2);
 	}

@@ -40,13 +40,6 @@ class Router extends Hash {
 		'root' => array(
 			'controller' => 'app',
 			'action' => 'index'
-		),
-		'scaffold_actions' => array(
-			'path' => ':controller/(?P<id>\d+)/:action/'
-		),
-		'scaffold_view' => array(
-			'path' => ':controller/(?P<id>\d+)/',
-			'action' => 'view'
 		)
 	);
 	
@@ -93,41 +86,47 @@ class Router extends Hash {
 		$debug = false;
 		assert(is_string($url) || empty($url));
 		$routeMatch = false;
+		// add some default scaffolding routes
+		$this->data['scaffold_actions'] = array('path' => ':controller/(?P<id>\d+)/:action/');
+		$this->data['scaffold_view'] = array(
+			'path' => ':controller/(?P<id>\d+)/',
+			'action' => 'view'
+		);
 		// go through routes and try to find a matching route
 		foreach($this as $routeName => $routeData) {
-			if (!empty($routeData['path'])) {
-				$routeTemplate = $routeData['path'];
-				$paramRegExp = $this->createRouteRegexp($routeTemplate);
-				if ($debug) {
-					echo 'url: '.$url.'<br />';
-					echo 'tpl: '.$routeTemplate.'<br />';
-					echo 'reg: '.htmlentities($paramRegExp).'<br />';
-				}
-				if (preg_match_all($paramRegExp, $url, $match)) {
-					// extract controller and action if found
-					if (isset($match['controller'])) {
-						$this->controller = $match['controller'][0];
-					} elseif (isset($routeData['controller'])) {
-						$this->controller = $routeData['controller'];
-					}
-					if (isset($match['action'])) {
-						$this->action = $match['action'][0];
-					} elseif (isset($routeData['action'])) {
-						$this->action = $routeData['action'];
-					}
-					// extract other parameter names
-					foreach($match as $key => $value) {
-						if (!preg_match('/[0-9]+/', $key)) {
-							$this->params[$key] = $value[0];
-						}
-					}
-					// merge with params coming from param array
-					$routeMatch = true;
-					if ($debug) echo 'MATCH!<br />';
-					break;
-				}
-				if ($debug) echo '<br />';
+			if (empty($routeData['path'])) continue;
+			$routeTemplate = $routeData['path'];
+			$paramRegExp = $this->createRouteRegexp($routeTemplate);
+			if ($debug) {
+				echo 'url: '.$url.'<br />';
+				echo 'tpl: '.$routeTemplate.'<br />';
+				echo 'reg: '.htmlentities($paramRegExp).'<br />';
 			}
+			if (preg_match_all($paramRegExp, $url, $match)) {
+				$this->params = $routeData;
+				// extract controller and action if found
+				if (isset($this->params['controller'])) {
+					$this->controller = $this->params['controller'];
+				} elseif (isset($match['controller'])) {
+					$this->controller = $match['controller'][0];
+				}
+				if (isset($this->params['action'])) {
+					$this->action = $this->params['action'];
+				} elseif (isset($match['action'])) {
+					$this->action = $match['action'][0];
+				}
+				// extract other parameter names
+				foreach($match as $key => $value) {
+					if (!preg_match('/[0-9]+/', $key)) {
+						$this->params[$key] = $value[0];
+					}
+				}
+				// merge with params coming from param array
+				$routeMatch = true;
+				if ($debug) echo 'MATCH!<br />';
+				break;
+			}
+			if ($debug) echo '<br />';
 		}
 		if ($debug) {
 			echo '<br /><strong>result:</strong><br />';
@@ -177,15 +176,7 @@ class Router extends Hash {
 	}
 	
 	private function addRoute($routeName = null, $path, $params = null) {
-		$routeData = array('path' => $path);
-		if (isset($params['controller'])) {
-			$routeData['controller'] = $params['controller'];
-			unset($params['controller']); 
-		}
-		if (isset($params['action'])) {
-			$routeData['action'] = $params['action'];
-			unset($params['action']); 
-		}
+		$routeData = array_merge(array('path' => $path), $params);
 		$this->add($routeName, $routeData);
 	}
 	

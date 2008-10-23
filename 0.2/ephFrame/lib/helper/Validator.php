@@ -47,9 +47,12 @@ class Validator extends Helper {
 		// single line string rules are callbacks!
 		foreach($this->config as $ruleName => $ruleConfig) {
 			$failMessage = isset($ruleConfig['message']) ? $ruleConfig['message'] : false;
-			if (isset($ruleConfig['callback']) && !$this->$callbackObject->{$ruleConfig['callback']}($value)) {
-				return $failMessage;
-			} elseif (isset($ruleConfig['regexp']) && !preg_match($ruleConfig['regexp'], $value)) {
+			if (isset($ruleConfig['callback'])) {
+				if (isset($this->callbackObject) && !$this->callbackObject->$ruleConfig['callback']($value)) {
+					return $failMessage;
+				}
+			}
+			if (isset($ruleConfig['regexp']) && !preg_match($ruleConfig['regexp'], $value)) {
 				return $failMessage;
 			} elseif (isset($ruleConfig['notEmpty']) && empty($value)) {
 				return $failMessage;

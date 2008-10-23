@@ -13,11 +13,11 @@
  */
 
 // load parent class
-ephFrame::loadClass('ephFrame.lib.View');
+require_once dirname(__FILE__).'/View.php';
 
 /**
  *	A view that is a HTML Page
- * 	this may be // OLD
+ * 	
  * 	@package ephFrame
  * 	@subpackage ephFrame.lib
  * 	@version 0.1
@@ -26,14 +26,12 @@ ephFrame::loadClass('ephFrame.lib.View');
  */
 class HTMLView extends View {
 	
-	public function afterRender($rendered) {
-		return $rendered;
-	}
-	
-	public function beforeRender() {
-		return true;
-	}
-	
+	/**
+	 *	Content type for this view that can be send to the client
+	 * 	@var string
+	 */
+	public $contentType = 'text/html';
+		
 }
 
 /**

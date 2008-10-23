@@ -53,7 +53,7 @@ class InsertQuery extends DBQuery {
 	public function renderValues() {
 		$rendered = '';
 		foreach($this->values->values() as $value) {
-			$rendered .= self::quote($value).', ';
+			$rendered .= $value.', ';
 		}
 		return substr($rendered, 0, -2);
 	}

@@ -382,7 +382,7 @@ class Model extends Object {
 		}
 		foreach($fieldNames as $fieldName) {
 			if (!isset($this->structure[$fieldName]) || !isset($this->data[$fieldName])) continue;
-			$data[$fieldName] = $this->data[$fieldName];
+			$data[$fieldName] = DBQuery::quote($this->data[$fieldName], $this->structure[$fieldName]->quoting);
 		}
 		if (!$this->beforeSave($data, $fieldNames) || !$this->behaviors->call('beforeSave', $data, $fieldNames)) {
 			return false;
@@ -418,7 +418,7 @@ class Model extends Object {
 			return false;
 		}
 		// set created date if there's any
-		if (isset($this->structure['created']) && isset($data['created'])) {
+		if (isset($this->structure['created']) && !isset($data['created'])) {
 			if ($this->structure['created']->quoting == ModelFieldInfo::QUOTE_STRING) {
 				// @todo set time string depending on sql type
 				$data['created'] = 'NOW()';
@@ -562,7 +562,8 @@ class Model extends Object {
 			return true;
 		}
 		// use validation config to validate value
-		$config = $this->validate[$fieldName];
+		// @todo add validator as class memmber $this->validator->validate();
+		$config = $this->validate;
 		$validator = new Validator($config, $this);
 		return $validator->validate($value);
 	}
@@ -876,7 +877,7 @@ class Model extends Object {
 	protected function loadStructure() {
 		// load model structure from cache
 		// @todo fix model structure cache, create own class for it?
-		if ($this->loadStructureCache()) {
+		if ($this->structure = $this->loadStructureCache()) {
 			$this->reset();
 			return $this;
 		}
