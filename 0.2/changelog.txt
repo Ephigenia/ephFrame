@@ -1,6 +1,15 @@
 changelog for ephFrame
 ----------------------
 
+2008-10-23
++ controller send now content type from view class
++ added xml view class
++ added simple rss action for controller
++ Validator fixed access to $validatorObject callback
++ db-query values now not escaped (should be done by model now)
++ added readme.txt dummy file
++ added absolute url to registry
+
 2008-10-21
 + started rewrite of Form and FormField classes (new validator class)
 + model uses the new validator class now
