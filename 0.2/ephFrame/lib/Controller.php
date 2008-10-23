@@ -65,7 +65,8 @@ abstract class Controller extends Object implements Renderable {
 	public $layout = 'default';
 	
 	/**
-	 *	Default view class for a controller
+	 *	Default view class for a controller, if you want to use views that are
+	 * 	stored in the app use paths like 'app.lib.MyCustomView'
 	 * 	@var string
 	 */
 	public $viewClassName = 'HTMLView';
@@ -74,7 +75,7 @@ abstract class Controller extends Object implements Renderable {
 	 *	Array of models this controller uses
 	 * 	@param array(string)
 	 */
-	public $models = array();
+	public $uses = array();
 	
 	/**
 	 *	Array of components used by this controller
@@ -87,6 +88,12 @@ abstract class Controller extends Object implements Renderable {
 	 * 	@var array(string)
 	 */
 	public $helpers = array();
+	
+	/**
+	 * 	Stores a number of form names that are used by this controller
+	 * 	@var array(string)
+	 */
+	public $forms = array();
 	
 	/**
 	 * 	Controller Constructor
@@ -111,8 +118,8 @@ abstract class Controller extends Object implements Renderable {
 		// controllers components and models ...
 		foreach ($this->__parentClasses() as $parentClass) {
 			$parentClassVars = get_class_vars($parentClass);
-			if (isset($parentClassVars['models'])) {
-				$this->models = array_unique(array_merge($parentClassVars['models'], $this->models));
+			if (isset($parentClassVars['uses'])) {
+				$this->models = array_unique(array_merge($parentClassVars['uses'], $this->uses));
 			}
 			if (isset($parentClassVars['components'])) {
 				$this->components = array_unique(array_merge($parentClassVars['components'], array_values($this->components)));
@@ -121,7 +128,7 @@ abstract class Controller extends Object implements Renderable {
 				$this->helpers = array_unique(array_merge($parentClassVars['helpers'], $this->helpers));
 			}
 			if (isset($parentClassVars['forms'])) {
-				$this->forms = array_unique(array_merge($parentClassvars['forms'], $this->forms));
+				$this->forms = array_unique(array_merge($parentClassVars['forms'], $this->forms));
 			}
 		}
 		// init components and helpers
@@ -189,12 +196,21 @@ abstract class Controller extends Object implements Renderable {
 		}
 	}
 	
-	public function rss() {
+	/**
+	 *	Default RSS Action tries to provide a Set of entries of the associated
+	 * 	model from this controller in the view.
+	 * 
+	 * 	@return boolean
+	 */
+	public function rss($params = array()) {
 		if (isset($this->{$this->name})) {
 			$plural = Inflector::plural($this->name);
-			$entries = $this->{$this->name}->getAll(null, null, null, 3);
+			$entries = $this->{$this->name}->getAll(null, null, null, 10);
 			$this->set($plural, $entries);
+			$this->layout = 'RSS';
+			$this->viewClassName = 'XMLView';
 		}
+		return true;
 	}
 	
 	/**
@@ -346,7 +362,7 @@ abstract class Controller extends Object implements Renderable {
 		return true;
 	}
 	
-	public function initForms() {
+	private function initForms() {
 		foreach($this->forms as $formName) {
 			$this->addForm($formName);
 		}
@@ -427,7 +443,7 @@ abstract class Controller extends Object implements Renderable {
 		// wrap layout around view
 		if (!empty($this->layout)) {
 			$layoutViewVars = array('content' => $viewRendered);
-			$layoutView = new HTMLView('layouts', $this->layout, array_merge($this->data, $layoutViewVars));
+			$layoutView = new $this->viewClassName('layouts', $this->layout, array_merge($this->data, $layoutViewVars));
 			$content = $layoutView->render();
 		} else {
 			$content = $viewRendered;
@@ -437,7 +453,7 @@ abstract class Controller extends Object implements Renderable {
 		if (!preg_match('/gzip/i', $_SERVER['HTTP_ACCEPT_ENCODING']) && $this->response->enableGZipCompression) {
 			$this->response->enableGZipCompression = false;
 		}
-		$this->response->header->set('Content-Type', 'text/html; charset=utf-8');
+		$this->response->header->set('Content-Type', $view->contentType.'; charset=utf-8');
 		$rendered = $this->response->render();
 		$this->response->header->send();
 		return $rendered;
