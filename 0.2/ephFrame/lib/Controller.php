@@ -173,7 +173,7 @@ abstract class Controller extends Object implements Renderable {
 	 * @param array $params
 	 */
 	public function view(Array $params = array()) {
-		if (isset($params['id']) && in_array($this->name, $this->uses)) {
+		if (isset($params['id']) && in_array($this->name, $this->uses) && isset($this->{$this->name})) {
 			$entry = $this->{$this->name}->findById($params['id']);
 			$this->set($this->name, $entry);
 			return $entry;
