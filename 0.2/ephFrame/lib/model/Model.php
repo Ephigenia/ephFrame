@@ -535,6 +535,7 @@ class Model extends Object {
 		if (func_num_args() <= 1) {
 			$fieldNames = array_keys($this->structure);
 		}
+		$this->validationErrors = array();
 		// iterate over validation rules
 		$this->validationErrors = array();
 		foreach($fieldNames as $fieldName) {
@@ -543,6 +544,9 @@ class Model extends Object {
 			if ($r !== true) {
 				$this->validationErrors[$fieldName] = $r;
 			}
+		}
+		if (!empty($this->validationErrors)) {
+			return false;
 		}
 		return true;
 	}
@@ -554,7 +558,7 @@ class Model extends Object {
 	 */
 	public function validateField($fieldName, $value) {
 		// validation of fields that don't exists are false
-		if (!isset($this->data[$fieldName])) {
+		if (func_num_args() == 1 && !isset($this->data[$fieldName])) {
 			return false;
 		}
 		// no validation rules on fields are always ok
@@ -563,7 +567,7 @@ class Model extends Object {
 		}
 		// use validation config to validate value
 		// @todo add validator as class memmber $this->validator->validate();
-		$config = $this->validate;
+		$config = $this->validate[$fieldName];
 		$validator = new Validator($config, $this);
 		return $validator->validate($value);
 	}
@@ -859,10 +863,12 @@ class Model extends Object {
 	 * 	@return boolean
 	 */
 	public function reset() {
-		foreach($this->structure as $fieldInfo) {
-			$this->data[$fieldInfo->name] = null;
-			if ($fieldInfo->primary) {
-				$this->primaryKeyName = $fieldInfo->name;
+		if (is_array($this->structure)) {
+			foreach($this->structure as $fieldInfo) {
+				$this->data[$fieldInfo->name] = null;
+				if ($fieldInfo->primary) {
+					$this->primaryKeyName = $fieldInfo->name;
+				}
 			}
 		}
 		$this->initAssociations();

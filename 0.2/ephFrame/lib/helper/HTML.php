@@ -40,6 +40,23 @@ class HTML extends Helper {
 	}
 	
 	/**
+	 *	Creates a simple <p> element with $content and $attributes ans returns
+	 * 	it ready for rendering.
+	 * 	
+	 * 	<code>
+	 * 	// in a view you can use this just like that:
+	 * 	echo $HTML->p('hello I\'m your P!', array('class' => 'hint'));
+	 * 	</code>
+	 * 	
+	 * 	@param string $content
+	 * 	@param array(string) $attributes
+	 * 	@return HTMLTag
+	 */
+	public function p($content, Array $attributes = array()) {
+		return new HTMLTag('p', $attributes, $content);
+	}
+	
+	/**
 	 * 	Creates a XHTML Valid link element.
 	 * 	@param string $url
 	 * 	@param array(string) $attributes

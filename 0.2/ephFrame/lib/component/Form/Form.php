@@ -3,9 +3,16 @@
 ephFrame::loadClass('ephFrame.lib.HTMLTag');
 
 /**
+ * 	@todo add validation rules here or make validation rules easily editable by sub classes
  * 	@version 0.3
  */
 class Form extends HTMLTag {
+	
+	/**
+	 *	Instance of Controller if Form is used as component
+	 * 	@var Controller
+	 */
+	protected $controller;
 	
 	protected $action = './';
 	
@@ -34,6 +41,29 @@ class Form extends HTMLTag {
 		$this->addChild($this->fieldset);
 		$attributes = array_merge(array('action' => &$action, 'method' => 'post', 'accept-charset' => 'UTF-8'), $attributes);
 		return parent::__construct('form', $attributes);
+	}
+	
+	/**
+	 *	Manual inherit Component startup method to use in sub classes, see docu
+	 * 	in {@link Component}.
+	 * 	@return boolean
+	 */
+	public function startup() {
+		// set form variable for view
+		if (isset($this->controller)) {
+			$this->controller->set(get_class($this), $this);
+			// set default action of form to the current url
+			$this->attributes->action = WEBROOT.$this->controller->request->get('__url'); 
+		}
+	}
+	
+	/**
+	 *	Manual inherit Component init method, see docu in {@link Component}.
+	 * 	@return boolean
+	 */
+	public function init(Controller $controller) {
+		$this->controller = $controller;
+		return true;
 	}
 	
 	/**
@@ -79,6 +109,8 @@ class Form extends HTMLTag {
 	}
 	
 	public function submitted() {
+		// test if a form was submitted by checking every field of the form
+		// for content
 		foreach($this->fieldset->children as $child) {
 			if (!isset($this->request->data[$child->attributes->name])) continue;
 			return true;

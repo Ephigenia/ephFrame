@@ -23,6 +23,12 @@ abstract class FormField extends HTMLTag {
 	public $mandatory = false;
 	
 	/**
+	 *	Stores a error message if validation failed for this form field
+	 * 	@var string|boolean
+	 */
+	public $error = false;
+	
+	/**
 	 * 	Validation rule for this form field, checked in {@link Validate}
 	 * 	@var array
 	 */
@@ -52,12 +58,20 @@ abstract class FormField extends HTMLTag {
 	}
 	
 	public function value() {
-		if (isset($this->form) && $this->form->submitted()) {
+		if (isset($this->form) && $this->form->submitted() && isset($this->form->request->data[$this->attributes->name])) {
 			return $this->form->request->data[$this->attributes->name];
 		}
 		return false;
 	}
 	
+	/**
+	 *	Validates the content of the form field that was submitted or the passed
+	 * 	$value. If no $value is submitted and the result is not true the form
+	 * 	field is marked as errous by setting {@link $error}.
+	 *  This method is used by the Form Class validate method.
+	 * 	@param string|mixed $value
+	 * 	@return string|boolean
+	 */
 	public function validate($value = null) {
 		if (func_num_args() == 0) {
 			$value = $this->value();
@@ -66,10 +80,26 @@ abstract class FormField extends HTMLTag {
 			return false;
 		}
 		$validator = new Validator($this->validate, $this);
-		return $validator->validate($value);
+		$result = $validator->validate($value);
+		if ($result !== true && func_num_args() == 0) {
+			$this->error = $result;
+		}
+		return $result;
 	}
 	
 	public function beforeRender() {
+		// add style class to form element
+		// @todo somehow this happens to be called twice?
+		if ($this->attributes->isEmpty('class')) {
+			$this->attributes->set('class', $this->attributes->name);
+		} elseif ($this->attributes->get('class') != $this->attributes->name) {
+			$this->attributes['class'] .= ' '.$this->attributes->name;
+		}
+		// does not work because this method is called two times?, see the comment above
+//		if (!$this->validate()) {
+//			$this->attributes['class'] .= ' errousField';
+//		}
+		
 		// get posted value and set it as value for this field
 		if ($value = $this->value()) {
 			if ($this->type == 'textarea') {

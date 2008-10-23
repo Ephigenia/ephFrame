@@ -60,6 +60,10 @@ class JavaScript extends Component implements Renderable {
 	}
 	
 	public function addFile($filename) {
+		if (func_num_args() > 1) {
+			$args = func_get_args();
+			return $this->addFiles($args);
+		}
 		$filename = basename($filename);
 		if (strcasecmp(substr($filename, -3), '.js') !== 0) {
 			$filename .= '.js';

@@ -366,6 +366,26 @@ class Set extends Component implements Countable, Renderable, Iterator, ArrayAcc
 	}
 	
 	/**
+	 *	Checks if the hole Set is empty or if the $index of the Set contains
+	 * 	something.
+	 * 	@param string|integer $index
+	 * 	@return boolean
+	 */
+	public function isEmpty($index = null) {
+		// check if value of $index is empty
+		if ($index !== null) {
+			$val = $this->get($index);
+			return empty($val);
+		}
+		// check if the hole set is empty
+		if (count($this) == 0) return true;
+		foreach($this as $value) {
+			if (!is_empty($value)) return false;
+		}
+		return false;
+	}
+	
+	/**
 	 * 	Shuffle the values in the set and returns it
 	 * 	@return Set
 	 */

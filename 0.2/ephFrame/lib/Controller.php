@@ -132,10 +132,12 @@ abstract class Controller extends Object implements Renderable {
 			}
 		}
 		// init components and helpers
+		
 		$this->initComponents();
-		$this->initHelpers();
 		$this->initModels();
+		$this->startUpComponents();
 		$this->initForms();
+		$this->initHelpers();
 		$this->afterConstruct();
 		return $this;
 	}
@@ -319,7 +321,20 @@ abstract class Controller extends Object implements Renderable {
 		// attach component to controller
 		$this->{$componentName} = new $className();
 		if (method_exists($this->{$componentName}, 'init')) {
-			$this->{$componentName}->init($this);
+			$this->{$className}->init($this);
+		}
+		return true;
+	}
+	
+	/**
+	 *	Sends startup signal to all components by calling the startup method
+	 * 	of every component attached to this controller
+	 * 	@return boolean
+	 */
+	public function startUpComponents() {
+		foreach($this->components as $componentName) {
+			$className = ClassPath::className($componentName);
+			$this->{$className}->startup();
 		}
 		return true;
 	}
@@ -374,6 +389,8 @@ abstract class Controller extends Object implements Renderable {
 			ephFrame::loadClass('app.lib.component.Form.'.$formName);
 		}
 		$this->{$formName} = new $formName();
+		$this->{$formName}->init($this);
+		$this->{$formName}->startup();
 		$this->{$formName}->configure();
 		logg(Log::VERBOSE_SILENT, 'ephFrame: Controller \''.get_class($this).'\' loaded form \''.$formName.'\' successfully');
 		return $this;

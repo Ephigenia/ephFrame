@@ -98,6 +98,7 @@ abstract class Component extends Object implements ephFrameComponent {
 				$this->controller->addComponent($componentName);
 			}
 			$this->{$componentClassName} = $this->controller->{$componentClassName};
+			//$this->{$componentClassName}->startup();
 		}
 		return true;
 	}

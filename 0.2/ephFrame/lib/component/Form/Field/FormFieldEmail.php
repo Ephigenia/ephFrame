@@ -1,8 +1,8 @@
 <?php
 
-require_once dirname(__FILE__).'/FormField.php';
+require_once dirname(__FILE__).'/FormFieldText.php';
 
-class FormFieldEmail extends FormField {
+class FormFieldEmail extends FormFieldText {
 
 	public $validate = array(
 		'invalid' => array(

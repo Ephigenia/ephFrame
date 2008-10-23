@@ -1,8 +1,7 @@
-<h1>Missing View for action <q><?= $missingAction ?></q></h1>
+<h1>Missing View File for action <q><?= $missingAction ?></q></h1>
 <p class="error">
-	Please create a view file for the <q><?= $missingController ?></q> action
-	<q><?= $missingAction ?></q> in the applications view directory
-	<q><?= VIEW_DIR ?></q>
+	There seemes to be one view file missing. Please create a view file in:<br />
+	<q><?= VIEW_DIR.lcFirst($missingAction) ?>.php</q>
 </p>
 <p class="hint">
 	You can edit this error message by creating your own view for it in

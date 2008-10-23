@@ -47,6 +47,16 @@ class Validator extends Helper {
 		// single line string rules are callbacks!
 		foreach($this->config as $ruleName => $ruleConfig) {
 			$failMessage = isset($ruleConfig['message']) ? $ruleConfig['message'] : false;
+			// replace wildcards in the failmessage
+			if ($failMessage !== false && strpos($failMessage, '%') !== false) {
+				$failMessage = String::substitute($failMessage, array(
+					'value' => $value,
+					'rule' => $ruleName,
+					'ruleName' => $ruleName,
+					'length' => String::length($value),
+					'type' => gettype($value)
+				));
+			}
 			if (isset($ruleConfig['callback'])) {
 				if (isset($this->callbackObject) && !$this->callbackObject->$ruleConfig['callback']($value)) {
 					return $failMessage;
