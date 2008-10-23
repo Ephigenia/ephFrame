@@ -91,7 +91,7 @@ class Router extends Hash {
 		Router::addRoute('scaffold_view', ':controller/(?P<id>\d+)/', array('action' => 'view'));
 		// go through routes and try to find a matching route
 		foreach($this as $routeName => $routeData) {
-			if (empty($routeData['path'])) continue;
+			if (!isset($routeData['path'])) continue;
 			$routeTemplate = $routeData['path'];
 			$paramRegExp = $this->createRouteRegexp($routeTemplate);
 			if ($debug) {
@@ -174,7 +174,7 @@ class Router extends Hash {
 	
 	private function addRoute($routeName = null, $path, Array $params = array()) {
 		// strip beginning / from path
-		if (substr($path, 0, 1) == '/' && strlen($path) > 2) {
+		if (substr($path, 0, 1) == '/') {
 			$path = substr($path, 1);
 		}
 		$params['path'] = $path;
