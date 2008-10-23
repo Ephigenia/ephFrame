@@ -87,11 +87,8 @@ class Router extends Hash {
 		assert(is_string($url) || empty($url));
 		$routeMatch = false;
 		// add some default scaffolding routes
-		$this->data['scaffold_actions'] = array('path' => ':controller/(?P<id>\d+)/:action/');
-		$this->data['scaffold_view'] = array(
-			'path' => ':controller/(?P<id>\d+)/',
-			'action' => 'view'
-		);
+		Router::addRoute('scaffold_actions', ':controller/(?P<id>\d+)/:action/');
+		Router::addRoute('scaffold_view', ':controller/(?P<id>\d+)/', array('action' => 'view'));
 		// go through routes and try to find a matching route
 		foreach($this as $routeName => $routeData) {
 			if (empty($routeData['path'])) continue;
@@ -175,9 +172,13 @@ class Router extends Hash {
 		return $this;
 	}
 	
-	private function addRoute($routeName = null, $path, $params = null) {
-		$routeData = array_merge(array('path' => $path), $params);
-		$this->add($routeName, $routeData);
+	private function addRoute($routeName = null, $path, Array $params = array()) {
+		// strip beginning / from path
+		if (substr($path, 0, 1) == '/' && strlen($path) > 2) {
+			$path = substr($path, 1);
+		}
+		$params['path'] = $path;
+		$this->add($routeName, $params);
 	}
 	
 }

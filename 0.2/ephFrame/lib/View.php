@@ -101,10 +101,10 @@ abstract class View extends Hash implements Renderable {
 		if ($this->name == 'Layout') {
 			$this->viewFilename = LAYOUT_DIR.$this->action.'.'.$this->templateExtension;	
 		} else {
-			$this->viewFilename = VIEW_DIR.lcfirst($this->name).'/'.$this->action.'.'.$this->templateExtension;
+			$this->viewFilename = VIEW_DIR.lcfirst($this->name).'/'.lcfirst($this->action).'.'.$this->templateExtension;
 			// if apps view does not exist, try to get view from ephFrame
 			if (!file_exists($this->viewFilename)) {
-				$ephFrameViewFile = FRAME_ROOT.'view/'.lcfirst($this->name).'/'.$this->action.'.'.$this->templateExtension;
+				$ephFrameViewFile = FRAME_ROOT.'view/'.lcfirst($this->name).'/'.lcfirst($this->action).'.'.$this->templateExtension;
 				if (file_exists($ephFrameViewFile)) {
 					$this->viewFilename = $ephFrameViewFile;
 				}
