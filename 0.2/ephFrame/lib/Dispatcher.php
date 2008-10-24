@@ -71,7 +71,11 @@ class Dispatcher extends Object {
 		} catch (ViewFileNotFoundException $e) {
 			return $this->dispatch('Error/MissingView', array('controller' => $router->controller, 'action' => $router->action));
 		} catch (MySQLTableNotFoundException $e) {
-			return $this->dispatch('Error/MissingTable', array('tablename' => $e->tablename));
+			if ($router->controller !== 'Error' && $router->action !== 'MissingTable') {
+				return $this->dispatch('Error/MissingTable', array('tablename' => $e->tablename));
+			} else {
+				throw $e;
+			}
 		}
 		return $controller;
 	}

@@ -257,7 +257,7 @@ class MySQLNoDBSelectedException extends MySQLDBException {
  */
 class MySQLDBNotFoundException extends MySQLDBException {
 	public function __construct(MySQL $dao) {
-		$this->message = 'Database Table named '.$dao->DBDSN->db().' not found.';
+		$this->message = 'Database \''.$dao->DBDSN->db().'\' not found.';
 		parent::__construct($dao);
 	}
 }
@@ -277,7 +277,7 @@ class MySQLTableException extends MySQLException {}
 class MySQLTableCrashedException extends MySQLTableException {
 	public function __construct(MySQL $dao) {
 		$tablename = preg_match_first($dao->errorMessage(), "!^Table \'([\w\d\.]*)\'!");
-		$this->message = 'Database Table named \''.$tablename.'\' is marked as crashed.';
+		$this->message = 'Database Table \''.$tablename.'\' is marked as crashed.';
 		parent::__construct($dao);
 	}
 }
