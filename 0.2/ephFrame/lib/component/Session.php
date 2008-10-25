@@ -55,7 +55,7 @@ class Session extends Hash {
 		$this->data = &$_SESSION;
 		// register session save
 		// todo use session_set_save_handler to register current session class
-		return $this;
+		return parent::init($controller);
 	}
 	
 	/**

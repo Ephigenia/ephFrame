@@ -1,5 +1,6 @@
 <?php
 
+// @todo add method, var to add validation rules (from a model)
 abstract class FormField extends HTMLTag {
 	
 	/**

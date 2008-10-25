@@ -15,6 +15,11 @@ if (!file_exists(CONFIG_DIR.'db.php')) {
 } elseif (!class_exists('DBConfig')) {
 	echo $this->renderElement('errorMessage', array('message' => 'db.php seemes to be included but no database config found.'));
 }
+if (!is_dir(MODELCACHE_DIR)) {
+	echo $this->renderElement('errorMessage', array('message' => 'The Directory where models store their structure does not exist <q>'.MODELCACHE_DIR.'</q>.'));
+} elseif (!is_writable(MODELCACHE_DIR)) {
+	echo $this->renderElement('errorMessage', array('message' => 'The Directory where models store their structure is not writable <q>'.MODELCACHE_DIR.'</q>.'));
+}
 // check salt value
 if (SALT === 'priotaseloukeadotraeuocrailaejot') {
 	echo $this->renderElement('errorMessage', array('message' => 'You haven\'t change the SALT value in <q>/app/config.php</q>. Please change the value!'));

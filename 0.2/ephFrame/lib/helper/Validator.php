@@ -46,6 +46,10 @@ class Validator extends Helper {
 		$ruleConfig = $this->config;
 		// single line string rules are callbacks!
 		foreach($this->config as $ruleName => $ruleConfig) {
+			// allowEmpty Rule
+			if (isset($ruleConfig['allowEmpty']) && empty($value)) {
+				return true;
+			}
 			$failMessage = isset($ruleConfig['message']) ? $ruleConfig['message'] : false;
 			// replace wildcards in the failmessage
 			if ($failMessage !== false && strpos($failMessage, '%') !== false) {
@@ -179,7 +183,7 @@ class Validator extends Helper {
 	public static function date($date) {
 		return (preg_match(self :: DATE, $date));
 	}
-	
+		
 	/**
 	 *	Regular Expression vor validating integers
 	 *	@var string

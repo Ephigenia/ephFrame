@@ -124,7 +124,7 @@ abstract class View extends Hash implements Renderable {
 	public function render() {
 		if (!$this->beforeRender()) return null;
 		ob_start();
-		foreach($this->data as $___key => $___val) {
+		foreach($this->data->toArray() as $___key => $___val) {
 			${$___key} = $___val;
 		}
 		// prevent key and val from manipulation

@@ -1,6 +1,9 @@
 changelog for ephFrame
 ----------------------
 
+2008-10-26
+
+
 2008-10-24
 + form adds default action now, WEBROOT+current url
 + form fields now save their validate status (error message in formfield->error)

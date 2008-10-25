@@ -71,6 +71,7 @@ class ModelFieldInfo extends Object {
 					if (!in_array(strtolower($found[1]), $matches)) continue;
 					$this->quoting = $phptype;
 				}
+				$this->type = $found[1];
 			}
 			// length
 			if (!empty($found[2])) {

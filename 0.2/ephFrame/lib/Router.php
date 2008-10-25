@@ -96,6 +96,7 @@ class Router extends Hash {
 			$paramRegExp = $this->createRouteRegexp($routeTemplate);
 			if ($debug) {
 				echo 'url: '.$url.'<br />';
+				echo 'pth: '.$routeData['path'].'<br />';
 				echo 'tpl: '.$routeTemplate.'<br />';
 				echo 'reg: '.htmlentities($paramRegExp).'<br />';
 			}
@@ -177,8 +178,17 @@ class Router extends Hash {
 		if (substr($path, 0, 1) == '/') {
 			$path = substr($path, 1);
 		}
-		$params['path'] = $path;
-		$this->add($routeName, $params);
+		// route names that are added after they are allready there become a copy
+		// of the original router if their params are empty
+		if ($this->hasKey($routeName) && empty($params)) {
+			$params = $this->get($routeName);
+			$params['path'] = $path;
+			$this->add($routeName.'_copy_'.rand(), $params);
+		} else {
+			$params['path'] = $path;
+			$this->add($routeName, $params);
+		}
+		return true;
 	}
 	
 }

@@ -19,6 +19,7 @@ ephFrame::loadClass('ephFrame.lib.model.DB.InsertQuery');
 ephFrame::loadClass('ephFrame.lib.model.DB.UpdateQuery');
 ephFrame::loadClass('ephFrame.lib.model.DB.DeleteQuery');
 ephFrame::loadClass('ephFrame.lib.model.ModelFieldInfo');
+ephFrame::loadClass('ephFrame.lib.model.ModelStructureCache');
 ephFrame::loadClass('ephFrame.lib.model.ModelBehaviorHandler');
 ephFrame::loadClass('ephFrame.lib.ObjectSet');
 
@@ -39,6 +40,7 @@ ephFrame::loadClass('ephFrame.lib.ObjectSet');
  * 	@subpackage ephFrame.lib.model
  * 	@uses DBConnectionManager
  * 	@uses SelectQuery
+ * 	@uses ModelStructureCache
  */
 class Model extends Object {
 	
@@ -47,7 +49,7 @@ class Model extends Object {
 	 * 	to this model
 	 * 	@var array(ModelFieldInfo)
 	 */
-	protected $structure = array();
+	public $structure = array();
 	
 	/**
 	 * 	Stores name of the primary field of this model, this is filled
@@ -112,6 +114,11 @@ class Model extends Object {
 	 * 	@var integer
 	 */
 	protected $modelCacheTTL = HOUR;
+	
+	/**
+	 *	@var ModelStrutureCache
+	 */
+	protected $modelStructureCache;
 	
 	public $findConditions = array();
 	
@@ -306,10 +313,11 @@ class Model extends Object {
 	
 	/**
 	 * 	Fills the model with data from an array
+	 * 	@todo add second argument for filtering keys
 	 * 	@param array(mixed) $data
 	 * 	@return Model
 	 */
-	public function fromArray(Array $data) {
+	public function fromArray(Array $data = array()) {
 		foreach($data as $key => $value) {
 			$this->set($key, $value);
 		}
@@ -883,62 +891,20 @@ class Model extends Object {
 	 * 	@return Model
 	 */
 	protected function loadStructure() {
-		// load model structure from cache
-		// @todo fix model structure cache, create own class for it?
-		if ($this->structure = $this->loadStructureCache()) {
-			$this->reset();
-			return $this;
+		if (!isset($this->modelStructureCache)) {
+			$this->modelStructureCache = new ModelStructureCache($this, $this->modelCacheTTL);
 		}
-		$tableInfo = $this->DB->describe($this->tablename());
-		// parse table info column by column
-		foreach($tableInfo as $index => $columnInfo) {
-			$modelField = new ModelFieldInfo($columnInfo);
-			$this->structure[$modelField->name] = $modelField;
+		if (!$this->structure = $this->modelStructureCache->load()) {
+			$tableInfo = $this->DB->describe($this->tablename());
+			// parse table info column by column
+			foreach($tableInfo as $index => $columnInfo) {
+				$modelField = new ModelFieldInfo($columnInfo);
+				$this->structure[$modelField->name] = $modelField;
+			}
+			$this->modelStructureCache->save($this->structure);
 		}
 		$this->reset();
-		// store structure
-		$this->saveStructureCache($this->structure);
 		return $this;
-	}
-	
-	/**
-	 * 	Stores the analyzed model structure for every model
-	 * 	@var array(array())
-	 */
-	public static $structures = array();
-	
-	/**
-	 * 	@todo really need to save the model structure a better way! woar this json shit is so damn crappy :(
-	 * 	@todo filename must contain db config that is used
-	 */
-	public function loadStructureCache() {
-		if (isset(self::$structures[$this->name])) {
-			return self::$structures[$this->name];
-		}
-		$modelCacheFileName = MODELCACHE_DIR.$this->tablename().'.structure.json';
-		if ($this->modelCacheTTL > 0 && file_exists($modelCacheFileName) && (filemtime($modelCacheFileName) + $this->modelCacheTTL) > time()) {
-			foreach (json_decode(file_get_contents($modelCacheFileName)) as $fieldName => $fieldInfoArr) {
-				$this->structure[$fieldName] = new ModelFieldInfo();
-				$this->structure[$fieldName]->fromJson($fieldInfoArr);
-			}
-			Log::write(Log::INFO, get_class($this).' structure load from model structure cache.');
-			return $this->structure;
-		}
-		return false;
-	}
-	
-	public function saveStructureCache(Array $structure = array()) {
-		self::$structures[$this->name] = $structure;
-		$modelCacheFileName = MODELCACHE_DIR.$this->tablename().'.structure.json';
-		if (file_exists(MODELCACHE_DIR) && is_dir(MODELCACHE_DIR) && is_writeable(MODELCACHE_DIR)) {
-			Log::write(Log::VERBOSE, 'ephFrame: '.get_class($this).' structure stored in model cache.');
-			$persistentModelStructure = array();
-			foreach($this->structure as $fieldInfo) {
-				$persistentModelStructure[$fieldInfo->name] = $fieldInfo->toArray();
-			}
-			file_put_contents($modelCacheFileName, json_encode($persistentModelStructure));
-		}
-		return true;
 	}
 	
 }

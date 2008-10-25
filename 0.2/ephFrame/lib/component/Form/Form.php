@@ -112,7 +112,7 @@ class Form extends HTMLTag {
 		// test if a form was submitted by checking every field of the form
 		// for content
 		foreach($this->fieldset->children as $child) {
-			if (!isset($this->request->data[$child->attributes->name])) continue;
+			if (empty($this->request->data[$child->attributes->name])) continue;
 			return true;
 		}
 		return false;
