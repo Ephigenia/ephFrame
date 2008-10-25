@@ -111,7 +111,7 @@ class Model extends Object {
 	 * 	re-read.
 	 * 	@var integer
 	 */
-	protected $modelCacheTTL = 1;
+	protected $modelCacheTTL = HOUR;
 	
 	public $findConditions = array();
 	
@@ -677,11 +677,13 @@ class Model extends Object {
 			$lastArr = $arr;
 			$i++;
 		}
-		if ($justOne) {
-			return $model;
-		}
 		if (isset($model)) {
+			if ($justOne) {
+				return $model;
+			}
 			$return->add($model);
+		} else {
+			return false;
 		}
 		return $return;
 	}
@@ -920,7 +922,7 @@ class Model extends Object {
 				$this->structure[$fieldName]->fromJson($fieldInfoArr);
 			}
 			Log::write(Log::INFO, get_class($this).' structure load from model structure cache.');
-			return true;
+			return $this->structure;
 		}
 		return false;
 	}
@@ -929,7 +931,7 @@ class Model extends Object {
 		self::$structures[$this->name] = $structure;
 		$modelCacheFileName = MODELCACHE_DIR.$this->tablename().'.structure.json';
 		if (file_exists(MODELCACHE_DIR) && is_dir(MODELCACHE_DIR) && is_writeable(MODELCACHE_DIR)) {
-			Log::write(Log::INFO, get_class($this).' structure stored in model cache.');
+			Log::write(Log::VERBOSE, 'ephFrame: '.get_class($this).' structure stored in model cache.');
 			$persistentModelStructure = array();
 			foreach($this->structure as $fieldInfo) {
 				$persistentModelStructure[$fieldInfo->name] = $fieldInfo->toArray();

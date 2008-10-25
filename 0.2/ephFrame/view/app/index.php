@@ -15,6 +15,10 @@ if (!file_exists(CONFIG_DIR.'db.php')) {
 } elseif (!class_exists('DBConfig')) {
 	echo $this->renderElement('errorMessage', array('message' => 'db.php seemes to be included but no database config found.'));
 }
+// check salt value
+if (SALT === 'priotaseloukeadotraeuocrailaejot') {
+	echo $this->renderElement('errorMessage', array('message' => 'You haven\'t change the SALT value in <q>/app/config.php</q>. Please change the value!'));
+}
 ?>
 <p class="hint">
 	You can modify this view by changing the layout '/app/view/layout/default.php' template file

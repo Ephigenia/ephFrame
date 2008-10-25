@@ -81,7 +81,7 @@ abstract class Controller extends Object implements Renderable {
 	 *	Array of components used by this controller
 	 * 	@var array(string)
 	 */
-	public $components = array();
+	public $components = array('Session');
 	
 	/**
 	 *	array of helper names used in the view when rendered
@@ -132,7 +132,6 @@ abstract class Controller extends Object implements Renderable {
 			}
 		}
 		// init components and helpers
-		
 		$this->initComponents();
 		$this->initModels();
 		$this->startUpComponents();
@@ -245,20 +244,29 @@ abstract class Controller extends Object implements Renderable {
 			$this->uses[] = $this->name;
 		}
 		foreach($this->uses as $modelName) {
-			if (strpos($modelName, ClassPath::$classPathDevider) === false) {
-				$modelName = 'App.lib.model.'.$modelName;
-				$className = ClassPath::className($modelName);
-			} else {
-				$className = $modelname;
-			}
-			try {
-				ephFrame::loadClass($modelName);
-				$this->{$className} = new $className();
-				$this->{$className}->init();
-				logg(Log::VERBOSE_SILENT, 'ephFrame: Controller \''.get_class($this).'\' loaded Model \''.$className.'\' successfully');
-			} catch (ephFrameClassFileNotFoundException $e) {
-				if ($modelName == $this->name) throw new $e;
-			}
+			$this->addModel($modelName);
+		}
+		return true;
+	}
+	
+	public function addModel($modelName) {
+		assert(is_string($modelName) && !empty($modelName));
+		if (in_array($modelName, $this->models)) {
+			return true;
+		}
+		if (strpos($modelName, ClassPath::$classPathDevider) === false) {
+			$modelName = 'App.lib.model.'.$modelName;
+			$className = ClassPath::className($modelName);
+		} else {
+			$className = $modelname;
+		}
+		try {
+			ephFrame::loadClass($modelName);
+			$this->{$className} = new $className();
+			$this->{$className}->init();
+			logg(Log::VERBOSE_SILENT, 'ephFrame: '.get_class($this).' loaded model \''.$className.'\'');
+		} catch (ephFrameClassFileNotFoundException $e) {
+			if ($modelName == $this->name) throw new $e;
 		}
 		return true;
 	}
@@ -275,18 +283,11 @@ abstract class Controller extends Object implements Renderable {
 	 * 	all components receive the startup signal.
 	 * 	@return boolean
 	 */
-	private function initComponents() {
-		logg(Log::VERBOSE_SILENT, 'ephFrame: initComponents: \''.implode(', ', $this->components).'\' ...');
+	protected function initComponents() {
+		logg(Log::VERBOSE_SILENT, 'ephFrame: '.get_class($this).' adds components: \''.implode(', ', $this->components).'\'');
 		// add and init every component set in in {@link components}
 		foreach ($this->components as $componentName) {
-			$this->addComponent($componentName);
-		}
-		// startup every component
-		foreach($this->components as $componentName) {
-			$className = ClassPath::className($componentName);
-			if (method_exists($this->{$className}, 'startup')) {
-				$this->{$className}->startup();
-			}
+			$this->addComponent($componentName, false);
 		}
 		return true;
 	}
@@ -301,7 +302,7 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	Loads and Adds a new {@link Component} to the Controller on run-time.
+	 * 	Loads and Adds a new {@link Component} to the Controller at run-time.
 	 * 	<code>
 	 * 	class TestController {
 	 * 		public function testI28n() {
@@ -310,25 +311,38 @@ abstract class Controller extends Object implements Renderable {
 	 *  }
 	 * 	</code>
 	 * 	@param string $componentName
+	 * 	@param boolean $startUp Fires the startup signal to the component
 	 * 	@return boolean
 	 */
-	public function addComponent($componentName) {
+	public function addComponent($componentName, $startUp = true) {
 		assert(is_string($componentName) && !empty($componentName));
+		if (!in_array($componentName, $this->components)) {
+			$this->components[] = $componentName;
+		}
 		// extract component class name
 		$className = ClassPath::className($componentName);
 		// try app and frame paths
-		loadComponent($componentName);
+		if (!class_exists($className)) {
+			loadComponent($componentName);
+		}
 		// attach component to controller
-		$this->{$componentName} = new $className();
-		if (method_exists($this->{$componentName}, 'init')) {
-			$this->{$className}->init($this);
+		if (!isset($this->$className)) {
+			$this->{$componentName} = new $className();
+			$this->{$componentName}->controller = $this;
+			if (method_exists($this->{$componentName}, 'init')) {
+				$this->{$className}->init($this);
+			}
+			if ($startUp) {
+				$this->{$className}->startup();
+			}
 		}
 		return true;
 	}
 	
 	/**
-	 *	Sends startup signal to all components by calling the startup method
-	 * 	of every component attached to this controller
+	 *	At this point all components that are used by this controller should
+	 * 	be added to the component list (also added by other components) and
+	 * 	get the startup signal now.
 	 * 	@return boolean
 	 */
 	public function startUpComponents() {
@@ -371,7 +385,7 @@ abstract class Controller extends Object implements Renderable {
 		// try app and frame paths
 		loadHelper($helperName);
 		// verbose log message
-		logg(Log::VERBOSE_SILENT, 'ephFrame: Controller \''.get_class($this).'\' loaded Helper \''.$helperName.'\' successfully');
+		logg(Log::VERBOSE_SILENT, 'ephFrame: '.get_class($this).' loaded helper '.$helperName.' successfully');
 		// attach component to controller
 		$this->set($className, new $className($this));
 		return true;
@@ -392,7 +406,7 @@ abstract class Controller extends Object implements Renderable {
 		$this->{$formName}->init($this);
 		$this->{$formName}->startup();
 		$this->{$formName}->configure();
-		logg(Log::VERBOSE_SILENT, 'ephFrame: Controller \''.get_class($this).'\' loaded form \''.$formName.'\' successfully');
+		logg(Log::VERBOSE_SILENT, 'ephFrame: '.get_class($this).' loaded form '.$formName.'');
 		return $this;
 	}
 	
@@ -415,7 +429,7 @@ abstract class Controller extends Object implements Renderable {
 	 */
 	public function action($action, Array $params = array()) {
 		assert(is_string($action) && !empty($action));
-		logg(Log::VERBOSE_SILENT, 'ephFrame: Controller \''.get_class($this).'\' changed action from \''.$this->action.'\' to \''.$action.'\'');
+		logg(Log::VERBOSE, 'ephFrame: '.get_class($this).' changed action from \''.$this->action.'\' to \''.$action.'\'');
 		$this->action = $action;
 		$this->set('action', $this->action);
 		if (method_exists($this, $action)) {
@@ -506,10 +520,12 @@ abstract class Controller extends Object implements Renderable {
 	 * 	@return string
 	 */
 	public function afterRender($rendered) {
+		// if we're in debugging mode we add the sql history dump to the view
+		// content (this can be overwritten in the AppController.
 		if (Registry::get('DEBUG') >= DEBUG_DEBUG && class_exists('QueryHistory')) {
 			$debugOutput =
 				'Compile Time: '.ephFrame::compileTime(6).'s'.LF.
-				'Memory Usage: '.ephFrame::memoryUsage(true).' ('.ephFrame::memoryUsage().')'.LF.LF.
+				'Memory Usage: '.ephFrame::memoryUsage(true).' ('.ephFrame::memoryUsage().' Bytes)'.LF.LF.
 				'DB QUERY HISTORY'.LF.'----------------'.LF.QueryHistory::getInstance()->render();
 			if ($this->viewClassName == 'HTMLView') {
 				$rendered .= '<pre class="debugOutput">'.nl2br($debugOutput).'</pre>';	

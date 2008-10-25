@@ -79,7 +79,7 @@ class Log extends Component {
 	public static $dateFormat = 'Y-m-d H:i:s';
 	
 	/**
-	 *	Message format
+	 *	Log Message format
 	 * 	// todo extract this to optional new class ?
 	 * 	@var string
 	 */
@@ -93,9 +93,12 @@ class Log extends Component {
 	
 	private static $instance;
 	
+	public static $level = self::INFO;
+	
 	/**
 	 * 	@todo explain the different mechanics behind the levels
 	 */
+	const SILENCE = 0;
 	const FATAL = 1;
 	const ERROR = 2;
 	const WARNING = 3;
@@ -154,10 +157,12 @@ class Log extends Component {
   	 * 	@return boolean true on success
   	 */
 	public static function write($level, $message) {
-		return true;
-		$log = self::getInstance();
-		$logFile = new File(self::logFileName($level));
-		$logFile->append($log->createLogMessage($message));
+		// log message only if level is higher or equal current reporting level
+		if ($level >= self::$level) {
+			$log = self::getInstance();
+			$logFile = new File(self::logFileName($level));
+			$logFile->append($log->createLogMessage($message));
+		}
 		return true;
 	}
 	
@@ -186,14 +191,22 @@ class Log extends Component {
 		}
 		// strip newlines
 		$message = preg_replace('/[\n\r]+/', ' ', $message);
+		// replace wildcards
 		$message = String::substitute(self::$format.LF, array(
 			'date' => date(self::$dateFormat),
 			'ip' => (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'unknown'),
-			'message' => $message
+			'message' => $message,
+			'user' => get_current_user()
 		));
 		// return resulting message
 		return $message;
 	}
+	
+	/**
+	 *	Stores the translated log file names as cache
+	 * 	@var array(string)
+	 */
+	public static $logFilenames = array();
 	
 	/**
 	 *	Translates the log level to a full path to the log filename and returns it
@@ -206,29 +219,32 @@ class Log extends Component {
 	 * 	@return string
 	 */
 	public static function logFileName($level) {
-		$path = realpath(self::$path).DS;
-		$logFileBasename = '';
-		if ($level == self::ERROR || $level == self::WARNING) {
-			$logFileBaseName = 'error';
-		} elseif (array_key_exists($level, self::$levels)) {
-			$logFileBaseName = self::$levels[$level];
-		} elseif (!empty($level)) {
-			$logFileBasename = $level;
-		}
-		// cleanup the filename
-		$logFileBasename = strtolower($logFileBasename);
-		$logFileBasename = Charset::toSingleBytes($logFileBasename);
-		// replace spaces
-		$logFileBasename = preg_replace('/\s+/', '_', $logFileBasename);
-		// replace any control character or non-word stuff
-		$logFileBasename = preg_replace('/[^-_., \d\w]/u', '', $logFileBasename);
-		// limit size of level name to unix type filename length
-		$logFileBasename = substr($logFileBasename, 0, 255);
-		if (empty($logFileBaseName)) {
-			$logFileBasename = 'unknown_level';
-		}
-		// return the resulting path to the logfile
-		return $path.$logFileBaseName.self::$extension;
+		if (!isset(self::$logFilenames[$level])) {
+			$path = realpath(self::$path).DS;
+			$logFileBasename = '';
+			if ($level == self::ERROR || $level == self::WARNING) {
+				$logFileBaseName = 'error';
+			} elseif (array_key_exists($level, self::$levels)) {
+				$logFileBaseName = self::$levels[$level];
+			} elseif (!empty($level)) {
+				$logFileBasename = $level;
+			}
+			// cleanup the filename
+			$logFileBasename = strtolower($logFileBasename);
+			$logFileBasename = Charset::toSingleBytes($logFileBasename);
+			// replace spaces
+			$logFileBasename = preg_replace('/\s+/', '_', $logFileBasename);
+			// replace any control character or non-word stuff
+			$logFileBasename = preg_replace('/[^-_., \d\w]/u', '', $logFileBasename);
+			// limit size of level name to unix type filename length
+			$logFileBasename = substr($logFileBasename, 0, 255);
+			if (empty($logFileBaseName)) {
+				$logFileBasename = 'unknown_level';
+			}
+			// return the resulting path to the logfile
+			self::$logFilenames[$level] = $path.$logFileBaseName.self::$extension;
+		} 
+		return self::$logFilenames[$level];
 	}
 	
 }

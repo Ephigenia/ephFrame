@@ -19,7 +19,22 @@ Registry::set('DEBUG', DEBUG_DEBUG);
 // default session name
 define('SESSION_NAME', 'app');
 
-// TimeZone Setting
+/**
+ *	Logging Level
+ * 	This should normally set to a low level
+ */
+Log::$level = Log::INFO;
+
+/**
+ * 	Salt for use in password creation or anything else that need so be salted
+ * 	change this as soon as you can to increase security!
+ */
+define('SALT', 'priotaseloukeadotraeuocrailaejot');
+
+/**
+ * 	TimeZone Setting
+ * 	This Setting influences alle location based methods of php
+ */ 
 date_default_timezone_set('Europe/Berlin');
 
 // ?XDEBUG_PROFILE=1

@@ -123,7 +123,6 @@ abstract class View extends Hash implements Renderable {
 	 */
 	public function render() {
 		if (!$this->beforeRender()) return null;
-		logg(Log::VERBOSE_SILENT, 'ephFrame: rendering \'(..)'.substr($this->viewFilename, -60).'\'');
 		ob_start();
 		foreach($this->data as $___key => $___val) {
 			${$___key} = $___val;

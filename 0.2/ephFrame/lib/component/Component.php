@@ -73,8 +73,7 @@ abstract class Component extends Object implements ephFrameComponent {
 	 * 	@param Controller $controller
 	 * 	@final 
 	 */
-	final public function init($controller) {
-		logg(Log::VERBOSE_SILENT, 'ephFrame: Component init signal received: \''.get_class($this).'\' ...');
+	public function init(Controller $controller) {
 		$this->controller = $controller;
 		$this->initComponents();
 		return $this;
@@ -86,7 +85,7 @@ abstract class Component extends Object implements ephFrameComponent {
 	 * 	
 	 * 	@return true
 	 */
-	private function initComponents() {
+	protected function initComponents() {
 		// merge list of components from parent component class
 		$parentClass = get_parent_class($this);
 		$parentClassVars = get_class_vars($parentClass);
@@ -95,10 +94,10 @@ abstract class Component extends Object implements ephFrameComponent {
 			$componentClassName = ClassPath::className($componentName);
 			// component not attached to controller, therefore do that now 
 			if (empty($this->controller->{$componentClassName})) {
-				$this->controller->addComponent($componentName);
+				logg(Log::VERBOSE_SILENT, 'ephFrame: '.get_class($this).' adds component \''.$componentName.'\' to '.get_class($this->controller));
+				$this->controller->addComponent($componentName, false);
 			}
 			$this->{$componentClassName} = $this->controller->{$componentClassName};
-			//$this->{$componentClassName}->startup();
 		}
 		return true;
 	}
@@ -109,7 +108,6 @@ abstract class Component extends Object implements ephFrameComponent {
 	 * 	@return Controller
 	 */
 	public function startup() {
-		logg(Log::VERBOSE_SILENT, 'ephFrame: Component startup signal received: \''.get_class($this).'\'.');
 		return $this;
 	}
 	

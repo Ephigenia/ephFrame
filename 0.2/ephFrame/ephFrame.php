@@ -63,7 +63,7 @@ final class ephFrame {
 			include (APP_ROOT.'config/paths.php');
 			include (APP_ROOT.'config/db.php');
 			self::setErrorReporting();
-			logg(Log::VERBOSE_SILENT, 'ephFrame: initiated finished');
+			logg(Log::VERBOSE_SILENT, 'ephFrame: successfully loaded, now going to dispatcher');
 		}
 		return self::$instance;
 	}
@@ -105,15 +105,13 @@ final class ephFrame {
 	 */
 	public static function loadComponent($componentName) {
 		$className = ucFirst($componentName);
-		logg(Log::VERBOSE_SILENT, 'ephFrame: Component loading: \''.$componentName.'\'');
 		if (ClassPath::exists('ephFrame.lib.component.'.$className)) {
 			loadClass('ephFrame.lib.component.'.$className);
 		} elseif (ClassPath::exists('app.lib.component.'.$className)) {
 			loadClass('app.lib.component.'.$className);
 		} else {
-			logg(Log::VERBOSE_SILENT, 'ephFrame: Component loading failed: \''.$componentName.'\'');
-			var_dump(xdebug_get_function_stack());
-			die('Component \''.$componentName.'\' not found');
+			logg(Log::VERBOSE_SILENT, 'ephFrame: failed loading component \''.$componentName.'\'');
+			return false;
 		}
 		return true;
 	}
@@ -130,7 +128,8 @@ final class ephFrame {
 		} elseif (ClassPath::exists('app.libs.helpers.'.$className)) {
 			loadClass('app.lib.helper.'.$className);
 		} else {
-			die('Helper \''.$helperName.'\' not found');
+			logg(Log::VERBOSE_SILENT, 'ephFrame: failed loading helper \''.$componentName.'\'');
+			return false;
 		}
 		return true;
 	}

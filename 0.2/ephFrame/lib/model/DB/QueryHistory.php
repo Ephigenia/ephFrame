@@ -95,12 +95,22 @@ class QueryHistory extends Object implements Countable, Renderable {
 		$rendered = '';
 		if (!$this->beforeRender()) return $rendered;
 		foreach ($this->data as $index => $data) {
-			$rendered .= sprintf('Query #%s (%ss, %s result/s):'.LF.'%s'.LF.LF,
-									$index,
+			//@todo make the following lines better
+			if($data['result']->numRows()) {
+				$rendered .= sprintf('Query #%s (%ss, %s result/s):'.LF.'%s'.LF.LF,
+									$index +1 ,
 									round($data['timer']->render(), 5),
 									$data['result']->numRows(),
 									(string) $data['query']
 								);
+			} else {
+				$rendered .= sprintf('Query #%s (%ss):'.LF.'%s'.LF.LF,
+									$index +1,
+									round($data['timer']->render(), 5),
+									(string) $data['query']
+								);
+			}
+			
 		}
 		return $this->afterRender($rendered);
 	}

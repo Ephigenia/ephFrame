@@ -50,7 +50,7 @@ class Session extends Hash {
 	 * 	@param 	string	$sessionName
 	 * 	@return Session
 	 */
-	public function startup() {
+	public function init(Controller $controller) {
 		$this->start();
 		$this->data = &$_SESSION;
 		// register session save
@@ -70,10 +70,7 @@ class Session extends Hash {
 		} else {
 			$this->name($this->name);
 		}
-		//if (defined('__ephFrameSessionStarted')) {
-			//define('__ephFrameSessionStarted', true);
-			session_start();
-		//}
+		session_start();
 		return true;
 	}
 	
