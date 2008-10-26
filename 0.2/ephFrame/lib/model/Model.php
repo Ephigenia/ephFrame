@@ -678,7 +678,7 @@ class Model extends Object {
 					$model->{Inflector::plural($modelName)}->add(new $modelName($arr));
 				}
 			}
-			if (@$lastArr[$primIdName] != @$arr[$primIdName] && $i > 0) {
+			if (@$lastArr[$primIdName] != @$arr[$primIdName] && $i > 0 || !isset($lastArr[$primIdName])) {
 				$return->add($model);
 			}
 			$lastArr = $arr;
@@ -690,7 +690,7 @@ class Model extends Object {
 			if ($justOne) {
 				return $model;
 			}
-			$return->add($model);
+			//$return->add($model);
 		}
 		//die(var_dump($return->toArray()));
 		return $return;
