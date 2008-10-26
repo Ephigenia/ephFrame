@@ -670,7 +670,6 @@ class Model extends Object {
 				foreach($this->hasOne as $modelName) {
 					$model->$modelName = new $modelName($arr);
 				}
-			// new set
 			}
 			foreach($this->belongsTo as $modelName) {
 				// check if there's data for the associated model in the result
@@ -685,14 +684,15 @@ class Model extends Object {
 			$lastArr = $arr;
 			$i++;
 		}
-		if (isset($model)) {
+		if (!isset($model)) {
+			return false;
+		} else {
 			if ($justOne) {
 				return $model;
 			}
 			$return->add($model);
-		} else {
-			return false;
 		}
+		//die(var_dump($return->toArray()));
 		return $return;
 	}
 	

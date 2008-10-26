@@ -251,9 +251,9 @@ abstract class Controller extends Object implements Renderable {
 	
 	public function addModel($modelName) {
 		assert(is_string($modelName) && !empty($modelName));
-		if (in_array($modelName, $this->models)) {
-			return true;
-		}
+//		if (in_array($modelName, $this->uses)) {
+//			return true;
+//		}
 		if (strpos($modelName, ClassPath::$classPathDevider) === false) {
 			$modelName = 'App.lib.model.'.$modelName;
 			$className = ClassPath::className($modelName);

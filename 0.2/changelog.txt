@@ -2,7 +2,18 @@ changelog for ephFrame
 ----------------------
 
 2008-10-26
-
++ changed the controller order actions to create components again
++ created ModelStructureCache to handle the save and load stuff of a model (refactoring)
++ modelfieldinfo now stores length (also float) and types correctly
++ router copies same route names data from allready existing routes
++ view renders all variables (to sad that the Hash seemes to have a bug on foreach sometimes?)
++ added message to application default index if model cache dir does not exists or not writable
++ enabled Log again
++ controller now loads all components, then the models and then startups all components
++ removed some log messages from controller and component
++ model saved structure files are now read correctly (still not very cool implementation)
++ Session loads up correctly (removed double load in controller)
++ query history now skips the results part if there was just one
 
 2008-10-24
 + form adds default action now, WEBROOT+current url
