@@ -35,7 +35,7 @@ class BasicException extends Exception {
 		$this->created = time();
 		if (!isset($this->level)) $this->level = self::ERROR;
 		// @todo finish all data in the silent verbose log
-		if (class_exists('Log')) {
+		if (class_exists('Log') && is_writable(LOG_DIR) && is_writable(Log::logFileName(Log::VERBOSE_SILENT))) {
 			$logMessage = 'ephFrame: Exception thrown \''.get_class($this).'\'';
 			if (!empty($message)) {
 				$logMessage .= ', message: \''.$message.'\'';

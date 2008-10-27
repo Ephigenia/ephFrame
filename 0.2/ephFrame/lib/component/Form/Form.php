@@ -14,6 +14,10 @@ class Form extends HTMLTag {
 	 */
 	protected $controller;
 	
+	/**
+	 * 	Stores the submit action target
+	 * 	@var string
+	 */
 	protected $action = './';
 	
 	/**

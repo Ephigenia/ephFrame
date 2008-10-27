@@ -37,14 +37,12 @@ abstract class FormField extends HTMLTag {
 
 	public function __construct($name, $value = null, Array $attributes = array()) {
 		$attributes['type'] = $this->type;
-		if ($value !== null) {
-			$attributes['value'] = $value;
-		}
 		$attributes['name'] = $name;
 		if (empty($this->label) && $this->label !== false) {
 			$this->label = ucwords(preg_replace('/_+/', ' ', $name)).':';
 		}
 		$this->label = new HTMLTag('label', array('for' => $name), $this->label);
+		$this->value($value);
 		return parent::__construct('input', $attributes);
 	}
 	
@@ -58,11 +56,18 @@ abstract class FormField extends HTMLTag {
 		return $this;
 	}
 	
-	public function value() {
-		if (isset($this->form) && $this->form->submitted() && isset($this->form->request->data[$this->attributes->name])) {
-			return $this->form->request->data[$this->attributes->name];
+	public function value($value = null) {
+		if (func_num_args() == 1) {
+			if ($value !== null) {
+				$this->attributes = $value;
+			}
+			return $this;
+		} else {
+			if (isset($this->form) && $this->form->submitted() && isset($this->form->request->data[$this->attributes->name])) {
+				return $this->form->request->data[$this->attributes->name];
+			}
+			return false;
 		}
-		return false;
 	}
 	
 	/**

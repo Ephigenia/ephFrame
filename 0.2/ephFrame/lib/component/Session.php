@@ -108,9 +108,9 @@ class Session extends Hash {
 	 *
 	 * 	@return boolean
 	 */
-	private function __destroy() {
-		parent::__destroy();
+	public function __destroy() {
 		session_write_close();
+		parent::__destroy();
 		return true;
 	}
 

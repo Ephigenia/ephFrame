@@ -6,8 +6,10 @@
 </p>
 <?php
 // check for writable log directory
-if (!is_writable(LOG_DIR)) {
-	echo $this->renderElement('errorMessage', array('message' => 'Your tmp directory is not writable.'));
+if (!is_dir(LOG_DIR)) {
+	echo $this->renderElement('errorMessage', array('message' => 'Log Directory not found: <q>'.LOG_DIR.'</q>'));
+} elseif (!is_writable(LOG_DIR)) {
+	echo $this->renderElement('errorMessage', array('message' => '<q>'.LOG_DIR.'</q> - The Log-Directory should be writable by PHP.'));
 }
 // check for database Config
 if (!file_exists(CONFIG_DIR.'db.php')) {
@@ -16,9 +18,9 @@ if (!file_exists(CONFIG_DIR.'db.php')) {
 	echo $this->renderElement('errorMessage', array('message' => 'db.php seemes to be included but no database config found.'));
 }
 if (!is_dir(MODELCACHE_DIR)) {
-	echo $this->renderElement('errorMessage', array('message' => 'The Directory where models store their structure does not exist <q>'.MODELCACHE_DIR.'</q>.'));
+	echo $this->renderElement('errorMessage', array('message' => 'Model-cache-directory does not exist: <q>'.MODELCACHE_DIR.'</q>.'));
 } elseif (!is_writable(MODELCACHE_DIR)) {
-	echo $this->renderElement('errorMessage', array('message' => 'The Directory where models store their structure is not writable <q>'.MODELCACHE_DIR.'</q>.'));
+	echo $this->renderElement('errorMessage', array('message' => 'Model-cache-diretory is not writable is not writable: <q>'.MODELCACHE_DIR.'</q>.'));
 }
 // check salt value
 if (SALT === 'priotaseloukeadotraeuocrailaejot') {

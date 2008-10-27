@@ -152,7 +152,13 @@ abstract class Controller extends Object implements Renderable {
 	
 	public function delete() {}
 	
-	public function edit() {}
+	public function edit(Array $params = array()) {
+		if (isset($params['id']) && in_array($this->name, $this->uses) && isset($this->{$this->name})) {
+			$entry = $this->{$this->name}->findById($params['id']);
+			$this->set($this->name, $entry);
+			return $entry;
+		}
+	}
 	
 	/**
 	 * 	Default view action
@@ -395,17 +401,24 @@ abstract class Controller extends Object implements Renderable {
 		foreach($this->forms as $formName) {
 			$this->addForm($formName);
 		}
+		foreach($this->forms as $formName) {
+			$this->{$formName}->startup();
+			$this->{$formName}->configure();
+		}
 		return $this;
 	}
 	
+	/**
+	 *	Adds an other form to the controller
+	 * 	@param string $formName
+	 * 	@return Controller
+	 */
 	public function addForm($formName) {
 		if (!class_exists($formName)) {
 			ephFrame::loadClass('app.lib.component.Form.'.$formName);
 		}
 		$this->{$formName} = new $formName();
 		$this->{$formName}->init($this);
-		$this->{$formName}->startup();
-		$this->{$formName}->configure();
 		logg(Log::VERBOSE_SILENT, 'ephFrame: '.get_class($this).' loaded form '.$formName.'');
 		return $this;
 	}
