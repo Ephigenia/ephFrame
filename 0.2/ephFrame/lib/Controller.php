@@ -59,6 +59,12 @@ abstract class Controller extends Object implements Renderable {
 	);
 	
 	/**
+	 *	Stores the parameters from the router
+	 * 	@var array(mixed)
+	 */
+	public $params = array();
+	
+	/**
 	 *	Default view layout for a controller
 	 * 	@var string
 	 */
@@ -150,38 +156,31 @@ abstract class Controller extends Object implements Renderable {
 	 */
 	public function create() {}
 	
-	public function delete() {}
+	public function delete() {
+		
+	}
 	
-	public function edit(Array $params = array()) {
-		if (isset($params['id']) && in_array($this->name, $this->uses) && isset($this->{$this->name})) {
-			$entry = $this->{$this->name}->findById($params['id']);
-			$this->set($this->name, $entry);
-			return $entry;
+	public function edit($id = null) {
+		$id = (int) $id;
+		if ($id > 0 && in_array($this->name, $this->uses) && isset($this->{$this->name})) {
+			$this->{$this->name} = $this->{$this->name}->findById($id);
+			$this->set($this->name, $this->{$this->name});
+			// if form is also attached, fill form data
+			if (isset($this->{$this->name.'Form'})) {
+				$this->{$this->name.'Form'}->fillModel($this->{$this->name});
+			}
+			return $this->{$this->name};
 		}
 	}
 	
 	/**
 	 * 	Default view action
-	 * 
-	 * 	The default view action assumes that you want to view an entry from the
-	 * 	model with an id. The id is machted by the router that calls this action.
-	 * 	So for example you have the url [root]/User/view/23/ this action is
-	 * 	called with the params array:
-	 * 	<code>
-	 * 	$params = array('id' => 23);
-	 * 	</code>
-	 * 	And will set a variable in the view named after the model used.
-	 * 	
-	 * 	So in our example you'll have in the view:
-	 * 	<code>
-	 * 	echo $User->id;
-	 * 	</code>
-	 *
-	 * @param array $params
+	 * @param integer $id
 	 */
-	public function view(Array $params = array()) {
-		if (isset($params['id']) && in_array($this->name, $this->uses) && isset($this->{$this->name})) {
-			$entry = $this->{$this->name}->findById($params['id']);
+	public function view($id = null) {
+		$id = (int) $id;
+		if ($id > 0 && in_array($this->name, $this->uses) && isset($this->{$this->name})) {
+			$entry = $this->{$this->name}->findById($id);
 			$this->set($this->name, $entry);
 			return $entry;
 		}
@@ -257,9 +256,6 @@ abstract class Controller extends Object implements Renderable {
 	
 	public function addModel($modelName) {
 		assert(is_string($modelName) && !empty($modelName));
-//		if (in_array($modelName, $this->uses)) {
-//			return true;
-//		}
 		if (strpos($modelName, ClassPath::$classPathDevider) === false) {
 			$modelName = 'App.lib.model.'.$modelName;
 			$className = ClassPath::className($modelName);
@@ -445,8 +441,10 @@ abstract class Controller extends Object implements Renderable {
 		logg(Log::VERBOSE, 'ephFrame: '.get_class($this).' changed action from \''.$this->action.'\' to \''.$action.'\'');
 		$this->action = $action;
 		$this->set('action', $this->action);
+		$this->params = $params;
 		if (method_exists($this, $action)) {
-			$this->$action($params);
+			$arguments = array_diff_key($params, array('controller' => 0, 'action' => 0, 'path' => 0));
+			$this->callMethod($action, $arguments);
 		}
 		return true;
 	}

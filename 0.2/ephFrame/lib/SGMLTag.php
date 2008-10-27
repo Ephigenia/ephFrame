@@ -65,9 +65,12 @@ abstract class SGMLTag extends Tree implements Traversable {
 	 * 	@param array(string) $attributes
 	 * 	@param mixed $tagValue
 	 */
-	public function __construct($tagName = null, $attributes = null, $tagValue = null) {
+	public function __construct($tagName = null, $attributes = array(), $tagValue = null) {
 		parent::__construct();
 		$this->tagName($tagName);
+		if (!empty($this->attributes)) {
+			$attributes = array_merge($this->attributes, $attributes);
+		}
 		$this->attributes = new SGMLAttributes($attributes);
 		$this->tagValue($tagValue);
 		return $this;
@@ -156,18 +159,25 @@ abstract class SGMLTag extends Tree implements Traversable {
 	}
 	
 	/**
-	 *	Returns a child that has an attribtue set
-	 * 	@param string $attributeName
-	 * 	@param string $attributeValue
-	 * 	@return SGMLTag
+	 *	Iterate of the children and return the first child with the passed 
+	 * 	$attributeValue. If no match found false is returned.
+	 * 
+	 * 	Return the field with 'username' as 'name' attribute:
+	 * 	<code>
+	 * 	$field = $form->childWithAttribute('name', 'username');
+	 * 	</code>
+	 * 	
+	 * 	@param string $name
+	 * 	@param string $value
+	 * 	@return SGMLTag|boolean
 	 */
-	public function childWithAttribute($attributeName, $attributeValue = null) {
-		foreach ($this as $sgmlTag) {
-			if ($sgmlTag->attributes->hasKey($attributeName)) {
+	public function childWithAttribute($name, $value = null) {
+		foreach ($this->children() as $child) {
+			if (isset($child->attributes[$name])) {
 				if (func_num_args() == 1) {
-					return $sgmlTag;
-				} elseif ($sgmlTag->attributes->get($attributeName) == $attributeValue) {
-					return $sgmlTag;
+					return $child;
+				} elseif ($child->attributes[$name] == $value) {
+					return $child;
 				}
 			}
 		}

@@ -65,7 +65,7 @@ class Dispatcher extends Object {
 		}	
 		ephFrame::loadClass($controllerClassPath);
 		try {
-			$controller = new $controllerName($request);
+			$controller = new $controllerName($request, $router->params);
 			$controller->action($router->action, $router->params);
 			echo $controller->render();
 		} catch (ViewFileNotFoundException $e) {

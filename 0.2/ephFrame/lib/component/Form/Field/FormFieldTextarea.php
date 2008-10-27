@@ -13,6 +13,10 @@ class FormFieldTextarea extends FormField {
 		return $this;
 	}
 	
+	public function value($value = null) {
+		
+	}
+	
 }
 
 ?>

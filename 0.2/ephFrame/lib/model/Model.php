@@ -792,11 +792,15 @@ class Model extends Object {
 	}
 	
 	public function get($fieldname, $default = null) {
-		if (is_scalar($fieldname) && isset($this->data[$fieldname])) {
-			if (empty($this->data[$fieldname]) && $default !== null) {
+		if (is_scalar($fieldname)) {
+			if (isset($this->data[$fieldname])) {
+				return $this->data[$fieldname];
+			} elseif (empty($this->data[$fieldname]) && func_num_args() > 1) {
 				return $default;
+			} elseif (isset($this->structure[$fieldname])) {
+				return null;
 			}
-			return $this->data[$fieldname];
+			
 		}
 		user_error('undefined variable \''.$fieldname.'\' of class '.get_class($this), E_USER_ERROR);
 	}
