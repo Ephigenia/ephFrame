@@ -100,6 +100,30 @@ class Tree extends Object implements Countable, Iterator, Renderable {
 	}
 	
 	/**
+	 *	Appends a new child Tree Element to the tree
+	 * 	@param Tree
+	 * 	@return Tree
+	 */
+	public function append(Tree $child) {
+		return $this->addChild($child);
+	}
+	
+	/**
+	 *	Prepends a child to the tree
+	 * 	@param Tree
+	 * 	@return Tree
+	 */
+	public function prepend(Tree $child) {
+		$child->parent($this);
+		array_unshift($this->children, $child);
+		// renumber children indexes
+		foreach($this->children as $index => $child) {
+			$child->index = $index;
+		}
+		return $this;
+	}
+	
+	/**
 	 *	Parses an Array and tries to put it into the tree
 	 * 	strucure.
 	 * 

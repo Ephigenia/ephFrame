@@ -109,7 +109,7 @@ class Validator extends Helper {
 	 *	@return boolean
 	 */
 	public static function email($stringEmail) {
-		return preg_match(self :: EMAIL, (string) $stringEmail);
+		return (bool) preg_match(self :: EMAIL, (string) $stringEmail);
 	}
 	
 	/**

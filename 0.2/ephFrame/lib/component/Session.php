@@ -70,7 +70,7 @@ class Session extends Hash {
 		} else {
 			$this->name($this->name);
 		}
-		session_start();
+		@session_start();
 		return true;
 	}
 	

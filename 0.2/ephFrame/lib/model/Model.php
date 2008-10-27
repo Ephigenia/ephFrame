@@ -390,16 +390,17 @@ class Model extends Object {
 		}
 		foreach($fieldNames as $fieldName) {
 			if (!isset($this->structure[$fieldName]) || !isset($this->data[$fieldName])) continue;
-			$data[$fieldName] = DBQuery::quote($this->data[$fieldName], $this->structure[$fieldName]->quoting);
+			$quotedData[$fieldName] = DBQuery::quote($this->data[$fieldName], $this->structure[$fieldName]->quoting);
+			$data[$fieldName] = $this->data[$fieldName];
 		}
 		if (!$this->beforeSave($data, $fieldNames) || !$this->behaviors->call('beforeSave', $data, $fieldNames)) {
 			return false;
 		}
 		// create save query for this model
 		if (!$this->exists()) {
-			$this->insert($data);
+			$this->insert($quotedData);
 		} else {
-			$this->update($data);
+			$this->update($quotedData);
 		}
 		$this->afterSave();
 		$this->behaviors->call('afterSave');;

@@ -172,6 +172,7 @@ abstract class DBQuery extends Object implements Renderable {
 	 * 	$type to the method.
 	 * 
 	 * 	@param mixed $val
+	 * 	@param string $type other type to use while quoting
 	 * 	@return string
 	 */
 	public static function quote($val, $type = null) {

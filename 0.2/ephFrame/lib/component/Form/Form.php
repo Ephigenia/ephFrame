@@ -141,6 +141,50 @@ class Form extends HTMLTag {
 		}
 	}
 	
+	/**
+	 *	Adds fields from the model structure to the form
+	 * 	@return Form
+	 */
+	public function configureModel(Model $model, Array $ignore = array()) {
+		foreach($model->structure as $fieldInfo) {
+			$field = false;
+			switch($fieldInfo->type) {
+				case 'varchar':
+					if ($fieldInfo->length >= 120 && $fieldInfo->name != 'email') {
+						$field = $this->newField('textarea', $fieldInfo->name, null, array('rows' => 3, 'cols' => 55));
+					} else {
+						if ($fieldInfo->name == 'password') {
+							$field = $this->newField('password', $fieldInfo->name);
+						} else {
+							$field = $this->newField('text', $fieldInfo->name);
+						}
+					}
+					break;
+			}
+			if ($field) {
+				$this->add($field);
+			}
+		}
+		if (!$this->childWithAttribute('type', 'submit')) {
+			$this->add($this->newField('submit', 'submit', 'submit'));
+		}
+		return $this;
+	} 
+	
+	/**
+	 *	Fills the form fields with data from a model
+	 * 	@return Form
+	 */
+	public function fillModel(Model $model) {
+		// only fill with model data if form was not submitted
+		foreach($model->structure as $fieldInfo) {
+			if (!($field = $this->fieldset->childWithAttribute('name', $fieldInfo->name))) continue;
+			$field->value($model->get($fieldInfo->name));
+		}
+		return $this;
+	}
+	
+	
 }
 
 /**
