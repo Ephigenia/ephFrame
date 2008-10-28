@@ -402,14 +402,11 @@ class Model extends Object {
 		if (!$this->beforeSave(&$data, $fieldNames) || !$this->behaviors->call('beforeSave', &$data, $fieldNames)) {
 			return false;
 		}
-		foreach ($data as $key => $value) {
-			$quotedData[$key] = DBQuery::quote($data[$key], $this->structure[$key]->quoting);
-		}
 		// create save query for this model
 		if (!$this->exists()) {
-			$this->insert($quotedData);
+			$this->insert($data);
 		} else {
-			$this->update($quotedData);
+			$this->update($data);
 		}
 		$this->afterSave();
 		$this->behaviors->call('afterSave');;
@@ -432,19 +429,22 @@ class Model extends Object {
 	 * 	@return boolean
 	 */
 	protected function insert(Array $data = array()) {
-		if (!$this->beforeInsert($data) || !$this->behaviors->call('beforeSave', $data)) {
+		if (!$this->beforeInsert(&$data) || !$this->behaviors->call('beforeSave', &$data)) {
 			return false;
 		}
+		foreach($data as $key => $value) {
+			$quotedData[$key] = DBQuery::quote($value, $this->structure[$key]->quoting);
+		}
 		// set created date if there's any
-		if (isset($this->structure['created']) && !isset($data['created'])) {
+		if (isset($this->structure['created']) && !isset($quotedData['created'])) {
 			if ($this->structure['created']->quoting == ModelFieldInfo::QUOTE_STRING) {
 				// @todo set time string depending on sql type
-				$data['created'] = 'NOW()';
+				$quotedData['created'] = 'NOW()';
 			} elseif($this->structure['created']->quoting == ModelFieldInfo::QUOTE_INTEGER) {
-				$data['created'] = 'UNIX_TIMESTAMP()';
+				$quotedData['created'] = 'UNIX_TIMESTAMP()';
 			}
 		}
-		$q = new InsertQuery($this->tablename, $data);
+		$q = new InsertQuery($this->tablename, $quotedData);
 		$this->DB->query($q);
 		$this->data[$this->primaryKeyName] = $this->DB->lastInsertId();
 		return true;
@@ -460,27 +460,30 @@ class Model extends Object {
 	 * 	@return unknown
 	 */
 	protected function update(Array $data = array()) {
-		if (!$this->beforeUpdate() || !$this->behaviors->call('beforeUpdate', $data)) {
+		if (!$this->beforeUpdate(&$data) || !$this->behaviors->call('beforeUpdate', &$data)) {
 			return false;
 		}
 		if (!$this->exists()) {
 			throw new ModelEmptyPrimaryKeyException($this);
 		}
+		foreach($data as $key => $value) {
+			$quotedData[$key] = DBQuery::quote($value, $this->structure[$key]->quoting);
+		}
 		// set created date if there's any
-		if (isset($this->structure['updated'])) {
+		if (isset($this->structure['updated']) && isset($data['updated'])) {
 			if ($this->structure['updated']->quoting == ModelFieldInfo::QUOTE_STRING) {
 				// @todo set time string depending on sql type
-				$this->data['updated'] = 'NOW()';
+				$quotedData['updated'] = 'NOW()';
 			} elseif($this->structure['created']->quoting == ModelFieldInfo::QUOTE_INTEGER) {
-				$this->data['updated'] = 'UNIX_TIMESTAMP()';
+				$quotedData['updated'] = 'UNIX_TIMESTAMP()';
 			}
 		}
-		$q = new UpdateQuery($this->tablename, $data, array($this->primaryKeyName => $this->data[$this->primaryKeyName]));
+		$q = new UpdateQuery($this->tablename, $quotedData, array($this->primaryKeyName => $this->data[$this->primaryKeyName]));
 		$this->DB->query($q);
 		return true;
 	}
 	
-	public function beforeUpdate() {
+	public function beforeUpdate($data = array()) {
 		return true;
 	}
 	

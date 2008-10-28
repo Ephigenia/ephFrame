@@ -160,6 +160,9 @@ class Form extends HTMLTag {
 						}
 					}
 					break;
+				case 'date':
+					$field = $this->newField('text', $fieldInfo->name, gmdate('Y-m-d'));
+					break;	
 			}
 			if ($field) {
 				$this->add($field);

@@ -156,8 +156,13 @@ abstract class Controller extends Object implements Renderable {
 	 */
 	public function create() {}
 	
-	public function delete() {
-		
+	public function delete($id = null) {
+		if ($id > 0 && isset($this->{$this->name})) {
+			if ($entry = $this->{$this->name}->findById($id)) {
+				return $entry->delete();
+			}
+			return false;
+		}
 	}
 	
 	public function edit($id = null) {
