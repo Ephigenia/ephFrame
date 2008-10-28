@@ -80,7 +80,7 @@ abstract class DBQuery extends Object implements Renderable {
 	 */
 	public $values;
 	/**
-	 * 	@var Collection
+	 * 	@var Hash
 	 */
 	public $where;
 	
@@ -128,12 +128,10 @@ abstract class DBQuery extends Object implements Renderable {
 		} elseif (!empty($values)) {
 			$this->value(null, $values);
 		}
-		if (!is_string($conditions) && @count($conditions) > 0) {
-			foreach($conditions as $k => $v) {
-				$this->where($k, $v);
-			}
-		} elseif (!empty($conditions)) {
-			$this->where($conditions);
+		if (is_string($conditions)) {
+			$this->where($condition);
+		} elseif (is_array($conditions) && count($conditions) > 0) {
+			$this->where->merge($conditions);
 		}
 		return $this;
 	}
@@ -149,7 +147,7 @@ abstract class DBQuery extends Object implements Renderable {
 		$this->having = new Collection();
 		$this->groupBy = new Collection();
 		$this->orderBy = new Collection();
-		$this->where = new Collection();
+		$this->where = new Hash();
 		$this->values = new Hash();
 		$this->flags = new Collection();
 		return $this;
@@ -248,6 +246,9 @@ abstract class DBQuery extends Object implements Renderable {
 				}
 			}
 		}
+//		echo '<pre>';
+//		echo (string) $rendered.LF.LF;
+//		echo '</pre>';
 		return $this->afterRender($rendered);
 	}
 	
@@ -486,11 +487,11 @@ abstract class DBQuery extends Object implements Renderable {
 	 * 	@param string $value
 	 * 	@return DBQuery
 	 */
-	public function where($key, $value = null) {
+	public function where($key, $right = null) {
 		if (func_num_args() == 1) {
-			$this->where[] = $key;
+			$this->where->add($key);
 		} else {
-			$this->where[$key] = $value;
+			$this->where->set($key, $right);
 		}
 		return $this;
 	}
@@ -585,7 +586,7 @@ abstract class DBQuery extends Object implements Renderable {
 	 * 	@param array(string) $where
 	 * 	@return string
 	 */
-	protected function renderWhere($whereConditions = array(), $quote = true) {
+	protected function renderWhere($whereConditions = array(), $quote = false) {
 		if (func_num_args() == 0) {
 			$whereConditions = $this->where;
 		}
@@ -599,22 +600,24 @@ abstract class DBQuery extends Object implements Renderable {
 			return null;
 		}
 		$rendered = '';
-		$conditionConnector = 'AND';
 		foreach($conditions as $left => $right) {
-			$conditionConnector = 'AND';
+			$connector = ' = ';
 			// skip connector if allready there (bad workaround)
 			// todo create cool condition array that can map all conditions possible
-			if (preg_match('/'.$conditionConnector.'/', $right)) {
-				$conditionConnector = '';
-			}
-			if ($quote) {
-				$rendered .= $left.' = '.self::quote($right);
+			if (is_int($left)) {
+				$rendered .= $right.' ';
 			} else {
-				$rendered .= $left.' = '.$right;
+				if ($quote) {
+					$rendered .= $left.$connector.self::quote($right);
+				} else {
+					$rendered .= $left.$connector.$right;
+				}
 			}
-			$rendered .= ' '.$conditionConnector.' ';
+			if (!preg_match('/\s+(AND|OR)$/', $right)) {
+				$rendered .= ' AND ';
+			}
 		}
-		return substr($rendered, 0, -strlen($conditionConnector)-2);
+		return substr($rendered, 0, -4);
 	}
 	
 	/**

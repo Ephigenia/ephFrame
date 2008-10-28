@@ -319,12 +319,13 @@ class Model extends Object {
 	
 	/**
 	 * 	Fills the model with data from an array
-	 * 	@todo add second argument for filtering keys
 	 * 	@param array(mixed) $data
+	 * 	@param array(string) name of the field that should be set (so you can ignore keys)
 	 * 	@return Model
 	 */
-	public function fromArray(Array $data = array()) {
+	public function fromArray(Array $data = array(), Array $fieldNames = array()) {
 		foreach($data as $key => $value) {
+			if (count($fieldNames) > 0 && !in_array($key, $fieldNames)) continue;
 			$this->set($key, $value);
 		}
 		return $this;
@@ -712,7 +713,7 @@ class Model extends Object {
 	 * 	@param $conditions array(string)
 	 * 	@param $order array(string)
 	 * 	@param $count integer
-	 * 	@return array(Model)
+	 * 	@return Set	A Set containing Models
 	 */
 	public function getAll($depth = null, $conditions = array(), $order = array(), $count = null) {
 		if (empty($order) && isset($this->structure['created'])) {
@@ -744,7 +745,7 @@ class Model extends Object {
 		if (strpos($fieldname, '.') === false) {
 			$fieldname = $this->name.'.'.$fieldname;
 		}
-		$query = $this->createSelectQuery(null, array($fieldname => $value));
+		$query = $this->createSelectQuery(null, array($fieldname => DBQuery::quote($value)));
 		$result = $this->DB->query($query);
 		return $this->createSelectResultList($result, true);
 	}
