@@ -213,13 +213,14 @@ abstract class Controller extends Object implements Renderable {
 	 * 
 	 * 	@return boolean
 	 */
-	public function rss($params = array()) {
+	public function rss($items = 10) {
 		if (isset($this->{$this->name})) {
 			$plural = Inflector::plural($this->name);
-			$entries = $this->{$this->name}->getAll(null, null, null, 10);
+			$entries = $this->{$this->name}->getAll(null, null, null, $items);
 			$this->set($plural, $entries);
 			$this->layout = 'RSS';
 			$this->viewClassName = 'XMLView';
+			Registry::set('DEBUG', DEBUG_DEVELOPMENT);
 		}
 		return true;
 	}

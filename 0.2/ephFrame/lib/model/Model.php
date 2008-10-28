@@ -120,7 +120,17 @@ class Model extends Object {
 	 */
 	protected $modelStructureCache;
 	
+	/**
+	 *	Defalut find conditions that is used on every select query
+	 * 	@var array(string)
+	 */
 	public $findConditions = array();
+	
+	/**
+	 *	Default Order Command for every select query
+	 * 	@var array(string)
+	 */
+	public $order = array();
 	
 	public $hasOne = array();
 	
@@ -597,6 +607,8 @@ class Model extends Object {
 	 * 	Creates a default select query including all associated models defined
 	 * 	in {@link belongsTo}, {@link hasMany}, {@hasOne} ...
 	 * 
+	 * 	@todo FIXME export the join conditions to extra methods!!!
+	 * 	@todo FIXME export foreign key and table name methods from this!!!
 	 * 	@param integer $depth depth of model associations to use in select query
 	 * 	@return SelectQuery
 	 */
@@ -617,20 +629,53 @@ class Model extends Object {
 			$q->select($this->name.'.'.$fieldInfo->name.' as \''.$this->name.'.'.$fieldInfo->name.'\'');
 		}
 		// belongsTo
-		if (!empty($this->belongsTo) && ($depth > 0 || $depth == null)) {
-			foreach($this->belongsTo as $modelName => $associationData) {
-				$joinConditions = array();
-				if (!is_array($associationData)) {
-					$modelName = $associationData;
-				} elseif (isset($associationData['conditions'])) {
-					$joinConditions = $associationData['conditions'];
+		if (($depth > 0 || $depth == null)) {
+			$thisSide = $this->name.'.'.$this->primaryKeyName;
+			// belongsTo 
+			if (!empty($this->belongsTo)) { 
+				foreach($this->belongsTo as $modelName => $associationData) {
+					$joinConditions = array();
+					if (!is_array($associationData)) {
+						$modelName = $associationData;
+					} elseif (isset($associationData['conditions'])) {
+						$joinConditions = $associationData['conditions'];
+					}
+					$foreignKey = Inflector::underscore($this->name, true).'_'.$this->primaryKeyName;
+					$joinConditions[$thisSide] = $this->$modelName->name.'.'.$foreignKey;
+					$q->join($this->$modelName->tablename(), $this->$modelName->name, DBQuery::JOIN_LEFT, $joinConditions);
+					foreach($this->$modelName->structure as $fieldInfo) {
+						$q->select($this->$modelName->name.'.'.$fieldInfo->name.' as \''.$this->$modelName->name.'.'.$fieldInfo->name.'\'');
+					}
+					// join deeper models too
+					if ($depth == null || $depth >= 2) {
+						foreach($this->{$modelName}->belongsTo as $index => $associationData) {
+							$m = $associationData;
+							$belongsToTableAlias = $this->{$modelName}->{$m}->name;
+							$belongsToTableName = $this->{$modelName}->{$m}->tablename;
+							$foreignKey = $this->{$modelName}->name.'.'.Inflector::underscore($this->{$modelName}->{$m}->name, true).'_'.$this->{$modelName}->primaryKeyName;
+							$belongsToConditions = array(
+								$belongsToTableAlias.'.'.$this->{$modelName}->{$m}->primaryKeyName => $foreignKey
+							);
+							$q->join($belongsToTableName, $belongsToTableAlias, DBQuery::JOIN_LEFT, $belongsToConditions);	
+						}
+					}
 				}
-				$thisSide = $this->name.'.'.$this->primaryKeyName;
-				$hisSide = strtolower(lcfirst(Inflector::underscore($this->name)).'_'.$this->primaryKeyName);
-				$joinConditions[$thisSide] = $this->$modelName->name.'.'.$hisSide;
-				$q->join($this->$modelName->tablename(), $this->$modelName->name, DBQuery::JOIN_LEFT, $joinConditions);
-				foreach($this->$modelName->structure as $fieldInfo) {
-					$q->select($this->$modelName->name.'.'.$fieldInfo->name.' as \''.$this->$modelName->name.'.'.$fieldInfo->name.'\'');
+			}
+			// hasMany
+			if (!empty($this->hasMany)) {
+				foreach($this->hasMany as $modelName => $associationData) {
+					$joinConditions = array();
+					if (!is_array($associationData)) {
+						$modelName = $associationData;
+					} elseif(isset($associationData['conditions'])) {
+						$joinConditions = $associationData['conditions'];
+					}
+					$foreignKey = strtolower(Inflector::underscore($this->name).'_'.$this->primaryKeyName);
+					$joinConditions[$thisSide] = $this->$modelName->name.'.'.$foreignKey;
+					$q->join($this->$modelName->tablename(), $this->$modelName->name, DBQuery::JOIN_LEFT, $joinConditions);
+					foreach($this->$modelName->structure as $fieldInfo) {
+						$q->select($this->$modelName->name.'.'.$fieldInfo->name.' as \''.$this->$modelName->name.'.'.$fieldInfo->name.'\'');
+					}
 				}
 			}
 		}
@@ -643,6 +688,7 @@ class Model extends Object {
 		if (!is_array($order) && !empty($order)) {
 			$order = array($order);
 		}
+		$order = array_merge($this->order, $order);
 		if (count($order) > 0) {
 			foreach($order as $orderRule) {
 				$q->orderBy($orderRule);
@@ -651,6 +697,9 @@ class Model extends Object {
 		if ($count !== null) {
 			$q->count($count);
 		}
+//		if ($this->name == 'Contact') {
+//			die('<pre>'.$q.'</pre>');
+//		}
 		//die($q);
 		return $q;
 	}
@@ -704,6 +753,10 @@ class Model extends Object {
 				return $model;
 			}
 			//$return->add($model);
+		}
+		if ($this->name == 'Contact') {
+			var_dump($this->toArray());
+			die();
 		}
 		//die(var_dump($return->toArray()));
 		return $return;

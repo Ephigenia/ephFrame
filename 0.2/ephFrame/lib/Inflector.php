@@ -133,8 +133,12 @@ class Inflector extends Object {
 		return $delimetered;
 	}
 	
-	public static function underscore($string) {
-		return self::delimeterSeperate($string, '_');
+	public static function underscore($string, $lowered = false) {
+		if ($lowered) {
+			return String::lower(self::delimeterSeperate($string, '_'));
+		} else {
+			return self::delimeterSeperate($string, '_');
+		}
 	}
 	
 }

@@ -147,11 +147,12 @@ class Form extends HTMLTag {
 	 */
 	public function configureModel(Model $model, Array $ignore = array()) {
 		foreach($model->structure as $fieldInfo) {
+			if (count($ignore) > 0 && in_array($fieldInfo->name, $ignore)) continue;
 			$field = false;
 			switch($fieldInfo->type) {
 				case 'varchar':
 					if ($fieldInfo->length >= 120 && $fieldInfo->name != 'email') {
-						$field = $this->newField('textarea', $fieldInfo->name, null, array('rows' => 3, 'cols' => 55));
+						$field = $this->newField('textarea', $fieldInfo->name);
 					} else {
 						if ($fieldInfo->name == 'password') {
 							$field = $this->newField('password', $fieldInfo->name);
@@ -159,6 +160,15 @@ class Form extends HTMLTag {
 							$field = $this->newField('text', $fieldInfo->name);
 						}
 					}
+					break;
+				case 'blob':
+				case 'mediumtext':
+				case 'mediumblob':
+				case 'tinyblob':
+				case 'tinytext':
+				case 'longblob':
+				case 'longtext':
+					$field = $this->newField('textarea', $fieldInfo->name);
 					break;
 				case 'date':
 					$field = $this->newField('text', $fieldInfo->name, gmdate('Y-m-d'));

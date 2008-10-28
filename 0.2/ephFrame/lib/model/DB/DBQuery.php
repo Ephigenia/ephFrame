@@ -641,6 +641,7 @@ abstract class DBQuery extends Object implements Renderable {
 			if ($conditionsRendered = $this->renderConditions($conditions, false)) {
 				$rendered .= ' ON '.$conditionsRendered;
 			}
+			$rendered .= LF;
 		}
 		return $rendered;
 	}
