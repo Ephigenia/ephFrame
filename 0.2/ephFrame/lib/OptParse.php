@@ -84,6 +84,13 @@ class OptParse extends Object {
 	);
 	
 	/**
+	 *	Stores the string that is printed after 'Usage: '... so this might be
+     *	something like: '[options] [path] [url]
+	 * 	@var string
+	 */
+	public $usage = '[options]';
+	
+	/**
 	 *	Stores the parsed options
 	 * 	@var array(string)
 	 */
@@ -107,7 +114,7 @@ class OptParse extends Object {
 			global $argv;
 			$this->rawArgs = array_slice($argv, 1);
 		}
-		//$this->parse();
+		$this->parse();
 		return $this;
 	}
 	
@@ -170,7 +177,11 @@ class OptParse extends Object {
 	 * 	@param integer $width
 	 */
 	public function usage($width = 80) {
-		$r = 'Usage: '.$_SERVER['PHP_SELF'].' [options]'.LF;
+		$r = 'Usage: '.basename($_SERVER['PHP_SELF']);
+		if ($this->usage) {
+			$r .= ' '.$this->usage;
+		}
+		$r .= LF;
 		if (count($this->config) > 0) {
 			$r .= LF.'Options:'.LF;
 			foreach($this->config as $index => $optionInfo) {
@@ -253,14 +264,23 @@ class OptParse extends Object {
 		return false;
 	}
 	
-	private function setOption($name, $value = null) {
+	public function setOption($name, $value = null) {
 		// try to find the arguments name in the options array
 		if ($optionInfo = $this->getOptionDefinition($name)) {
 			// special type of args, defined in the {@link options}
 			switch(isset($optionInfo['type']) ? $optionInfo['type'] : false) {
 				// callbacks
 				case self::TYPE_CALLBACK:
-					return call_user_func_array(array(&$this, $optionInfo['callback']), array($name, $value));
+					if (!empty($optionInfo['callback'])) {
+						$methodName = $optionInfo['callback'];
+					} elseif (!empty($optionInfo['dest'])) {
+						$methodName = $optionInfo['dest'];
+					} elseif (!empty($optionInfo['long'])) {
+						$methodName = $optionInfo['long'];
+					} else {
+						user_error('Undefined callback name for option.', E_USER_ERROR);
+					}
+					return $this->$methodName($name, $value);
 				// arrays
 				case self::TYPE_ARRAY:
 					if (!empty($value)) {

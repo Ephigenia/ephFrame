@@ -34,7 +34,7 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 	 */
 	public $model;
 	
-	protected $behaviorCallBacks = array('beforeSave', 'afterSave', 'beforeDelete', 'afterDelete', 'beforeFind', 'afterFind', 'beforeInsert', 'beforeUpdate');
+	protected $behaviorCallBacks = array('afterConstruct', 'beforeSave', 'afterSave', 'beforeDelete', 'afterDelete', 'beforeFind', 'afterFind', 'beforeInsert', 'beforeUpdate');
 	
 	public function __construct(Model $model, Array $behaviors = array()) {
 		$this->model = $model;

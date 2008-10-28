@@ -40,6 +40,10 @@ class ModelBehavior extends Object {
 		return $this;
 	}
 	
+	public function afterConstruct() {
+		return true;
+	}
+	
 	public function beforeInsert() {
 		return true;
 	}

@@ -21,9 +21,10 @@ define('DS', DIRECTORY_SEPARATOR);
 
 // check for defined FRAME_ROOT
 if (!defined('FRAME_ROOT')) {
-	die ('You need to set FRAME_ROOT to the path where ephFrame is located.');
+	define('FRAME_ROOT', dirname(realpath(__FILE__)).'/');
+}
 // find ephFrame.php in the ephFrame lib dir, if fail die
-} elseif(!file_exists(FRAME_ROOT.'ephFrame.php')) {
+if(!file_exists(FRAME_ROOT.'ephFrame.php')) {
 	die ('Unable to find ephFrame, please set FRAME_ROOT to the ephFrame directory.');
 }
 

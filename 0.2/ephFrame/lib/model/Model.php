@@ -177,7 +177,13 @@ class Model extends Object {
 		} elseif (is_int($id)) {
 			$this->fromId($id);
 		}
+		$this->afterConstruct();
+		$this->behaviors->call('afterConstruct');
 		return $this;
+	}
+	
+	public function afterConstruct() {
+		return true;
 	}
 	
 	/**
@@ -390,11 +396,13 @@ class Model extends Object {
 		}
 		foreach($fieldNames as $fieldName) {
 			if (!isset($this->structure[$fieldName]) || !isset($this->data[$fieldName])) continue;
-			$quotedData[$fieldName] = DBQuery::quote($this->data[$fieldName], $this->structure[$fieldName]->quoting);
 			$data[$fieldName] = $this->data[$fieldName];
 		}
-		if (!$this->beforeSave($data, $fieldNames) || !$this->behaviors->call('beforeSave', $data, $fieldNames)) {
+		if (!$this->beforeSave(&$data, $fieldNames) || !$this->behaviors->call('beforeSave', &$data, $fieldNames)) {
 			return false;
+		}
+		foreach ($data as $key => $value) {
+			$quotedData[$key] = DBQuery::quote($data[$key], $this->structure[$key]->quoting);
 		}
 		// create save query for this model
 		if (!$this->exists()) {

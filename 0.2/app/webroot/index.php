@@ -17,12 +17,7 @@
  * 	modify this path to point at the ephFrame root (where the startup.php
  * 	script is located, by default '../ephFrame')
  */
-//define('FRAME_ROOT', '../../ephFrame/');
-define('FRAME_ROOT', '/Users/ephigenia/Sites/ephFrameNew/ephFrame/ephFrame/ephFrame/');
-if (!file_exists(FRAME_ROOT.'startup.php')) {
-	die('Framework startup script not found. Please check the FRAME_ROOT');
-}
-require (FRAME_ROOT.'startup.php');
+require '../../ephFrame/startup.php';
 
 /**
  *	Create the dispatcher that creates the controller ...

@@ -34,7 +34,13 @@ define ('VENDOR_ROOT', FRAME_ROOT.'../vendor/');
 /**
  * 	Default Applications paths
  */
-if (!defined('APP_ROOT')) define ('APP_ROOT', '../');		// absolute path to application root
+if (!defined('APP_ROOT')) {
+	if (basename(getcwd()) == 'webroot') {
+		define('APP_ROOT', '../');
+	} else {
+		define ('APP_ROOT', dirname(getcwd().'/a').'/');		// absolute path to application root
+	}
+}
 if (!defined('CONFIG_DIR')) define('CONFIG_DIR', APP_ROOT.'config/');
 if (!defined('VIEW_DIR')) define ('VIEW_DIR', APP_ROOT.'view/');
 if (!defined('ELEMENTS_DIR')) define ('ELEMENTS_DIR', VIEW_DIR.'element/');
