@@ -36,6 +36,7 @@ class MySQLException extends DBException {
 	const ERRNO_DUBLICATE_ENTRY = 1062;
 	const ERRNO_TABLE_CRASHED = 1194;
 	const ERRNO_CONNECTION_ERROR = 2003;
+	const ERRNO_UNKNOWN_HOST = 2005;
 	const ERRNO_SERVER_GONE_AWAY = 2006;
 	const ERRNO_LOST_CONNECTION_QUERY = 2013;
 	
@@ -45,20 +46,20 @@ class MySQLException extends DBException {
 	 * 	{@link http://www.mysql.org/doc/refman/5.0/en/error-messages-server.html}
 	 * 	@var integer
 	 */
-	public $mysqlErrorNo;
+	public $errorNumber;
 	
 	/**
 	 *	Stores the current MySQL Error String
 	 * 	@var string
 	 */
-	public $mysqlErrorMessage;
+	public $errorMessage;
 	
 	public function __construct(MySQL $dao) {
-		$this->mysqlErrorMessage = $dao->errorMessage();
-		$this->mysqlErrorNo = $dao->errorNo();
+		$this->errorMessage = $dao->errorMessage();
+		$this->errorNumber 	= (int) $dao->errorNo();
 		// put some information in any mysql exception that might have no message
 		if (empty($this->message)) {
-			$this->message = 'MySQL Error ('.$this->mysqlErrorNo.'): '.$this->mysqlErrorMessage;
+			$this->message = 'MySQL Error ('.$this->errorNumber.'): '.$this->errorMessage;
 		}
 		// add last query to exception message
 		if (count($dao->queries) > 0) {
@@ -115,6 +116,9 @@ class MySQLException extends DBException {
 				break;
 			case self::ERRNO_DB_NOT_FOUND:
 				return 'MySQLDBNotFoundException';
+				break;
+			case self::ERRNO_UNKNOWN_HOST:
+				return 'MySQLConnectionUnknownHostException';
 				break;
 			case self::ERRNO_QUERY_ERROR:
 			case self::ERRNO_DEFAULT:
@@ -214,7 +218,23 @@ class MySQLConnectionException extends MySQLException {}
  * 	@package ephFrame
  * 	@subpackage ephFrame.lib
  */
-class MySQLConnectionAccessDeniedException extends MySQLConnectionException {}
+class MySQLConnectionAccessDeniedException extends MySQLConnectionException {
+	public function __construct(MySQL $MySQL) {
+		$this->message = 'Unable to login into mysql server.';
+		parent::__construct($MySQL);
+	}
+}
+
+/**
+ *	@package ephFrame
+ * 	@subpackage ephFrame.lib
+ */
+class MySQLConnectionUnknownHostException extends MySQLConnectionException {
+	public function __construct(MySQL $MySQL) {
+		$this->message = 'Unable to connect to unknown host.';
+		parent::__construct($MySQL);
+	}
+}
 
 /**
  * 	Thrown if the MySQL Server gone away (probably crashed)

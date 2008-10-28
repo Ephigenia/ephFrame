@@ -53,7 +53,7 @@ class MySQL extends DB implements DBInterface {
 		// throw an expetion if the connaction failed
 		if (!$this->connectionHandle) {
 			logg(Log::VERBOSE_SILENT, 'ephFrame: MySQL Connecting to \''.$this->DBDSN->host().'\' failed');
-			throw new MySQLConnectionErrorException($this);
+			MySQLException::evoke($this);
 		}
 		logg(Log::VERBOSE_SILENT, 'ephFrame: MySQL Connected to \''.$this->DBDSN->host().'\'');
 		$this->afterConnect();
