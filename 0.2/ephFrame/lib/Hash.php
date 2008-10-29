@@ -53,8 +53,8 @@ class Hash extends Set {
 	 * 	@return Hash
 	 */
 	public function add($key, $value = null) {
-		if (func_num_args() == 1 || $key == null) {
-			$this->data[] = $value;
+		if (func_num_args() == 1) {
+			$this->data[] = $key;
 		} else {
 			$this->data[$key] = $value;
 		}
