@@ -52,7 +52,7 @@ abstract class DBQuery extends Object implements Renderable {
 	public $verb;
 	
 	/**
-	 * 	@var Collection
+	 * 	@var Hash
 	 */
 	public $select;
 	/**
@@ -141,7 +141,7 @@ abstract class DBQuery extends Object implements Renderable {
 	 * 	@return DBQuery
 	 */
 	public function reset() {
-		$this->select = new Collection();
+		$this->select = new Hash();
 		$this->tables = new Collection();
 		$this->join = new Collection();
 		$this->having = new Collection();
@@ -340,34 +340,6 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 *	Adds field names to select in the SQL Query
-	 * 	<code>
-	 * 	// ... SELECT id, created ...
-	 * 	$query->select(array('id', 'created'));
-	 * 	// ... same stuff
-	 * 	$query->select('id', 'created');
-	 * 	</code>
-	 * 	@param string|array(string) Single Select name or multiple
-	 * 	@return DBQuery
-	 */
-	public function select($select) {
-		if (func_num_args() == 0 || $select === null) return $this->select;
-		if (!empty($select)) {
-			if (func_num_args() > 1) $select = func_get_args();
-			if (is_array($select) || is_object($select) && (is_subclass_of($select, 'Set') || get_class($select) == 'Set')) {
-				foreach($select as $value) {
-					$this->select($value);	
-				}
-			} else {
-				$select = trim($select);
-				assert(is_string($select));
-				$this->select->add($select);
-			}
-		}
-		return $this;
-	}
-	
-	/**
 	 *	Adds a single value statement to the values/insert statement, consisting
 	 * 	of the fieldname and the desired value. Some Examples:
 	 * 	<code>
@@ -539,7 +511,18 @@ abstract class DBQuery extends Object implements Renderable {
 	 * 	@return string
 	 */
 	protected function renderSelect() {
-		return $this->select->implode(', ');
+		if (count($this->select) == 0) {
+			return '';
+		}
+		$rendered = '';
+		foreach($this->select as $fieldname => $alias) {
+			$rendered .= $fieldname;
+			if (!empty($alias)) {
+				$rendered .= ' as \''.$alias.'\'';
+			}
+			$rendered .= ', ';
+		}
+		return substr($rendered, 0, -2);
 	}
 	
 	/**

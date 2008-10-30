@@ -13,13 +13,17 @@
  */
 
 /**
+ * 	This is a ephFrame TestCase using the SimpleTest-PHP-Testing Suite.
+ * 	If you want to test ephFrame on your machine you need to have SimpleTest
+ * 	installed in /ephFrame/vendor/simpletest/.
+ * 
  *	This file should setup a hole framework wide test, testing components and
  * 	Helpers.
  * 	@package ephFrame
  * 	@subpackage ephFrame.test
  */
 
-require_once 'autorun.php';
+require_once dirname(__FILE__).'/autorun.php';
 
 if (isset($_SERVER['HTTP_HOST'])) {
 	header('Content-Type: text/html; charset=utf-8');

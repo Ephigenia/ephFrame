@@ -43,7 +43,7 @@ class TestSelectQuery extends UnitTestCase {
 		$q = new SelectQuery();
 		$q->autoNewLine = false;
 		$q->from('testtable');
-		$this->assertEqual((string) $q, 'SELECT * FROM testtable');
+		$this->assertEqual((string) $q, 'SELECT FROM testtable');
 	}
 	
 }

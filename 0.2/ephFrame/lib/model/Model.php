@@ -132,14 +132,50 @@ class Model extends Object {
 	 */
 	public $order = array();
 	
+	/**
+	 * 	List of Models that this model has exactly one of, F.e Customer has one
+	 * 	Address:
+	 * 	<code>
+	 * 					Address.id
+	 * 	customer.id		Address.customer_id
+	 * 	customer.name	Address.street
+	 * 	</code>
+	 *	@var array(string)
+	 */
 	public $hasOne = array();
 	
+	/**
+	 *	@var array(string)
+	 */
 	public $hasMany = array();
 	
+	/**
+	 *	List of Models that this Model belongsTo. F.e. comment belongs to User
+	 * 	and BlogEntry:
+	 * 	<code>
+	 * 	$belongsTo = ('User', 'BlogEntry');
+	 * 	</code>
+	 * 
+	 * 	The tables should look like this then:
+	 * 	<code>
+	 * 	comments.id
+	 *  comments.user_id ---> users.id
+	 * 	comments.blogentry_id ---> blogentries.id
+	 * 	</code>
+	 * 	
+	 * 	@var array(string)
+	 */
 	public $belongsTo = array();
 	
+	/**
+	 *	@var array(string)
+	 */
 	public $hasAndBelongsToMany = array();
 	
+	/**
+	 * 	Valid model association key names
+	 *	@var array(string)
+	 */
 	protected $associationTypes = array('hasOne', 'hasMany', 'belongsTo', 'hasAndBelongsToMany');
 	
 	/**
@@ -161,7 +197,7 @@ class Model extends Object {
 		$this->tablename();
 		// create structure array by reading structure from database
 		$this->loadStructure();
-		// merge associations of this model with associations of every parent model
+		// merge associations of this model with associations from parent models
 		foreach ($this->__parentClasses() as $parentClass) {
 			$parentClassVars = get_class_vars($parentClass);
 			foreach ($this->associationTypes as $associationKey) {
@@ -212,16 +248,14 @@ class Model extends Object {
 		// init models associated with this model
 		foreach($this->associationTypes as $associationType) {
 			if (!isset($this->$associationType) || (isset($this->$associationType) && !is_array($this->$associationType))) continue;
-			foreach($this->$associationType as $modelName => $associationConfig) {
-				// simple association ($belongsTo = array('User', 'Company');
-				if (!is_array($associationConfig)) {
-					$modelName = $associationConfig;
-					$associationConfig = array();
+			foreach($this->$associationType as $modelName => $config) {
+				// simple notation $belongsTo = arryay('User')
+				if (is_int($modelName)) {
+					unset($this->{$associationType}[$modelName]);
+					$modelName = $config;
+					$config = array();
 				}
-				if (!isset($associationConfig['conditions'])) {
-					$associationConfig['conditions'] = array();
-				}
-				$this->bind($associationType, $modelName, $associationConfig);
+				$this->bind($associationType, $modelName, $config);
 			}
 		}
 		return true;
@@ -232,12 +266,12 @@ class Model extends Object {
 	 *
 	 * 	@param string $associationType
 	 * 	@param string $modelName
-	 * 	@param array(string) $associationConfig
+	 * 	@param array(string) $config
 	 * 	@throws ModelInvalidAssociationTypeException
 	 * 	@throws ModelReflexiveException if you try to bin the model to itsself
 	 * 	@return boolean
 	 */
-	public function bind($associationType, $modelName, Array $associationConfig = array()) {
+	public function bind($associationType, $modelName, Array $config = array()) {
 		if (!$this->validAssociationType($associationType)) {
 			throw new ModelInvalidAssociationTypeException($this, $associationType);
 		}
@@ -247,23 +281,50 @@ class Model extends Object {
 		if ($this->name == $modelName) {
 			throw new ModelReflexiveException($this);
 		}
-		// load Model class (also external paths are enabled, such as 'vendor.cms.model.User')
-		if (strpos($modelName, '.') === false) {
-			if (!class_exists($modelName)) {
-				ephFrame::loadClass('app.lib.model.'.$modelName);
-			}
-		} else {
-			$modelClassname = ClassPath::className($modelName);
-			if (!class_exists($modelClassname)) {
-				ephFrame::loadClass($modelName); 
-			}
-			$modelName = $modelClassname;
+		if (!class_exists($modelName)) {
+			ephFrame::loadClass('app.lib.model.'.$modelName);
 		}
+		$boundModel = new $modelName();
+		$boundModelName = $modelName;
 		// don't double bind
-		if (!isset($this->$modelName)) {
-			$this->{$modelName} = new $modelName();
-			$this->{$modelName}->{$this->name} = $this;
+		if (!isset($this->{$boundModelName})) {
+			$this->{$boundModelName} = new $modelName();
+			$this->{$boundModelName}->{$this->name} = $this;
 		}
+		// create default config
+		$config = array_merge(array(
+			'conditions' => array(),
+			'count' => null,
+			'order' => null
+		), $config);
+		// their side of the join
+		if (!isset($config['foreignKey'])) {
+			switch ($associationType) {
+				case 'belongsTo':
+					$config['foreignKey'] = $this->{$modelName}->name.'.'.$this->{$modelName}->primaryKeyName;
+					break;
+				case 'hasMany':
+					$config['foreignKey'] = $this->{$modelName}->name.'.'.Inflector::delimeterSeperate($this->{$modelName}->name.'_id');
+					break;
+				case 'hasOne':
+					$config['foreignKey'] = $this->{$modelName}->name.'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName, true);
+					break;
+				case 'hasAndBelongsToMany':
+					
+					break;
+			}
+		}
+		// my side of the join
+		if (!isset($config['associationKey'])) {
+			if ($associationType == 'belongsTo') {
+				$config['associationKey'] = $this->{$modelName}->name.'.'.$this->{$modelName}->primaryKeyName;
+			} elseif ($associationType == 'hasAndBelongsToMany') {
+				
+			} else {
+				$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
+			}
+		}
+		$this->{$associationType}[$modelName] = $config;
 		return true;
 	}
 	
@@ -277,6 +338,9 @@ class Model extends Object {
 	 */
 	public function undbind($modelName) {
 		if (isset($this->{$modelName})) {
+			foreach($this->associationTypes as $types) {
+
+			}
 			unset($this->{$modelName});
 		}
 		return true;
@@ -328,7 +392,15 @@ class Model extends Object {
 	}
 	
 	/**
-	 * 	Fills the model with data from an array
+	 * 	Fills the Model data from an Array ignoring all keys from $fieldNames
+	 * 	
+	 * 	<code>
+	 * 	// filling a User but only with username and email
+	 * 	$User = new User();
+	 * 	$User->fromArray($_POST, array('username', 'email'));
+	 * 	</code>
+	 * 
+	 * 	@todo check if this works with [Model][id] notation in $fieldNames
 	 * 	@param array(mixed) $data
 	 * 	@param array(string) name of the field that should be set (so you can ignore keys)
 	 * 	@return Model
@@ -342,7 +414,21 @@ class Model extends Object {
 	}
 	
 	/**
-	 * 	Returns an array containing
+	 * 	Fills Model data by searching the database table for a matching primaryKey
+	 * 	value
+	 * 	@return boolean
+	 */
+	public function fromId($id) {
+		if (!$model = $this->findBy($this->primaryKeyName, (int) $id)) {
+			return false;
+		} else {
+			$this->data = $model->toArray();
+			return true;
+		}
+	}
+	
+	/**
+	 * 	Returns the model data as array
 	 * 	@return array(mixed)
 	 */
 	public function toArray() {
@@ -350,50 +436,8 @@ class Model extends Object {
 	}
 	
 	/**
-	 * 	Delete a model entry
-	 * 	
-	 * 	You can delete model entries on 3 different kind of ways. Delete the
-	 * 	current model entry, model entry by primary id and model as parameter:
-	 * 	<code>
+	 * 	Save Model Data to database table
 	 * 
-	 * 	</code>
-	 * 	@param integer|model $id
-	 */
-	public function delete($id = null) {
-		if (($id == null || func_num_args() == 0)) {
-			if (empty($this->data[$this->primaryKeyName])) {
-				return $this;
-			}
-			$id = $this->{$this->primaryKeyName};
-		} elseif (is_object($id)) {
-			return $id->delete();
-		} else {
-			$id = (int) $id;
-		}
-		if (!$this->beforeDelete() || !$this->behaviors->call('beforeDelete')) {
-			return false;
-		}
-		$q = new DeleteQuery($this->tablename, array($this->primaryKeyName => DBQuery::quote($id, $this->structure[$this->primaryKeyName]->quoting)));
-		$this->DB->query($q);
-		// clear model data
-		foreach($this->structure as $columnName => $columnInfo) {
-			$this->data[$columnName] = $this->structure[$columnName]->default;
-		}
-		$this->afterDelete();
-		$this->behaviors->call('afterDelete');
-		return $this;
-	}
-	
-	protected function beforeDelete() {
-		return true;
-	}
-	
-	protected function afterDelete() {
-		return true;
-	}
-	
-	/**
-	 * 	Save the current state of this model
 	 * 	@param Model $model
 	 * 	@param boolean $validate
 	 * 	@param array(string) $fieldNames
@@ -498,40 +542,75 @@ class Model extends Object {
 	}
 	
 	/**
-	 * 	This method will if this model data exists in the db
+	 * 	Delete model from database table
 	 * 
-	 * 	You can use this method for checking your model class for existence in 
-	 * 	the database. If no parameter is found it's just checked if the primary
-	 * 	key is filled.
 	 * 	<code>
-	 * 	// if the User was found we get a valid user and can chek it
-	 * 	if ($user = $this->User->findById(24)) {
-	 * 		var_dump($user->exists);	// should turn out in true
-	 * 	} else {
-	 * 		echo 'user not found';
-	 * 	}
+	 * 	$User = new User(23);
+	 * 	$User->delete();
 	 * 	</code>
+	 * 
+	 * 	@param integer|Model $id
+	 * 	@return boolean
+	 */
+	public function delete($id = null) {
+		if (is_object($id)) {
+			return $id->delete();
+		} elseif ($id === null) {
+			if (!$this->exists()) { 
+				return false;
+			}
+			$id = $this->{$this->primaryKeyName};
+		} else {
+			$id = (int) $id;
+		}
+		if (!$this->beforeDelete() || !$this->behaviors->call('beforeDelete')) {
+			return false;
+		}
+		$this->DB->query(new DeleteQuery($this->tablename, array($this->primaryKeyName => $id)));
+		$this->afterDelete();
+		$this->behaviors->call('afterDelete');
+		return true;
+	}
+	
+	/**
+	 *	Callback called before {@link delete} starts deleting, this should
+	 * 	return false to stop the deleting process.
+	 * 	@return true
+	 */
+	protected function beforeDelete() {
+		return true;
+	}
+	
+	/**
+	 *	Called after the model data was successfully deleted, the return value
+	 * 	of this is not so important.
+	 * 	@return boolean.
+	 */
+	protected function afterDelete() {
+		return true;
+	}
+	
+	/**
+	 * 	Returns true if the model is saved in the database table.
 	 * 
 	 * 	If you call this method with a primary key value it will search for an
 	 * 	entry in the database with this primary key.
 	 * 	<code>
-	 * 	if ($this->BlogEntry->exists($postedId)) {
-	 * 		echo 'sorry no blog entry found with this id!';
+	 * 	if ($blogEntry = $this->BlogEntry->exists($postedId)) {
+	 * 		echo 'blog entry found');
 	 * 	} else {
-	 * 		// go on posting the comment or what ever
+	 * 		echo 'sorry there\'s no blogEntry with that id';
 	 * 	}
 	 * 	</code>
 	 * 
 	 * 	@param integer $id
-	 * 	@return boolean
+	 * 	@return boolean|Model
 	 */
 	public function exists($id = null) {
 		if ($id !== null) {
-			$query = new SelectQuery();
-			$query->table($this->tablename())->where($this->primaryKeyName, (int) $id);
-			$result = $this->DB->query($query);
-			if ($result->numRows() >= 0) {
-				return true;
+			$m = new $this->name((int) $id);
+			if ($m->exists()) {
+				return $m;
 			}
 			return false;
 		}
@@ -612,96 +691,53 @@ class Model extends Object {
 	 * 	@param integer $depth depth of model associations to use in select query
 	 * 	@return SelectQuery
 	 */
-	protected function createSelectQuery($depth = null, $conditions = array(), $order = array(), $count = null) {
-		foreach(array('conditions', 'order') as $__key) {
-			if (empty(${$__key})) {
-				${$__key} = array();
-			} elseif (!is_array(${$__key})) {
-				${$__key} = array(${$__key});
-			}
+	protected function createSelectQuery($conditions = array(), $order = array(), $offset = 0, $count = null, $depth = 2) {
+		// prepare conditions
+		if (!is_array($conditions)) {
+			$conditions = array($conditions);
+		} else {
+			$conditions = array();
 		}
-		// use standard find conditions
 		$conditions = array_merge($this->findConditions, $conditions);
-		$q = new SelectQuery();
-		$q->table($this->tablename(), $this->name);
+		$query = new SelectQuery();
+		$query->table($this->tablename, $this->name);
 		// add fields from this table
 		foreach($this->structure as $fieldInfo) {
-			$q->select($this->name.'.'.$fieldInfo->name.' as \''.$this->name.'.'.$fieldInfo->name.'\'');
+			$query->select($this->name.'.'.$fieldInfo->name, $this->name.'.'.$fieldInfo->name);
 		}
-		// belongsTo
-		if (($depth > 0 || $depth == null)) {
-			$thisSide = $this->name.'.'.$this->primaryKeyName;
-			// belongsTo 
-			if (!empty($this->belongsTo)) { 
-				foreach($this->belongsTo as $modelName => $associationData) {
-					$joinConditions = array();
-					if (!is_array($associationData)) {
-						$modelName = $associationData;
-					} elseif (isset($associationData['conditions'])) {
-						$joinConditions = $associationData['conditions'];
-					}
-					$foreignKey = Inflector::underscore($this->name, true).'_'.$this->primaryKeyName;
-					$joinConditions[$thisSide] = $this->$modelName->name.'.'.$foreignKey;
-					$q->join($this->$modelName->tablename(), $this->$modelName->name, DBQuery::JOIN_LEFT, $joinConditions);
-					foreach($this->$modelName->structure as $fieldInfo) {
-						$q->select($this->$modelName->name.'.'.$fieldInfo->name.' as \''.$this->$modelName->name.'.'.$fieldInfo->name.'\'');
-					}
-					// join deeper models too
-					if ($depth == null || $depth >= 2) {
-						foreach($this->{$modelName}->belongsTo as $index => $associationData) {
-							$m = $associationData;
-							$belongsToTableAlias = $this->{$modelName}->{$m}->name;
-							$belongsToTableName = $this->{$modelName}->{$m}->tablename;
-							$foreignKey = $this->{$modelName}->name.'.'.Inflector::underscore($this->{$modelName}->{$m}->name, true).'_'.$this->{$modelName}->primaryKeyName;
-							$belongsToConditions = array(
-								$belongsToTableAlias.'.'.$this->{$modelName}->{$m}->primaryKeyName => $foreignKey
-							);
-							$q->join($belongsToTableName, $belongsToTableAlias, DBQuery::JOIN_LEFT, $belongsToConditions);	
-						}
-					}
-				}
-			}
-			// hasMany
-			if (!empty($this->hasMany)) {
-				foreach($this->hasMany as $modelName => $associationData) {
-					$joinConditions = array();
-					if (!is_array($associationData)) {
-						$modelName = $associationData;
-					} elseif(isset($associationData['conditions'])) {
-						$joinConditions = $associationData['conditions'];
-					}
-					$foreignKey = strtolower(Inflector::underscore($this->name).'_'.$this->primaryKeyName);
-					$joinConditions[$thisSide] = $this->$modelName->name.'.'.$foreignKey;
-					$q->join($this->$modelName->tablename(), $this->$modelName->name, DBQuery::JOIN_LEFT, $joinConditions);
-					foreach($this->$modelName->structure as $fieldInfo) {
-						$q->select($this->$modelName->name.'.'.$fieldInfo->name.' as \''.$this->$modelName->name.'.'.$fieldInfo->name.'\'');
-					}
-				}
-			}
-		}
-		// add where conditions
-		// @todo increase query performance and order if conditions that belong into the join go to the join and not to the where
-		foreach($conditions as $left => $right) {
-			$q->where($left, $right);
-		}
-		// add other stuff
-		if (!is_array($order) && !empty($order)) {
+		// ordering
+		if (!is_array($order) && is_string($order)) {
 			$order = array($order);
+		} else {
+			$order = array();
 		}
 		$order = array_merge($this->order, $order);
 		if (count($order) > 0) {
 			foreach($order as $orderRule) {
-				$q->orderBy($orderRule);
+				$query->orderBy($orderRule);
 			}
 		}
+		// count and limit
 		if ($count !== null) {
-			$q->count($count);
+			$query->count((int) $count);
 		}
-//		if ($this->name == 'Contact') {
-//			die('<pre>'.$q.'</pre>');
-//		}
-		//die($q);
-		return $q;
+		if ($offset > 0) {
+			$query->offset((int) $offset);
+		}
+		// belongsto / has one
+		if ($depth > 0) {
+			$joinStuff = $this->hasOne + $this->belongsTo;
+			foreach($joinStuff as $modelName => $config) {
+				foreach($this->{$modelName}->structure as $fieldInfo) {
+					$query->select($this->{$modelName}->name.'.'.$fieldInfo->name, $this->{$modelName}->name.'.'.$fieldInfo->name);
+				}
+				$joinConditions = array($config['associationKey'] => $config['foreignKey']);
+				$joinConditions = array_merge($joinConditions, $config['conditions']);
+				$query->join($this->{$modelName}->tablename, $modelName, DBQuery::JOIN_LEFT, $joinConditions);
+			}
+		}
+		//die('<pre>'.wordwrap($query).'</pre>');
+		return $query;
 	}
 	
 	/**
@@ -714,111 +750,127 @@ class Model extends Object {
 		if ($result->numRows() == 0) {
 			return false;
 		}
-		$classname = get_class($this);
+		$belongsToAndHasOne = $this->belongsTo + $this->hasOne;
 		$return = new Set();
-		$lastArr = array();
-		$primIdName = $this->name.'.'.$this->primaryKeyName;
-		$i = 0;
-		while($arr = $result->fetchAssoc()) {
-			if (@$lastArr[$primIdName] != @$arr[$primIdName]) {
-				if ($i > 0 && $justOne) {
-					return $model;
-				}
-				$model = new $classname($arr);
-				// add associations
-				foreach($this->belongsTo as $modelName) {
-					$model->{Inflector::plural($modelName)} = new ObjectSet($modelName);
-				}
-				foreach($this->hasOne as $modelName) {
-					$model->$modelName = new $modelName($arr);
-				}
+		while($modelData = $result->fetchAssoc()) {
+			$model = new $this->name($modelData);
+			foreach($belongsToAndHasOne as $associatedModelName => $config) {
+				$model->{$associatedModelName} = new $associatedModelName($modelData);
 			}
-			foreach($this->belongsTo as $modelName) {
-				// check if there's data for the associated model in the result
-				$associatedModelIdFromResult = $arr[$this->$modelName->name.'.'.$this->$modelName->primaryKeyName];
-				if ($associatedModelIdFromResult !== null) {
-					$model->{Inflector::plural($modelName)}->add(new $modelName($arr));
-				}
+			foreach($this->hasMany as $associatedModelName => $config) {
+				$model->{Inflector::plural($associatedModelName)} = $this->{$associatedModelName}->findAllById($this->id);
 			}
-			if (@$lastArr[$primIdName] != @$arr[$primIdName] && $i > 0 || !isset($lastArr[$primIdName])) {
-				$return->add($model);
-			}
-			$lastArr = $arr;
-			$i++;
-		}
-		if (!isset($model)) {
-			return false;
-		} else {
 			if ($justOne) {
+				
 				return $model;
 			}
-			//$return->add($model);
+			$return->add($model);
 		}
-		if ($this->name == 'Contact') {
-			var_dump($this->toArray());
-			die();
-		}
-		//die(var_dump($return->toArray()));
 		return $return;
 	}
 	
 	/**
-	 * 	Returns all elements stored in this model
+	 * 	Search a single Row and return it as Model
 	 * 	
-	 * 	@param $depth integer
-	 * 	@param $conditions array(string)
-	 * 	@param $order array(string)
-	 * 	@param $count integer
-	 * 	@return Set	A Set containing Models
-	 */
-	public function getAll($depth = null, $conditions = array(), $order = array(), $count = null) {
-		if (empty($order) && isset($this->structure['created'])) {
-			$order = array($this->name.'.created DESC');
-		}
-		$query = $this->createSelectQuery($depth, $conditions, $order, $count);
-		$result = $this->DB->query($query);
-		return $this->createSelectResultList($result, false);
-	}
-	
-	/**
-	 * 	Returns matching Model Values that match $fieldname = $value
-	 * 	
-	 * 	Find all users with the username 'Ephigenia', in controller:
 	 * 	<code>
-	 * 	while($user = $this->User->findBy('username', 'Ephigenia')) {
-	 * 		echo $user->name;
-	 * 	}
-	 * 	if (!$user) {
-	 * 		echo 'no users found with that name';
-	 * 	}
+	 * 	// search a single user by his mail addy
+	 * 	$User->find(array('email' => 'love@ephigenia'));
+	 * 	// search a single blog entry by it's primary key value
+	 * 	$Comment->find(666);
 	 * 	</code>
-	 * 
-	 * 	@param string $fieldname
-	 * 	@param string $value
-	 * 	@return Set|boolean
+	 *
+	 * 	@param string|array $conditions
+	 * 	@return Model|boolean
 	 */
-	public function findOne($fieldname, $value) {
-		if (strpos($fieldname, '.') === false) {
-			$fieldname = $this->name.'.'.$fieldname;
-		}
-		$query = $this->createSelectQuery(null, array($fieldname => DBQuery::quote($value)));
-		$result = $this->DB->query($query);
+	public function find($conditions) {
+		$result = $this->DB->query($this->createSelectQuery($conditions));
 		return $this->createSelectResultList($result, true);
 	}
 	
 	/**
-	 * 	This will return every entry from the model with a matching
-	 * 	$fieldname = $value 
-	 *
+	 *	Tries to return a Model from the table that matches the $key => $value
+	 * 	rule passed to this method. These method handles all the
+	 * 	$model->getby[fieldnam] calls.
+	 * 
+	 * 	<code>
+	 * 	// find user by email addy
+	 * 	$User->findBy('email', 'love@ephigenia.de');
+	 * 	// find by primary id (just one parameter)
+	 * 	$User->findBy(666);
+	 * 	// find first entry where lastlogin = NULL (not filled)
+	 * 	$User->findBy('lastlogin', null);
+	 * 	</code>
+	 * 	
 	 * 	@param string $fieldname
 	 * 	@param string $value
-	 * 	@return Set|boolean
+	 * 	@return Model|boolean
 	 */
-	public function findAll($fieldname, $value) {
-		if (strpos($fieldname, '.') === false) {
-			$fieldname = $this->name.'.'.$fieldname;
+	public function findBy($fieldname, $value = null) {
+		if (func_num_args() == 1) {
+			$fieldname = $this->primaryKeyName;
 		}
-		return $this->getAll(array($conditions => $value));
+		if ($this->hasField($fieldname)) {
+			$value = DBQuery::quote($value, $this->structure[$fieldname]->quoting);
+		} else {
+			$value = DBQuery::quote($value);
+		}
+		$conditions[$fieldname] = $value;
+		return $this->find($conditions);
+	}
+	
+	/**
+	 * 	Returns a {@link Set} of $conditions matching Models ordererd by $order.
+	 *
+	 * 	<code>
+	 * 	// find all comments from one user
+	 * 	$Comment->findAll(array('user_id' => 23));
+	 * 	// find all entries, but 10 of them, starting at offset 5
+	 * 	$Comment->findAll(null, null, 10, 5);
+	 * 	// find all entries, ordered by comments_count and creation time
+	 * 	$BlogEntry->findAll(null, array('creation DESC', 'comments_count DESC');
+	 * 	</code>
+	 * 
+	 * 	@param array(string)|string $conditions
+	 * 	@param array(string)|string $order
+	 * 	@param integer $count Number of items to return
+	 * 	@param integer $offset Offset to select from
+	 * 	@return Set(Model)|boolean
+	 */
+	public function findAll($conditions = null, $order = null, $offset = 0, $count = null, $depth = 2) {
+		$result = $this->DB->query($this->createSelectQuery($conditions, $order, $offset, $count, $depth));
+		return $this->createSelectResultList($result);
+	}
+	
+	/**
+	 * 	Returns all entries where $fieldname = $value. The values should be
+	 * 	quoted with DBQuery::quote();
+	 * 
+	 * 	<code>
+	 * 	// find all users whose usernames start with an a
+	 * 	$User->findAllBy('SUBSTR(username, 0, 1)', 'a');
+	 * 	// find all users that never logged on
+	 * 	$User->findAllBy('lastlogin', NULL, false);
+	 * 	// find all users that never logged in sort by creation date
+	 * 	$User->findAllBy('lastlogin', NULL
+	 * 	</code>
+	 * 	
+	 * 	@todo implement that $value can be an array and the query uses $fieldname in (item, item) ...
+	 *	@param mixed $fieldname
+	 * 	@param mixed $value
+	 * 	@param array(string) $order
+	 * 	@param integer $offset
+	 * 	@param integer $count
+	 * 	@param integer $depth depth of model recursion (0-2);
+	 * 	@return Set(Model)|boolean
+	 */
+	public function findAllBy($fieldname, $value = null, $order = null, $offset = 0, $count = null, $depth = 2) {
+		if ($this->hasField($fieldname)) {
+			$value = DBQuery::quote($value, $this->structure[$fieldname]);
+		} else {
+			$value = DBQuery::quote($value);
+		}
+		$conditions = array($fieldname => $value);
+		return $this->findAll($conditions, $order, $offset, $count, $depth);
 	}
 	
 	/**
@@ -830,13 +882,13 @@ class Model extends Object {
 	 * 	@param array $args
 	 */
 	public function __call($methodName, Array $args) {
-		// catch findBy[fieldname] calls
+		// catch findAllBy[fieldname] calls
 		if (preg_match('/(findAll(By)?)(.*)/i', $methodName, $found)) {
 			$args[-1] = lcfirst($found[3]);
-			return $this->callMethod('findAll', $args);
-			//return $this->findAll($found[3], $args[0]);
+			return $this->callMethod('findAllBy', $args);
+		// catch findBy[fieldname] calls 
 		} elseif (preg_match('/find(By)?(.*)/i', $methodName, $found)) {
-			return $this->findOne(lcfirst($found[2]), $args[0]);
+			return $this->findBy(lcfirst($found[2]), $args[0]);
 		// catch $model->username() calls
 		} elseif (isset($this->structure[$methodName])) {
 			return $this->structure[$methodName];
@@ -857,6 +909,11 @@ class Model extends Object {
 		return isset($this->structure[trim($fieldname)]);
 	}
 	
+	/**
+	 *	Returns the value of a model field.
+	 * 	@param string $fieldname
+	 * 	@param mixed $default
+	 */
 	public function get($fieldname, $default = null) {
 		if (is_scalar($fieldname)) {
 			if (isset($this->data[$fieldname])) {
@@ -866,7 +923,6 @@ class Model extends Object {
 			} elseif (isset($this->structure[$fieldname])) {
 				return null;
 			}
-			
 		}
 		user_error('undefined variable \''.$fieldname.'\' of class '.get_class($this), E_USER_ERROR);
 	}

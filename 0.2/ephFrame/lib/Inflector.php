@@ -53,7 +53,8 @@ class Inflector extends Object {
 			'/(.*['.$consonants.'])y$/' => '\\1ies',
 			// The -oes rule: most nouns ending in o preceded by a consonant also form their plurals by adding -es
 			'/(.*['.$consonants.'])o$/' => '\\1oes',
-			'/(.*)h$/'  => '\\1es'
+			'/(.*)h$/'  => '\\1es',
+			'/(.*)s$/'	=> '\\1ses'
 		);
 		foreach($rules as $regexp => $replace) {
 			$result = preg_replace($regexp, $replace, $string);
@@ -123,22 +124,21 @@ class Inflector extends Object {
 	 * 	@param string $delimeter The delimeter ot use, usually its an underscore _
 	 * 	@return string converted string
 	 */
-	public static function delimeterSeperate($string, $delimeter = '_') {
+	public static function delimeterSeperate($string, $delimeter = '_', $lowered = false) {
 		assert(is_scalar($string) && is_scalar($delimeter));
 		$delimetered = trim($string);
 		$delimetered = preg_replace('@\\s+@', $delimeter, $delimetered);
 		$delimetered = preg_replace('@(?!^)([A-Z])@', $delimeter.'\\1', $delimetered);
 		// remove double delimeters
 		$delimetered = preg_replace('@('.preg_quote($delimeter).'){2,}@', $delimeter, $delimetered);
+		if ($lowered) {
+			$delimetered = String::lower($delimetered);
+		}
 		return $delimetered;
 	}
 	
 	public static function underscore($string, $lowered = false) {
-		if ($lowered) {
-			return String::lower(self::delimeterSeperate($string, '_'));
-		} else {
-			return self::delimeterSeperate($string, '_');
-		}
+		return self::delimeterSeperate($string, '_', $lowered);
 	}
 	
 }

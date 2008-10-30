@@ -31,15 +31,31 @@ class SelectQuery extends DBQuery {
 		return parent::__construct();
 	}
 	
-	public function beforeRender() {
-		if (count($this->select) == 0) {
-			$this->select->add('*');
-		}
-		return parent::beforeRender();
-	}
-	
 	public function from($tablename, $alias = null) {
 		return parent::table($tablename, $alias);
+	}
+
+	/**
+	 *	Add a new field (with alias) to select query
+	 * 	<code>
+	 * 	// select id, created
+	 * 	$query->select(array('id', 'created'));
+	 * 	// select id but with the alias User.id
+	 * 	$query->select('id', 'User.id');
+	 * 	</code>
+	 * 	@param string|array(string) Single Select name or multiple
+	 * 	@return DBQuery
+	 */
+	public function select($fieldname, $alias = null) {
+		if (func_num_args() == 0) return $this->select;
+		if (is_array($fieldname)) {
+			foreach($fieldname as $v) {
+				$this->select($v);
+			}
+		} else {
+			$this->select->add(trim($fieldname), trim($alias));
+		}
+		return $this;
 	}
 	
 }

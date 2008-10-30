@@ -24,6 +24,12 @@ class TestHash extends UnitTestCase {
 		$this->assertEqual($test->implode(), 'HossaName');
 	}
 	
+	public function testAdd() {
+		$r = new Hash();
+		$r->add('test');
+		$this->assertEqual($r->toArray(), array(0 => 'test'));
+	}
+	
 	public function testToString() {
 		$test = new Hash();
 		$test->append('Name', 'Hossa');

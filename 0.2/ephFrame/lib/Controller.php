@@ -202,7 +202,7 @@ abstract class Controller extends Object implements Renderable {
 	public function index() {
 		if (isset($this->{$this->name})) {
 			$plural = Inflector::plural($this->name);
-			$entries = $this->{$this->name}->getAll();
+			$entries = $this->{$this->name}->findAll();
 			$this->set($plural, $entries);
 		}
 	}
@@ -213,10 +213,10 @@ abstract class Controller extends Object implements Renderable {
 	 * 
 	 * 	@return boolean
 	 */
-	public function rss($items = 10) {
+	public function rss($itemCount = 10) {
 		if (isset($this->{$this->name})) {
 			$plural = Inflector::plural($this->name);
-			$entries = $this->{$this->name}->getAll(null, null, null, $items);
+			$entries = $this->{$this->name}->findAll(null, null, null, $itemCount);
 			$this->set($plural, $entries);
 			$this->layout = 'RSS';
 			$this->viewClassName = 'XMLView';

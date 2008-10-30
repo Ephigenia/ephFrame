@@ -15,13 +15,13 @@
 
 // change this path to simpletest, if you have it somewhere else
 if (!defined('SIMPLE_TEST')) {
-	define('SIMPLE_TEST', dirname(__FILE__).'/../vendor/simpletest/');
+	define('SIMPLE_TEST', realpath(dirname(__FILE__).'/../vendor/simpletest/').'/');
 }
 if (!defined('FRAME_ROOT')) {
-	define('FRAME_ROOT', dirname(__FILE__).'/../ephFrame/');
+	define('FRAME_ROOT', realpath(dirname(__FILE__).'/../ephFrame/').'/');
 }
 if (!defined('APP_ROOT')) {
-	define('APP_ROOT', dirname(__FILE__).'/../app/');
+	define('APP_ROOT', realpath(dirname(__FILE__).'/../app/').'/');
 }
 
 ?>

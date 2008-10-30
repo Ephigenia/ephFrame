@@ -161,7 +161,10 @@ class String extends Helper {
 	 * 	@return string
 	 */
 	public static function lower($string = null, $charset = 'UTF-8') {
-		assert(is_scalar($string));
+		if(!is_scalar($string)) {
+			return false;
+		}
+		$string = (string) $string;
 		if (Charset::isUTF8($string)) {
 			return mb_strtolower($string, $charset);
 		} else {
