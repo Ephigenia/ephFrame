@@ -284,12 +284,12 @@ class Model extends Object {
 		if (!class_exists($modelName)) {
 			ephFrame::loadClass('app.lib.model.'.$modelName);
 		}
-		$boundModel = new $modelName();
-		$boundModelName = $modelName;
 		// don't double bind
-		if (!isset($this->{$boundModelName})) {
-			$this->{$boundModelName} = new $modelName();
-			$this->{$boundModelName}->{$this->name} = $this;
+		if (!isset($this->{$modelName})) {
+			$this->{$modelName} = new $modelName();
+			$this->{$modelName}->{$this->name} = $this;
+		} else {
+			return true;
 		}
 		// create default config
 		$config = array_merge(array(
@@ -303,27 +303,34 @@ class Model extends Object {
 				case 'belongsTo':
 					$config['foreignKey'] = $this->{$modelName}->name.'.'.$this->{$modelName}->primaryKeyName;
 					break;
-				case 'hasMany':
-					$config['foreignKey'] = $this->{$modelName}->name.'.'.Inflector::delimeterSeperate($this->{$modelName}->name.'_id');
-					break;
 				case 'hasOne':
-					$config['foreignKey'] = $this->{$modelName}->name.'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName, true);
+					$config['foreignKey'] = $this->{$modelName}->name.'.'.Inflector::delimeterSeperate($this->name.'_id');
+					break;
+				case 'hasMany':
+					$config['foreignKey'] = $this->name.'.'.$this->primaryKeyName;
 					break;
 				case 'hasAndBelongsToMany':
-					
 					break;
 			}
 		}
 		// my side of the join
 		if (!isset($config['associationKey'])) {
-			if ($associationType == 'belongsTo') {
-				$config['associationKey'] = $this->{$modelName}->name.'.'.$this->{$modelName}->primaryKeyName;
-			} elseif ($associationType == 'hasAndBelongsToMany') {
-				
-			} else {
-				$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
+			switch ($associationType) {
+				case 'belongsTo':
+					$config['associationKey'] = $this->name.'.'.Inflector::underscore($this->{$modelName}->name.'_'.$this->{$modelName}->primaryKeyName, true);
+					break;
+				case 'hasOne':
+					$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
+					break;
+				case 'hasMany':
+					$config['associationKey'] = $this->{$modelName}->name.'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName, true);
+					break;
+				case 'hasAndBelongsToMany':
+					break;
 			}
 		}
+//		echo '<strong>'.$this->name.' '.$associationType.' '.$modelName.'</strong>';
+//		var_dump($config);
 		$this->{$associationType}[$modelName] = $config;
 		return true;
 	}
@@ -676,7 +683,7 @@ class Model extends Object {
 			return true;
 		}
 		// use validation config to validate value
-		// @todo add validator as class memmber $this->validator->validate();
+		// @todo add validator as class member $this->validator->validate();
 		$config = $this->validate[$fieldName];
 		$validator = new Validator($config, $this);
 		return $validator->validate($value);
@@ -686,21 +693,20 @@ class Model extends Object {
 	 * 	Creates a default select query including all associated models defined
 	 * 	in {@link belongsTo}, {@link hasMany}, {@hasOne} ...
 	 * 
-	 * 	@todo FIXME export the join conditions to extra methods!!!
-	 * 	@todo FIXME export foreign key and table name methods from this!!!
 	 * 	@param integer $depth depth of model associations to use in select query
 	 * 	@return SelectQuery
 	 */
 	protected function createSelectQuery($conditions = array(), $order = array(), $offset = 0, $count = null, $depth = 2) {
 		// prepare conditions
-		if (!is_array($conditions)) {
-			$conditions = array($conditions);
-		} else {
+		if ($conditions == null) {
 			$conditions = array();
+		} elseif (!is_array($conditions)) {
+			$conditions = array($conditions);
 		}
 		$conditions = array_merge($this->findConditions, $conditions);
 		$query = new SelectQuery();
 		$query->table($this->tablename, $this->name);
+		$query->where->fromArray($conditions);
 		// add fields from this table
 		foreach($this->structure as $fieldInfo) {
 			$query->select($this->name.'.'.$fieldInfo->name, $this->name.'.'.$fieldInfo->name);
@@ -725,7 +731,7 @@ class Model extends Object {
 			$query->offset((int) $offset);
 		}
 		// belongsto / has one
-		if ($depth > 0) {
+		if ($depth >= 1) {
 			$joinStuff = $this->hasOne + $this->belongsTo;
 			foreach($joinStuff as $modelName => $config) {
 				foreach($this->{$modelName}->structure as $fieldInfo) {
@@ -737,6 +743,7 @@ class Model extends Object {
 			}
 		}
 		//die('<pre>'.wordwrap($query).'</pre>');
+		//echo $query.'<br />';
 		return $query;
 	}
 	
@@ -745,8 +752,7 @@ class Model extends Object {
 	 * 	@param QueryResult $result
 	 * 	@return Set
 	 */
-	protected function createSelectResultList(QueryResult $result, $justOne = false) {
-		// @todo check performance if we use ObjectCollection here
+	protected function createSelectResultList(QueryResult $result, $justOne = false, $depth = 2) {
 		if ($result->numRows() == 0) {
 			return false;
 		}
@@ -754,17 +760,27 @@ class Model extends Object {
 		$return = new Set();
 		while($modelData = $result->fetchAssoc()) {
 			$model = new $this->name($modelData);
-			foreach($belongsToAndHasOne as $associatedModelName => $config) {
-				$model->{$associatedModelName} = new $associatedModelName($modelData);
+			if ($depth >= 1) {
+				foreach($belongsToAndHasOne as $associatedModelName => $config) {
+					$model->{$associatedModelName} = new $associatedModelName($modelData);
+				}
 			}
-			foreach($this->hasMany as $associatedModelName => $config) {
-				$model->{Inflector::plural($associatedModelName)} = $this->{$associatedModelName}->findAllById($this->id);
-			}
-			if ($justOne) {
-				
-				return $model;
+			if ($depth >= 2) {
+				foreach($this->hasMany as $associatedModelName => $config) {
+					$joinConditions = array_merge($config['conditions'], array(
+						$config['associationKey'] => $model->get($model->primaryKeyName)
+					));
+					if (!$associatedData = $this->{$associatedModelName}->findAll($joinConditions)) {
+						$associatedData = new Set();
+					}
+					$model->{Inflector::plural($associatedModelName)} = $associatedData;
+				}
 			}
 			$return->add($model);
+			if ($justOne) break;
+		}
+		if ($justOne) {
+			return $return[0];
 		}
 		return $return;
 	}
@@ -838,7 +854,7 @@ class Model extends Object {
 	 */
 	public function findAll($conditions = null, $order = null, $offset = 0, $count = null, $depth = 2) {
 		$result = $this->DB->query($this->createSelectQuery($conditions, $order, $offset, $count, $depth));
-		return $this->createSelectResultList($result);
+		return $this->createSelectResultList($result, false, $depth);
 	}
 	
 	/**
@@ -864,12 +880,14 @@ class Model extends Object {
 	 * 	@return Set(Model)|boolean
 	 */
 	public function findAllBy($fieldname, $value = null, $order = null, $offset = 0, $count = null, $depth = 2) {
+		var_dump($fieldname);
 		if ($this->hasField($fieldname)) {
 			$value = DBQuery::quote($value, $this->structure[$fieldname]);
 		} else {
 			$value = DBQuery::quote($value);
 		}
 		$conditions = array($fieldname => $value);
+		var_dump($conditions);
 		return $this->findAll($conditions, $order, $offset, $count, $depth);
 	}
 	
@@ -884,8 +902,7 @@ class Model extends Object {
 	public function __call($methodName, Array $args) {
 		// catch findAllBy[fieldname] calls
 		if (preg_match('/(findAll(By)?)(.*)/i', $methodName, $found)) {
-			$args[-1] = lcfirst($found[3]);
-			return $this->callMethod('findAllBy', $args);
+			return $this->findAllBy(lcfirst($found[2]), $args[0]);
 		// catch findBy[fieldname] calls 
 		} elseif (preg_match('/find(By)?(.*)/i', $methodName, $found)) {
 			return $this->findBy(lcfirst($found[2]), $args[0]);
@@ -1063,7 +1080,7 @@ class ModelReflexiveException extends ModelException {}
  */
 class ModelEmptyPrimaryKeyException extends ModelException {
 	public function __construct(Model $model) {
-		parent::_-construct('This model has no primary Key value and can not be updated.');
+		parent::__construct('This model has no primary Key value and can not be updated.');
 	}
 }
 

@@ -463,7 +463,7 @@ abstract class DBQuery extends Object implements Renderable {
 		if (func_num_args() == 1) {
 			$this->where->add($key);
 		} else {
-			$this->where->set($key, $right);
+			$this->where->add($key, $right);
 		}
 		return $this;
 	}
