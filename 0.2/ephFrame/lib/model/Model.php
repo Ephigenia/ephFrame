@@ -284,13 +284,11 @@ class Model extends Object {
 		if (!class_exists($modelName)) {
 			ephFrame::loadClass('app.lib.model.'.$modelName);
 		}
-		// don't double bind
-		if (!isset($this->{$modelName})) {
-			$this->{$modelName} = new $modelName();
-			$this->{$modelName}->{$this->name} = $this;
-		} else {
-			return true;
+		if (isset($this->{$modelName})) {
+			return;
 		}
+		$this->{$modelName} = new $modelName();
+		$this->{$modelName}->{$this->name} = $this;
 		// create default config
 		$config = array_merge(array(
 			'conditions' => array(),
@@ -329,8 +327,6 @@ class Model extends Object {
 					break;
 			}
 		}
-//		echo '<strong>'.$this->name.' '.$associationType.' '.$modelName.'</strong>';
-//		var_dump($config);
 		$this->{$associationType}[$modelName] = $config;
 		return true;
 	}
@@ -445,12 +441,11 @@ class Model extends Object {
 	/**
 	 * 	Save Model Data to database table
 	 * 
-	 * 	@param Model $model
 	 * 	@param boolean $validate
 	 * 	@param array(string) $fieldNames
 	 * 	@return boolean
 	 */
-	public function save(Model $model = null, $validate = true, Array $fieldNames = array()) {
+	public function save($validate = true, Array $fieldNames = array()) {
 		// use fieldnames to create data array that should be saved or inserted
 		$data = array();
 		if (empty($fieldNames)) {
@@ -674,19 +669,25 @@ class Model extends Object {
 	 * 	@return boolean|string
 	 */
 	public function validateField($fieldName, $value) {
-		// validation of fields that don't exists are false
 		if (func_num_args() == 1 && !isset($this->data[$fieldName])) {
 			return false;
 		}
-		// no validation rules on fields are always ok
 		if (!isset($this->validate[$fieldName])) {
 			return true;
 		}
-		// use validation config to validate value
-		// @todo add validator as class member $this->validator->validate();
-		$config = $this->validate[$fieldName];
-		$validator = new Validator($config, $this);
-		return $validator->validate($value);
+		$validationRules = array($fieldName => $this->validate[$fieldName]);
+		if (ArrayHelper::dimensions($validationRules) == 3) {
+			foreach($validationRules as $rules) {
+				$validator = new Validator($rules, $this);
+				$r = $validator->validate($value);
+				if ($r !== true) {
+					return $r;
+				}
+			}
+		} else {
+			$validator = new Validator($validationRules, $this);
+			return $validator->validate($value);
+		}
 	}
 	
 	/**

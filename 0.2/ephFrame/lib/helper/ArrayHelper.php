@@ -24,6 +24,28 @@
 class ArrayHelper extends Helper {
 	
 	/**
+	 *	Returns the number of dimensions in $array
+	 * 	@param array(mixed)
+	 * 	@return integer
+	 */
+	public static function dimensions($array) {
+		if (!is_array($array)) {
+			return false;
+		}
+		$result = 1;
+		$maxDimensions = 0;
+		foreach($array as $value) {
+			if (is_array($value)) {
+				$tmp = self::dimensions($value);
+				if ($tmp > $maxDimensions) {
+					$maxDimensions = $tmp;
+				}
+			}
+		}
+		return $result + $maxDimensions;
+	}
+	
+	/**
 	 *	Implode Array or Objects that implement IteratorAggregate into a string
 	 * 	with optional $format string and callbacks for key and value manipulation.
 	 * 

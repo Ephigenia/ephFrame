@@ -162,6 +162,7 @@ class Form extends HTMLTag {
 					}
 					break;
 				case 'blob':
+				case 'text':
 				case 'mediumtext':
 				case 'mediumblob':
 				case 'tinyblob':

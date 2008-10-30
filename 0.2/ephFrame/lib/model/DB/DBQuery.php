@@ -626,7 +626,7 @@ abstract class DBQuery extends Object implements Renderable {
 			}
 			$rendered .= LF;
 		}
-		return $rendered;
+		return substr($rendered,0,-1);
 	}
 	
 	/**

@@ -111,6 +111,14 @@ abstract class Component extends Object implements ephFrameComponent {
 		return $this;
 	}
 	
+	/**
+	 * 	Called by the controller before he renders
+	 * 	@return true
+	 */
+	public function beforeRender() {
+		return true;
+	}
+	
 }
 
 /**

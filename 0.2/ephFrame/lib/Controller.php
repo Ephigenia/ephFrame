@@ -481,6 +481,11 @@ abstract class Controller extends Object implements Renderable {
 	 */
 	public function render() {
 		if (!$this->beforeRender()) return false;
+		// send before Render to every component
+		foreach($this->components as $componentName) {
+			$className = ClassPath::className($componentName);
+			$this->{$className}->beforeRender();
+		}
 		// load view class if available
 		if (!strpos($this->viewClassName, '.')) {
 			ephFrame::loadClass('ephFrame.lib.'.$this->viewClassName);
