@@ -664,6 +664,8 @@ class Model extends Object {
 	}
 	
 	/**
+	 * 	Validates $value to the rules assigned to $fieldName
+	 * 	
 	 *	@param string $fieldName
 	 * 	@param mixed $value
 	 * 	@return boolean|string

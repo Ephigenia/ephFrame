@@ -50,9 +50,11 @@ class Validator extends Helper {
 			if (isset($ruleConfig['allowEmpty']) && empty($value)) {
 				return true;
 			}
-			$failMessage = isset($ruleConfig['message']) ? $ruleConfig['message'] : false;
-			// replace wildcards in the failmessage
-			if ($failMessage !== false && strpos($failMessage, '%') !== false) {
+			if (!isset($ruleConfig['message'])) {
+				$failMessage = false;
+			} else {
+				$failMessage = $ruleConfig['message'];
+				// replace wildcards in the failmessage
 				$failMessage = String::substitute($failMessage, array(
 					'value' => $value,
 					'rule' => $ruleName,
