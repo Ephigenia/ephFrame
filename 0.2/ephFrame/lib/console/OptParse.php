@@ -1,14 +1,14 @@
 <?php
 
 /**
- * 	rapiddownload: <http://rapiddownload.sourceforge.net/>
+ * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
  * 	Copyright 2007+, Ephigenia M. Eichner, Kopernikusstr. 8, 10245 Berlin
  *
  * 	Licensed under The MIT License
  * 	Redistributions of files must retain the above copyright notice.
  * 	@license http://www.opensource.org/licenses/mit-license.php The MIT License
  * 	@copyright Copyright 2007+, Ephigenia M. Eichner
- * 	@link http://rapiddownload.sourceforge.net
+ * 	@link http://code.ephigenia.de/projects/ephFrame/
  * 	@filesource
  */
 
@@ -114,6 +114,8 @@ class OptParse extends Object {
 			global $argv;
 			$this->rawArgs = array_slice($argv, 1);
 		}
+		// merge config with parent class configs
+		
 		$this->parse();
 		return $this;
 	}
@@ -200,7 +202,7 @@ class OptParse extends Object {
 		for($i = 0; $i < count($this->rawArgs); $i++) {
 			// --[argumentname]=[value]
 			if (preg_match($this->longArgRegExp, $this->rawArgs[$i], $found)) {
-				$this->setOption($found[1], $found[2]);
+				$this->setOption($found[1], @$found[2]);
 			// [-|/][argumentname] [value]
 			} elseif (preg_match($this->shortArgRegExp, $this->rawArgs[$i], $found)) {
 				$this->setOption($found[1], $found[2]);

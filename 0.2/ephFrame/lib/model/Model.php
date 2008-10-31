@@ -649,7 +649,6 @@ class Model extends Object {
 		}
 		$this->validationErrors = array();
 		// iterate over validation rules
-		$this->validationErrors = array();
 		foreach($fieldNames as $fieldName) {
 			if (!isset($data[$fieldName])) continue;
 			$r = $this->validateField($fieldName, $data[$fieldName]);
@@ -657,10 +656,7 @@ class Model extends Object {
 				$this->validationErrors[$fieldName] = $r;
 			}
 		}
-		if (!empty($this->validationErrors)) {
-			return false;
-		}
-		return true;
+		return (count($this->validationErrors) == 0);
 	}
 	
 	/**
@@ -677,19 +673,13 @@ class Model extends Object {
 		if (!isset($this->validate[$fieldName])) {
 			return true;
 		}
-		$validationRules = array($fieldName => $this->validate[$fieldName]);
-		if (ArrayHelper::dimensions($validationRules) == 3) {
-			foreach($validationRules as $rules) {
-				$validator = new Validator($rules, $this);
-				$r = $validator->validate($value);
-				if ($r !== true) {
-					return $r;
-				}
-			}
-		} else {
-			$validator = new Validator($validationRules, $this);
-			return $validator->validate($value);
+		$validationRules = $this->validate[$fieldName];
+		$validator = new Validator($validationRules, $this);
+		$r = $validator->validate($value);
+		if ($r !== true) {
+			return $r;
 		}
+		return true;
 	}
 	
 	/**

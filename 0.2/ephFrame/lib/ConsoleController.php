@@ -13,7 +13,6 @@
  */
 
 require_once FRAME_LIB_DIR.'Controller.php';
-require_ONCE FRAME_LIB_DIR.'Console.php';
 
 /**
  * 	[add description here]
@@ -26,27 +25,89 @@ require_ONCE FRAME_LIB_DIR.'Console.php';
  */
 class ConsoleController extends Controller {
 	
-	protected $optParseClassname = 'OptParse';
+	/**
+	 *	instance of the optparser for this console application
+	 * 	@var OptParse
+	 */
+	protected $optParse;
 	
 	/**
+	 *	Clasname of the Optparse that should be used
+	 * 	@var string
+	 */
+	protected $optParseClassname = 'ephFrame.lib.console.OptParse';
+	
+	/**
+	 *	Name of class that handles the output, as defualt it's consoledrawing
+	 * 	that can colour your output, but you can replace this by your own class
+	 * 	@var string
+	 */
+	protected $consoleClassname = 'ephFrame.lib.console.ConsoleDrawing';
+	
+	/**
+	 * 	Console Class
 	 * 	@var Console
 	 */
 	protected $console;
 	
+	/**
+	 *	stores the with for some output messages of the application
+	 * 	@var integer
+	 */
+	protected $consoleWidth = 80;
+	
 	public function afterConstruct() {
 		parent::afterConstruct();
-		$this->console = new Console;
+		// load console class
+		$consoleClassName = ephFrame::loadClass($this->consoleClassname);
+		$this->console = new $consoleClassName();
 		// load optParse
-		$optParseClass = $this->optParseClassname;
-		if (strpos($this->optParseClassname, ClassPath::$classPathDevider) !== false) {
-			
-		} else {
-			$optParseClassName = ClassPath::className($this->optParseClassname);
-			$optParseClassPath = 'ephFrame.lib.OptParse';
+		$optParseClassName = ephFrame::loadClass($this->optParseClassname);
+		$this->optParse = new $optParseClassName();
+		$this->init();
+		$this->main();
+	}
+	
+	protected function init() {
+		$this->showHello();
+		if (!empty($this->optParse->options['help'])) {
+			$this->console->out(LF);
+			$this->showHelp();
+			$this->quit();
 		}
-		
+		return true;
+	}
+	
+	protected function main() {
+		return true;
+	}
+	
+	public function showHello() {
+		return true;
+	}
+	
+	public function showHelp() {
+		$this->console->out($this->optParse->usage($this->consoleWidth));
+		return true;
+	}
+	
+	public function boxedMessage($message) {
+		return 
+			WACS_ULCORNER.str_repeat(WACS_HLINE, $this->consoleWidth-2).WACS_URCORNER.LF.
+			WACS_VLINE.' '.str_pad($message, $this->consoleWidth - 3, ' ', STR_PAD_RIGHT).WACS_VLINE.LF.
+			WACS_LLCORNER.str_repeat(WACS_HLINE, $this->consoleWidth-2).WACS_LRCORNER.LF;
+	}
+	
+	public function quit() {
+		exit;
 	}
 	
 }
+
+/**
+ * 	@package ephFrame
+ * 	@subpackage ephFrame.exceptions
+ */
+class ConsoleControllerException extends ControllerException {}
 
 ?>

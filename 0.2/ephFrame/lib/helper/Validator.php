@@ -29,6 +29,12 @@ class Validator extends Helper {
 	public $config = array();
 	public $callbackObject;
 	
+	/**
+	 *	Creates a new validator
+	 * 	
+	 * 	@param array(string) $config
+	 * 	@param Object $callbackObject
+	 */
 	public function __construct($config = array(), $callbackObject = null) {
 		$this->config = $config;
 		$this->callbackObject = $callbackObject;
@@ -43,7 +49,6 @@ class Validator extends Helper {
 	 * 	@return boolean|string
 	 */
 	public function validate($value = null) {
-		$ruleConfig = $this->config;
 		// single line string rules are callbacks!
 		foreach($this->config as $ruleName => $ruleConfig) {
 			// allowEmpty Rule

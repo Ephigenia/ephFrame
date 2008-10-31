@@ -157,7 +157,7 @@ final class ephFrame {
 		if (!class_exists($className)) {
 			self::loadFrameWorkFile($classPath);
 		}
-		return true;
+		return $className;
 	}
 	
 	/**

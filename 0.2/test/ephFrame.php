@@ -43,6 +43,7 @@ $helperTests->addTestFile('lib/helper/TestHTML.php');
 // ephFrame basic classes
 $helperTests->addTestFile('lib/TestFile.php');
 $helperTests->addTestFile('lib/TestSet.php');
+$helperTests->addTestFile('lib/TestCSV.php');
 $helperTests->addTestFile('lib/TestObjectSet.php');
 $helperTests->addTestFile('lib/TestCollection.php');
 $helperTests->addTestFile('lib/TestHash.php');
