@@ -380,7 +380,7 @@ class Set extends Component implements Countable, Renderable, Iterator, ArrayAcc
 		// check if the hole set is empty
 		if (count($this) == 0) return true;
 		foreach($this as $value) {
-			if (!is_empty($value)) return false;
+			if (!empty($value)) return false;
 		}
 		return false;
 	}

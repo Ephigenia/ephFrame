@@ -171,7 +171,10 @@ class HTTPHeader extends Hash {
 		if (!is_array($headerData)) {
 			return false;
 		}
-		$rendered = array(HTTPStatusCode::header($this->statusCode));
+		// send HTTP Header if set
+		if ($this->statusCode > 0) {
+			$rendered = array(HTTPStatusCode::header($this->statusCode));			
+		}
 		// render the header, finally
 		foreach ($headerData as $key => $value) {
 			$rendered[] = $this->renderKey($key, $value);
