@@ -69,7 +69,7 @@ class ConsoleProgressBar extends ConsoleWindow {
 	}
 	
 	public function redraw() {
-		if ($this->max <= 0) {
+		if ($this->max > 0) {
 			$percent = $this->value / $this->max;
 		} else {
 			$percent = 0.0;

@@ -179,6 +179,15 @@ class Model extends Object {
 	protected $associationTypes = array('hasOne', 'hasMany', 'belongsTo', 'hasAndBelongsToMany');
 	
 	/**
+	 *	Default association depth when reading data from model
+	 * 	0 = just data from this model
+	 * 	1 = data from associated models
+	 *  2 = data from associated models and their associated models
+	 * 	@var integer
+	 */
+	public $depth = 2;
+	
+	/**
 	 * 	@var ModelBehaviorHandler
 	 */
 	public $behaviors = array('Model');
@@ -689,7 +698,10 @@ class Model extends Object {
 	 * 	@param integer $depth depth of model associations to use in select query
 	 * 	@return SelectQuery
 	 */
-	protected function createSelectQuery($conditions = array(), $order = array(), $offset = 0, $count = null, $depth = 2) {
+	protected function createSelectQuery($conditions = array(), $order = array(), $offset = 0, $count = null, $depth = null) {
+		if ($depth === null) {
+			$depth = $this->depth;
+		}
 		// prepare conditions
 		if ($conditions == null) {
 			$conditions = array();
@@ -745,7 +757,10 @@ class Model extends Object {
 	 * 	@param QueryResult $result
 	 * 	@return Set
 	 */
-	protected function createSelectResultList(QueryResult $result, $justOne = false, $depth = 2) {
+	protected function createSelectResultList(QueryResult $result, $justOne = false, $depth = null) {
+		if ($depth === null) {
+			$depth = $this->depth;
+		}
 		if ($result->numRows() == 0) {
 			return false;
 		}
@@ -845,7 +860,7 @@ class Model extends Object {
 	 * 	@param integer $offset Offset to select from
 	 * 	@return Set(Model)|boolean
 	 */
-	public function findAll($conditions = null, $order = null, $offset = 0, $count = null, $depth = 2) {
+	public function findAll($conditions = null, $order = null, $offset = 0, $count = null, $depth = null) {
 		$result = $this->DB->query($this->createSelectQuery($conditions, $order, $offset, $count, $depth));
 		return $this->createSelectResultList($result, false, $depth);
 	}
@@ -872,7 +887,7 @@ class Model extends Object {
 	 * 	@param integer $depth depth of model recursion (0-2);
 	 * 	@return Set(Model)|boolean
 	 */
-	public function findAllBy($fieldname, $value = null, $order = null, $offset = 0, $count = null, $depth = 2) {
+	public function findAllBy($fieldname, $value = null, $order = null, $offset = 0, $count = null, $depth = null) {
 		var_dump($fieldname);
 		if ($this->hasField($fieldname)) {
 			$value = DBQuery::quote($value, $this->structure[$fieldname]);

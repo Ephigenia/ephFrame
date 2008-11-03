@@ -77,6 +77,19 @@ class Form extends HTMLTag {
 		// in the classes that inherit this one, you create all the form fields
 	}
 	
+	public function beforeRender() {
+		// add multipart form data if file field in the form
+		if (!($this->attributes->hasKey('enctype'))) {
+			foreach($this->fieldset->children() as $child) {
+				if ($child instanceof FormFieldFile) {
+					$this->attributes->set('enctype', 'multipart/form-data');
+					break;
+				}
+			}
+		}
+		return parent::beforeRender();
+	}
+	
 	public function __get($fieldname) {
 		if ($field = $this->fieldset->childWithAttribute('name', $fieldname)) {
 			return $field;

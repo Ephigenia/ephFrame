@@ -102,9 +102,9 @@ abstract class FormField extends HTMLTag {
 			$this->attributes['class'] .= ' '.$this->attributes->name;
 		}
 		// does not work because this method is called two times?, see the comment above
-//		if (!$this->validate()) {
-//			$this->attributes['class'] .= ' errousField';
-//		}
+		if (!$this->validate()) {
+			$this->attributes['class'] .= ' errousField';
+		}
 		
 		// get posted value and set it as value for this field
 		if ($value = $this->value()) {
@@ -128,6 +128,16 @@ abstract class FormField extends HTMLTag {
 			$rendered = '<p>'.$rendered.'</p>'.LF;
 		}
 		return ($this->afterRender($rendered));
+	}
+	
+	public function insertAfter(Tree $field) {
+		$field->form = $this->form;
+		return parent::insertAfter($field);
+	}
+	
+	public function insertBefore(Tree $field) {
+		$field->form = $this->form;
+		return parent::insertBefore($field);
 	}
 	
 }

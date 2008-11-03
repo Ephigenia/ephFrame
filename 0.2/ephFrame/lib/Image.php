@@ -12,8 +12,8 @@
  * 	@filesource
  */
 
-ephFrame::loadClass('ephFrame.lib.File');
-ephFrame::loadClass('ephFrame.lib.Color');
+require_once dirname(__FILE__).'/File.php';
+require_once dirname(__FILE__).'/Color.php';
 
 /**
  *	Image Class

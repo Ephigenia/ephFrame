@@ -109,7 +109,7 @@ class Tree extends Object implements Countable, Iterator, Renderable {
 	}
 	
 	/**
-	 *	Prepends a child to the tree
+	 *	Prepend $child to the beginning of the children of this Treenode
 	 * 	@param Tree
 	 * 	@return Tree
 	 */
@@ -120,6 +120,41 @@ class Tree extends Object implements Countable, Iterator, Renderable {
 		foreach($this->children as $index => $child) {
 			$child->index = $index;
 		}
+		return $this;
+	}
+	
+	/**
+	 *	Insert a Tree element to before this tree element in the parent
+	 * 	children
+	 * 	@param Tree
+	 * 	@return Tree
+	 */
+	public function insertBefore(Tree $tree) {
+		$tree->parent($this->parent);
+		$newChildren = array_slice($this->parent->children, 0, $this->index);
+		$newChildren[] = $tree;
+		$newChildren = array_merge($newChildren, array_slice($this->parent->children, $this->index));
+		foreach($newChildren as $index => $child) {
+			$child->index = $index;
+		}
+		$this->parent->children = $newChildren;
+		return $this;
+	}
+	
+	/**
+	 * 	Inserts a Tree element to the end of the parents children
+	 * 	@param Tree
+	 * 	@return Tree
+	 */
+	public function insertAfter(Tree $tree) {
+		$tree->parent($this->parent);
+		$newChildren = array_slice($this->parent->children, 0, $this->index+1);
+		$newChildren[] = $tree;
+		$newChildren = array_merge($newChildren, array_slice($this->parent->children, $this->index+1));
+		foreach($newChildren as $index => $child) {
+			$child->index = $index;
+		}
+		$this->parent->children = $newChildren;
 		return $this;
 	}
 	

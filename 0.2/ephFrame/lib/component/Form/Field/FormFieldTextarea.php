@@ -12,13 +12,19 @@ class FormFieldTextarea extends FormField {
 
 	public function __construct($name, $value = null, Array $attributes = array()) {
 		parent::__construct($name, null, $attributes);
+		unset($this->attributes['type']);
 		$this->tagValue = $value;
 		$this->tagName = $this->type;
 		return $this;
 	}
 	
 	public function value($value = null) {
-		
+		if (func_num_args() > 0) {
+			$this->tagValue = $value;
+			return $this;
+		} else {
+			return parent::value($value);
+		}
 	}
 	
 }

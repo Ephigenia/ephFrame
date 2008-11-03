@@ -80,6 +80,10 @@ class HTTPRequest extends Component {
 	 */
 	public $timeout = 5;
 	
+	/**
+	 *	Stores post and get variables
+	 * 	@var array(string)
+	 */
 	public $data = array();
 	
 	/**
