@@ -108,7 +108,7 @@ class JSPacker extends Component {
 				$packed .= $this->compressor->compressFile($filename).LF;
 			} else {
 				$jsFile = new File($filename);
-				$packed .= $jsFile->read();
+				$packed .= $jsFile->slurp();
 			}
 		}
 		return $packed;

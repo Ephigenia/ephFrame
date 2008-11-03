@@ -1,7 +1,8 @@
 <?php
 
 require_once dirname(__FILE__).'/ConsoleDrawing.php';
-require_once dirname(__FILE__).'/../helper/Set.php';
+require_once dirname(__FILE__).'/ConsoleWindow.php';
+require_once dirname(__FILE__).'/../Set.php';
 
 /**
  * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
@@ -50,8 +51,8 @@ class ConsoleProgressBar extends ConsoleWindow {
 		$this->y = $y;
 		$this->width = $width;
 		$this->max = $max;
-		$this->redraw();
 		$this->drawChars[4] = new Set('-', '\\', '|', '/');
+		$this->redraw();
 		return $this;
 	}
 	
@@ -68,12 +69,16 @@ class ConsoleProgressBar extends ConsoleWindow {
 	}
 	
 	public function redraw() {
-		$percent = $this->value / $this->max;
+		if ($this->max <= 0) {
+			$percent = $this->value / $this->max;
+		} else {
+			$percent = 0.0;
+		}
 		// render content
 		$rendered = '';
 		// percentage display
 		if ($this->type == self::TYPE_PERCENT) {
-			$rendered .= str_pad(floor($percent*100), 3, $this->background, STR_PAD_LEFT).'%'.$this->background;
+			$rendered .= str_pad(floor($percent * 100), 3, $this->background, STR_PAD_LEFT).'%'.$this->background;
 		}
 		// counter display
 		if ($this->type = self::TYPE_COUNTER) {
@@ -97,7 +102,8 @@ class ConsoleProgressBar extends ConsoleWindow {
 		}
 		$rendered .= str_repeat($this->drawChars[1], $progressBarWidth-$progressBarOnWidth);
 		$rendered .= $this->drawChars[3];
-		return $this->content($rendered);
+		$this->content = $rendered;
+		parent::redraw();
 	}
 	
 }

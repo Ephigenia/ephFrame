@@ -18,11 +18,7 @@ require_once dirname(__FILE__).'/FileSystemNode.php';
 /**
  *	File Class
  * 
- * 	This class should represent files. You can copy them, move them, check
- * 	their existence, check the size, get the Mime-Type and various other stuff.
- * 	Check the examples in the methods.
  * 	
- * 	See the method list and example usages for more examples.
  * 
  * 	This class is partially tested by {@link TestFile}.
  * 
@@ -39,7 +35,13 @@ class File extends FileSystemNode {
 	 *	Read Buffer size on {@link read}ing actions
 	 * 	@var integer
 	 */
-	private $readBufferSize = 1024;
+	protected $readBufferSize = 1024;
+	
+	/**
+	 *	Opened stream of a file
+	 * 	@var ressource
+	 */
+	protected $stream;
 	
 	/**
 	 * 	File Constructor
@@ -342,31 +344,40 @@ class File extends FileSystemNode {
 	}
 	
 	/**
-	 *	Read contents of the file
-	 * 	
-	 * 	This reads the file into an array ($asArray = true) or as string.
-	 * 	<code>
-	 * 	$file = new File('log.txt');
-	 * 	foreach($line = $file->read(true)) {
-	 * 		echo $line.'<br />;
-	 * 	}
-	 * 	</code>
-	 * 	@param boolean $asArray Read file into an array instead of a string
-	 * 	@param integer $readBufferSize Custom read buffer size
-	 * 	@return array(string)|string
+	 *	Reads a single line from a file with optional skipping empty lines
+	 * 	@param boolean $notEmpty
+	 * 	@return string
 	 */
-	public function read($asArray = false, $readBufferSize = null) {
-		if ($readBufferSize === null) {
-			$readBufferSize = $this->readBufferSize;
+	public function read() {
+		if (!is_resource($this->stream)) {
+			$this->checkExistence();
+			$this->stream = fopen($this->nodeName, 'r');
 		}
+		if (feof($this->stream)) {
+			$this->close();
+			return false;
+		}
+		$result = fgets($this->stream, $this->readBufferSize);
+		return $result;
+	}
+	
+	/**
+	 *	Returns the hole content of a file as string
+	 * 	@return string
+	 */
+	public function slurp() {
+		$this->checkExistence();
+		return file_get_contents($this->nodeName);
+	}
+	
+	/**
+	 *	Reads the hole file into an array and returns the array
+	 * 	@return array(string)
+	 */
+	public function toArray() {
 		$this->checkExistence();
 		if (!$this->readable()) throw new FileNotReadableException($this);
-		if ($asArray) {
-			$return = file($this->filename());
-		} else {
-			$return = file_get_contents($this->filename());
-		}
-		return $return;
+		return array_map('trim', file($this->filename()));
 	}
 	
 	/**
@@ -403,13 +414,28 @@ class File extends FileSystemNode {
 		if ($filename == null) {
 			$file = $this;
 		} else {
-			$file = new File($filename);
+			$classname = get_class($this);
+			$file = new $classname($filename);
 		}
 		if (!$fp) {
 			throw new FileNotWriteableException($file);
 		}
 		$file->chmod($chmod);
 		return $file;
+	}
+	
+	/**
+	 *	Saves the file as $filename and returns a new File Instance of the 
+	 * 	new created file.
+	 * 	@param string $filename
+	 * 	@return File
+	 */
+	public function saveAs($filename) {
+		$this->checkExistence();
+		$classname = get_class($this);
+		$newFile = new $classname($filename);
+		$newFile->write(file_get_contents($this->nodeName));
+		return $newFile;
 	}
 	
 	/**
@@ -420,13 +446,23 @@ class File extends FileSystemNode {
 	public function checkForPHPTags() {
 		$this->checkExistence();
 		if (!$this->readable()) throw new FileNotReadableException($this);
-		$fp = fopen($this->nodeName, 'b');
-		while(!feof($fp)) {
+		while($line == $this->read()) {
 			$line = fgets($fp, $this->readBufferSize);
 			if (preg_match('', $line)) throw new FileWithPHPTagsException($this);
 		}
-		fclose($fp);
+		$this->close();
 		return $this;
+	}
+	
+	public function close() {
+		if (is_resource($this->stream)) {
+			fclose($this->stream);
+		}
+		return true;
+	}
+	
+	public function __destroy() {
+		$this->close();
 	}
 
 }

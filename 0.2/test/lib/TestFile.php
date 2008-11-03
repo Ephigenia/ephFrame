@@ -41,6 +41,14 @@ class TestFile extends UnitTestCase {
 		$this->falseFile = new File('nixda');
 	}
 	
+	public function testReadLine() {
+		$file = new File(dirname(__FILE__).'/../tmp/textfile.txt');
+		while($line = $file->read(true)) {
+			$this->assertTrue(is_string($line));
+		}
+		$this->assertTrue(count($file->toArray()), 4);
+	}
+	
 	public function testExt() {
 		$this->assertEqual(File::ext('Simplefilename.ext'), 'ext');
 		$this->assertEqual(File::ext('Simplefilename.ext  '), 'ext');

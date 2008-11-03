@@ -121,7 +121,7 @@ class CSSPacker extends Component {
 				$content = $this->compressor->compressFile($filename);
 			} else {
 				$file = new File($filename);
-				$content = $file->read();
+				$content = $file->slurp();
 			}
 			// capture encoding tag, last one wins
 			if ($encoding = $this->captureCharset($content)) {

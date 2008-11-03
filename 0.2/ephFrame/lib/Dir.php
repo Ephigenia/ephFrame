@@ -152,11 +152,11 @@ class Dir extends FileSystemNode {
 	 * 	flags {@link listHiddenFiles} and {@link listHiddenDirectories} are on.
 	 *	Prevent listing hidden files by setting them to false.
 	 * 
-	 * 	@param boolean $hiddenStuff show hidden files and directories?
+	 * 	@param string $pattern
 	 * 	@return Set {@link Set} of files and directories
 	 */
-	public function read() {
-		$dh = scandir($this->nodeName, 1);
+	public function read($pattern = null) {
+		$dh = scandir($this->nodeName.$pattern, 1);
 		$contents = new Set();
 		foreach ($dh as $possible) {
 			// create either file or directory objects depending on found

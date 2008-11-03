@@ -47,7 +47,7 @@ abstract class Compressor extends Component {
 	 */
 	public function compressFile($filename) {
 		$file = new File($filename);
-		return $this->compress($file->read());
+		return $this->compress($file->slurp());
 	}
 	
 }

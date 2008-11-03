@@ -45,6 +45,7 @@ ephFrame::loadClass('ephFrame.lib.File');
  * 	echo $csv->toCSV();
  * 	</code>
  * 
+ * 	@todo add multiline-column support
  * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * 	@since 19.05.2007
  * 	@version 0.2
@@ -57,7 +58,7 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	 *	CSV File Content, Don't touch
 	 *	@var array(array(string))
 	 */
-	protected $tableData = array();
+	protected $data = array();
 	
 	/**
 	 *	Row Seperators
@@ -80,13 +81,24 @@ class CSV extends File implements Renderable, Iterator, Countable {
 
 	/**
 	 *	CSV File Constructer
-	 *	@param string		$filename
+	 *	@param string|array $filename
 	 *	@param string|array	$seperator
+	 * 	@return CSV
 	 */
 	public function __construct($filename = null, $seperator = null) {
-		parent::__construct($filename);
-		$this->seperator($seperator);
 		$this->recreateLineRegExp();
+		if (is_array($filename)) {
+			$this->data = $filename;
+		} elseif (is_object($filename) && is_a($filename, 'Set')) {
+			$this->data = $filename->toArray();
+		} elseif (!empty($filename)) {
+			parent::__construct($filename);
+			if (parent::exists()) {
+				$this->data = $this->toArray();
+			}
+		}
+		$this->seperator($seperator);
+		return $this;
 	}
 
 	/**
@@ -133,7 +145,7 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	}
 
 	/**
-	 *	Encodes a Coloumn for CSV
+	 *	Encodes a single coloumn for CSV
 	 *	@param string	$column
 	 *	@return string
 	 */
@@ -151,43 +163,44 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	}
 
 	/**
-	 *	Parses a CSV Line and splits and decoded the coloumns
+	 *	Parses a line from csv line and returns the parsed data array
 	 *	@return array(string)
 	 */
-	protected function parseLine($inLine) {
+	protected function parseLine($raw) {
+		if (!is_string($raw)) return false;
 		// split line using regular expression
-		preg_match_all($this->lineRegExp, $inLine, $foundColumns);
-		if (is_array($foundColumns)) {
-			// trim seperators at beginning and end of values
-			foreach ($foundColumns[0] as $columnNo => $value) {
-				$foundColumns[0][$columnNo] = $this->unencodeColumn($value);
-			}
-			return $foundColumns[0];
-		} else {
-			return array();
+		if (!preg_match_all($this->lineRegExp, $raw, $foundColumns)) {
+			return false;
 		}
+		// trim seperators at beginning and end of values
+		foreach ($foundColumns[0] as $columnNo => $value) {
+			$foundColumns[0][$columnNo] = $this->unencodeColumn($value);
+		}
+		return $foundColumns[0];
 	}
 
 	/**
-	 * 	Returns an array of all lines and rows in this csv-file.
+	 * 	Returns one line of parsed csv data as an array or false if the end
+	 * 	is reached
 	 * 	@return array(array(string))
 	 */
 	public function read() {
-		if (empty($this->tableData)) {
-			$content = parent::read();
-			foreach ($content as $line) {
-				$lineArr = $this->parseLine($line);
-				if (!empty($lineArr)) $this->addRow($lineArr);
-			}
+		return $this->parseLine(parent::read());
+	}
+	
+	public function toArray() {
+		$r = array();
+		while($d = $this->read()) {
+			$r[] = $d;
 		}
-		return $this->tableData;
+		return $r;
 	}
 	
 	/**
 	 * 	{@link render} callback
 	 * 	@return boolean
 	 */
-	private function beforeRender() {
+	public function beforeRender() {
 		return true;
 	}
 	
@@ -196,7 +209,7 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	 * 	@param string $rendered
 	 * 	@return string
 	 */
-	private function afterRender($rendered) {
+	public function afterRender($rendered) {
 		return $rendered;
 	}
 
@@ -220,33 +233,13 @@ class CSV extends File implements Renderable, Iterator, Countable {
 		$rendered = substr($rendered, 0, -2); // strip last Line breaks
 		return $this->afterRender($rendered);
 	}
-
-	/**
-	 *	Sends and returns a header for a csv file with
-	 * 	optional download headers.
-	 * 	Specify a filename for the downloaded file if you want
-	 * 	@param string	$downloadFileName
-	 * 	@return string
-	 */
-	public function header($downloadFileName = false) {
-		$header = array(MimeTypes::mimeType('csv'));
-		if ($downloadFileName !== false) {
-			$header[] = 'Content-Disposition: attachment; filename="'.(($downloadFileName === true) ? $this->filename : $downloadFileName).'"';
-		}
-		foreach ($header as $line) {
-			header($line);
-		}
-		return implode("\n",$header);
+	
+	public function __toString() {
+		return $this->render();
 	}
-
-	/**
-	 *	Adds a nother Line to CSV
-	 *	@param array|string 	$arr
-	 */
-	public function addRow($arr) {
-		if (is_string($arr)) $arr = array($arr);
-		array_push($this->tableData, $arr);
-		return $this;
+	
+	public function add($arr) {
+		return $this->append($arr);
 	}
 
 	/**
@@ -254,7 +247,9 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	 * 	@see addRow
 	 */
 	public function append($arr) {
-		$this->addRow($arr);
+		if (is_string($arr)) $arr = array($arr);
+		$this->data[] = $arr;
+		return $this;
 	}
 
 	/**
@@ -269,37 +264,43 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	 *	@param string	$filename
 	 */
 	public function saveAs($filename) {
-		$newFile = new File($filename);
+		$classname = get_class($this);
+		$newFile = new $classname($filename);
 		$newFile->write($this->render());
 		$this->filename = $filename;
+		return $this;
 	}
 	
+	/**
+	 *	Returns the number of lines 
+	 * 	@return integer
+	 */
 	public function count() {
-		if (empty($this->tableData)) $this->read();
-		return count($this->tableData);
+		if (empty($this->data)) $this->read();
+		return count($this->data);
 	}
 
 	public function rewind() {
 		$this->iteratorPosition = 0;
-		if (empty($this->tableData)) $this->read();
-		reset($this->tableData);
+		if (empty($this->data)) $this->read();
+		reset($this->data);
 		return true;
 	}
 
 	public function next() {
-		if (empty($this->tableData)) $this->read();
+		if (empty($this->data)) $this->read();
 		$this->iteratorPosition++;
-		next($this->tableData);
+		next($this->data);
 	}
 
 	public function key() {
-		if (empty($this->tableData)) $this->read();
-		return key($this->tableData);
+		if (empty($this->data)) $this->read();
+		return key($this->data);
 	}
 
 	public function current() {
-		if (empty($this->tableData)) $this->read();
-		return current($this->tableData);
+		if (empty($this->data)) $this->read();
+		return current($this->data);
 	}
 
 	public function valid() {
