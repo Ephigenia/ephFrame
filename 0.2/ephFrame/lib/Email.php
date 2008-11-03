@@ -16,23 +16,37 @@ class Email extends Object {
 	protected $recipients = array();
 	protected $reply = null;
 	
-	public function __construct($to = null, $subject = null) {
+	public function __construct($from = null, $to = null, $subject = null) {
 		$this->headers = new HTTPHeader();
 		$this->recipients = array('bcc' => new Hash(), 'cc' => new Hash(), 'to' => new Hash());
-		$this->subject($subject);
+
+		$this->from($from);
+		$this->to($to);
+		$this->subject($subject);		
 	}
-	
+	// TODO: Marcel fragen - get_class doof?
 	public function addAttachment($filename) {
-		$this->attachments[] = $filename;
+		if(get_class($filename) == 'File') {
+			$this->attachments[] = $filename;			
+		}else{
+			$this->attachments[] = new File($filename);
+		}
 	}
 	
 	public function addBCC($email, $name = null) {
-		return $this->recipients['bcc']->add($this->toRFC2822MailAddress($email, $name));
+		if(is_array($email)) {
+			return $this->recipients['bcc']->merge($email);
+		}else{
+			return $this->recipients['bcc']->add($this->toRFC2822MailAddress($email, $name));			
+		}	
 	}
 	
 	public function addCC($email, $name = null) {
-		return $this->recipients['cc']->add($this->toRFC2822MailAddress($email, $name));
-		
+		if(is_array($email)) {
+			return $this->recipients['cc']->merge($email);
+		}else{
+			return $this->recipients['cc']->add($this->toRFC2822MailAddress($email, $name));			
+		}		
 	}
 	
 	public function addHeader($key, $value = null) {
@@ -40,7 +54,11 @@ class Email extends Object {
 	}
 	
 	public function addTo($email, $name = null) {
-		return $this->recipients['to']->add($this->toRFC2822MailAddress($email, $name));
+		if(is_array($email)) {
+			return $this->recipients['to']->merge($email);
+		}else{
+			return $this->recipients['to']->add($this->toRFC2822MailAddress($email, $name));			
+		}
 	}
 	
 	public function afterSend() {
@@ -93,6 +111,16 @@ class Email extends Object {
 		return Validator::email($email);
 	}
 	
+	public function removeDuplicates() {
+		return true;
+	}
+	
+	protected function renderAttachments() {
+		if($this->hasAttachments()) {
+			
+		}
+	}
+	
 	protected function renderBody() {
 		return $this->body;
 	}
@@ -110,18 +138,20 @@ class Email extends Object {
 	}
 	
 	public function send() {
-		if(($this->beforeSend()) && (!$this->to()->isEmpty()) && ($this->from())) {
-			// turn HTTP Headers off & add BCC/CC Headers
-			if(!$this->bcc()->isEmpty()) $this->addHeader('Bcc', $this->bcc()->implode(', '));
-			if(!$this->cc()->isEmpty()) $this->addHeader('Cc', $this->cc()->implode(', '));
-			$this->headers->statusCode = 0;
-			
-			foreach($this->to()->values() as $to) {
-				//@mail($to, $this->subject(), $this->renderBody(), $this->renderHeaders());
+		if($this->beforeSend()) {
+			if($this->removeDuplicates()) {
+				// turn HTTP Headers off & add BCC/CC Headers
+				if(!$this->bcc()->isEmpty()) $this->addHeader('Bcc', $this->bcc()->implode(', '));
+				if(!$this->cc()->isEmpty()) $this->addHeader('Cc', $this->cc()->implode(', '));
+				$this->headers->statusCode = 0;				
+
+				foreach($this->to()->values() as $to) {
+					//@mail($to, $this->subject(), $this->renderBody(), $this->renderHeaders());
+				}
+
+				$this->afterSend();
+				return true;				
 			}
-			
-			$this->afterSend();
-			return true;
 		}
 		return false;
 	}
@@ -143,7 +173,15 @@ class Email extends Object {
 	
 	public function to($to = null) {		
 		if(!empty($to)){
-			$this->recipients['to'] = $to;
+			if(get_class($to) == 'Hash'){
+				$this->recipients['to'] = $to;
+			}else{
+				if(is_array($to)){
+					$this->recipients['to']->fromArray($to);
+				}else{
+					$this->recipients['to']->add($to);	
+				}
+			}
 		}
 		return $this->recipients['to'];
 	}
