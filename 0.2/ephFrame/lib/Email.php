@@ -37,7 +37,7 @@ class Email extends Object {
 		if(is_array($email)) {
 			return $this->recipients['bcc']->merge($email);
 		}else{
-			return $this->recipients['bcc']->add($email, $this->toRFC2822MailAddress($email, $name));			
+			return $this->recipients['bcc']->add($this->cleanEmailAddress($email), $this->toRFC2822MailAddress($email, $name));			
 		}	
 	}
 	
@@ -45,7 +45,7 @@ class Email extends Object {
 		if(is_array($email)) {
 			return $this->recipients['cc']->merge($email);
 		}else{
-			return $this->recipients['cc']->add($email, $this->toRFC2822MailAddress($email, $name));			
+			return $this->recipients['cc']->add($this->cleanEmailAddress($email), $this->toRFC2822MailAddress($email, $name));			
 		}		
 	}
 	
@@ -57,7 +57,7 @@ class Email extends Object {
 		if(is_array($email)) {
 			return $this->recipients['to']->merge($email);
 		}else{
-			return $this->recipients['to']->add($email, $this->toRFC2822MailAddress($email, $name));			
+			return $this->recipients['to']->add($this->cleanEmailAddress($email), $this->toRFC2822MailAddress($email, $name));			
 		}
 	}
 	
@@ -81,6 +81,10 @@ class Email extends Object {
 			$this->recipients['cc'] = $cc;
 		}
 		return $this->recipients['cc'];
+	}
+	
+	protected function cleanEmailAddress($email) {
+		return strtolower(trim($email));
 	}
 	
 	public function from($email = null, $name = null) {
@@ -139,19 +143,17 @@ class Email extends Object {
 	
 	public function send() {
 		if($this->beforeSend()) {
-			if($this->removeDuplicates()) {
-				// turn HTTP Headers off & add BCC/CC Headers
-				if(!$this->bcc()->isEmpty()) $this->addHeader('Bcc', $this->bcc()->implode(', '));
-				if(!$this->cc()->isEmpty()) $this->addHeader('Cc', $this->cc()->implode(', '));
-				$this->headers->statusCode = 0;				
+			// turn HTTP Headers off & add BCC/CC Headers
+			if(!$this->bcc()->isEmpty()) $this->addHeader('Bcc', $this->bcc()->implode(', '));
+			if(!$this->cc()->isEmpty()) $this->addHeader('Cc', $this->cc()->implode(', '));
+			$this->headers->statusCode = 0;				
 
-				foreach($this->to()->values() as $to) {
-					//@mail($to, $this->subject(), $this->renderBody(), $this->renderHeaders());
-				}
-
-				$this->afterSend();
-				return true;				
+			foreach($this->to()->values() as $to) {
+				//@mail($to, $this->subject(), $this->renderBody(), $this->renderHeaders());
 			}
+			
+			$this->afterSend();
+			return true;				
 		}
 		return false;
 	}
