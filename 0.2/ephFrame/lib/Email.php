@@ -24,7 +24,7 @@ class Email extends Object {
 		$this->to($to);
 		$this->subject($subject);		
 	}
-	// TODO: Marcel fragen - get_class doof?
+	/* @TODO: Marcel fragen - get_class doof? */
 	public function addAttachment($filename) {
 		if(get_class($filename) == 'File') {
 			$this->attachments[] = $filename;			
@@ -37,7 +37,7 @@ class Email extends Object {
 		if(is_array($email)) {
 			return $this->recipients['bcc']->merge($email);
 		}else{
-			return $this->recipients['bcc']->add($this->toRFC2822MailAddress($email, $name));			
+			return $this->recipients['bcc']->add($email, $this->toRFC2822MailAddress($email, $name));			
 		}	
 	}
 	
@@ -45,7 +45,7 @@ class Email extends Object {
 		if(is_array($email)) {
 			return $this->recipients['cc']->merge($email);
 		}else{
-			return $this->recipients['cc']->add($this->toRFC2822MailAddress($email, $name));			
+			return $this->recipients['cc']->add($email, $this->toRFC2822MailAddress($email, $name));			
 		}		
 	}
 	
@@ -57,7 +57,7 @@ class Email extends Object {
 		if(is_array($email)) {
 			return $this->recipients['to']->merge($email);
 		}else{
-			return $this->recipients['to']->add($this->toRFC2822MailAddress($email, $name));			
+			return $this->recipients['to']->add($email, $this->toRFC2822MailAddress($email, $name));			
 		}
 	}
 	
