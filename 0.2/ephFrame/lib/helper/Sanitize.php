@@ -80,11 +80,9 @@ class Sanitize extends Helper {
 		if (!is_array($array)) {
 			throw new ArrayExpectedException();
 		}
-		$ret = array();
 		foreach ($array as $key => $value) {
 			$array[$key] = self::panic($value);
 		}
-		$array = $ret;
 		return $array;
 	}
 	

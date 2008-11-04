@@ -26,9 +26,10 @@ class FormFieldFile extends FormField {
 			if (!isset($this->form) || isset($this->form) && !$this->form->submitted()) {
 				return false;
 			}
-			if (isset($_FILES[$this->attributes->name])) {
+			if (!empty($_FILES[$this->attributes->name]['tmp_name'])) {
 				return new $this->fileClassName($_FILES[$this->attributes->name]['tmp_name']);
 			}
+			return false;
 		}
 	}
 	
