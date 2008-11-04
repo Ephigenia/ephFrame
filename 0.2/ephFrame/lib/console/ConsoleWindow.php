@@ -30,6 +30,20 @@ require_once dirname(__FILE__).'/ConsoleDrawing.php';
  *		usleep(0.02 * 1000000); // ms
  *	}
  * 	</code>
+ * 
+ * 	Example Output:
+ * 	<code>
+ * 	┌─[ Drawing ]──────┐
+ *  │ very long        │
+ *  │ character shit   │
+ *  │ Automatic        │
+ *  │ Console Drawing  │
+ *  │ x Drawing        │
+ *  │                  │
+ *  │                  │
+ *  │                  │
+ *  └──────────────────┘
+ * 	</code>
  * 	
  * 	@package ephFrame
  * 	@subpackage ephFrame.lib.console

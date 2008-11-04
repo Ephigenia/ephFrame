@@ -19,6 +19,11 @@ require_once dirname(__FILE__).'/../Set.php';
 /**	
  * 	Draws a Progress-Bar into the Console
  * 	
+ * 	Example Output, 40/60 Done, the current location indicator rotates:
+ * 	<code>
+ * 	40/60 [============================/--------------------]
+ * 	</code>
+ * 
  * 	@since 19.04.2008
  * 	@package ephFrame
  * 	@subpackage ephFrame.lib.console

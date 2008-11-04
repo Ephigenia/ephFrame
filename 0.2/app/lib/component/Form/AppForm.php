@@ -15,7 +15,11 @@
 ephFrame::loadClass('ephFrame.lib.component.Form.Form');
 
 /**
- * 	Mother class for all application forms
+ * 	Mother Class for all Application Forms
+ * 
+ * 	Use this class to add methods to you application wide used forms.
+ * 	See the cookbook how to use this in your applications.
+ * 
  * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * 	@since 23.10.2008
  * 	@package app
@@ -23,7 +27,6 @@ ephFrame::loadClass('ephFrame.lib.component.Form.Form');
  */
 class AppForm extends Form {
 
-	
 }
 
 ?>

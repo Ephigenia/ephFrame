@@ -17,6 +17,10 @@ require_once(dirname(__FILE__).'/../ConsoleDrawing.php');
 /**
  * 	Draws a histogram-like graph into the console
  * 
+ * 	<code>
+ * 	
+ * 	</code>
+ * 
  * 	@since 19.04.2008
  * 	@package ephFrame
  * 	@subpackage ephFrame.lib.console
@@ -100,8 +104,8 @@ class ConsoleHistogram extends ConsoleDrawing {
 }
 
 /**
- * 	@package rapidDownload
- * 	@subpackage rapdidDownload.lib.exception
+ * 	@package ephFrame
+ * 	@subpackage ephFrame.lib.exception
  */
 class ConsoleHistogramException extends ConsoleDrawingException {}
 

@@ -1,10 +1,28 @@
 <?php
 
-ephFrame::loadClass('ephFrame.lib.HTMLTag');
+/**
+ * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * 	Copyright 2007+, Ephigenia M. Eichner, Kopernikusstr. 8, 10245 Berlin
+ *
+ * 	Licensed under The MIT License
+ * 	Redistributions of files must retain the above copyright notice.
+ * 	@license http://www.opensource.org/licenses/mit-license.php The MIT License
+ * 	@copyright Copyright 2007+, Ephigenia M. Eichner
+ * 	@link http://code.ephigenia.de/projects/ephFrame/
+ * 	@filesource
+ */
+
+if (!class_exists('HTMLTag')) ephFrame::loadClass('ephFrame.lib.HTMLTag');
 
 /**
+ * 	Form Class
+ * 	
  * 	@todo add validation rules here or make validation rules easily editable by sub classes
  * 	@version 0.3
+ * 	@package ephFrame
+ * 	@subpackage ephFrame.lib.component.Form
+ * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * 	@since 04.11.2008
  */
 class Form extends HTMLTag {
 	
@@ -29,6 +47,19 @@ class Form extends HTMLTag {
 	 * 	@var HTMLTag
 	 */
 	protected $fieldset;
+	
+	/**
+	 *	Stores tha errors from a validation process
+	 * 	@var array(string)
+	 */
+	public $validationErrors = array();
+	
+	/**
+	 *	Name of Models from the controller that should autamticly used in this
+	 * 	form
+	 * 	@param array(string)
+	 */
+	public $configureModel = array();
 	
 	/**
 	 * 	Creates a new Form Instance
@@ -70,13 +101,6 @@ class Form extends HTMLTag {
 		return true;
 	}
 	
-	/**
-	 * 	Define your form in this method
-	 */
-	public function configure() {
-		// in the classes that inherit this one, you create all the form fields
-	}
-	
 	public function beforeRender() {
 		// add multipart form data if file field in the form
 		if (!($this->attributes->hasKey('enctype'))) {
@@ -86,6 +110,9 @@ class Form extends HTMLTag {
 					break;
 				}
 			}
+		}
+		if ($this->submitted() && !$this->validate() && count($this->validationErrors) > 0) {
+			$this->prepend(new HTMLTag('p', array('class' => 'error'), nl2br(implode(LF, $this->validationErrors))));
 		}
 		return parent::beforeRender();
 	}
@@ -125,6 +152,11 @@ class Form extends HTMLTag {
 		return new $fieldClassname($name, $value, $attributes);
 	}
 	
+	/**
+	 *	Checks if the form is submitted by iterating over all elements and return
+	 * 	true if any of these fields was submitted
+	 * 	@return boolean
+	 */
 	public function submitted() {
 		// test if a form was submitted by checking every field of the form
 		// for content
@@ -136,26 +168,79 @@ class Form extends HTMLTag {
 	}
 	
 	public function validate(Array $fieldNames = array()) {
-		$validationErrors = array();
-		foreach($this->children() as $child) {
+		$validationErrors = false;
+		foreach($this->fieldset->children() as $child) {
 			// skip form fields with the names from $fieldNames
 			if (!empty($fieldNames) && !in_array($child->attributes->name, $fieldNames)) continue;
+			// skip non-form-fields
+			if (!($child instanceof FormField)) continue;
 			// validate form field and save errors in return array
-			$r = $child->validate();
-			if ($r !== true) {
-				$validationErrors[$child->attributes->name] = $r;
+			if ($child->validate() !== true) {
+				$validationErrors[$child->attributes->name] = $child->error;
 			}
 		}
 		// finally return the resulting errors
-		if (empty($validationErrors)) {
+		if (!$validationErrors) {
 			return true;
 		} else {
-			return $validationErrors;
+			$this->validationErrors = $validationErrors;
+			return false;
 		}
+	}
+		
+	/**
+	 * 	Define additional form elements in you application forms.
+	 * 	You can automaticly fill you application models using model structure:
+	 * 
+	 * 	If youre form is named CommentForm and you have a model Comment then
+	 * 	the form will try to get the form field structure from the Model
+	 * 	structure.
+	 * 
+	 * 	You also cann exclude structure field names when importing model
+	 * 	structure:
+	 * 	<code>
+	 * 	public $configureModel = array('User' => array('id', 'email'));
+	 * 	</code>
+	 * 	
+	 * 	But you also can use this callback to  create your own forms:
+	 * 	<code>
+	 * 	// be sure to call parent::configure();
+	 * 	$this->add($this->newField('text', 'username'));
+	 * 	</code>
+	 * 	
+	 * 	@return true
+	 */
+	public function configure() {
+		if (empty($this->configureModel)) {
+			$possibleModelName = substr(get_class($this), 0, -4);
+			if (isset($this->controller->$possibleModelName)) {
+				$this->configureModel[] = $possibleModelName;
+			}
+		}
+		if (!empty($this->configureModel)) {
+			if (!is_array($this->configureModel)) {
+				$this->configureModel = array($this->configureModel);
+			}
+			foreach($this->configureModel as $modelName => $config) {
+				if (!is_array($config)) {
+					$modelName = $config;
+					$config = array('ignore' => array());
+				}
+				if (isset($this->controller->$modelName)) {
+					$this->configureModel($this->controller->$modelName, $config['ignore']);
+				}
+			}
+		}
+		if (!$this->childWithAttribute('type', 'submit')) {
+			$this->add($this->newField('submit', 'submit', 'submit'));
+		}
+		return true;
 	}
 	
 	/**
-	 *	Adds fields from the model structure to the form
+	 *	Adds form fields by parsing model structure, ignoring the model fields
+	 * 	with the $ignore names
+	 * 		
 	 * 	@return Form
 	 */
 	public function configureModel(Model $model, Array $ignore = array()) {
@@ -164,14 +249,12 @@ class Form extends HTMLTag {
 			$field = false;
 			switch($fieldInfo->type) {
 				case 'varchar':
-					if ($fieldInfo->length >= 120 && $fieldInfo->name != 'email') {
-						$field = $this->newField('textarea', $fieldInfo->name);
+					if ($fieldInfo->name == 'password') {
+						$field = $this->newField('password', $fieldInfo->name);
+					} elseif ($fieldInfo->name == 'email') {
+						$field = $this->newField('email', $fieldInfo->name);
 					} else {
-						if ($fieldInfo->name == 'password') {
-							$field = $this->newField('password', $fieldInfo->name);
-						} else {
-							$field = $this->newField('text', $fieldInfo->name);
-						}
+						$field = $this->newField('text', $fieldInfo->name);
 					}
 					break;
 				case 'blob':
@@ -189,11 +272,12 @@ class Form extends HTMLTag {
 					break;	
 			}
 			if ($field) {
+				// add validation rules from model to field
+				if (isset($model->validate[$fieldInfo->name])) {
+					$field->addValidationRule($model->validate[$fieldInfo->name]);
+				}
 				$this->add($field);
 			}
-		}
-		if (!$this->childWithAttribute('type', 'submit')) {
-			$this->add($this->newField('submit', 'submit', 'submit'));
 		}
 		return $this;
 	} 

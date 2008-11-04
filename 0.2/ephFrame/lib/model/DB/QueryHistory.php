@@ -90,6 +90,18 @@ class QueryHistory extends Object implements Countable, Renderable {
 		return $this->data[$queryIndex]['query'];
 	}
 	
+	/**
+	 *	Return the time in seconds the queries took all in all
+	 * 	@return float
+	 */
+	public function timeTotal($precision = 6) {
+		$sum = 0.0;
+		foreach($this->data as $index => $data) {
+			$sum += $data['timer']->time();
+		}
+		return round($sum, $precision);
+	}
+	
 	public function render() {
 		if (!$this->beforeRender()) return '';
 		$rendered = '';

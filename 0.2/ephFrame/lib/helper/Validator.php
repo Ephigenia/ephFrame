@@ -50,17 +50,17 @@ class Validator extends Helper {
 	 */
 	public function validate($value = null) {
 		// single line string rules are callbacks!
-		foreach($this->config as $ruleName => $ruleConfig) {
+		foreach($this->config as $ruleName => $config) {
 			// allowEmpty Rule
-			if (isset($ruleConfig['allowEmpty']) && empty($value)) {
+			if (isset($config['allowEmpty']) && empty($value)) {
 				return true;
 			}
-			if (!isset($ruleConfig['message'])) {
-				$failMessage = false;
+			if (!isset($config['message'])) {
+				$message = false;
 			} else {
-				$failMessage = $ruleConfig['message'];
+				$message = $config['message'];
 				// replace wildcards in the failmessage
-				$failMessage = String::substitute($failMessage, array(
+				$message = String::substitute($message, array(
 					'value' => $value,
 					'rule' => $ruleName,
 					'ruleName' => $ruleName,
@@ -68,23 +68,23 @@ class Validator extends Helper {
 					'type' => gettype($value)
 				));
 			}
-			if (isset($ruleConfig['callback'])) {
-				if (isset($this->callbackObject) && !$this->callbackObject->$ruleConfig['callback']($value)) {
-					return $failMessage;
+			if (isset($config['callback'])) {
+				if (isset($this->callbackObject) && !$this->callbackObject->$config['callback']($value)) {
+					return $message;
 				}
 			}
-			if (isset($ruleConfig['regexp']) && !preg_match($ruleConfig['regexp'], $value)) {
-				return $failMessage;
-			} elseif (isset($ruleConfig['notEmpty']) && empty($value)) {
-				return $failMessage;
-			} elseif (isset($rule['maxLength']) && String::length($value) > $rule['maxLength']) {
-				return $failMessage;
-			} elseif (isset($rule['minLength']) && String::length($value) < $rule['minLength']) {
-				return $failMessage;
-			} elseif (isset($rule['min']) && (float) $value > $rule['min']) {
-				return $failMessage;
-			} elseif (isset($rule['max']) && (float) $value > $rule['max']) {
-				return $failMessage;
+			if (isset($config['regexp']) && !preg_match($config['regexp'], $value)) {
+				return $message;
+			} elseif (isset($config['notEmpty']) && empty($value)) {
+				return $message;
+			} elseif (isset($config['maxLength']) && String::length($value) > $config['maxLength']) {
+				return $message;
+			} elseif (isset($config['minLength']) && String::length($value) < $config['minLength']) {
+				return $message;
+			} elseif (isset($config['min']) && (float) $value > $config['min']) {
+				return $message;
+			} elseif (isset($config['max']) && (float) $value > $config['max']) {
+				return $message;
 			}
 		}
 		return true;

@@ -54,9 +54,9 @@ class Timer extends Helper {
 	
 	public function time() {
 		if ($this->stop > 0) {
-			return (string) ($this->stop - $this->start);
+			return ($this->stop - $this->start);
 		}
-		return (string) (microtime(true) - $this->start);
+		return (microtime(true) - $this->start);
 	}
 	
 	public function __toString() {

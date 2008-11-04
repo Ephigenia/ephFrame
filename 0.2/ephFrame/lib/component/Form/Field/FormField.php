@@ -1,9 +1,30 @@
 <?php
 
 // @todo add method, var to add validation rules (from a model)
+/**
+ * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * 	Copyright 2007+, Ephigenia M. Eichner, Kopernikusstr. 8, 10245 Berlin
+ *
+ * 	Licensed under The MIT License
+ * 	Redistributions of files must retain the above copyright notice.
+ * 	@license http://www.opensource.org/licenses/mit-license.php The MIT License
+ * 	@copyright Copyright 2007+, Ephigenia M. Eichner
+ * 	@link http://code.ephigenia.de/projects/ephFrame/
+ * 	@filesource
+ */
+
+/**
+ *	Abstract Form Field Class
+ * 
+ * 	@package ephFrame
+ * 	@subpackage ephFrame.lib.component.Form.Field
+ * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * 	@since 04.11.2008
+ */
 abstract class FormField extends HTMLTag {
 	
 	/**
+	 * 	Stores an instance to the form this Form Field belongs to
 	 * 	@var Form
 	 */
 	public $form;
@@ -30,11 +51,24 @@ abstract class FormField extends HTMLTag {
 	public $error = false;
 	
 	/**
+	 *	Stores a description for the form field
+	 * 	@var string|boolean
+	 */
+	public $description = false;
+	
+	/**
 	 * 	Validation rule for this form field, checked in {@link Validate}
+	 * 	Same format as in model.
 	 * 	@var array
 	 */
 	public $validate = array();
 
+	/**
+	 *	Creates a new Formfield with the $name, $value and $attributes
+	 * 	@param string $name
+	 * 	@param string $value
+	 * 	@param array(string) array of attributes
+	 */
 	public function __construct($name, $value = null, Array $attributes = array()) {
 		$attributes['type'] = $this->type;
 		$attributes['name'] = $name;
@@ -52,6 +86,11 @@ abstract class FormField extends HTMLTag {
 		return $this;
 	}
 	
+	public function description($description) {
+		$this->description = $description;
+		return $this;
+	}
+	
 	public function label($label) {
 		$this->label->tagValue = $label;
 		return $this;
@@ -62,19 +101,38 @@ abstract class FormField extends HTMLTag {
 			if ($value !== null) {
 				$this->attributes->set('value', $value);
 			}
-		} else {
-			if (isset($this->form) && $this->form->submitted() && isset($this->form->request->data[$this->attributes->name])) {
-				return $this->form->request->data[$this->attributes->name];
-			}
-			return false;
+			return $this;
+		} elseif (isset($this->form) && $this->form->submitted() && isset($this->form->request->data[$this->attributes->name])) {
+			return $this->form->request->data[$this->attributes->name];
 		}
+		return false;
 	}
 	
 	/**
-	 *	Validates the content of the form field that was submitted or the passed
-	 * 	$value. If no $value is submitted and the result is not true the form
-	 * 	field is marked as errous by setting {@link $error}.
-	 *  This method is used by the Form Class validate method.
+	 *	Adds an validation Rule to the validation error, allready existent
+	 * 	rules will be overwritten.
+	 * 	@param array(string)
+	 * 	@return FormField
+	 */
+	public function addValidationRule(Array $validationRule) {
+		if (ArrayHelper::dimensions($validationRule) <= 2) {
+			$this->validate[] = $validationRule;
+		} else {
+			$this->validate = array_merge($this->validate, $validationRule);
+		}
+		return $this;
+	}
+	
+	/**
+	 *	Validate a single value or the current form field value and returns
+	 * 	the result. If the validation fails the error message is stored in 
+	 * 	$error:
+	 * 	<code>
+	 * 	if ($formField->validate('testvalue')) {
+	 * 		echo $FormField->error;
+	 *	}
+	 * 	</code>
+	 * 	
 	 * 	@param string|mixed $value
 	 * 	@return string|boolean
 	 */
@@ -87,15 +145,15 @@ abstract class FormField extends HTMLTag {
 		}
 		$validator = new Validator($this->validate, $this);
 		$result = $validator->validate($value);
-		if ($result !== true && func_num_args() == 0) {
+		if ($result !== true) {
 			$this->error = $result;
+			return false;
 		}
-		return $result;
+		return true;
 	}
 	
 	public function beforeRender() {
 		// add style class to form element
-		// @todo somehow this happens to be called twice?
 		if ($this->attributes->isEmpty('class')) {
 			$this->attributes->set('class', $this->attributes->name);
 		} elseif ($this->attributes->get('class') != $this->attributes->name) {

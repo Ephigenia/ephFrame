@@ -1,7 +1,7 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * 	ephFrame: http://code.moresleep.net/project/ephFrame/
  * 	Copyright 2007+, Ephigenia M. Eichner, Kopernikusstr. 8, 10245 Berlin
  *
  * 	Licensed under The MIT License
@@ -281,6 +281,10 @@ abstract class Controller extends Object implements Renderable {
 		return true;
 	}
 	
+	public function hasModel($modelName) {
+		return in_array($modelName, $this->uses);
+	}
+	
 	/**
 	 * 	Initiate Components
 	 * 
@@ -312,14 +316,18 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	Loads and Adds a new {@link Component} to the Controller at run-time.
+	 * 	Loads and Adds a new {@link Component} to the Controller at run-time.
+	 * 
+	 * 	You can use this to dynamicly add components to controllers that should
+	 * 	only be available on some certain actions.
 	 * 	<code>
-	 * 	class TestController {
+	 * 	class TestController extends AppController {
 	 * 		public function testI28n() {
 	 * 			$this->addComponent('I28n');
 	 * 		}
 	 *  }
 	 * 	</code>
+	 * 	
 	 * 	@param string $componentName
 	 * 	@param boolean $startUp Fires the startup signal to the component
 	 * 	@return boolean
@@ -547,8 +555,11 @@ abstract class Controller extends Object implements Renderable {
 		// if we're in debugging mode we add the sql history dump to the view
 		// content (this can be overwritten in the AppController.
 		if (Registry::get('DEBUG') >= DEBUG_DEBUG && class_exists('QueryHistory')) {
+			$compileTime = ephFrame::compileTime(6);
+			$queryTime = QueryHistory::getInstance()->timeTotal(3);
+			$queryCompilePercent = round($queryTime / $compileTime * 100);
 			$debugOutput =
-				'Compile Time: '.ephFrame::compileTime(6).'s'.LF.
+				'Compile Time: '.round($compileTime, 3).'s ('.$queryTime.'s/'.$queryCompilePercent.'% querytime)'.LF.
 				'Memory Usage: '.ephFrame::memoryUsage(true).' ('.ephFrame::memoryUsage().' Bytes)'.LF.LF.
 				'DB QUERY HISTORY'.LF.'----------------'.LF.QueryHistory::getInstance()->render();
 			if ($this->viewClassName == 'HTMLView') {
@@ -561,23 +572,38 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	/**
-	 *	Redirects to an other url
+	 *	Send redirect header to client
+	 *  
+	 * 	This will send a redirect header directing to $url with the http $status
+	 * 	code and exit php if you pass $exit = true.<br />
+	 * 	The status code must be a valid HTTP-Statuscode or 'perm', 'permanent',
+	 * 	'p' for permanent moved (301), or 'tmp', 'temp', 't' for temporary
+	 * 	redirect (307).<br />
+	 * 	The status code will not be send if it's invalid.<br />
+	 * 	This will overwrite previously send location and status header.<br />
+	 * 
 	 * 	<code>
 	 * 	// for example direct to user login and exit
 	 * 	$this->redirect('/user/login/', null, true);
+	 * 	// skip to an other url
+	 * 	$this->redirect('http://code.nomoresleep.net/', 'p', true);
 	 * 	</code>
+	 * 
 	 * 	@param string $url
 	 * 	@param integer $status HTTP 1.1 status code
 	 * 	@param boolean $exit exit after redirect
+	 * 	@return boolean
 	 */
 	public function redirect($url, $status = null, $exit = false) {
 		if (!class_exists('HTTPStatusCode')) ephFrame::loadClass('ephFrame.lib.HTTPStatusCode');
 		if ($url !== null) {
-			header('Location: '.$url);
+			header('Location: '.$url, true);
 		}
 		if (!empty($status)) {
+			if (in_array($status, array('p', 'permanent', 'perm'))) $status = 301;
+			if (in_array($status, array('t', 'tmp', 'temporary'))) $status = 307;
 			if (isset(HTTPStatusCode::$statusCodes[$status])) {
-				header(sprintf('HTTP/1.1 %s %s;', $status, HTTPStatusCode::$statusCodes[$status]));	
+				header(sprintf('HTTP/1.1 %s %s;', $status, HTTPStatusCode::$statusCodes[$status]), true);	
 			}
 		}
 		if ($exit) {
