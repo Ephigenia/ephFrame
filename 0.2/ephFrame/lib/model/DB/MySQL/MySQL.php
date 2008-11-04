@@ -125,10 +125,12 @@ class MySQL extends DB implements DBInterface {
 		$queryTimer->stopTimer();
 		// check for errors and throw exception
 		if (!$result) {
+			$this->queries->add($query, new MySQLQueryResult($result), $queryTimer);
 			MySQLException::evoke($this);
+		} else {
+			$queryResult = new MySQLQueryResult($result);
+			$this->queries->add($query, $queryResult, $queryTimer);
 		}
-		$queryResult = new MySQLQueryResult($result);
-		$this->queries->add($query, $queryResult, $queryTimer);
 		return $queryResult;
 	}
 	

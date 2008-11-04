@@ -287,10 +287,12 @@ class Form extends HTMLTag {
 	 * 	@return Form
 	 */
 	public function fillModel(Model $model) {
-		// only fill with model data if form was not submitted
-		foreach($model->structure as $fieldInfo) {
-			if (!($field = $this->fieldset->childWithAttribute('name', $fieldInfo->name))) continue;
-			$field->value($model->get($fieldInfo->name));
+		if (!$this->submitted()) {
+			// only fill with model data if form was not submitted
+			foreach($model->structure as $fieldInfo) {
+				if (!($field = $this->fieldset->childWithAttribute('name', $fieldInfo->name))) continue;
+				$field->value($model->get($fieldInfo->name));
+			}
 		}
 		return $this;
 	}

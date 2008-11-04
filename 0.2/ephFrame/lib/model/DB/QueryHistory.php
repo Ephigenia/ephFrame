@@ -68,7 +68,8 @@ class QueryHistory extends Object implements Countable, Renderable {
 	 * 	@return integer
 	 */
 	public function count() {
-		return count($this->data);
+		$history = self::getInstance();
+		return count($history->data);
 	}
 	
 	/**
@@ -76,7 +77,8 @@ class QueryHistory extends Object implements Countable, Renderable {
 	 * 	@return DBQuery
 	 */
 	public function last() {
-		if (count($this) > 0) return $this->data[count($this)-1]['query'];
+		$history = self::getInstance();
+		if (count($history) > 0) return $history->data[count($history)-1]['query'];
 		return false;
 	}
 	

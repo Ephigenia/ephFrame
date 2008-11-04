@@ -115,7 +115,7 @@ abstract class FormField extends HTMLTag {
 	 * 	@return FormField
 	 */
 	public function addValidationRule(Array $validationRule) {
-		if (ArrayHelper::dimensions($validationRule) <= 2) {
+		if (ArrayHelper::dimensions($validationRule) == 1) {
 			$this->validate[] = $validationRule;
 		} else {
 			$this->validate = array_merge($this->validate, $validationRule);

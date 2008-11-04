@@ -23,6 +23,8 @@
 interface ephFrameComponent {
 
 	public function startup();
+	
+	public function init(Controller $controller);
 
 }
 

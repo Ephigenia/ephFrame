@@ -62,7 +62,9 @@ class Dispatcher extends Object {
 				$params = array('controllerName' => $controllerName);
 				return $this->dispatch('Error/ControllerNotFound', $params);
 			}
-		}	
+		}
+		require_once APP_LIB_DIR.'AppController.php';
+		require_once APP_LIB_DIR.'model/AppModel.php';
 		ephFrame::loadClass($controllerClassPath);
 		try {
 			$controller = new $controllerName($request, $router->params);

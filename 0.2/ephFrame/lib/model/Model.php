@@ -747,8 +747,6 @@ class Model extends Object {
 				$query->join($this->{$modelName}->tablename, $modelName, DBQuery::JOIN_LEFT, $joinConditions);
 			}
 		}
-		//die('<pre>'.wordwrap($query).'</pre>');
-		//echo $query.'<br />';
 		return $query;
 	}
 	
@@ -835,6 +833,9 @@ class Model extends Object {
 		}
 		if ($this->hasField($fieldname)) {
 			$value = DBQuery::quote($value, $this->structure[$fieldname]->quoting);
+			if (strpos($fieldname, '.') === false) {
+				$fieldname = $this->name.'.'.$fieldname;
+			}
 		} else {
 			$value = DBQuery::quote($value);
 		}

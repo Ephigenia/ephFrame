@@ -69,7 +69,9 @@ class Validator extends Helper {
 				));
 			}
 			if (isset($config['callback'])) {
-				if (isset($this->callbackObject) && !$this->callbackObject->$config['callback']($value)) {
+				if (isset($this->callbackObject)
+					&& method_exists($this->callbackObject, $config['callback'])
+					&& !$this->callbackObject->$config['callback']($value)) {
 					return $message;
 				}
 			}

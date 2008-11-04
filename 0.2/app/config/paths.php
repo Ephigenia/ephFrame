@@ -21,5 +21,6 @@
 if (!defined('STATIC_DIR')) define ('STATIC_DIR', 'static'.DS);
 if (!defined('APP_LIB_DIR')) define ('APP_LIB_DIR', APP_ROOT.'lib/');
 if (!defined('APP_CONTROLLER_DIR')) define('APP_CONTROLLER_DIR', APP_LIB_DIR.'controller/');
+if (!defined('APP_MODEL_DIR')) define('APP_MODEL_DIR', APP_LIB_DIR.'model/');
 
 ?>
