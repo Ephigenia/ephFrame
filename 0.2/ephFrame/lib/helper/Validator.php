@@ -60,13 +60,13 @@ class Validator extends Helper {
 			} else {
 				$message = $config['message'];
 				// replace wildcards in the failmessage
-				$message = String::substitute($message, array(
+				$message = String::substitute($message, array_merge($config, array(
 					'value' => $value,
 					'rule' => $ruleName,
 					'ruleName' => $ruleName,
 					'length' => String::length($value),
 					'type' => gettype($value)
-				));
+				)));
 			}
 			if (isset($config['callback'])) {
 				if (isset($this->callbackObject)

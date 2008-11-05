@@ -244,6 +244,9 @@ class Form extends HTMLTag {
 	 * 	@return Form
 	 */
 	public function configureModel(Model $model, Array $ignore = array()) {
+		if (empty($ignore)) {
+			$ignore = array('id');
+		}
 		foreach($model->structure as $fieldInfo) {
 			if (count($ignore) > 0 && in_array($fieldInfo->name, $ignore)) continue;
 			$field = false;

@@ -66,8 +66,11 @@ class HTTPRequest extends Component {
 	public $method;
 	
 	public $uri;
+	public $hostname;
 	public $host;
 	public $port = 80;
+	
+	public $referer = false;
 	
 	/**
 	 * 	@var HTTPHeader
@@ -112,7 +115,14 @@ class HTTPRequest extends Component {
 	private function autofill() {
 		$this->method = $_SERVER['REQUEST_METHOD'];
 		$this->uri = $_SERVER['REQUEST_URI'];
-		$this->host = $_SERVER['HTTP_HOST'];
+		$this->hostname = $_SERVER['HTTP_HOST'];
+		$this->host = $_SERVER['REMOTE_ADDR'];
+		if (isset($_SERVER['HTTP_REFERER'])) {
+			$this->referer = $_SERVER['HTTP_REFERER'];
+		}
+		if ($this->host == '::1') {
+			$this->host = '127.0.0.1';
+		}
 		if ($this->method == self::METHOD_GET) {
 			$this->data = &$_GET;
 			$this->data = array_merge($_POST, $this->data);
@@ -241,15 +251,7 @@ class HTTPRequest extends Component {
 		if (!is_array($data)) {
 			return $data;
 		}
-		$queryString = '?';
-		foreach($data as $key => $value) {
-			if (is_array($value)) {
-				// missing stuff
-			} else {
-				$queryString .= $key.'='.urlencode($value).'&';
-			}
-		}
-		return $queryString;
+		return http_build_query($data);
 	}
 	
 	/**

@@ -30,7 +30,7 @@ class FormFieldEmail extends FormFieldText {
 	public $validate = array(
 		'invalid' => array(
 			'regexp' => Validator::EMAIL,
-			'message' => 'Invalid Email'
+			'message' => 'The email adress you\'ve entered seemes to be invalid. Please enter a valid email adress.'
 		)
 	);
 	

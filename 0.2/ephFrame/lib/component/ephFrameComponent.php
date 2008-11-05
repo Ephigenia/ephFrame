@@ -25,6 +25,10 @@ interface ephFrameComponent {
 	public function startup();
 	
 	public function init(Controller $controller);
+	
+	public function beforeRender();
+	
+	public function beforeAction();
 
 }
 

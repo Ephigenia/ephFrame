@@ -160,6 +160,9 @@ abstract class Controller extends Object implements Renderable {
 		if ($id > 0 && isset($this->{$this->name})) {
 			if ($entry = $this->{$this->name}->findById($id)) {
 				return $entry->delete();
+			} else {
+				$this->name = 'error';
+				$this->action('404', array());
 			}
 			return false;
 		}
@@ -168,7 +171,11 @@ abstract class Controller extends Object implements Renderable {
 	public function edit($id = null) {
 		$id = (int) $id;
 		if ($id > 0 && in_array($this->name, $this->uses) && isset($this->{$this->name})) {
-			$this->{$this->name} = $this->{$this->name}->findById($id);
+			if (!($this->{$this->name} = $this->{$this->name}->findById($id))) {
+				$this->name = 'error';
+				$this->action('404', array());
+				return false;
+			}
 			$this->set($this->name, $this->{$this->name});
 			// if form is also attached, fill form data
 			if (isset($this->{$this->name.'Form'})) {
@@ -185,7 +192,10 @@ abstract class Controller extends Object implements Renderable {
 	public function view($id = null) {
 		$id = (int) $id;
 		if ($id > 0 && in_array($this->name, $this->uses) && isset($this->{$this->name})) {
-			$entry = $this->{$this->name}->findById($id);
+			if (!$entry = $this->{$this->name}->findById($id)) {
+				$this->name = 'error';
+				$this->action('404', array());
+			}
 			$this->set($this->name, $entry);
 			return $entry;
 		}
@@ -410,6 +420,10 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	private function initForms() {
+		// add form name of this controller if class is found
+		if (!in_array($this->name.'Form', $this->forms) && ClassPath::exists('app.lib.component.Form.'.$this->name.'Form')) {
+			$this->forms[] = $this->name.'Form';
+		}
 		foreach($this->forms as $formName) {
 			$this->addForm($formName);
 		}
@@ -459,6 +473,11 @@ abstract class Controller extends Object implements Renderable {
 		$this->set('action', $this->action);
 		$this->params = $params;
 		if (method_exists($this, $action)) {
+			// call beforeaction on every component
+			foreach($this->components as $componentName) {
+				$className = ClassPath::className($componentName);
+				$this->{$componentName}->beforeAction();
+			}
 			$arguments = array_diff_key($params, array('controller' => 0, 'action' => 0, 'path' => 0));
 			$this->callMethod($action, $arguments);
 		}

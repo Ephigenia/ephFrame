@@ -41,7 +41,7 @@ class Dispatcher extends Object {
 			$request = $requestObjectOrUrl;
 		// fake the request
 		} elseif (is_string($requestObjectOrUrl)) {
-			$request = new HTTPRequest(false);
+			$request = new HTTPRequest(true);
 			$request->data['__url'] = $requestObjectOrUrl;
 		}
 		$router = new Router();

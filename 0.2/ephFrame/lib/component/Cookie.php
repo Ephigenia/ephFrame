@@ -19,15 +19,29 @@
  * 	saved right before the controller renders the view (because the controller
  * 	calls beforeRender) or the Cookie component gets destroyed and there are
  * 	still cookies to save. So even when the controller redirects to another
- * 	page all cookies get saved.<br />
- * 	<br />
+ * 	page all cookies get saved.
+ * 	
  * 	The secure mode of setCookie is always used, so all cookies created using
  * 	this component are HTTP-Only. Read more about this here:
  * 	http://en.wikipedia.org/wiki/HTTP_cookie
- * 
+ *
  * 	<code>
  * 	// set a permanent login cookie that lats one week
  * 	$this->Cookie->write('permanentKey', md5('salt' + $User->id), WEEK);
+ * 	</code>
+ * 	
+ * 	<strong>Cookie-Arrays</strong>
+ * 	You can create nested cookies by using the array notation for their name.
+ * 	See the example:
+ * 	<code>
+ * 	$this->Cookie->write('User[id]', 1);
+ * 	$this->Cookie->write('User[name]', 'Ephigenia');
+ * 	</code>
+ * 
+ * 	<strong>Cookie on subdomains</strong>
+ * 	You can use cookies on all subdomains if you use the $domain attribute:
+ * 	<code>
+ * 	$this->Cookie->write('permanentKey', 'x', null, null, '.example.com');
  * 	</code>
  * 
  * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
@@ -67,7 +81,7 @@ class Cookie extends Component {
 	 *	Stores all cookies	
 	 * 	@var array(string)
 	 */
-	protected $data = array();
+	public $data = array();
 	
 	/**
 	 *	Saves all cookies that should be written
@@ -82,6 +96,9 @@ class Cookie extends Component {
 	public function __construct() {
 		parent::__construct();
 		$this->data = &$_COOKIE;
+		if (empty($this->domain)) {
+			$this->domain = $_SERVER['HTTP_HOST'];
+		}
 		return $this; 
 	}
 	
@@ -159,7 +176,7 @@ class Cookie extends Component {
 	 */
 	public function read($varname) {
 		if ($this->defined($varname)) {
-			return $this->data[$varname]['value'];
+			return $this->data[$varname];
 		}
 		return false;
 	}
@@ -170,7 +187,7 @@ class Cookie extends Component {
 	 * 	@return mixed
 	 */
 	public function get($varname) {
-		
+		return read($varname);
 	}
 	
 	/**
@@ -194,10 +211,10 @@ class Cookie extends Component {
 		foreach ($this->saveData as $cookieName => $cookieData) {
 			$path = (isset($cookieData['path'])) ? $cookieData['path'] : $this->path;
 			$ttl = (isset($cookieData['ttl'])) ? $cookieData['ttl'] : $this->TTL;
-			$domain = (isset($cookieData['domain'])) ? $cookieData['domain'] : $this->domain;
+			$domain = (isset($cookieData['domain'])) ? $cookieData['domain'] : null;
 			$secure = (isset($cookieData['secure'])) ? $cookieData['secure'] : true;
 			$value = $cookieData['value'];
-			@setcookie($cookieName, $value, time() + $ttl, $this->path, $domain, $secure);
+			@setcookie($cookieName, $value, time() + $ttl, $path); //, $domain, $secure);
 		}
 		$count = count($this->saveData);
 		$this->saveData = array();
