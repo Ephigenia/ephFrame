@@ -111,7 +111,7 @@ class Form extends HTMLTag {
 				}
 			}
 		}
-		if ($this->submitted() && !$this->validate() && count($this->validationErrors) > 0) {
+		if ($this->submitted() && (!$this->validate() || count($this->validationErrors) > 0)) {
 			$this->prepend(new HTMLTag('p', array('class' => 'error'), nl2br(implode(LF, $this->validationErrors))));
 		}
 		return parent::beforeRender();

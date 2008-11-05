@@ -12,6 +12,8 @@
  * 	@filesource
  */
 
+if (!class_exists('Object')) require_once dirname(__FILE__).'/../../Object.php';
+
 /**
  *	Terminal Class
  * 

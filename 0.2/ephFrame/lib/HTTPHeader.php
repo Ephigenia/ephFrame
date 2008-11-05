@@ -127,7 +127,7 @@ class HTTPHeader extends Hash {
 		foreach($this as $key => $value) {
 			$rendered = $this->renderKey($key, $value);
 			if (!empty($rendered)) {
-				header($rendered, true, $this->statusCode);
+				header($rendered, null, $this->statusCode);
 			}
 		}
 		return true;

@@ -12,6 +12,8 @@
  * 	@filesource
  */
 
+if (!class_exists('BasicException')) require_once dirname(__FILE__).'/lib/exception/BasicException.php';
+
 /**
  *	Basic Object Class
  * 	
