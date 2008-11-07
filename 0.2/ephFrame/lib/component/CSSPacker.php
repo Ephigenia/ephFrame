@@ -99,7 +99,7 @@ class CSSPacker extends Component {
 	 * 	@return boolean|array(string) false if nothing found, otherwise a string with the charset encoding name found
 	 */
 	private function captureCharset($cssString) {
-		if (preg_match('/^[\s\n\r]*@charset\s+["\'](.+)["\'];/i', $cssString, $found)) {
+		if (preg_match('/^[\s\n\r]*@charset\s+["\']([^"\']+)["\'];\s*/i', $cssString, $found)) {
 			return $found;
 		}
 		return false;
