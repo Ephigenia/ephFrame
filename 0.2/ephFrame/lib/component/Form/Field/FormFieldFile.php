@@ -49,7 +49,7 @@ class FormFieldFile extends FormField {
 			if (empty($_FILES[$this->attributes->name]['tmp_name'])) {
 				return false;
 			}
-			$file = $this->fileClassName($_FILES[$this->attributes->name]['tmp_name']);
+			$file = new $this->fileClassName($_FILES[$this->attributes->name]['tmp_name']);
 			return $file;
 		}
 	}

@@ -159,6 +159,23 @@ class Tree extends Object implements Countable, Iterator, Renderable {
 	}
 	
 	/**
+	 *	Deletes this node from the tree and returns the result. False if this
+	 * 	node has no parent or could not be deleted.
+	 * 	@return boolean
+	 */
+	public function delete() {
+		if (!$this->parent) return false;
+		foreach($this->parent->children as $index => $child) {
+			if ($child->index != $this->index) continue;
+			unset($this->parent->children[$index]);
+			foreach($this->parent->children as $index => $child) {
+				$child->index = $index;
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 *	Parses an Array and tries to put it into the tree
 	 * 	strucure.
 	 * 

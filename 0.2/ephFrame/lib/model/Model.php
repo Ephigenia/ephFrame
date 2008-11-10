@@ -199,7 +199,9 @@ class Model extends Object {
 	 * 	@return Model
 	 */
 	public function __construct($id = null) {
-		$this->name = get_class($this);
+		if (empty($this->name)) {
+			$this->name = get_class($this);
+		}
 		// set db source
 		$this->useDB($this->useDBConfig);
 		// generate tablename if empty
@@ -212,7 +214,7 @@ class Model extends Object {
 			foreach ($this->associationTypes as $associationKey) {
 				if (!isset($parentClassVars[$associationKey])) continue;
 				if (is_array($parentClassVars[$associationKey])) {
-					$this->$associationKey = array_unique(array_merge($parentClassVars[$associationKey], $this->$associationKey));
+					$this->$associationKey = array_merge($parentClassVars[$associationKey], $this->$associationKey);
 				}
 				if (in_array($this->name, $this->$associationKey)) {
 					user_error('Model '.$this->name.' can not be associated with itself', E_USER_ERROR);
@@ -263,8 +265,8 @@ class Model extends Object {
 					unset($this->{$associationType}[$modelName]);
 					$modelName = $config;
 					$config = array();
+					$this->bind($associationType, $modelName, $config);
 				}
-				$this->bind($associationType, $modelName, $config);
 			}
 		}
 		return true;
@@ -725,6 +727,10 @@ class Model extends Object {
 		$order = array_merge($this->order, $order);
 		if (count($order) > 0) {
 			foreach($order as $orderRule) {
+				// add model table alias name if missing
+				if ($this->hasField(substr($orderRule, 0, strpos($orderRule, ' ')))) {
+					$orderRule = $this->name.'.'.$orderRule;
+				}
 				$query->orderBy($orderRule);
 			}
 		}
@@ -764,8 +770,9 @@ class Model extends Object {
 		}
 		$belongsToAndHasOne = $this->belongsTo + $this->hasOne;
 		$return = new Set();
+		$classname = get_class($this);
 		while($modelData = $result->fetchAssoc()) {
-			$model = new $this->name($modelData);
+			$model = new $classname($modelData);
 			if ($depth >= 1) {
 				foreach($belongsToAndHasOne as $associatedModelName => $config) {
 					$model->{$associatedModelName} = new $associatedModelName($modelData);

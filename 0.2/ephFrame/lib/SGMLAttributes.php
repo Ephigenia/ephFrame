@@ -44,6 +44,19 @@ class SGMLAttributes extends Hash {
 	}
 	
 	/**
+	 *	Appends something to a attribute. If attribute is not set it will be
+	 * 	created
+	 */
+	public function appendTo($attributeName, $value) {
+		if ($this->hasKey($attributeName)) {
+			$this->data[$attributeName] .= $value;
+		} else {
+			$this->set($attributeName, $value);
+		}
+		return $this;
+	}
+	
+	/**
 	 *	Sets or returns an attribute's value. The function will try to 
 	 * 	return the attribute's value if you pass just the name. If the
 	 * 	attribute is found, the value is returned, otherwise a simple null.

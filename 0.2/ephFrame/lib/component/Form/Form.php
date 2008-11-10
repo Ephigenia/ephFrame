@@ -52,7 +52,7 @@ class Form extends HTMLTag {
 	 *	Stores tha errors from a validation process
 	 * 	@var array(string)
 	 */
-	public $validationErrors = array();
+	public $errors = array();
 	
 	/**
 	 *	Name of Models from the controller that should autamticly used in this
@@ -69,12 +69,12 @@ class Form extends HTMLTag {
 	 */
 	public function __construct($action = null, Array $attributes = array()) {
 		$this->request = new HTTPRequest(true);
-		if ($action == null) {
-			$action = $this->action;
+		if ($action != null) {
+			$this->action = $action;
 		}
 		$this->fieldset = new HTMLTag('fieldset');
 		$this->addChild($this->fieldset);
-		$attributes = array_merge(array('action' => &$action, 'method' => 'post', 'accept-charset' => 'UTF-8'), $attributes);
+		$attributes = array_merge(array('action' => &$this->action, 'method' => 'post', 'accept-charset' => 'UTF-8', 'id' => get_class($this)), $attributes);
 		return parent::__construct('form', $attributes);
 	}
 	
@@ -111,8 +111,8 @@ class Form extends HTMLTag {
 				}
 			}
 		}
-		if ($this->submitted() && (!$this->validate() || count($this->validationErrors) > 0)) {
-			$this->prepend(new HTMLTag('p', array('class' => 'error'), nl2br(implode(LF, $this->validationErrors))));
+		if ($this->submitted() && (!$this->validate() || count($this->errors) > 0)) {
+			$this->prepend(new HTMLTag('p', array('class' => 'error'), nl2br(implode(LF, $this->errors))));
 		}
 		return parent::beforeRender();
 	}
@@ -122,6 +122,14 @@ class Form extends HTMLTag {
 			return $field;
 		}
 		return $this->{$fieldname};
+	}
+	
+	public function delete($fieldname = null) {
+		foreach($this->fieldset->children() as $field) {
+			if ($field->attributes->name == $fieldname) {
+				$field->delete();
+			}
+		}
 	}
 	
 	/**
@@ -161,10 +169,24 @@ class Form extends HTMLTag {
 		// test if a form was submitted by checking every field of the form
 		// for content
 		foreach($this->fieldset->children as $child) {
-			if (empty($this->request->data[$child->attributes->name])) continue;
+			if ($child instanceof FormFieldFile) {
+				if (empty($_FILES[$child->attributes->name])) continue;
+			} else if (empty($this->request->data[$child->attributes->name])) {
+				continue;
+			}
 			return true;
 		}
 		return false;
+	}
+	
+	/**
+	 *	This is a shortcut method combining {@link submitted} and {@link validate}
+	 * 	so it returns true if the form is submitted and no errors and false if
+	 * 	not submitted or errors
+	 * 	@return boolean
+	 */
+	public function ok() {
+		return ($this->submitted() && $this->validate());
 	}
 	
 	public function validate(Array $fieldNames = array()) {
@@ -183,7 +205,7 @@ class Form extends HTMLTag {
 		if (!$validationErrors) {
 			return true;
 		} else {
-			$this->validationErrors = $validationErrors;
+			$this->errors = $validationErrors;
 			return false;
 		}
 	}
@@ -272,6 +294,9 @@ class Form extends HTMLTag {
 					break;
 				case 'date':
 					$field = $this->newField('text', $fieldInfo->name, gmdate('Y-m-d'));
+					break;
+				case 'char':
+					$field = $this->newField('checkbox', $fieldInfo->name, true);
 					break;	
 			}
 			if ($field) {
@@ -294,7 +319,17 @@ class Form extends HTMLTag {
 			// only fill with model data if form was not submitted
 			foreach($model->structure as $fieldInfo) {
 				if (!($field = $this->fieldset->childWithAttribute('name', $fieldInfo->name))) continue;
-				$field->value($model->get($fieldInfo->name));
+				// checkboxes need special treatment
+				if ($fieldInfo->type == 'char') {
+					$field->value(true);
+					if ($model->get($fieldInfo->name)) {
+						$field->checked(true);
+					} else {
+						$field->checked(false);
+					}
+				} else {
+					$field->value($model->get($fieldInfo->name));
+				}
 			}
 		}
 		return $this;

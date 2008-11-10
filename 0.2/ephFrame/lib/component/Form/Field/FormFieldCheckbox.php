@@ -24,6 +24,30 @@ class FormFieldCheckbox extends FormField {
 	
 	public $type = 'checkbox';
 	
+	public function checked($bool) {
+		if ($bool) {
+			$this->attributes->checked = 'checked';
+		} else {
+			$this->attributes->delete('checked');
+		}
+		return $this;
+	}
+	
+	public function value($value = null) {
+		if (func_num_args() == 0) {
+			if ($this->form->submitted() && !empty($this->form->request->data[$this->attributes->name])) {
+				if (!empty($this->attributes->value)) {
+					return $this->attributes->value;
+				}
+				return true;
+			}
+			return false;
+		} else {
+			$this->attributes->value = $value;
+		}
+		return $this;
+	}
+	
 }
 
 ?>

@@ -67,6 +67,7 @@ class GZipCompressor extends Compressor {
 	 * 	@param string $filename
 	 * 	@param string $target Optional target name file
 	 * 	@return string|boolean
+	 * 	@todo add gzip-compressFile
 	 */
 	public function compressFile($filename, $target = null) {
 		

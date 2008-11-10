@@ -24,24 +24,45 @@
  * 	The secure mode of setCookie is always used, so all cookies created using
  * 	this component are HTTP-Only. Read more about this here:
  * 	http://en.wikipedia.org/wiki/HTTP_cookie
+ * 
+ * 	So her now a slightly simple example how to set a cookie from a controller
+ * 	a very year low level example but illustration how to access cookie vars.
+ * 	<code>
+ * 	class ExampleController extends AppController {
+ * 		public $components = array('Cookie');
+ * 		public function login() {
+ * 			if ($this->params['username'] == 'alpha' && $this->params['password'] == 'gamma') {
+ * 				$this->Cookie->set('welcomeMessage', 'Hi Baby!');
+ * 			}
+ * 		}
+ * 	}
+ * 	</code>
  *
  * 	<code>
  * 	// set a permanent login cookie that lats one week
  * 	$this->Cookie->write('permanentKey', md5('salt' + $User->id), WEEK);
  * 	</code>
  * 	
- * 	<strong>Cookie-Arrays</strong>
+ * 	Saving Arrays
+ * 	
  * 	You can create nested cookies by using the array notation for their name.
  * 	See the example:
  * 	<code>
  * 	$this->Cookie->write('User[id]', 1);
  * 	$this->Cookie->write('User[name]', 'Ephigenia');
  * 	</code>
- * 
- * 	<strong>Cookie on subdomains</strong>
+ * 	
+ * 	Cookies for subdomains only and every subdomain
+ * 	
  * 	You can use cookies on all subdomains if you use the $domain attribute:
  * 	<code>
  * 	$this->Cookie->write('permanentKey', 'x', null, null, '.example.com');
+ * 	</code>
+ * 	
+ * 	Deleting Cookies
+ * 	
+ * 	<code>
+ * 	$this->Cookie->delete('cookiename');
  * 	</code>
  * 
  * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>

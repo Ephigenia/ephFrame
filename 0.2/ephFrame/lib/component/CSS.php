@@ -21,12 +21,8 @@ ephFrame::loadClass('ephFrame.lib.Collection');
  * 	The directory used for rendering the css file includes is STATIC_DIR by
  * 	default. You can set your own css directory changing dir property of CSS.
  * 
- * 	Add a CSS File in a {@link View} or {@link Element}:
- * 	<code>
- * 	$CSS->addFile('css/main.css');
- * 	</code>
- * 
- * 	You also can add CSS Files in a {@link Controller}
+ * 	The simplest example of how you can use this component is by showing you
+ * 	how ot add css files or css rules to your application:
  * 	<code>
  * 	class ExampleController extends AppController {
  * 		public $components = array('CSS');
@@ -35,7 +31,19 @@ ephFrame::loadClass('ephFrame.lib.Collection');
  * 		}
  * 	}
  * 	</code>
+ * 	
+ * 	The cool thing about the ephFrame is that you can add css files even from
+ * 	an {@link Element} which are in your views! So here a simple example to add a
+ * 	CSS File from an element, like for example <q>/view/elements/menu.php</q>
+ * 	<code>
+ * 		// add meun styles for the element
+ * 		$CSS->addFile('css/menu.css');
+ * 	</code>
+ * 	
+ * 	The effort about it that you get collected code. Elements in the view collect
+ * 	js, css code. No peated code. So you might like it - DRY Style ;-) Ho!
  * 
+ * 	@todo add external css scripts, like http://lalaland.de/fancy.css
  * 	@author Marcel Eichner // Ephiagenia <love@ephigenia.de>
  * 	@since 11.05.2008
  * 	@package ephFrame

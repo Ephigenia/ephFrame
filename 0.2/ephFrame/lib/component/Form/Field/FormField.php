@@ -45,7 +45,8 @@ abstract class FormField extends HTMLTag {
 	public $mandatory = false;
 	
 	/**
-	 *	Stores a error message if validation failed for this form field
+	 *	Stores a error message if validation failed for this form field, if no
+	 * 	specific error message was set and an error occured this is true.
 	 * 	@var string|boolean
 	 */
 	public $error = false;
@@ -79,6 +80,10 @@ abstract class FormField extends HTMLTag {
 		parent::__construct('input', $attributes);
 		$this->value($value);
 		return $this;
+	}
+	
+	public function afterConstruct() {
+		
 	}
 	
 	public function mandatory($value) {

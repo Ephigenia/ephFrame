@@ -39,6 +39,7 @@
  * 	@subpackage ephFrame.lib.component
  * 	@uses JSCompressor
  * 	@uses File
+ * 	@todo normalize File Packer to not beeing a component and JS and CSS Packer inherit from the new create class
  */
 class JSPacker extends Component {
 	
@@ -117,17 +118,13 @@ class JSPacker extends Component {
 	/**
 	 * 	Generates a unique filename using the basenames of the files in the
 	 * 	array passed.
-	 *	//todo as in {@link CSSPacker} outsource this method to some other class
 	 * 	@param array $files
 	 * 	@return string
 	 */
 	public function packedFilename(Array $files) {
-		$compressedFileName = '';
-		if (!empty($this->packedPrefix)) {
-			$compressedFileName .= str_replace('/[^-_A-Za-z0-9\./', '', $this->packedPrefix);
-		}
-		$compressedFileName .= md5(implode('', array_map('basename', $files)));
-		$compressedFileName .= '.'.str_replace('/[^-_A-Za-z0-9\./', '', $this->packedExtension);
+		$md5Filenames = md5(implode('', array_map('basename', $files)));
+		$compressedFileName = $this->packedPrefix.$md5Filenames.'.'.$this->packedExtension;
+		$compressedFileName = str_replace('/[^-_A-Za-z0-9\./', '', $compressedFileName);
 		return $compressedFileName;
 	}
 	

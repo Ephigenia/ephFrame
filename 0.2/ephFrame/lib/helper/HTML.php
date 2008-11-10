@@ -66,7 +66,7 @@ class HTML extends Helper {
 		if (!empty($url)) {
 			$attributes['href'] = $url;
 		}
-		if (!empty($label) && !isset($attributes['title'])) {
+		if (!empty($label) && !isset($attributes['title']) && !preg_match('/<[^>]+>/', $label)) {
 			$attributes['title'] = htmlentities($label);
 		}
 		$tag = $this->createTag('a', $attributes);

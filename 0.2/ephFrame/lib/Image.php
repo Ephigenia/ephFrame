@@ -836,7 +836,7 @@ class Image extends File implements Renderable {
 		if (is_null($filename)) {
 			$filename = $this->nodeName;
 		} else {
-			$this->nodeName = $filename;
+			//$this->nodeName = $filename;
 		}
 		switch ($this->type()) {
 			default :

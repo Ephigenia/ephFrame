@@ -15,7 +15,7 @@
 /**
  * 	CSS Packer, packs CSS Files into single files
  * 
- * 	A Packer packs files into one single file. That should reduce HTTP-Requests.
+ * 	A Packer packs files into one single file. That reduces HTTP-Requests.
  * 
  * 	Pack css files and echo result:
  * 	<code>
@@ -87,6 +87,7 @@ class CSSPacker extends Component {
 	 * 	@param string $targetDir
 	 */
 	public function packAndStore(Array $files, $targetDir) {
+		assert(!empty($targetDir));
 		$packedFilename = $this->packedFilename($files);
 		$compressed = $this->pack($files);
 		file_put_contents($targetDir.$packedFilename, $compressed);
@@ -137,19 +138,18 @@ class CSSPacker extends Component {
 	}
 	
 	/**
-	 * 	Generates a unique filename using the basenames of the files in the
-	 * 	array passed and returns it.
+	 * 	Fielname is a combination out of prefix, md5 hash of all filenames and
+	 * 	a timestamp of the last modified file.
 	 *
 	 * 	@param array(string) $files
 	 * 	@return string
 	 */
 	public function packedFilename(Array $files) {
-		$compressedFileName = '';
-		if (!empty($this->packedPrefix)) {
-			$compressedFileName .= str_replace('/[^-_A-Za-z0-9\./', '', $this->packedPrefix);
-		}
-		$compressedFileName .= md5(implode('', array_map('basename', $files)));
-		$compressedFileName .= '.'.str_replace('/[^-_A-Za-z0-9\./', '', $this->packedExtension);
+		// determine newest file timestamp
+//		$lastModified = max(array_map('filemtime', $files));
+		$md5Filenames = md5(implode('', array_map('basename', $files)));
+		$compressedFileName = $this->packedPrefix.$md5Filenames.'.'.$this->packedExtension;
+		$compressedFileName = str_replace('/[^-_A-Za-z0-9\./', '', $compressedFileName);
 		return $compressedFileName;
 	}
 	

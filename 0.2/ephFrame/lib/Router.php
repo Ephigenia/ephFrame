@@ -174,10 +174,8 @@ class Router extends Hash {
 	}
 	
 	private function addRoute($routeName = null, $path, Array $params = array()) {
-		// strip beginning / from path
-		if (substr($path, 0, 1) == '/') {
-			$path = substr($path, 1);
-		}
+		// strip / from path
+		$path = ltrim($path, '/');
 		// route names that are added after they are allready there become a copy
 		// of the original router if their params are empty
 		if ($this->hasKey($routeName) && empty($params)) {
@@ -186,7 +184,11 @@ class Router extends Hash {
 			$this->add($routeName.'_copy_'.rand(), $params);
 		} else {
 			$params['path'] = $path;
-			$this->add($routeName, $params);
+			if ($routeName == null) {
+				$this->add($params);
+			} else {
+				$this->add($routeName, $params);
+			}
 		}
 		return true;
 	}

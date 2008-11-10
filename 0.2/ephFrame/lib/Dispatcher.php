@@ -65,6 +65,7 @@ class Dispatcher extends Object {
 		}
 		require_once APP_LIB_DIR.'AppController.php';
 		require_once APP_LIB_DIR.'model/AppModel.php';
+		require_once APP_LIB_DIR.'component/Form/AppForm.php';
 		ephFrame::loadClass($controllerClassPath);
 		try {
 			$controller = new $controllerName($request, $router->params);

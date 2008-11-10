@@ -279,7 +279,6 @@ abstract class Controller extends Object implements Renderable {
 		}
 		try {
 			if (!class_exists($modelName)) {
-				//echo ClassPath::translatePath($classPath);
 				ephFrame::loadClass($classPath);
 			}
 			$this->{$modelName} = new $modelName();
@@ -478,6 +477,7 @@ abstract class Controller extends Object implements Renderable {
 				$className = ClassPath::className($componentName);
 				$this->{$componentName}->beforeAction();
 			}
+			$this->beforeAction();
 			$arguments = array_diff_key($params, array('controller' => 0, 'action' => 0, 'path' => 0));
 			$this->callMethod($action, $arguments);
 		}
@@ -559,6 +559,15 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	/**
+	 * 	Called everytime a controller gets a new action. called before the action
+	 * 	is called and after all component are called.
+	 * 	@return boolean
+	 */
+	public function beforeAction() {
+		return true;
+	}
+	
+	/**
 	 * 	This is a hook for your own after rendering logic.
 	 * 	
 	 * 	So you can set every character to lowerspace or beautify the html code
@@ -635,17 +644,17 @@ abstract class Controller extends Object implements Renderable {
 	 *	Returns the refererrer submitted by the client if found
 	 * 	Set $local to true to only use internal urls (external urls will be
 	 * 	ignored)
-	 * 	@param string $default default referer
+	 * 	@param string $default default referer returned on empty referers
 	 * 	@param boolean $local Use only local referers
 	 * 	@return string
 	 */
 	public function referer($default = false, $local = true) {
-		if (isset($_SERVER['HTTP_REFERER']) && empty($_SERVER['HTTP_REFERER'])) {
+		if ($this->request->referer) {
 			// return refere only if in local domain
 			if (!$local) {
-				return $_SERVER['HTTP_REFERER'];
-			} elseif (preg_match('/^(http:\/\/|)'.str_replace('.', '\.', $_SERVER['HTTP_HOST']).'/', $_SERVER['REFERER'])) {
-				return $_SERVER['HTTP_REFERER'];
+				return $this->request->referer;
+			} elseif (preg_match('/^(http:\/\/|)'.str_replace('.', '\.', $_SERVER['HTTP_HOST']).'/', $this->request->referer)) {
+				return $this->request->referer;
 			}
 		}
 		return $default;

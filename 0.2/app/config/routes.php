@@ -13,7 +13,9 @@
  */
 
 /**
- *	Stores all custom routes for the application
+ *	This is the file which stores all url routes to the correct controllers and
+ * 	actions including possible parameters.
+ * 	
  * 	@package app
  * 	@subpackage app.config
  */
