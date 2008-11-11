@@ -60,7 +60,7 @@ class Model extends Object {
 	protected $primaryKeyName = 'id';
 
 	/**
-	 * 	Alias for this Model Table in DB-Queries
+	 * 	Alias for this Model Table in DB-Queries and name for view var
 	 * 	@var string
 	 */
 	public $name;
@@ -199,7 +199,7 @@ class Model extends Object {
 	 * 	@return Model
 	 */
 	public function __construct($id = null) {
-		if (empty($this->name)) {
+		if (!$this->name) {
 			$this->name = get_class($this);
 		}
 		// set db source
@@ -582,6 +582,7 @@ class Model extends Object {
 		$this->DB->query(new DeleteQuery($this->tablename, array($this->primaryKeyName => $id)));
 		$this->afterDelete();
 		$this->behaviors->call('afterDelete');
+		$this->reset();
 		return true;
 	}
 	
@@ -812,8 +813,30 @@ class Model extends Object {
 	 * 	@return Model|boolean
 	 */
 	public function find($conditions) {
-		$result = $this->DB->query($this->createSelectQuery($conditions));
-		return $this->createSelectResultList($result, true);
+		$query = $this->createSelectQuery($conditions);
+		if (!$this->beforeFind(&$query)) return false;
+		$result = $this->DB->query($query);
+		if ($resultSet = $this->createSelectResultList($result, true)) { 
+			return $this->afterFind($resultSet);
+		}
+		return false;
+	}
+	
+	/**
+	 *	Callback get's called before {@link find} query is send to database
+	 * 	@param string $query
+	 * 	@return boolean
+	 */
+	public function beforeFind($query) {
+		return true;
+	}
+	
+	/**
+	 *	Callback called before $results are returned from the model
+	 * 	@var mixed $results
+	 */
+	public function afterFind($results) {
+		return $results;
 	}
 	
 	/**
@@ -869,8 +892,13 @@ class Model extends Object {
 	 * 	@return Set(Model)|boolean
 	 */
 	public function findAll($conditions = null, $order = null, $offset = 0, $count = null, $depth = null) {
-		$result = $this->DB->query($this->createSelectQuery($conditions, $order, $offset, $count, $depth));
-		return $this->createSelectResultList($result, false, $depth);
+		$query = $this->createSelectQuery($conditions, $order, $offset, $count, $depth);
+		if (!$this->beforeFind($query)) return false;
+		$result = $this->DB->query($query);
+		if ($resultSet = $this->createSelectResultList($result, false, $depth)) {
+			return $this->afterFind($resultSet);
+		}
+		return false;
 	}
 	
 	/**
@@ -896,14 +924,12 @@ class Model extends Object {
 	 * 	@return Set(Model)|boolean
 	 */
 	public function findAllBy($fieldname, $value = null, $order = null, $offset = 0, $count = null, $depth = null) {
-		var_dump($fieldname);
 		if ($this->hasField($fieldname)) {
 			$value = DBQuery::quote($value, $this->structure[$fieldname]);
 		} else {
 			$value = DBQuery::quote($value);
 		}
 		$conditions = array($fieldname => $value);
-		var_dump($conditions);
 		return $this->findAll($conditions, $order, $offset, $count, $depth);
 	}
 	

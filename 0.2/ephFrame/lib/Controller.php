@@ -157,6 +157,7 @@ abstract class Controller extends Object implements Renderable {
 	public function create() {}
 	
 	public function delete($id = null) {
+		$id = (int) $this->params['id'];
 		if ($id > 0 && isset($this->{$this->name})) {
 			if ($entry = $this->{$this->name}->findById($id)) {
 				return $entry->delete();
@@ -169,7 +170,7 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	public function edit($id = null) {
-		$id = (int) $id;
+		$id = (int) $this->params['id'];
 		if ($id > 0 && in_array($this->name, $this->uses) && isset($this->{$this->name})) {
 			if (!($this->{$this->name} = $this->{$this->name}->findById($id))) {
 				$this->name = 'error';
@@ -190,7 +191,7 @@ abstract class Controller extends Object implements Renderable {
 	 * @param integer $id
 	 */
 	public function view($id = null) {
-		$id = (int) $id;
+		$id = (int) $this->params['id'];
 		if ($id > 0 && in_array($this->name, $this->uses) && isset($this->{$this->name})) {
 			if (!$entry = $this->{$this->name}->findById($id)) {
 				$this->name = 'error';
@@ -241,8 +242,24 @@ abstract class Controller extends Object implements Renderable {
 	 *
 	 * 	@param string $keyword
 	 */
-	public function search($keyword) {
-		
+	public function search($keyword, $fields = array()) {
+		$searchTerm = '%'.$keyword.'%';
+		$searchTermQuoted = DBQuery::quote($searchTerm);
+		if (isset($this->{$this->name}) && strlen($keyword) > 0) {
+			$this->set('keyword', $keyword);
+			$conditions = array();
+			foreach($this->{$this->name}->structure as $fieldInfo) {
+				if (count($fields) > 0 && !in_array($fieldInfo->name, $fields)) continue;
+				$conditions[] = $this->{$this->name}->name.'.'.$fieldInfo->name.' LIKE '.$searchTermQuoted.' OR';
+			}
+			if (empty($conditions)) {
+				return new Set();
+			}
+			$results = $this->{$this->name}->findAll($conditions);
+			$this->set(Inflector::plural($this->name), $results);
+			return $results;
+		}
+		return true;	
 	}
 	
 	/**

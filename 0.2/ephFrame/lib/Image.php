@@ -45,7 +45,8 @@ require_once dirname(__FILE__).'/Color.php';
  *	</code>
  *	<br />
  * 
- * 	Making flickr-like thumbnails (resize but so exact size)
+ * 	Making flickr-like thumbnails where the image is resized and cropped to the
+ * 	exact size:
  * 	<code>
  * 		$image = new Image("test.jpg");
  * 		$thumb = $image->stretchResizeTo(200,200);
@@ -491,21 +492,30 @@ class Image extends File implements Renderable {
 	}
 
 	/**
-	 *	Resizes The Image to the given size using optional constrain proportions<br />
+	 *	Resize Image
 	 *	<br />
-	 *	Resize uploaded image and put into folder
+	 * 	Use this method to resize your image to a tinier thumbnail or preview
+	 * 	sizes. The method will automatically check if the image is in panel or
+	 * 	portrait format and decide wich way to resize the image.<br />
+	 * 	The $width and $height parameters are the maximum width and height of
+	 * 	the resulting image.<br />
+	 * 	If you set $constrainProps to false your result may have false
+	 * 	proportions.<br />
+	 * 	<br />
+	 *	Resize uploaded image and save into folder:
 	 *	<code>
 	 *		$image = new Image($_FILES["image"]["tmp_name"]);
-	 *		$image->resizeTo(200,300,true);
+	 *		$image->resizeTo(320, 240);
 	 *		$image->saveAs("images/products/product_1_thumb.jpg",100);
 	 *	</code>
+	 * 	
 	 *	@param	integer	$width
-	 *	@param 	integer	$height
+	 *	@param integer	$height
 	 *	@param	boolean $constrainProps
 	 */
 	public function resizeTo($width, $height, $constrainProps = true) {
 		if ($constrainProps) {
-			if ($this->isPanelFormat()) {
+			if ($this->isPanelFormat() || $this->width() == $this->height()) {
 				$width = round($this->width() * ($height / $this->height()));
 			} else {
 				$height = round($this->height() * ($width / $this->width()));
@@ -527,7 +537,9 @@ class Image extends File implements Renderable {
 	 * 	<br />
 	 * 	This is easier to understand if you think about the thumbnails in flickr
 	 * 	or other webservices where the thumbnails always have the same size and 
-	 * 	no panel or landscape format change.
+	 * 	no panel or landscape format change.<br />
+	 * 	http://flickr.com/photos/ephigenia/
+	 * 	<br />
 	 * 
 	 * 	@param	integer	$width
 	 * 	@param	integer	$height
@@ -655,7 +667,12 @@ class Image extends File implements Renderable {
 	}
 	
 	/**
-	 * 	Returns available Image Types this class can handle
+	 * 	Returns available Image Types this class can handle. Usually this is an
+	 * 	array like this:
+	 * 	<code>
+	 * 	// should echo gif,jpg,png,swf
+	 * 	echo implode(',', $image->availableTypes());
+	 * 	</code>
 	 * 	@return array(string)
 	 */
 	public function availableTypes() {
@@ -699,7 +716,13 @@ class Image extends File implements Renderable {
 	}
 
 	/**
-	 *	Returns the number of color channels in the image
+	 *	Returns number of color channels in the image.
+	 * 	Use this for check for b/w images that have 2 channels:
+	 * 	<code>
+	 * 	if ($image->channels() != 3) {
+	 * 		echo 'ERROR, your image file possibly not an RGB-File.';
+	 * 	}
+	 * 	</code>
 	 *	@return integer	Number of color channels
 	 *	@throws ImageIndeterminateColorChannels
 	 */
@@ -732,15 +755,15 @@ class Image extends File implements Renderable {
 	}
 
 	/**
-	 *	Creates an Image Ressource Handle for you for an existing
-	 *	image file or creates an empty image ressource handle of the 
+	 *	Creates an Image Ressource Handle.
+	 * 
+	 * 	for you for an existing image file or creates an empty image ressource handle of the 
 	 *	given type, width and height. If no with and height is given
 	 * 	the width and height property of the image is used.
 	 *
-	 *	@param	string	$type
-	 *					Type of the image, jpg, gif, png
+	 *	@param	string $type Type of the image, jpg, gif, png
 	 *	@param	integer	$width
-	 *	@param 	integer $height
+	 *	@param integer $height
 	 *	@return ressource
 	 */
 	public function createHandle($type = null, $width = null, $height = null) {
@@ -767,6 +790,10 @@ class Image extends File implements Renderable {
 		} else {
 			if (is_null($type)) {
 				$type = $this->type();
+			}
+			// check for valid type string
+			if (!isset($this->imageTypes[$type]) && !in_array($type, $this->imageTypes)) {
+				throw new ImageInvalidTypeException($type);
 			}
 			if (is_null($width)) $width = $this->width();
 			if (is_null($height)) $height = $this->height();
@@ -795,7 +822,8 @@ class Image extends File implements Renderable {
 	}
 
 	/**
-	 * 	Returns the image contents
+	 * 	Returns the image content itself
+	 *
 	 * 	@param	integer	$quality optional JPG-Image quality (only applied if image is an jpeg)
 	 * 	@return boolean|string image string source or boolean failure
 	 */
@@ -824,7 +852,7 @@ class Image extends File implements Renderable {
 	}
 
 	/**
-	 *	Saves the image on the harddrive
+	 *	Save image on the harddrive
 	 *
 	 *	<code>
 	 *		$image->saveImage("../img/products/product_1.jpg", 100);
@@ -968,30 +996,6 @@ class Image extends File implements Renderable {
 		return $this;
 	}
 
-	/**
-	 *	Returns the most dominat color a new Color
-	 * 	@return Color
-	 */
-	public function dominantColor() {
-		$colormatrix = $this->getColorMatrix();
-		$width = $this->width();
-		$height = $this->height();
-		$colorOccurence = array ();
-		for ($x = 0; $x < $width; $x++) {
-			for ($y = 0; $y < $height; $y++) {
-				$color = $colormatrix[$x][$y];
-				if (!isset ($colorOccurence[$color["index"]])) {
-					$colorOccurence[$color["index"]] = 1;
-				} else {
-					$colorOccurence[$color["index"]]++;
-				}
-			}
-		}
-		arsort($colorOccurence);
-		$keys = array_keys($colorOccurence);
-		return $this->getColorForIndex($keys[0]);
-	}
-	
 	public function createColor($color) {
 		$args = func_get_args();
 		if (get_class($args[0]) == 'Color') {
@@ -1011,7 +1015,7 @@ class Image extends File implements Renderable {
 	 *	Return a {@link Color} Object for a index given. If the
 	 * 	Color was not found false is returned
 	 * 
-	 * 	@param 	integer	$colorIndex Index of Color you want to get
+	 * 	@param integer	$colorIndex Index of Color you want to get
 	 *	@return Color|boolean
 	 */
 	public function getColorForIndex($colorIndex) {
@@ -1103,6 +1107,17 @@ class ImageUndetectableImageType extends ImageException {
 			$message = 'Unable to determine type of image.';
 		}
 		parent::__construct($message);
+	}
+}
+
+/**
+ * 	Thrown if an invalid type of image was specified
+ *	@package ephFrame
+ * 	@subpackage ephFrame.lib.exception
+ */
+class ImageInvalidTypeException extends ImageException {
+	public function __construct($type) {
+		parent::__construct('Invalid Image Type \''.$type.'\'.');
 	}
 }
 
