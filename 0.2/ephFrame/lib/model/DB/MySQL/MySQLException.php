@@ -25,20 +25,21 @@
  */
 class MySQLException extends DBException {
 	
-	const ERRNO_DEFAULT = 0;
-	const ERRNO_ACCESS_DENIED = 1045;
-	const ERRNO_NO_DB_SELECTED = 1046;
-	const ERRNO_DB_NOT_FOUND = 1049;
+	const ERRNO_DEFAULT 					= 0;
+	const ERRNO_ACCESS_DENIED 				= 1045;
+	const ERRNO_NO_DB_SELECTED 				= 1046;
+	const ERRNO_DB_NOT_FOUND 				= 1049;
 	const ERRNO_SERVER_SHUTDOWN_IN_PROGRESS = 1053;
-	const ERRNO_QUERY_ERROR = 1064;
-	const ERRNO_TABLE_NOT_ACCESSIBLE = 1105;
-	const ERRNO_TABLE_NOT_FOUND = 1146;
-	const ERRNO_DUBLICATE_ENTRY = 1062;
-	const ERRNO_TABLE_CRASHED = 1194;
-	const ERRNO_CONNECTION_ERROR = 2003;
-	const ERRNO_UNKNOWN_HOST = 2005;
-	const ERRNO_SERVER_GONE_AWAY = 2006;
-	const ERRNO_LOST_CONNECTION_QUERY = 2013;
+	const ERRNO_QUERY_ERROR 				= 1064;
+	const ERRNO_TABLE_NOT_ACCESSIBLE 		= 1105;
+	const ERRNO_TABLE_NOT_FOUND 			= 1146;
+	const ERRNO_DUBLICATE_ENTRY 			= 1062;
+	const ERRNO_TABLE_CRASHED 				= 1194;
+	const ERRNO_SOCKET_CONNECTION_ERROR 	= 2002;
+	const ERRNO_CONNECTION_ERROR 			= 2003;
+	const ERRNO_UNKNOWN_HOST 				= 2005;
+	const ERRNO_SERVER_GONE_AWAY 			= 2006;
+	const ERRNO_LOST_CONNECTION_QUERY 		= 2013;
 	
 	/**
 	 *	Stores the Current MySQL Error Number
@@ -89,6 +90,9 @@ class MySQLException extends DBException {
 				break;
 			case self::ERRNO_CONNECTION_ERROR:
 				return 'MySQLConnectionException';
+				break;
+			case self::ERRNO_SOCKET_CONNECTION_ERROR:
+				return 'MySQLSocketConnectionError';
 				break;
 			case self::ERRNO_LOST_CONNECTION_QUERY:
 				return 'MySQLQueryLostConnectionException';
@@ -173,6 +177,18 @@ class MySQLQueryEmptyException extends MySQLQueryException {
  * 	@subpackage ephFrame.lib
  */
 class MySQLConnectionErrorException extends MySQLException {
+	public function __construct(MySQL $dao) {
+		$this->level = self::FATAL;
+		parent::__construct($dao);
+	}
+}
+
+/**
+ * 	Thrown if no connection could be established through local socket
+ * 	@package ephFrame
+ * 	@subpackage ephFrame.lib
+ */
+class MySQLSocketConnectionError extends MySQLConnectionErrorException {
 	public function __construct(MySQL $dao) {
 		$this->level = self::FATAL;
 		parent::__construct($dao);

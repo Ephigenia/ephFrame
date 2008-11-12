@@ -50,6 +50,11 @@ if (!defined('LOG_DIR')) define ('LOG_DIR', TMP_DIR.'log/');
 if (!defined('MODELCACHE_DIR')) define ('MODELCACHE_DIR', TMP_DIR.'model/');
 
 if (!defined('WEBROOT')) {
+//	echo '<pre>';
+//	echo $_SERVER['DOCUMENT_ROOT'].LF;
+//	echo realpath(APP_ROOT).LF;
+//	exit;
+	
 	if (preg_match('/^'.preg_quote($_SERVER['DOCUMENT_ROOT'], '/').'/', realpath(APP_ROOT).'/')) {
 		$__webroot = str_replace($_SERVER['DOCUMENT_ROOT'], '', realpath(APP_ROOT).'/');
 		if (empty($__webroot)) {
@@ -58,7 +63,8 @@ if (!defined('WEBROOT')) {
 			$__webroot = '/'.$__webroot;
 		}
 	} else {
-		$__webroot = '/';
+//		$__webroot = '/';
+		$__webroot = str_repeat('../', substr_count($_SERVER['REQUEST_URI'], '/')-2);
 	}
 	define ('WEBROOT', $__webroot); // absolute path to webroot
 	unset($__webroot);

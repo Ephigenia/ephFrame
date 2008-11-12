@@ -115,7 +115,7 @@ class Twitter extends CURL {
 	 * 	@return integer $id
 	 * 	@param string message
 	 */
-	public function updateStats($message) {
+	public function updateStatus($message) {
 		if (trim($message) == '') return false;
 		$this->url 	= $this->baseUrl.'statuses/update.json';
 		$this->data = array('status' => $message);
