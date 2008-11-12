@@ -50,11 +50,6 @@ if (!defined('LOG_DIR')) define ('LOG_DIR', TMP_DIR.'log/');
 if (!defined('MODELCACHE_DIR')) define ('MODELCACHE_DIR', TMP_DIR.'model/');
 
 if (!defined('WEBROOT')) {
-//	echo '<pre>';
-//	echo $_SERVER['DOCUMENT_ROOT'].LF;
-//	echo realpath(APP_ROOT).LF;
-//	exit;
-	
 	if (preg_match('/^'.preg_quote($_SERVER['DOCUMENT_ROOT'], '/').'/', realpath(APP_ROOT).'/')) {
 		$__webroot = str_replace($_SERVER['DOCUMENT_ROOT'], '', realpath(APP_ROOT).'/');
 		if (empty($__webroot)) {
@@ -63,8 +58,22 @@ if (!defined('WEBROOT')) {
 			$__webroot = '/'.$__webroot;
 		}
 	} else {
-//		$__webroot = '/';
-		$__webroot = str_repeat('../', substr_count($_SERVER['REQUEST_URI'], '/')-2);
+		$depth = 0;
+		$requestUri = trim($_SERVER['REQUEST_URI'], '/');
+		$appRootLastDirName = basename(realpath(APP_ROOT));
+		if ($requestUri = $appRootLastDirName) {
+			$__webroot = '/'.$appRootLastDirName.'/';
+		} else {
+			$requestPathArr = explode('/', dirname(preg_replace('/^([^?]*)(\?(.*))?$/', '\\1', $requestUri)));
+			for($i = count($requestPathArr)-1; $i > 0; $i--) {
+	 			if ($requestPathArr[i] === $appRootLastDirName) {
+					break;
+				} else {
+					$depth++;
+				}
+			}
+			$__webroot = str_repeat('../', $depth);
+		}
 	}
 	define ('WEBROOT', $__webroot); // absolute path to webroot
 	unset($__webroot);

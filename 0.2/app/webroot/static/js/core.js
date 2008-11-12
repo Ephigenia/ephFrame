@@ -70,6 +70,19 @@ Array.prototype.filter = function(m) {
 	return this;
 }
 
+/**
+ *	Returns the index of the $value if found
+ * 	@param array(mixed) $val
+ */
+Array.prototype.indexOf = function($val) {
+	for(var a = 0; a < this.length; a++) {
+		if (this[a] == $val) {
+			return a;
+		}
+	}
+	return false;
+}
+
 
 /**
  *	Url Escapes utf8 characters in a string and returns it

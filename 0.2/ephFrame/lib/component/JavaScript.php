@@ -43,6 +43,7 @@ class JavaScript extends Component implements Renderable {
 	 * 	@var array(string)
 	 */
 	public $plain = array();
+	public $jQuery = array();
 	public $dir = './';
 	
 	public $compress = false;
@@ -56,9 +57,12 @@ class JavaScript extends Component implements Renderable {
 	
 	public function addScript($script) {
 		$this->plain[] = $script;
-		return $this;
 	}
 	
+	public function jQuery($script) {
+		$this->jQuery[] = $script;
+	}
+
 	public function addFile($filename) {
 		if (func_num_args() > 1) {
 			$args = func_get_args();
@@ -99,20 +103,21 @@ class JavaScript extends Component implements Renderable {
 			$rendered .= $cssIncludeTag->render();
 		}
 		if (!empty($this->plain)) {
-			$plainJoined = implode(LF, $this->plain);
-			if (!$this->compress) {
-				$plain = $plainJoined;
-			} else {
+			$plain = implode(LF, $this->plain);
+			$jQuery = implode(LF, $this->jQuery);
+			if ($this->compress) {
 				loadComponent('JSCompressor');
 				$compressor = new JSCompressor();
 				$plain = $compressor->compress($plainJoined);
+				$jQuery = $compressor->compress($jQuery);
 			}
-			$plain = '//<![CDATA['.LF.
+			$jsSource = '//<![CDATA['.LF.
+				$plain.
 				'$(document).ready(function() {'.LF.
-				$plain.LF.
+				$jQuery.LF.
 				'});'.LF.
 				'//]]>';
-			$jsScriptTag = new HTMLTag('script', array('type' => 'text/javascript'), $plain);
+			$jsScriptTag = new HTMLTag('script', array('type' => 'text/javascript'), $jsSource);
 			$rendered .= $jsScriptTag->render();
 		}
 		return $this->afterRender($rendered);
