@@ -47,7 +47,7 @@ class Element extends View {
 				$this->viewFilename = $ephFrameViewFile;
 			}
 		}
-		if (!file_exists($this->viewFilename)) throw new ViewFileNotFoundException($this);
+		if (!file_exists($this->viewFilename)) throw new ElementFileNotFoundException($this);
 		return $this->viewFilename;
 	}
 	
@@ -67,5 +67,12 @@ class Element extends View {
  */
 class ElementException extends BasicException {}
 
+class ElementFileNotFoundException extends BasicException {
+	public function __construct(View $view) {
+		$this->view = $view;
+		$message = 'Unable to find view File \''.$this->view->viewFilename.'\'';
+		parent::__construct($message);
+	}
+}
 
 ?>

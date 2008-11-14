@@ -17,7 +17,11 @@
  * 	modify this path to point at the ephFrame root (where the startup.php
  * 	script is located, by default '../ephFrame')
  */
-require '../../ephFrame/startup.php';
+switch(get_current_user()) {
+	default:
+		require '../../ephFrame/startup.php';
+		break;
+}
 
 /**
  *	Create the dispatcher that creates the controller ...

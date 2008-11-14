@@ -127,6 +127,13 @@ class Model extends Object {
 	public $findConditions = array();
 	
 	/**
+	 *	Default number of entries to return when no limit is passed or pagination
+	 * 	is used
+	 * 	@var integer
+	 */
+	public $perPage = 10;
+	
+	/**
 	 *	Default Order Command for every select query
 	 * 	@var array(string)
 	 */
@@ -701,7 +708,7 @@ class Model extends Object {
 	 * 	@param integer $depth depth of model associations to use in select query
 	 * 	@return SelectQuery
 	 */
-	protected function createSelectQuery($conditions = array(), $order = array(), $offset = 0, $count = null, $depth = null) {
+	protected function createSelectQuery($conditions = array(), $order = null, $offset = 0, $count = null, $depth = null) {
 		if ($depth === null) {
 			$depth = $this->depth;
 		}
@@ -899,6 +906,51 @@ class Model extends Object {
 			return $this->afterFind($resultSet);
 		}
 		return false;
+	}
+	
+	/**
+	 *	Returns the number of entries found
+	 * 	@param array(string) $conditions
+	 * 	@param integer $offset
+	 * 	@param integer $count
+	 * 	@return integer
+	 */
+	public function countAll($conditions = null, $offset = null, $count = null) {
+		$query = $this->createSelectQuery($conditions, array(), $offset, $count);
+		$query->select = new Hash(array('COUNT(*)' => 'count'));
+		$result = $this->DB->query($query);
+		if (!$result) {
+			return false;
+		}
+		$r = $result->fetchAssoc();
+		return $r['count'];
+	}
+	
+	/**
+	 *	Returns an array with information about pagination in this model
+	 * 	@todo maybe this is not part of model, maybe it's more controller-like?
+	 * 	@param integer $page Current Page Number
+	 * 	@param integer $perPage number of items per page
+	 * 	@param array(string) $conditions Conditions to mention when paginating
+	 * 	@return array()
+	 */
+	public function paginate($page = 1, $perPage = null, $conditions = null) {
+		$page = abs((int) $page); $perPage = abs((int) $perPage);
+		if ($page <= 0) $page = 1;
+		if ($perPage == 0) $perPage = $this->perPage;
+		$total = $this->countAll($conditions);
+		$lastPage = ceil($total / $perPage);
+		return array(
+			'page' => $page,
+			'perPage' => $perPage,
+			'next' => ($page < $lastPage) ? $page+1 : false,
+			'previous' => ($page > 1) ? $page - 1 : false,
+			'pages' => $lastPage,
+			'pagesTotal' => $lastPage,
+			'total' => $total,
+			'last' => $lastPage,
+			'first' => 1
+		);
 	}
 	
 	/**

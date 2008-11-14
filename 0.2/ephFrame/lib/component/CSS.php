@@ -19,15 +19,15 @@ ephFrame::loadClass('ephFrame.lib.Collection');
  * 	Class Collecting CSS definitions and files for the view
  * 
  * 	The directory used for rendering the css file includes is STATIC_DIR by
- * 	default. You can set your own css directory changing dir property of CSS.
- * 
+ * 	default. You can set your own css directory changing dir property of CSS.<br />
+ * 	<br />
  * 	The simplest example of how you can use this component is by showing you
  * 	how ot add css files or css rules to your application:
  * 	<code>
  * 	class ExampleController extends AppController {
  * 		public $components = array('CSS');
  * 		public function exampleAction() {
- * 			$this->CSS->addFile('css/main.css');
+ * 			$this->CSS->link('css/main.css');
  * 		}
  * 	}
  * 	</code>
@@ -106,6 +106,10 @@ class CSS extends Component implements Renderable {
 	public function add($css) {
 		$this->plain[] = $css;
 		return $this;
+	}
+	
+	public function link($filename) {
+		return $this->addFile($filename);
 	}
 	
 	/**
@@ -190,7 +194,8 @@ class CSS extends Component implements Renderable {
 			loadComponent('CSSPacker');
 			$packer = new CSSPacker();
 			$compressedFilename = $packer->packAndStore($files, $dir);
-			$this->files = array($compressedFilename);
+			$this->files = new Collection();
+			$this->files->add($compressedFilename);
 		}
 		return true;
 	}

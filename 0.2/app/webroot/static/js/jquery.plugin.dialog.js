@@ -1,5 +1,15 @@
 /**
- *	GIF-Like Animation
+ *	jQuery Extensions creating dialog-like windows
+ *
+ *	This class can help you making your web-application look fancy better!
+ *	It will create cool looking windows with buttons and inputs in it. No need
+ *	for ugly OS-Depending Confirmation / Prompt Windows.
+ *
+ *	Example Usage of Prompt
+ *	<code>
+ *	
+ *	</code>
+ *	
  *	@todo change the name of this plugin to fit 
  *	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
  *	@since 2008-11-12
@@ -14,19 +24,9 @@
 			$(this).loadCSS(document.WEBROOT + 'static/css/dialog.css');
 		},
 		
-		prompt: function(title, message, value, callback) {
-			this.init();
-			var divId = 'dialog' + this.dialoges.length;
+		createDialog: function(title, content) {
 			var window = '<div id="' + divId + '" class="dialog prompt">%s</div>';
-			var content = '<h1>' + title + '</h1>';
-			if (message) {
-				content += '<p>' + message + '</p>'; 
-			}
-			if (typeof(value) == 'undefined') {
-				value = '';
-			}
-			content += '<input type="text" name="prompt" class="value" value="' + value + '" /><br />';
-			content += '<input type="submit" value="OK" class="submit" />';
+			var divId = 'dialog' + this.dialoges.length;
 			var source = window.replace(/%s/, content);
 			$('body').prepend(source);
 			var dialog = $('#' + divId);
@@ -34,20 +34,37 @@
 				$(this).fadeOut(400);
 			}
 			this.dialoges[divId] = dialog;
-			$('#' + divId + ' .submit').click(function() {
+		},
+		
+		prompt: function(title, message, value, callback) {
+			this.init();
+			var content = '<h1>' + title + '</h1>';
+			if (message) content += '<p>' + message + '</p>'; 
+			if (typeof(value) == 'undefined') value = '';
+			content += '<input type="text" name="prompt" class="value" value="' + value + '" /><br />';
+			content += '<input type="submit" value="OK" class="submit" />';
+			dialog = createDialog(title, content);
+			$('.submit', dialog).click(function() {
 				if (typeof(callback) == 'function') {
-					callback($('#'+ divId + ' input.value').val());
+					callback($('input.value', dialog).val());
 				}
 				dialog.close();
 			});
-			$('#' + divId + ' .value').keyup(function(e) {
+			$('.value', dialog).keyup(function(e) {
 				var keyCode = e.keyCode || window.event.keyCode;
 				if (keyCode == 27) {
 					$(this).close();
 				} else if (keyCode == 13 || keyCode == 10) {
-					$('#' + divId + ' .submit').trigger('click');
+					$('.submit', dialog).trigger('click');
 				}
 			});
+			dialog.centerOnScreen();
+			dialog.hide().fadeIn(400);
+		},
+		
+		confirm: function(title, message, callback) {
+			this.init();
+			dialog = this.createDialog(title, message);
 			dialog.centerOnScreen();
 			dialog.hide().fadeIn(400);
 		},

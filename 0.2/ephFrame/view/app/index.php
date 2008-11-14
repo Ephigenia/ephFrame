@@ -23,7 +23,7 @@ if (!is_dir(MODELCACHE_DIR)) {
 	echo $this->renderElement('errorMessage', array('message' => 'Model-cache-diretory is not writable is not writable: <q>'.MODELCACHE_DIR.'</q>.'));
 }
 // check salt value
-if (SALT === 'priotaseloukeadotraeuocrailaejot') {
+if (defined('SALT') && SALT === 'priotaseloukeadotraeuocrailaejot') {
 	echo $this->renderElement('errorMessage', array('message' => 'You haven\'t change the SALT value in <q>/app/config.php</q>. Please change the value!'));
 }
 ?>

@@ -61,6 +61,15 @@ class DBConfig {
 	 *	@var string
 	 */
 	public $default = 'mysql://root:gDE3ge@localhost:3306/ephFrameTest/#utf8';
+
+	public function __construct() {
+		// switch DB Configs depending on user name (example how to switch)
+		switch(get_current_user()) {
+			case 'yourUsername':
+				$this->default = 'mysql://';
+				break;
+		}
+	}
 	
 }
 

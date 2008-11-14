@@ -15,12 +15,19 @@
 /**
  * 	The Javascript component used for {@link HTMLView} class
  * 
- * 	Use this class to add Javascript Code from the view or controller to the
- * 	view or layout.
+ * 	This class can be used as a component in a controller and the views to add
+ * 	js-code for jquery-document-ready, plain javascript and even js-files.<br />
+ * 	The cool thing about this component is that it can be used in view {@link Element},
+ * 	so you don’t have to devide the elements js code from the element anymore
+ * 	they are both in the same file.
  * 
- * 	Adding Javascript Code to layout from the view
  * 	<code>
- * 	$JavaScript->addScript('alert("hi i\'m the javascript master")');
+ * 	// add a simple hello world to the javascript
+ * 	$JavaScript->addScript('alert("Hello World!")');
+ * 	// add a hello world to jQuery Document Ready
+ * 	$JavaScript->jQuery('alert("Hello World!")');
+ * 	// add js file
+ * 	$JavaScript->link('jquery.js');
  * 	</code>
  * 
  * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de
@@ -61,6 +68,10 @@ class JavaScript extends Component implements Renderable {
 	
 	public function jQuery($script) {
 		$this->jQuery[] = $script;
+	}
+	
+	public function link($filename) {
+		return $this->addFile($filename);
 	}
 
 	public function addFile($filename) {

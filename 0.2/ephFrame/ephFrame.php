@@ -125,10 +125,10 @@ final class ephFrame {
 		$className = ucFirst($helperName);
 		if (ClassPath::exists('ephFrame.lib.helper.'.$className)) {
 			loadClass('ephFrame.lib.helper.'.$className);
-		} elseif (ClassPath::exists('app.libs.helpers.'.$className)) {
+		} elseif (ClassPath::exists('app.lib.helper.'.$className)) {
 			loadClass('app.lib.helper.'.$className);
 		} else {
-			logg(Log::VERBOSE_SILENT, 'ephFrame: failed loading helper \''.$componentName.'\'');
+			logg(Log::VERBOSE_SILENT, 'ephFrame: failed loading helper \''.$helperName.'\'');
 			return false;
 		}
 		return true;

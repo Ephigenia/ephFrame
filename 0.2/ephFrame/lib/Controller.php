@@ -212,9 +212,10 @@ abstract class Controller extends Object implements Renderable {
 	 */
 	public function index() {
 		if (isset($this->{$this->name})) {
-			$plural = Inflector::plural($this->name);
-			$entries = $this->{$this->name}->findAll();
-			$this->set($plural, $entries);
+			$page = (isset($this->params['page'])) ? $this->params['page'] : 1;
+			$entries = $this->{$this->name}->findAll(null,null, ($page-1) * $this->{$this->name}->perPage,$this->{$this->name}->perPage);
+			$this->set(Inflector::plural($this->name), $entries);
+			$this->set('pagination', $this->BlogEntry->paginate($page));
 		}
 	}
 	
@@ -226,9 +227,8 @@ abstract class Controller extends Object implements Renderable {
 	 */
 	public function rss($itemCount = 10) {
 		if (isset($this->{$this->name})) {
-			$plural = Inflector::plural($this->name);
 			$entries = $this->{$this->name}->findAll(null, null, null, $itemCount);
-			$this->set($plural, $entries);
+			$this->set(Inflector::plural($this->name), $entries);
 			$this->layout = 'RSS';
 			$this->viewClassName = 'XMLView';
 			Registry::set('DEBUG', DEBUG_DEVELOPMENT);
@@ -255,7 +255,9 @@ abstract class Controller extends Object implements Renderable {
 			if (empty($conditions)) {
 				return new Set();
 			}
-			$results = $this->{$this->name}->findAll($conditions);
+			$page = (isset($this->params['page'])) ? $this->params['page'] : 1;
+			$this->set('pagination', $this->{$this->name}->paginate($page, null, $conditions));
+			$results = $this->{$this->name}->findAll($conditions, null, ($page-1) * $this->{$this->name}->perPage, $this->{$this->name}->perPage);
 			$this->set(Inflector::plural($this->name), $results);
 			return $results;
 		}
