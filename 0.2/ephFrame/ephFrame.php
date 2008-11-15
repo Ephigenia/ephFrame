@@ -51,7 +51,7 @@ final class ephFrame {
 			require (FRAME_HELPERS_DIR.'Helper.php');
 			require (FRAME_HELPERS_DIR.'Validator.php');
 			require (FRAME_HELPERS_DIR.'String.php');
-			require (FRAME_LIB_DIR.'helper/Sanitize.php');
+			require (FRAME_LIB_DIR.'helper/Sanitizer.php');
 			require (FRAME_LIB_DIR.'exception/IntrusionException.php');
 			require (FRAME_LIB_DIR.'exception/TypeException.php');
 			require (FRAME_LIB_DIR.'Registry.php');

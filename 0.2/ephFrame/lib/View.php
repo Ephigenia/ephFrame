@@ -87,7 +87,7 @@ abstract class View extends Hash implements Renderable {
 		// sanitize name
 		$this->name = preg_replace('/[^-_\/a-zA-Z0-9]*/', '', $name);
 		// sanitize action name
-		$this->action = Sanitize::paranoid($action);
+		$this->action = Sanitizer::panic($action);
 		// viewfilename
 		$this->createViewFilename();
 		return parent::__construct();

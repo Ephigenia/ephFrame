@@ -52,7 +52,7 @@ class Validator extends Helper {
 		// single line string rules are callbacks!
 		foreach($this->config as $ruleName => $config) {
 			// allowEmpty Rule
-			if (isset($config['allowEmpty']) && empty($value)) {
+			if (isset($config['allowEmpty']) && $config['allowEmpty'] === true && empty($value)) {
 				return true;
 			}
 			if (!isset($config['message'])) {

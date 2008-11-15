@@ -31,7 +31,8 @@ class HTMLTag extends SGMLTag {
 		if (empty($this->tagName)) return '';
 		$rendered = $this->tagIndent().self::OPEN.$this->tagName;
 		if (count($this->attributes) > 0) $rendered .= ' '.$this->attributes->render();
-		if (empty($this->tagValue) && !$this->hasChildren() && strcasecmp($this->tagName, 'script') !== 0) $rendered .= ' /';
+		if (empty($this->tagValue) && !$this->hasChildren() && strcasecmp($this->tagName, 'script') !== 0
+			&& !in_array($this->tagName, $this->noShortTags)) $rendered .= ' /';
 		$rendered .= self::CLOSE;
 		return $rendered;
 	}

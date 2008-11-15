@@ -116,6 +116,9 @@ class Router extends Hash {
 				// extract other parameter names
 				foreach($match as $key => $value) {
 					if (!preg_match('/[0-9]+/', $key)) {
+						if ($key == 'id') {
+							$value[0] = (int) $value[0];
+						}
 						$this->params[$key] = $value[0];
 					}
 				}

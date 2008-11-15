@@ -85,7 +85,8 @@ class ModelFieldInfo extends Object {
 				$this->signed = false;
 			}
 		// check for enum
-		} elseif (preg_match('@enum\((.+)\)@i', $this->type, $found)) {
+		}
+		if (preg_match('@enum\(([^\)]+)\)@i', $this->type, $found)) {
 			$enumOptionsRaw = $found[1];
 			// split raw enum options and save 'em
 			if ($splitted = preg_split('@\',\'@', $enumOptionsRaw)) {
@@ -95,6 +96,7 @@ class ModelFieldInfo extends Object {
 					$this->enumOptions[] = $option;
 				}
 			}
+			$this->type = 'enum';
 			$this->quoting = self::QUOTE_STRING;
 		}
 		

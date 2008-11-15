@@ -124,7 +124,7 @@ class JavaScript extends Component implements Renderable {
 			}
 			$jsSource = '//<![CDATA['.LF.
 				$plain.
-				'$(document).ready(function() {'.LF.
+				LF.'$(document).ready(function() {'.LF.
 				$jQuery.LF.
 				'});'.LF.
 				'//]]>';

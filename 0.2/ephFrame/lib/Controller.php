@@ -215,7 +215,7 @@ abstract class Controller extends Object implements Renderable {
 			$page = (isset($this->params['page'])) ? $this->params['page'] : 1;
 			$entries = $this->{$this->name}->findAll(null,null, ($page-1) * $this->{$this->name}->perPage,$this->{$this->name}->perPage);
 			$this->set(Inflector::plural($this->name), $entries);
-			$this->set('pagination', $this->BlogEntry->paginate($page));
+			$this->set('pagination', $this->{$this->name}->paginate($page));
 		}
 	}
 	

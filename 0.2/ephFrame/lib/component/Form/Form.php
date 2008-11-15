@@ -259,6 +259,13 @@ class Form extends HTMLTag {
 		return true;
 	}
 	
+	public $fieldNameFormTypeMapping = array(
+		'email' => 'email',
+		'url' 	=> 'url',
+		'text'	=> 'textarea',
+		'password' => 'password'
+	);
+	
 	/**
 	 *	Adds form fields by parsing model structure, ignoring the model fields
 	 * 	with the $ignore names
@@ -272,32 +279,36 @@ class Form extends HTMLTag {
 		foreach($model->structure as $fieldInfo) {
 			if (count($ignore) > 0 && in_array($fieldInfo->name, $ignore)) continue;
 			$field = false;
-			switch($fieldInfo->type) {
-				case 'varchar':
-					if ($fieldInfo->name == 'password') {
-						$field = $this->newField('password', $fieldInfo->name);
-					} elseif ($fieldInfo->name == 'email') {
-						$field = $this->newField('email', $fieldInfo->name);
-					} else {
+			if (in_array($fieldInfo->name, $this->fieldNameFormTypeMapping)) {
+				$field = $this->newField($this->fieldNameFormTypeMapping[$fieldInfo->name], $fieldInfo->name);
+			} else {
+				switch($fieldInfo->type) {
+					case 'varchar':
 						$field = $this->newField('text', $fieldInfo->name);
-					}
-					break;
-				case 'blob':
-				case 'text':
-				case 'mediumtext':
-				case 'mediumblob':
-				case 'tinyblob':
-				case 'tinytext':
-				case 'longblob':
-				case 'longtext':
-					$field = $this->newField('textarea', $fieldInfo->name);
-					break;
-				case 'date':
-					$field = $this->newField('text', $fieldInfo->name, gmdate('Y-m-d'));
-					break;
-				case 'char':
-					$field = $this->newField('checkbox', $fieldInfo->name, true);
-					break;	
+						break;
+					case 'blob':
+					case 'text':
+					case 'mediumtext':
+					case 'mediumblob':
+					case 'tinyblob':
+					case 'tinytext':
+					case 'longblob':
+					case 'longtext':
+						$field = $this->newField('textarea', $fieldInfo->name);
+						break;
+					case 'date':
+						$field = $this->newField('text', $fieldInfo->name, gmdate('Y-m-d'));
+						break;
+					case 'char':
+						$field = $this->newField('checkbox', $fieldInfo->name, true);
+						break;
+					case 'enum':
+						// enum can be checkbox
+						if ($fieldInfo->enumOptions == array('1', '0') || $fieldInfo->enumOptions == array('0', '1')) {
+							$field = $this->newField('checkbox', $fieldInfo->name, true); 
+						}
+						break;
+				}
 			}
 			if ($field) {
 				// add validation rules from model to field
@@ -320,7 +331,7 @@ class Form extends HTMLTag {
 			foreach($model->structure as $fieldInfo) {
 				if (!($field = $this->fieldset->childWithAttribute('name', $fieldInfo->name))) continue;
 				// checkboxes need special treatment
-				if ($fieldInfo->type == 'char') {
+				if ($fieldInfo->type == 'char' || $fieldInfo->type == 'enum') {
 					$field->value(true);
 					if ($model->get($fieldInfo->name)) {
 						$field->checked(true);

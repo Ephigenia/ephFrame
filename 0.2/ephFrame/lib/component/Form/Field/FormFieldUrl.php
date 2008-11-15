@@ -15,22 +15,23 @@
 require_once dirname(__FILE__).'/FormFieldText.php';
 
 /**
- * 	Email Form Field Text
+ * 	URL-Input Field
+ * 	
  * 	@package ephFrame
  * 	@subpackage ephFrame.lib.component.Form.Field
  * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * 	@since 04.11.2008
  */
-class FormFieldEmail extends FormFieldText {
+class FormFieldUrl extends FormFieldText {
 
 	/**
-	 *	Default validation rules for emails, should be emails
+	 *	Default validation rules for urls
 	 * 	@var array(string)
 	 */
 	public $validate = array(
 		'valid' => array(
-			'regexp' => Validator::EMAIL,
-			'message' => 'The email adress you\'ve entered seemes to be invalid. Please enter a valid email adress.'
+			'regexp' => Validator::URL,
+			'message' => 'The URL you\'ve entered is not valid.'
 		)
 	);
 	

@@ -113,7 +113,7 @@ class Model extends Object {
 	 * 	re-read.
 	 * 	@var integer
 	 */
-	protected $modelCacheTTL = HOUR;
+	protected $modelCacheTTL = 0;
 	
 	/**
 	 *	@var ModelStrutureCache

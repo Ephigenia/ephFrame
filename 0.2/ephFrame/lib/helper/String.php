@@ -824,7 +824,7 @@ class String extends Helper {
 	 * 	@return string
 	 */
 	public static function stripMultipleWhiteSpace($target) {
-		return preg_replace('/([\s]){1,}/', '$1', $target);
+		return preg_replace('/([\s]+){1,}/', '$1', $target);
 	}
 	
 	/**
