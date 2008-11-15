@@ -98,6 +98,7 @@ class Sanitizer extends Helper {
 		if ($flags == null) {
 			$flags = self::PARANOID; 
 		}
+		$var = self::clean($var);
 		if (is_array($var)) {
 			foreach($var as $i => $v) {
 				if ($include == null || ($include !== null && in_array($i, $include))) {

@@ -11,7 +11,7 @@
 # ------------------------------------------------------------------------------
 
 # configuration
-svndsn='export http://ephigenia-svn.cvsdude.com/ephigenia/trunc/ephFrame/0.2/app/';
+svndsn='export svn+ssh://moresleep.net/home/51916/data/ephFrame/0.2/app/';
 
 displayHelp() {
 	echo 'this can help you creating a new simple project file structure for a ephFrame'
