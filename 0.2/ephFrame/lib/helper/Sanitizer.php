@@ -66,30 +66,30 @@ class Sanitizer extends Helper {
 		if (is_array($var)) {
 			foreach($var as $i => $v) {
 				if ($ignore !== null && in_array($i, $ignore)) continue;
-				$var[$index] = self::clean($val, $flags, $ignore);
+				$var[$i] = self::clean($val, $flags, $ignore);
 			}
 			return $var;
 		}
 		$val = trim($var);
 		// always drop 00-strings
-		$var = preg_replace('@\x00@', '', $var);
+		$val = preg_replace('@\x00@', '', $val);
 		if ($flags & self::CLEAN_CARRIAGE) {
-			$var = preg_replace('@\r+@', '', $var);
+			$val = preg_replace('@\r+@', '', $val);
 		}
 		if ($flags & self::CLEAN_SPACES) {
-			$var = preg_replace('@[\s+]@', '', $var);
+			$val = preg_replace('@[\s+]@', '', $val);
 		}
 		if ($flags & self::CLEAN_UNICODE) {
-			$data = preg_replace("@&#([0-9]+);@s", "&#\\1;", $data);
+			$val = preg_replace("@&#([0-9]+);@s", "&#\\1;", $val);
 		}
 		if ($flags & self::CLEAN_DOLLAR) {
-			$ret = preg_replace('@@', '$', $val);	
+			$val = preg_replace('@@', '$', $val);	
 		}
 		if ($flags & self::CLEAN_HTML) {
-			$ret = String::stripTags($string);
+			$val = String::stripTags($val);
 		}
 		if ($flags & self::CLEAN_CONTROL_CHARS) {
-			$ret = String::stripControlChars($string);
+			$val = String::stripControlChars($val);
 		}
 		return $val;
 	}

@@ -59,18 +59,21 @@ class WikiText extends Component {
 			'/\[(.*)\]/' => '<a href="\\1">\\1</a>'
 			),
 		'headlines' => array(
-			'/^={2}\s(.+)\s={2}$/m' => '<h2>\\1</h2>',
-			'/^={1}\s(.+)\s={1}$/m' => '<h1>\\1</h1>',
-			'/^={3}\s(.+)\s+={3}$/m' => '<h3>\\1</h3>',
-			'/^={4}\s(.+)\s+={4}$/m' => '<h4>\\1</h4>',
-			'/^={5}\s(.+)\s+={5}$/m' => '<h5>\\1</h5>',
-			'/^={6,}\s(.+)\s+={6,}$/m' => '<h6>\\1</h6>',
+			'/^= (.+) =/m' => '<h1>\\1</h1>',
+			'/^={2} (.+) ={2}/m' => '<h2>\\1</h2>',
+			'/^={3} (.+) ={3}/m' => '<h3>\\1</h3>',
+			'/^={4} (.+) ={4}/m' => '<h4>\\1</h4>',
+			'/^={5} (.+) ={5}/m' => '<h5>\\1</h5>',
+			'/^={6,} (.+) ={6,}/m' => '<h6>\\1</h6>',
 			),
 		'hr' => array(
-			'/^-{4}$/m' => '<hr />'
+			'/^-{4}/m' => '<hr />'
 			),
+		'lists' => array(
+			'/^\#{1,} (.*)/m' => '<ul><li>\\1</li></ul>',
+		),
 		'numbered list' => array(
-			'/^\*{1,}(.*)/m' => '<ul><li>\\1</li></ul>',
+			'/^\*{1,} (.*)/m' => '<ol><li>\\1</li></ol>',
 			),
 		// intext syntax
 		'bold' => array(
@@ -79,6 +82,9 @@ class WikiText extends Component {
 		'italic' => array(
 			'/\'{2}(.*)\'{2}/' => '<i>\\1</i>'
 			),
+		'urlReplace' => array(
+			'/(http:\/\/|(www\.))(([^\s<]{4,68})[^\s<]*)/' => '<a href="http://$2$3" rel="nofollow">$2$4</a>'			
+		)
 	);
 	
 	/**
@@ -110,7 +116,7 @@ class WikiText extends Component {
 				}
 			}
 		}
-		$translated = preg_replace('/\n{1}/', '<br />'.LF, $translated);
+		$translated = preg_replace('/[\n\r]{2,}/s', '<br />'.LF, $translated);
 		return $translated;
 	}
 	

@@ -113,7 +113,7 @@ class JavaScript extends Component implements Renderable {
 			));
 			$rendered .= $cssIncludeTag->render();
 		}
-		if (!empty($this->plain)) {
+		if (!empty($this->plain) || !empty($this->jQuery)) {
 			$plain = implode(LF, $this->plain);
 			$jQuery = implode(LF, $this->jQuery);
 			if ($this->compress) {

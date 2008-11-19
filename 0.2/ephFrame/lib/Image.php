@@ -522,7 +522,7 @@ class Image extends File implements Renderable {
 			}
 		}
 		$oldHandle = $this->handle();
-		$newHandle = $this->createHandle($this->type(), $width, $height);
+		$newHandle = $this->createHandle('jpg', $width, $height);
 		imagecopyresampled($newHandle, $oldHandle, 0, 0, 0, 0, $width, $height, $this->width(), $this->height());
 		$this->handle = $newHandle;
 		$this->width = $width;
@@ -559,7 +559,7 @@ class Image extends File implements Renderable {
 		$srcH = $height * $scale;
 		$srcY = ($this->height() / 2) - ($srcH / 2);
 		$oldHandle = $this->handle();
-		$newHandle = $this->createHandle($this->type(), $width, $height);
+		$newHandle = $this->createHandle('jpg', $width, $height);
 		imagecopyresampled($newHandle, $oldHandle, 0, 0, $srcX, $srcY, $width, $height, $srcW, $srcH);
 		$this->handle = $newHandle;
 		return $this;

@@ -15,18 +15,26 @@ ephFrame::loadClass('ephFrame.lib.HTMLTag');
 class MetaTags extends Hash implements Renderable {
 	
 	public $data = array(
-		'keywords' => array(),
+		'keywords' => null,
 		'description' => '',
 		'robots' => array('index', 'follow'),
 		'imagetoolbar' => 'no',
-		'MSSmartTagsPreventParsing' => false
+		'MSSmartTagsPreventParsing' => 'false'
 	);
 	
 	public $metaEquivNames = array('content-type', 'content-language', 'pragma');
 	
 	public function startup() {
 		$this->controller->set('MetaTags', $this);
+		$this->data['keywords'] = new Collection();
 		return parent::startup();
+	}
+	
+	public function __get($index) {
+		if (isset($this->data[$index])) {
+			return $this->data[$index];
+		}
+		return false;
 	}
 	
 	public function renderMetaTag($key, $value) {
@@ -39,16 +47,20 @@ class MetaTags extends Hash implements Renderable {
 		} else {
 			$tagAttributes['name'] = $key;
 		}
-		switch(gettype($value)) {
-			case 'boolean':
-				$tagAttributes['content'] = ($value ? 'true' : 'false');
-				break;
-			case 'array':
-				$tagAttributes['content'] = implode(', ', $value);
-				break;
-			default:
-				$tagAttributes['content'] = $value;
-				break;
+		if ($value instanceof Set) {
+			$tagAttributes['content'] = $value->implode(' ');	
+		} else {
+			switch(gettype($value)) {
+				case 'boolean':
+					$tagAttributes['content'] = ($value ? 'true' : 'false');
+					break;
+				case 'array':
+					$tagAttributes['content'] = implode(' ', $value);
+					break;
+				default:
+					$tagAttributes['content'] = $value;
+					break;
+			}
 		}
 		$metaTag = new HTMLTag('meta', $tagAttributes);
 		return $metaTag->render();

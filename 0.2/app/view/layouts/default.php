@@ -13,15 +13,17 @@
         <!--[if IE 8]><meta http-equiv="X-UA-Compatible" content="IE=7" /><![endif]-->
 	</head>
 	<body>
-		<div id="header">
-			<a href="<?= WEBROOT ?>">ephFrame <?= ephFrame::VERSION ?></a>
-		</div>
-		<div id="content">
-			<?= (isset($content)) ? $content : '' ?>
-		</div>
-		<div id="footer">
-			© 2008+ <a href="http://www.nomoresleep.net/" title="nomoresleep">NMS</a>,
-			licensed under <a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a>
+		<div id="app">
+			<div id="header">
+				<a href="<?= WEBROOT ?>">ephFrame <?= ephFrame::VERSION ?></a>
+			</div>
+			<div id="content">
+				<?= (isset($content)) ? $content : '' ?>
+			</div>
+			<div id="footer">
+				© 2008+ <a href="http://www.nomoresleep.net/" title="nomoresleep">NMS</a>,
+				licensed under <a href="http://www.opensource.org/licenses/mit-license.php">MIT License</a>
+			</div>
 		</div>
 		<?php if (isset($JavaScript)) echo String::indent($JavaScript->render(), 2); ?>
 	</body>

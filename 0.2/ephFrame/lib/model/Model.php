@@ -510,7 +510,7 @@ class Model extends Object {
 			$quotedData[$key] = DBQuery::quote($value, $this->structure[$key]->quoting);
 		}
 		// set created date if there's any
-		if (isset($this->structure['created']) && !isset($quotedData['created'])) {
+		if (isset($this->structure['created']) && empty($quotedData['created'])) {
 			if ($this->structure['created']->quoting == ModelFieldInfo::QUOTE_STRING) {
 				// @todo set time string depending on sql type
 				$quotedData['created'] = 'NOW()';
@@ -727,10 +727,11 @@ class Model extends Object {
 			$query->select($this->name.'.'.$fieldInfo->name, $this->name.'.'.$fieldInfo->name);
 		}
 		// ordering
+		if ($order == null) {
+			$order = array();
+		}
 		if (!is_array($order) && is_string($order)) {
 			$order = array($order);
-		} else {
-			$order = array();
 		}
 		$order = array_merge($this->order, $order);
 		if (count($order) > 0) {

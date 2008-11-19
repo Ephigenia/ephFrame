@@ -57,6 +57,20 @@ class HTML extends Helper {
 	}
 	
 	/**
+	 *	Creates an email link, but encoding the email address
+	 * 	@param string email
+	 * 	@param string label
+	 * 	@return string
+	 */
+	public function email($email, $label = null) {
+		$emailEncoded = String::htmlOrdEncode($email);
+		if ($label == null) {
+			$label = $emailEncoded;
+		}
+		return $this->link('mailto:'.$emailEncoded, $label);
+	}
+	
+	/**
 	 * 	Creates a XHTML Valid link element.
 	 * 	@param string $url
 	 * 	@param array(string) $attributes

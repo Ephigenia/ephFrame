@@ -51,7 +51,6 @@ class Color extends Object {
 	 *	@param array(integer), integer, string
 	 */
     public function __construct() {
-    	parent::__construct();
     	// create color
     	$args = func_get_args();
     	// parameters passed: image, hexcolorstring
@@ -206,7 +205,7 @@ class Color extends Object {
      * 	@param integer $g
      * 	@return array array containing Y, U and V value
      */
-    public static function RGBtoYUV($r, $g = null, $b = null) {
+    public static function RGBtoYUV($r = null, $g = null, $b = null) {
     	if (is_array($r)) {
     		list($r, $g, $b) = $r;
     	}
@@ -222,6 +221,10 @@ class Color extends Object {
      */
     public function toYUV() {
     	return Color::RGBtoYUV($this->r, $this->g, $this->b);
+    }
+    
+    public function yuv() {
+    	return $this->toYUV();
     }
     
     /**
