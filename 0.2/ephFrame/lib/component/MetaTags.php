@@ -48,14 +48,18 @@ class MetaTags extends Hash implements Renderable {
 			$tagAttributes['name'] = $key;
 		}
 		if ($value instanceof Set) {
-			$tagAttributes['content'] = $value->implode(' ');	
+			$tagAttributes['content'] = $value->implode(', ');	
 		} else {
 			switch(gettype($value)) {
 				case 'boolean':
 					$tagAttributes['content'] = ($value ? 'true' : 'false');
 					break;
 				case 'array':
-					$tagAttributes['content'] = implode(' ', $value);
+					if (isset($value['value'])) {
+						$tagAttributes = array_merge($tagAttributes, $value);
+					} else {
+						$tagAttributes['content'] = implode(', ', $value);
+					}
 					break;
 				default:
 					$tagAttributes['content'] = $value;

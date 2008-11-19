@@ -494,9 +494,9 @@ abstract class Controller extends Object implements Renderable {
 			// call beforeaction on every component
 			foreach($this->components as $componentName) {
 				$className = ClassPath::className($componentName);
-				$this->{$componentName}->beforeAction();
+				$this->{$componentName}->beforeAction($action);
 			}
-			$this->beforeAction();
+			$this->beforeAction($action);
 			$arguments = array_diff_key($params, array('controller' => 0, 'action' => 0, 'path' => 0));
 			$this->callMethod($action, $arguments);
 		}

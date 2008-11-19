@@ -789,8 +789,10 @@ class Model extends Object {
 			}
 			if ($depth >= 2) {
 				foreach($this->hasMany as $associatedModelName => $config) {
+					$primaryKeyValue = $model->get($model->primaryKeyName);
+					if (empty($primaryKeyValue)) continue;
 					$joinConditions = array_merge($config['conditions'], array(
-						$config['associationKey'] => $model->get($model->primaryKeyName)
+						$config['associationKey'] => $primaryKeyValue
 					));
 					if (!$associatedData = $this->{$associatedModelName}->findAll($joinConditions)) {
 						$associatedData = new Set();
@@ -805,6 +807,10 @@ class Model extends Object {
 			return $return[0];
 		}
 		return $return;
+	}
+	
+	public function query($query) {
+		return $this->createSelectResultList($this->DB->query($query));
 	}
 	
 	/**
@@ -1093,8 +1099,10 @@ class Model extends Object {
 						break;
 				}
 				$this->data[$fieldName] = $value;
-			} else {
+			} elseif (is_object($value)) {
 				$this->$fieldName = $value;
+			} else {
+				$this->data[$fieldName] = $value;
 			}
 		} elseif (isset($this->$modelName)) {
 			$this->$modelName->set($fieldName, $value);

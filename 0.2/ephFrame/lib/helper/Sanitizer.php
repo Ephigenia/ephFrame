@@ -66,32 +66,33 @@ class Sanitizer extends Helper {
 		if (is_array($var)) {
 			foreach($var as $i => $v) {
 				if ($ignore !== null && in_array($i, $ignore)) continue;
-				$var[$i] = self::clean($val, $flags, $ignore);
+				$var[$i] = self::clean($v, $flags, $ignore);
 			}
 			return $var;
 		}
-		$val = trim($var);
+		$var = trim($var);
 		// always drop 00-strings
-		$val = preg_replace('@\x00@', '', $val);
+		$var = preg_replace('@\x00@', '', $var);
 		if ($flags & self::CLEAN_CARRIAGE) {
-			$val = preg_replace('@\r+@', '', $val);
+			$var = preg_replace('@\r+@', '', $var);
 		}
 		if ($flags & self::CLEAN_SPACES) {
-			$val = preg_replace('@[\s+]@', '', $val);
+			$var = preg_replace('@[\s+]@', ' ', $var);
 		}
+		
 		if ($flags & self::CLEAN_UNICODE) {
-			$val = preg_replace("@&#([0-9]+);@s", "&#\\1;", $val);
+			$var = preg_replace("@&#([0-9]+);@s", "&#\\1;", $var);
 		}
 		if ($flags & self::CLEAN_DOLLAR) {
-			$val = preg_replace('@@', '$', $val);	
+			$var = str_replace('\\\$', '$', $var);	
 		}
 		if ($flags & self::CLEAN_HTML) {
-			$val = String::stripTags($val);
+			$var = String::stripTags($var);
 		}
 		if ($flags & self::CLEAN_CONTROL_CHARS) {
-			$val = String::stripControlChars($val);
+			$var = String::stripControlChars($var);
 		}
-		return $val;
+		return $var;
 	}
 
 	public static function sanitize(&$var, $flags = null, $include = null) {
@@ -123,13 +124,12 @@ class Sanitizer extends Helper {
 		return $var;
 	}
 	
-	public function paranoid($var, $additionalChars = null) {
-		$allow = '@[^a-zA-Zà-úÀ-Ú$!?*™˝©®+-_%&\/|(){}[]€£₤¥¡¿#§\@:;⁏.,‚~‘’‛“”„‟°˝`´‵‶′″"\'';
+	public static function paranoid($string, $additionalChars = null) {
+		$allow = 'a-zA-Zà-úÀ-Ú!?*™˝©®+-_%&\/|(){}[]$€£₤¥¡¿#§@:;⁏.,‚~‘’‛“”„‟°˝`´‵‶′″"\'';
 		if ($additionalChars === null) {
 			$allow .= $additionalChars;
 		}
-		$var = preg_replace('@[^'.preg_quote($allow, '@').']@i', '', $var);
-		return $var;
+		return preg_replace('@[^'.preg_quote($allow, '@').']@i', '', $string);
 	}
 	
 	public static function sql($string) {
