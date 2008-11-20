@@ -62,6 +62,11 @@ final class ephFrame {
 			include (APP_ROOT.'config/config.php');
 			include (APP_ROOT.'config/paths.php');
 			include (APP_ROOT.'config/db.php');
+			require_once APP_LIB_DIR.'AppController.php';
+			require_once APP_LIB_DIR.'model/AppModel.php';
+			if (file_exists(APP_LIB_DIR.'component/Form/AppForm.php')) {
+				require_once APP_LIB_DIR.'component/Form/AppForm.php';
+			}
 			self::setErrorReporting();
 			logg(Log::VERBOSE_SILENT, 'ephFrame: successfully loaded, now going to dispatcher');
 		}
@@ -154,7 +159,9 @@ final class ephFrame {
 	public static function loadClass($classPath) {
 		if (empty($classPath)) throw new StringExpectedException();
 		$className = ClassPath::className($classPath);
+		
 		if (!class_exists($className)) {
+			
 			self::loadFrameWorkFile($classPath);
 		}
 		return $className;

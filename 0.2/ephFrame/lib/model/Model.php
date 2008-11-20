@@ -553,7 +553,7 @@ class Model extends Object {
 			}
 		}
 		$q = new UpdateQuery($this->tablename, $quotedData, array($this->primaryKeyName => $this->data[$this->primaryKeyName]));
-		$this->DB->query($q);
+		$this->query($q);
 		return true;
 	}
 	

@@ -12,8 +12,10 @@
  * 	@filesource
  */
 
-require FRAME_LIB_DIR.'Router.php';
-require FRAME_LIB_DIR.'HTTPRequest.php'; 
+require_once FRAME_LIB_DIR.'Router.php';
+require_once FRAME_LIB_DIR.'HTTPRequest.php';
+ 
+
 //ephFrame::loadClass('ephFrame.lib.Router');
 //ephFrame::loadClass('ephFrame.lib.HTTPRequest');
 
@@ -62,11 +64,6 @@ class Dispatcher extends Object {
 				$params = array('controllerName' => $controllerName);
 				return $this->dispatch('Error/ControllerNotFound', $params);
 			}
-		}
-		require_once APP_LIB_DIR.'AppController.php';
-		require_once APP_LIB_DIR.'model/AppModel.php';
-		if (file_exists(APP_LIB_DIR.'component/Form/AppForm.php')) {
-			require_once APP_LIB_DIR.'component/Form/AppForm.php';
 		}
 		ephFrame::loadClass($controllerClassPath);
 		try {

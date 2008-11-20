@@ -65,7 +65,7 @@ class ConsoleController extends Controller {
 		$optParseClassName = ephFrame::loadClass($this->optParseClassname);
 		$this->optParse = new $optParseClassName();
 		$this->init();
-		$this->main();
+		while($this->main()) {}
 	}
 	
 	protected function init() {
