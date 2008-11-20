@@ -55,7 +55,7 @@ class MetaTags extends Hash implements Renderable {
 					$tagAttributes['content'] = ($value ? 'true' : 'false');
 					break;
 				case 'array':
-					if (isset($value['value'])) {
+					if (isset($value['content'])) {
 						$tagAttributes = array_merge($tagAttributes, $value);
 					} else {
 						$tagAttributes['content'] = implode(', ', $value);

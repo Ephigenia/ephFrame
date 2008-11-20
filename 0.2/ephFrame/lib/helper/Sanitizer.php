@@ -95,7 +95,7 @@ class Sanitizer extends Helper {
 		return $var;
 	}
 
-	public static function sanitize(&$var, $flags = null, $include = null) {
+	public static function sanitize($var, $flags = null, $include = null) {
 		if ($flags == null) {
 			$flags = self::PARANOID; 
 		}

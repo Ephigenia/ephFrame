@@ -946,7 +946,11 @@ class Model extends Object {
 		if ($page <= 0) $page = 1;
 		if ($perPage == 0) $perPage = $this->perPage;
 		$total = $this->countAll($conditions);
-		$lastPage = ceil($total / $perPage);
+		if (!$perPage) {
+			$lastPage = 1;
+		} else {
+			$lastPage = ceil($total / $perPage);
+		}
 		return array(
 			'page' => $page,
 			'perPage' => $perPage,

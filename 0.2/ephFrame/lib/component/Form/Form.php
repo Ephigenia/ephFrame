@@ -279,11 +279,14 @@ class Form extends HTMLTag {
 		foreach($model->structure as $fieldInfo) {
 			if (count($ignore) > 0 && in_array($fieldInfo->name, $ignore)) continue;
 			$field = false;
+			// create form field depending on db-table field type
 			if (in_array($fieldInfo->name, $this->fieldNameFormTypeMapping)) {
 				$field = $this->newField($this->fieldNameFormTypeMapping[$fieldInfo->name], $fieldInfo->name);
 			} else {
 				switch($fieldInfo->type) {
 					case 'varchar':
+					case 'int':
+					case 'float':
 						$field = $this->newField('text', $fieldInfo->name);
 						break;
 					case 'blob':
@@ -338,6 +341,8 @@ class Form extends HTMLTag {
 					} else {
 						$field->checked(false);
 					}
+				} elseif (in_array($fieldInfo->name, array('created', 'edited'))) {
+					$field->value(date('d.m.Y H:i', $model->get($fieldInfo->name)));
 				} else {
 					$field->value($model->get($fieldInfo->name));
 				}

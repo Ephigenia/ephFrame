@@ -43,15 +43,33 @@ class FormFieldFile extends FormField {
 	 */
 	public function value($value = null) {
 		if (func_num_args() == 0) {
-			if (!isset($this->form) || isset($this->form) && !$this->form->submitted()) {
-				return false;
-			}
-			if (empty($_FILES[$this->attributes->name]['tmp_name'])) {
-				return false;
-			}
+			if (!$this->isUploaded()) return false;
 			$file = new $this->fileClassName($_FILES[$this->attributes->name]['tmp_name']);
 			return $file;
 		}
+	}
+	
+	/**
+	 *	Checks if any upload has happened
+	 * 	@return boolean
+	 */
+	protected function isUploaded() {
+		if (!isset($this->form) || isset($this->form) && !$this->form->submitted()) {
+			return false;
+		}
+		if (empty($_FILES[$this->attributes->name]['tmp_name'])) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
+	 *	Returns the name of the file uploaded if any file was uploaded.
+	 * 	@return string
+	 */
+	public function originalFilename() {
+		if (!$this->isUploaded()) return false;
+		return $_FILES[$this->attributes->name]['name'];
 	}
 	
 }

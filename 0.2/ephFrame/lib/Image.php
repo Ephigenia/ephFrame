@@ -113,6 +113,8 @@ class Image extends File implements Renderable {
 	 *	@var array()
 	 */
 	private $imgInfo = array ();
+	
+	public $fontSize = 2;
 
 	/**
 	 *	Image Constructor
