@@ -988,7 +988,7 @@ class Model extends Object {
 	 */
 	public function findAllBy($fieldname, $value = null, $order = null, $offset = 0, $count = null, $depth = null) {
 		if ($this->hasField($fieldname)) {
-			$value = DBQuery::quote($value, $this->structure[$fieldname]);
+			$value = DBQuery::quote($value, $this->structure[$fieldname]->quoting);
 		} else {
 			$value = DBQuery::quote($value);
 		}
@@ -1007,7 +1007,7 @@ class Model extends Object {
 	public function __call($methodName, Array $args) {
 		// catch findAllBy[fieldname] calls
 		if (preg_match('/(findAll(By)?)(.*)/i', $methodName, $found)) {
-			return $this->findAllBy(lcfirst($found[2]), $args[0]);
+			return $this->findAllBy(lcfirst(Inflector::underscore($found[3], true)), $args[0]);
 		// catch findBy[fieldname] calls 
 		} elseif (preg_match('/find(By)?(.*)/i', $methodName, $found)) {
 			return $this->findBy(lcfirst($found[2]), $args[0]);

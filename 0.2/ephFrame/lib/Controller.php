@@ -302,7 +302,7 @@ abstract class Controller extends Object implements Renderable {
 				ephFrame::loadClass($classPath);
 			}
 			$this->{$modelName} = new $modelName();
-			$this->{$modelName}->init();
+			$this->{$modelName}->init($this);
 			logg(Log::VERBOSE_SILENT, 'ephFrame: '.get_class($this).' loaded model \''.$modelName.'\'');
 		} catch (ephFrameClassFileNotFoundException $e) {
 			if ($modelName != $this->name) throw $e;

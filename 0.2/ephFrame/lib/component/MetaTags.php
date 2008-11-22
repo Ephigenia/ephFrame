@@ -19,10 +19,11 @@ class MetaTags extends Hash implements Renderable {
 		'description' => '',
 		'robots' => array('index', 'follow'),
 		'imagetoolbar' => 'no',
-		'MSSmartTagsPreventParsing' => 'false'
+		'MSSmartTagsPreventParsing' => 'false',
+		'content-type' => 'text/html; charset=utf-8'
 	);
 	
-	public $metaEquivNames = array('content-type', 'content-language', 'pragma');
+	public $metaEquivNames = array('content-type', 'content-language', 'pragma', 'imagetoolbar');
 	
 	public function startup() {
 		$this->controller->set('MetaTags', $this);
@@ -42,7 +43,7 @@ class MetaTags extends Hash implements Renderable {
 			return '';
 		}
 		$tagAttributes = array();
-		if (in_array($value, $this->metaEquivNames)) {
+		if (in_array($key, $this->metaEquivNames)) {
 			$tagAttributes['http-equiv'] = $key;
 		} else {
 			$tagAttributes['name'] = $key;
@@ -55,10 +56,12 @@ class MetaTags extends Hash implements Renderable {
 					$tagAttributes['content'] = ($value ? 'true' : 'false');
 					break;
 				case 'array':
-					if (isset($value['content'])) {
-						$tagAttributes = array_merge($tagAttributes, $value);
-					} else {
-						$tagAttributes['content'] = implode(', ', $value);
+					if (count($value) > 0) {
+						if (isset($value['content'])) {
+							$tagAttributes = array_merge($tagAttributes, $value);
+						} else {
+							$tagAttributes['content'] = implode(', ', $value);
+						}
 					}
 					break;
 				default:
