@@ -54,7 +54,7 @@ class JavaScript extends Component implements Renderable {
 	public $dir = './';
 	
 	public $compress = false;
-	public $pack = false;
+	public $pack = true;
 	
 	public function startup() {
 		$this->dir = STATIC_DIR.'js'.DS;

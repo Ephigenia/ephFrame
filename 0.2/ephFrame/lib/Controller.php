@@ -552,7 +552,7 @@ abstract class Controller extends Object implements Renderable {
 		}
 		$this->response->body = $this->afterRender($content);
 		// @todo add this to request/response
-		if (!preg_match('/gzip/i', $_SERVER['HTTP_ACCEPT_ENCODING']) && $this->response->enableGZipCompression) {
+		if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) && !preg_match('/gzip/i', $_SERVER['HTTP_ACCEPT_ENCODING']) && $this->response->enableGZipCompression) {
 			$this->response->enableGZipCompression = false;
 		}
 		$this->response->header->set('Content-Type', $view->contentType.'; charset=utf-8');

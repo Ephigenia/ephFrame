@@ -515,9 +515,13 @@ class Image extends File implements Renderable {
 	 *	@param integer	$height
 	 *	@param	boolean $constrainProps
 	 */
-	public function resizeTo($width, $height, $constrainProps = true) {
+	public function resizeTo($width = null, $height = null, $constrainProps = true) {
 		if ($constrainProps) {
-			if ($this->isPanelFormat() || $this->width() == $this->height()) {
+			if ($width == null) {
+				$width = round($this->width() * ($height / $this->height()));
+			} elseif ($height == null) {
+				$height = round($this->height() * ($width / $this->width()));
+			} elseif ($this->isPanelFormat() || $this->width() == $this->height()) {
 				$width = round($this->width() * ($height / $this->height()));
 			} else {
 				$height = round($this->height() * ($width / $this->width()));

@@ -32,14 +32,10 @@ define ('FRAME_HELPERS_DIR', FRAME_LIB_DIR.'helper/');
 define ('VENDOR_ROOT', FRAME_ROOT.'../vendor/');
 
 /**
- * 	Default Applications paths
+ * 	Absolute Path to application root, always one up before webroot/ or html!
  */
 if (!defined('APP_ROOT')) {
-	if (basename(getcwd()) == 'webroot') {
-		define('APP_ROOT', '../');
-	} else {
-		define ('APP_ROOT', dirname(getcwd().'/a').'/');		// absolute path to application root
-	}
+	define('APP_ROOT', realpath(getcwd().'/../').'/');
 }
 if (!defined('CONFIG_DIR')) define('CONFIG_DIR', APP_ROOT.'config/');
 if (!defined('VIEW_DIR')) define ('VIEW_DIR', APP_ROOT.'view/');
@@ -49,7 +45,33 @@ if (!defined('TMP_DIR')) define ('TMP_DIR', APP_ROOT.'tmp/');
 if (!defined('LOG_DIR')) define ('LOG_DIR', TMP_DIR.'log/');
 if (!defined('MODELCACHE_DIR')) define ('MODELCACHE_DIR', TMP_DIR.'model/');
 
+/**
+ *	Determine webroot, the directory that can be used for linking images
+ * 	files relative on the server
+ */
 if (!defined('WEBROOT')) {
+	
+	$debug = false;
+	if (!empty($debug)) {
+		echo '<pre>';
+		echo 'APP_ROOT '.TAB.TAB.APP_ROOT.LF;
+		echo 'APP_ROOT basename: '.TAB.basename(getcwd()).LF;
+		echo 'APP_ROOT webroot:  '.TAB.APP_ROOT.basename(getcwd()).LF;
+		echo 'APP_ROOT realpath: '.TAB.realpath(APP_ROOT).LF;
+		echo 'DOC_ROOT'.TAB.TAB.$_SERVER['DOCUMENT_ROOT'].LF;
+		echo 'DOC_ROOT_REAL'.TAB.TAB.realpath($_SERVER['DOCUMENT_ROOT']).LF;
+		echo 'REQUEST_URI'.TAB.TAB.$_SERVER['REQUEST_URI'].LF.LF;	
+		echo '</pre>';
+	}
+	
+	$__webroot = str_replace(realpath($_SERVER['DOCUMENT_ROOT']), '', APP_ROOT);
+	if ($__webroot == APP_ROOT) {
+		$__webroot = '/';
+	}
+	
+	// try to find actual webroot directory (most cases: html, webroot in real doc root)
+	
+	/*
 	if (preg_match('/^'.preg_quote($_SERVER['DOCUMENT_ROOT'], '/').'/', realpath(APP_ROOT).'/')) {
 		$__webroot = str_replace($_SERVER['DOCUMENT_ROOT'], '', realpath(APP_ROOT).'/');
 		if (empty($__webroot)) {
@@ -75,7 +97,13 @@ if (!defined('WEBROOT')) {
 			$__webroot = str_repeat('../', $depth);
 		}
 	}
-	define ('WEBROOT', $__webroot); // absolute path to webroot
+	*/
+	
+	if (!empty($debug)) {
+		var_dumP($__webroot);
+		exit;
+	}
+	define ('WEBROOT', $__webroot); // relative path to webroot (from the clients perspective)
 	unset($__webroot);
 }
 
