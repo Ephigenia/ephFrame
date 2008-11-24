@@ -758,7 +758,7 @@ class Model extends Object {
 		if (!is_array($order) && is_string($order)) {
 			$order = array($order);
 		}
-		$order = array_merge($this->order, $order);
+		$order = array_merge($order, $this->order);
 		if (count($order) > 0) {
 			foreach($order as $orderRule) {
 				// add model table alias name if missing
@@ -858,8 +858,8 @@ class Model extends Object {
 	 * 	@param string|array $conditions
 	 * 	@return Model|boolean
 	 */
-	public function find($conditions) {
-		$query = $this->createSelectQuery($conditions);
+	public function find($conditions, $order = null) {
+		$query = $this->createSelectQuery($conditions, $order);
 		if (!$this->beforeFind(&$query)) return false;
 		$result = $this->DB->query($query);
 		if ($resultSet = $this->createSelectResultList($result, true)) { 
