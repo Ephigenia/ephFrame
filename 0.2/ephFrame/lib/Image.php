@@ -272,7 +272,12 @@ class Image extends File implements Renderable {
 	 */
 	public function getPixel($x, $y) {
 		$col = imagecolorat($this->handle(), $x, $y);
-		if (!$col) return 0;
+		if ($this->type() == self::TYPE_GIF) {
+			$col = imagecolorsforindex($this->handle(), $col);
+			//var_dump($col);
+			$col = array($col['red'], $col['green'], $col['blue']);
+			return $col;
+		}
 		return array(($col >> 16) & 0xFF, ($col >> 8) & 0xFF, $col & 0xFF);
 	}
 	

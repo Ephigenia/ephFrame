@@ -196,6 +196,85 @@ class Color extends Object {
     }
     
     /**
+     *	Convert RGB Color to HSV Color Model
+     * 	http://en.wikipedia.org/wiki/HSL_color_space
+     * 	
+     */
+    public static function RGBtoHSL($r, $g = null, $b = null) {
+    	if (is_array($r)) {
+    		list($r, $g, $b) = $r;
+    	}
+    	$r /= 255; $g /= 255; $b /= 255;
+    	$max = max(array($r, $g, $b));
+    	$min = min(array($r, $g, $b));
+    	$h = $s = $l = ($max + $min) / 2;
+    	if ($max == $min) {
+    		$h = $s = 0;
+    	} else {
+    		$d = $max - $min;
+    		$s = $l > 0.5 ? $d / (2 - $max - $min) : $d / ($max + $min);
+    		switch($max) {
+    			case $r:
+    				$h = ($g - $b) / $d + ($g < $b ? 6 : 0);
+    				break;
+    			case $g:
+    				$h = ($b - $r) / $d + 2;
+    				break;
+    			case $b:
+    				$h = ($r - $g) / $d + 4;
+    				break;
+    		}
+    		$h /= 6;
+    	}
+    	return array($h, $s, $l);
+    }
+    
+    public function toHSL() {
+    	return Color::RGBtoHSL($this->r, $this->g, $this->b);
+    }
+    
+    public function hsl() {
+    	return $this->toHSL();
+    }
+    
+    public static function RGBtoHSV($r, $g = null, $b = null) {
+    	if (is_array($r)) {
+    		list($r, $g, $b) = $r;
+    	}
+    	$r /= 255; $g /= 255; $b /= 255;
+    	$max = max(array($r, $g, $b));
+    	$min = min(array($r, $g, $b));
+    	$h = $s = $v = $max;
+    	$d = $max - $min;
+    	$s = $max == 0 ? 0 : $d / $max;
+    	if ($max == $min) {
+    		$h = 0;
+    	} else {
+    		switch($max) {
+    			case $r:
+    				$h = ($g - $b) / $d + ($g < $b ? 6 : 0);
+    				break;
+    			case $g:
+    				$h = ($b - $r) / $d + 2;
+    				break;
+    			case $b:
+    				$h = ($r - $g) / $d + 4;
+    				break;
+    		}
+    		$h /= 6;
+    	}
+    	return array($h, $s, $v);
+    }
+    
+    public function toHSV() {
+    	return Color::RGBtoHSV($this->r, $this->g, $this->b);
+    }
+    
+    public function hsv() {
+    	return $this->toHSV();
+    }
+    
+    /**
      * 	Converts rgb values to YUV
      * 	
      * 	YUV colors are described here <a href="http://de.wikipedia.org/wiki/YUV">YUV</a>
@@ -205,7 +284,7 @@ class Color extends Object {
      * 	@param integer $g
      * 	@return array array containing Y, U and V value
      */
-    public static function RGBtoYUV($r = null, $g = null, $b = null) {
+    public static function RGBtoYUV($r, $g = null, $b = null) {
     	if (is_array($r)) {
     		list($r, $g, $b) = $r;
     	}
@@ -243,55 +322,6 @@ class Color extends Object {
     	$g = (1.7 * $y) - (0.509 * $r) - (0.194 * $b);
     	return array(round($r), round($g), round($b));
     }
-    
-    /**
-     * 	Converts rgb values to HSV
-     * 	
-     * 	HSV Colors consist of hue, saturation and value values that represent
-     * 	diffent informations about a color.
-     * 	The HSV color model is described here: <a href="http://de.wikipedia.org/wiki/HSV_%28Farbmodell%29">HSV</a>
-     *
-     * 	@param integer|array(integer) $r
-     * 	@param integer $g
-     * 	@param integer $b
-     * 	@return array
-     */
-	public static function RGBtoHSV ($r, $g, $b) {
-		if (is_array($r)) {
-			list($r, $g, $b) = $r; 
-		} 
-		$var_R = ($r / 255); 
-		$var_G = ($g / 255); 
-		$var_B = ($b / 255); 
-		$var_Min = min($var_R, $var_G, $var_B); 
-		$var_Max = max($var_R, $var_G, $var_B); 
-		$del_Max = $var_Max - $var_Min;
-		$V = $var_Max;
-		$max = $var_Max;
-		if ($del_Max == 0) { 
-			$H = 0; 
-			$S = 0; 
-		} else {
-			$S = $del_Max / $var_Max; 
-			$del_R = ((($max - $var_R) / 6) + ($del_Max / 2)) / $del_Max; 
-			$del_G = ((($max - $var_G) / 6) + ($del_Max / 2)) / $del_Max; 
-			$del_B = ((($max - $var_B) / 6 ) + ( $del_Max / 2)) / $del_Max;
-      		if ($var_R == $var_Max) $H = $del_B - $del_G;
-			else if ($var_G == $var_Max) $H = ( 1 / 3 ) + $del_R - $del_B; 
-			else if ($var_B == $var_Max) $H = ( 2 / 3 ) + $del_G - $del_R;
-			if ($H<0) $H++;
-			if ($H>1) $H--;
-		}
-		return array($H, $S, $V); 
-	}
-	
-	/**
-	 *	Returns this color as HSV values
-	 * 	@return array(integer)
-	 */
-	public function toHSV() {
-		return Color::RGBtoHSV($this->r, $this->g, $this->b);
-	}
     
     /**
      *	Converts a RGB Color to HUV Color

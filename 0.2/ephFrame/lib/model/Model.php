@@ -86,12 +86,14 @@ class Model extends Object {
 	public $data = array();
 	
 	/**
-	 * 	Name of db configuration that should be used, defined in {@link DB_CONFIG}
+	 * 	Name of the DB Configuration from {@link DB_CONFIG} that should be used
+	 * 	by this model. Change the used config name with {@link useDB}
 	 * 	@var string
 	 */
 	protected $useDBConfig = 'default';
 	
 	/**
+	 * 	Stores an instance of a DB Object that accepts queries
 	 * 	@var DB
 	 */
 	protected $DB;
@@ -220,23 +222,14 @@ class Model extends Object {
 			$parentClassVars = get_class_vars($parentClass);
 			foreach ($this->associationTypes as $associationKey) {
 				if (!isset($parentClassVars[$associationKey])) continue;
-				if (is_array($parentClassVars[$associationKey])) {
-					$this->$associationKey = array_merge($parentClassVars[$associationKey], $this->$associationKey);
-				}
-				if (in_array($this->name, $this->$associationKey)) {
-					user_error('Model '.$this->name.' can not be associated with itself', E_USER_ERROR);
-				}
+				$this->__mergeParentProperty($associationKey);
 			}
-			if (isset($parentClassVars['behaviors']) && is_array($parentClassVars['behaviors'])) {
-				$this->behaviors = array_unique(array_merge($parentClassVars['behaviors'], $this->behaviors));		
-			}
+			$this->__mergeParentProperty('behaviors');
 		}
 		// initialize model behavior callbacks
 		$this->behaviors = new ModelBehaviorHandler($this, $this->behaviors);
 		// initialize model bindings
-//		if (!is_object($id)) {
-			$this->initAssociations(is_object($id));
-//		}
+		$this->initAssociations(is_object($id));
 		// load inital data from array data or primary id
 		if (is_array($id)) {
 			$this->fromArray($id);
