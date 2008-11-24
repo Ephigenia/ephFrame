@@ -74,7 +74,7 @@ class Collection extends Set {
 	 * 	@return Collection
 	 */
 	public function fromArray(Array $data) {
-		parent::fromArray($array);
+		parent::fromArray($data);
 		$this->unique();
 		return $this;
 	}

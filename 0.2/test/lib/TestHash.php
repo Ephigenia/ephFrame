@@ -4,7 +4,7 @@
 require_once dirname(__FILE__).'/../autorun.php';
 
 /**
- * 	[SOME DOCU HERE WOULD BE NICE HEE!?]
+ * 	SimpleTest Class testing the {@link Hash} class from the ephFrame Framework
  * 
  * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * 	@since 18.08.2008

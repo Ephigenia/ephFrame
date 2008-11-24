@@ -145,6 +145,38 @@ class Set extends Component implements Countable, Renderable, Iterator, ArrayAcc
 	}
 	
 	/**
+	 *	Append to an existing value, if not exists, create index and value
+	 * 	@param integer|string $key
+	 * 	@param mixed $value
+	 */
+	public function appendTo($key, $value) {
+		if ($this->hasKey($key)) {
+			$this->data[$key] .= $value;
+		} else {
+			$this->set($key, $value);
+		}
+		return $this;
+	}
+	
+	/**
+	 *	Append values from an array to the Set
+	 * 	
+	 * 	<code>
+	 * 	$set = new Set(0,1,2,3);
+	 * 	$set->appendFromArray(array(4,5,6,7));
+	 * 	// prints 0,1,2,3,4,5,6,7
+	 * 	echo $set->implode(',');
+	 * 	</code>
+	 * 	
+	 * 	@param array(mixed) $array
+	 * 	@return string
+	 */
+	public function appendFromArray(Array $array) {
+		foreach($array as $v) $this->append($v);
+		return $this;
+	}
+	
+	/**
 	 *	Set a specific Index in the {@link Set} to a specific value
 	 * 	
 	 * 	<code>

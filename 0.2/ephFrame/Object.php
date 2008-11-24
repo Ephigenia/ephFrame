@@ -85,16 +85,32 @@ abstract class Object {
 	 * 	// should echo 'A,B'
 	 * 	echo implode(',', $c->__parentClasses());
 	 * 	</code>
+	 * 	@param object $obj
 	 * 	@return array(string)
 	 */
-	public function __parentClasses() {
+	public function __parentClasses($obj = null) {
 		$parents = array();
-		$obj = $this;
+		if ($obj == null) {
+			$obj = $this;
+		}
 		while($parentClass = get_parent_class($obj)) {
 			$parents[] = $parentClass;
 			$obj = $parentClass;
 		}
 		return $parents;
+	}
+	
+	/**
+	 *	merges an property array of the current class with all values from
+	 * 	parents.
+	 * 	@param string $name name of parent classes
+	 */
+	public function __mergeParentProperty($name) {
+		foreach($this->__parentClasses() as $parentClassName) {
+			$classVars = get_class_vars($parentClassName);
+			if (!isset($classVars[$name])) continue;
+			array_merge($classVars[$name], $this->{$name});
+		}
 	}
 	
 	public function __toString() {

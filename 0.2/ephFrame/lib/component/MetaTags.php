@@ -27,7 +27,7 @@ class MetaTags extends Hash implements Renderable {
 	
 	public function startup() {
 		$this->controller->set('MetaTags', $this);
-		$this->data['keywords'] = new Collection();
+		$this->data['keywords'] = new Collection($this->data['keywords']);
 		return parent::startup();
 	}
 	

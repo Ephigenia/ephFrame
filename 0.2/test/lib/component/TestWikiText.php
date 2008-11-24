@@ -55,7 +55,7 @@ class TestWikiText extends UnitTestCase {
 	
 	public function testLink() {
 		$this->assertEqual($this->wikiText->format('[www.ephigenia.de]'), '<a href="www.ephigenia.de">www.ephigenia.de</a>');
-		$this->assertEqual($this->wikiText->format('[www.ephigenia.de ephigenia]'), '<a href="www.ephigenia.de">ephigenia</a>');
+		$this->assertEqual($this->wikiText->format('[www.ephigenia.de ephigenia]'), '<a href="www.ephigenia.de" title="ephigenia">ephigenia</a>');
 	}
 	
 	public function testHr() {

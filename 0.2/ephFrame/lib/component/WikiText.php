@@ -55,8 +55,8 @@ class WikiText extends Component {
 	 */
 	public $syntax = array(
 		'links' => array(
-			'/\[(.+)\s(.+)\]/' => '<a href="\\1">\\2</a>',
-			'/\[(.*)\]/' => '<a href="\\1">\\1</a>'
+			'/\[([^\s]+)\s(.+)\]/' => '<a href="\\1" title="\\2">\\2</a>',
+			'/\[([^\]]+)\]/' => '<a href="\\1">\\1</a>'
 			),
 		'headlines' => array(
 			'/^= (.+) =/m' => '<h1>\\1</h1>',
@@ -81,9 +81,10 @@ class WikiText extends Component {
 			),
 		'italic' => array(
 			'/\'{2}(.*)\'{2}/' => '<i>\\1</i>'
-			),
+			)
+			,
 		'urlReplace' => array(
-			'/(http:\/\/|(www\.))(([^\s<]{4,68})[^\s<]*)/' => '<a href="http://$2$3" rel="nofollow">$2$4</a>'			
+			'/\s+(http:\/\/|(www\.))(([^\s<]{4,68})[^\s<]*)/' => '<a href="http://$2$3">$2$4</a>'			
 		)
 	);
 	

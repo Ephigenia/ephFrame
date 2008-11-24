@@ -57,7 +57,7 @@ class Model extends Object {
 	 * 	but it should be usually 'id'
 	 * 	@var string
 	 */
-	protected $primaryKeyName = 'id';
+	public $primaryKeyName = 'id';
 
 	/**
 	 * 	Alias for this Model Table in DB-Queries and name for view var
@@ -192,7 +192,7 @@ class Model extends Object {
 	 *  2 = data from associated models and their associated models
 	 * 	@var integer
 	 */
-	public $depth = 2;
+	public $depth = 1;
 	
 	/**
 	 * 	@var ModelBehaviorHandler
@@ -234,7 +234,9 @@ class Model extends Object {
 		// initialize model behavior callbacks
 		$this->behaviors = new ModelBehaviorHandler($this, $this->behaviors);
 		// initialize model bindings
-		$this->initAssociations();
+//		if (!is_object($id)) {
+			$this->initAssociations(is_object($id));
+//		}
 		// load inital data from array data or primary id
 		if (is_array($id)) {
 			$this->fromArray($id);
@@ -262,7 +264,7 @@ class Model extends Object {
 	 * 	Initates all models associations defined in $belongsTo, $hasMany and so on
 	 * 	@return boolean
 	 */
-	protected function initAssociations() {
+	protected function initAssociations($bind = true) {
 		// init models associated with this model
 		foreach($this->associationTypes as $associationType) {
 			if (!isset($this->$associationType) || (isset($this->$associationType) && !is_array($this->$associationType))) continue;
@@ -273,6 +275,17 @@ class Model extends Object {
 					$modelName = $config;
 					$config = array();
 					$this->bind($associationType, $modelName, $config);
+				} else {
+					$this->bind($associationType, $modelName, $config);
+				}
+				if (!$bind) {
+					$modelClassname = $modelName;
+					if ($associationType == 'hasMany' || $associationType == 'hasAndBelongsToMany') {
+						$modelName = Inflector::plural($modelName);
+					}
+					$this->{$modelName} = new $modelClassname($this);
+					$this->{$modelName}->{$this->name} = $this;
+					//$this->depth = $this->depth-1;
 				}
 			}
 		}
@@ -305,8 +318,10 @@ class Model extends Object {
 		if (isset($this->{$modelName})) {
 			return;
 		}
-		$this->{$modelName} = new $modelName();
-		$this->{$modelName}->{$this->name} = $this;
+		$modelVars = get_class_vars($modelName);
+		if (empty($modelVars['name'])) {
+			$modelVars['name'] = $modelName;
+		}
 		// create default config
 		$config = array_merge(array(
 			'conditions' => array(),
@@ -317,10 +332,10 @@ class Model extends Object {
 		if (!isset($config['foreignKey'])) {
 			switch ($associationType) {
 				case 'belongsTo':
-					$config['foreignKey'] = $this->{$modelName}->name.'.'.$this->{$modelName}->primaryKeyName;
+					$config['foreignKey'] = $modelVars['name'].'.'.$modelVars['primaryKeyName'];
 					break;
 				case 'hasOne':
-					$config['foreignKey'] = $this->{$modelName}->name.'.'.Inflector::delimeterSeperate($this->name.'_id');
+					$config['foreignKey'] = $modelVars['name'].'.'.Inflector::delimeterSeperate($this->name.'_id');
 					break;
 				case 'hasMany':
 					$config['foreignKey'] = $this->name.'.'.$this->primaryKeyName;
@@ -333,13 +348,13 @@ class Model extends Object {
 		if (!isset($config['associationKey'])) {
 			switch ($associationType) {
 				case 'belongsTo':
-					$config['associationKey'] = $this->name.'.'.Inflector::underscore($this->{$modelName}->name.'_'.$this->{$modelName}->primaryKeyName, true);
+					$config['associationKey'] = $this->name.'.'.Inflector::underscore($modelVars['name'].'_'.$modelVars['primaryKeyName'], true);
 					break;
 				case 'hasOne':
 					$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
 					break;
 				case 'hasMany':
-					$config['associationKey'] = $this->{$modelName}->name.'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName, true);
+					$config['associationKey'] = $modelVars['name'].'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName, true);
 					break;
 				case 'hasAndBelongsToMany':
 					break;
@@ -454,6 +469,23 @@ class Model extends Object {
 	 */
 	public function toArray() {
 		return $this->data;
+	}
+	
+	/**
+	 *	Saves a single new field value in the model.
+	 * 
+	 * 	This can be used as some kind of short cut for:
+	 * 	<code>
+	 * 	$entry->is_public = true;
+	 * 	$entry->save();
+	 * 	</code>
+	 * 	@param string $fieldname,
+	 * 	@param mixed $value
+	 * 	@return boolean
+	 */
+	public function saveField($fieldname, $value) {
+		$this->set($fieldname, $value);
+		return $this->save();
 	}
 	
 	/**
@@ -753,6 +785,8 @@ class Model extends Object {
 		// belongsto / has one
 		if ($depth >= 1) {
 			$joinStuff = $this->hasOne + $this->belongsTo;
+			//echo $this->name.'<br />';
+			//var_dump($joinStuff);
 			foreach($joinStuff as $modelName => $config) {
 				foreach($this->{$modelName}->structure as $fieldInfo) {
 					$query->select($this->{$modelName}->name.'.'.$fieldInfo->name, $this->{$modelName}->name.'.'.$fieldInfo->name);
@@ -762,6 +796,7 @@ class Model extends Object {
 				$query->join($this->{$modelName}->tablename, $modelName, DBQuery::JOIN_LEFT, $joinConditions);
 			}
 		}
+		//echo '<pre>'.$query.'</pre>';
 		return $query;
 	}
 	
@@ -785,19 +820,23 @@ class Model extends Object {
 			if ($depth >= 1) {
 				foreach($belongsToAndHasOne as $associatedModelName => $config) {
 					$model->{$associatedModelName} = new $associatedModelName($modelData);
+					$model->{$associatedModelName}->depth = $depth-1;
 				}
 			}
-			if ($depth >= 2) {
+			if ($depth >= 1) {
 				foreach($this->hasMany as $associatedModelName => $config) {
 					$primaryKeyValue = $model->get($model->primaryKeyName);
+					$associatedModelNamePlural = Inflector::plural($associatedModelName);
 					if (empty($primaryKeyValue)) continue;
 					$joinConditions = array_merge($config['conditions'], array(
 						$config['associationKey'] => $primaryKeyValue
 					));
-					if (!$associatedData = $this->{$associatedModelName}->findAll($joinConditions)) {
-						$associatedData = new Set();
+					if ($depth >= 1) {
+						if (!$associatedData = $this->{$associatedModelNamePlural}->findAll($joinConditions)) {
+							$associatedData = new Set();
+						}
+						$model->{$associatedModelNamePlural} = $associatedData;
 					}
-					$model->{Inflector::plural($associatedModelName)} = $associatedData;
 				}
 			}
 			$return->add($model);
@@ -1130,8 +1169,9 @@ class Model extends Object {
 					$this->primaryKeyName = $fieldInfo->name;
 				}
 			}
+		} else {
+			$this->initAssociations();
 		}
-		$this->initAssociations();
 		return $this;
 	}
 	

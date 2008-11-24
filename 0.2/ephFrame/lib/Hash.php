@@ -61,6 +61,17 @@ class Hash extends Set {
 		return $this;
 	}
 	
+/**
+	 * 	Alias for {@link push}
+	 *
+	 * 	@param mixed $val
+	 * 	@return Hash
+	 */
+	public function append($val) {
+		$args = func_get_args();
+		return $this->callmethod('push', $args);
+	}
+	
 	/**
 	 * 	Appends $val to the hash using next higher index key as index.
 	 *
@@ -76,17 +87,6 @@ class Hash extends Set {
 			$this->data[] = $val;
 		}
 		return $this;
-	}
-	
-	/**
-	 * 	Alias for {@link push}
-	 *
-	 * 	@param mixed $val
-	 * 	@return Hash
-	 */
-	public function append($val) {
-		$args = func_get_args();
-		return $this->callmethod('push', $args);
 	}
 	
 	/**
