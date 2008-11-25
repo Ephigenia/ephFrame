@@ -1,5 +1,5 @@
 <IfModule mod_rewrite.c>
 	RewriteEngine On
-	RewriteRule ^$		webroot/	[L]
-	RewriteRule (.*)	webroot/$1	[L]
+	RewriteRule ^$		html/	[L]
+	RewriteRule (.*)	html/$1	[L]
 </IfModule>

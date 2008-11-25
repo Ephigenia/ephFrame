@@ -18,8 +18,11 @@
  * 	script is located, by default '../ephFrame')
  */
 switch(get_current_user()) {
-	default:
+	case 'Ephigenia':
 		require '../../ephFrame/startup.php';
+		break;
+	default:
+		require '../../../ephFrame/startup.php';
 		break;
 }
 

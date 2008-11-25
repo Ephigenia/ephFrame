@@ -856,6 +856,7 @@ class Model extends Object {
 	 * 	</code>
 	 *
 	 * 	@param string|array $conditions
+	 * 	@param array $order
 	 * 	@return Model|boolean
 	 */
 	public function find($conditions, $order = null) {
