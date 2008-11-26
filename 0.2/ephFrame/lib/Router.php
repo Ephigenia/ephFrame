@@ -176,6 +176,14 @@ class Router extends Hash {
 		return $this;
 	}
 	
+	public static function getRoute($routeName) {
+		$router = new Router();
+		if ($router->hasKey($routeName)) {
+			return $router->get($routeName);
+		}
+		return false;
+	}
+	
 	private function addRoute($routeName = null, $path, Array $params = array()) {
 		// strip / from path
 		$path = ltrim($path, '/');
