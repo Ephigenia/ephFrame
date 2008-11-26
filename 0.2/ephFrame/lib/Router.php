@@ -69,6 +69,19 @@ class Router extends Hash {
 		return $this;
 	}
 	
+	
+	public static $instance;
+	
+	/**
+	 * 	@return DBConnectionManager
+	 */
+	public static function getInstance() {
+		if (empty(self::$instance)) {
+			self::$instance = new Router();
+		}
+		return self::$instance;
+	}
+	
 	/**
 	 * 	Load the routes into the {@link data} array
 	 */
@@ -177,28 +190,30 @@ class Router extends Hash {
 	}
 	
 	public static function getRoute($routeName) {
-		$router = new Router();
+		$router = self::getInstance();
 		if ($router->hasKey($routeName)) {
-			return $router->get($routeName);
+			$route = $router->get($routeName);
+			return $route['path'];
 		}
 		return false;
 	}
 	
-	private function addRoute($routeName = null, $path, Array $params = array()) {
+	public static function addRoute($routeName = null, $path, Array $params = array()) {
+		$router = self::getInstance();
 		// strip / from path
 		$path = ltrim($path, '/');
 		// route names that are added after they are allready there become a copy
 		// of the original router if their params are empty
-		if ($this->hasKey($routeName) && empty($params)) {
+		if ($router->hasKey($routeName) && empty($params)) {
 			$params = $this->get($routeName);
 			$params['path'] = $path;
-			$this->add($routeName.'_copy_'.rand(), $params);
+			$router->add($routeName.'_copy_'.rand(), $params);
 		} else {
 			$params['path'] = $path;
 			if ($routeName == null) {
-				$this->add($params);
+				$router->add($params);
 			} else {
-				$this->add($routeName, $params);
+				$router->add($routeName, $params);
 			}
 		}
 		return true;
