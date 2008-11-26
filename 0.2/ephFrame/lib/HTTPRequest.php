@@ -115,13 +115,15 @@ class HTTPRequest extends Component {
 	private function autofill() {
 		$this->method = $_SERVER['REQUEST_METHOD'];
 		$this->uri = $_SERVER['REQUEST_URI'];
-		$this->hostname = $_SERVER['HTTP_HOST'];
 		$this->host = $_SERVER['REMOTE_ADDR'];
-		if (isset($_SERVER['HTTP_REFERER'])) {
-			$this->referer = $_SERVER['HTTP_REFERER'];
-		}
 		if ($this->host == '::1') {
 			$this->host = '127.0.0.1';
+		}
+		// determin host name if possible
+		$this->hostname = gethostbyaddr($this->host);
+		// set referer if ther's any
+		if (isset($_SERVER['HTTP_REFERER'])) {
+			$this->referer = $_SERVER['HTTP_REFERER'];
 		}
 		if ($this->method == self::METHOD_GET) {
 			$this->data = &$_GET;
