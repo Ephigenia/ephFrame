@@ -103,7 +103,7 @@ class Router extends Hash {
 		Router::addRoute('scaffold_actions', ':controller/(?P<id>\d+)/:action/');
 		Router::addRoute('scaffold_view', ':controller/(?P<id>\d+)/', array('action' => 'view'));
 		// go through routes and try to find a matching route
-		foreach($this as $routeName => $routeData) {
+		foreach(self::getInstance() as $routeName => $routeData) {
 			if (!isset($routeData['path'])) continue;
 			$routeTemplate = $routeData['path'];
 			$paramRegExp = $this->createRouteRegexp($routeTemplate);
@@ -146,7 +146,7 @@ class Router extends Hash {
 			echo '<br /><strong>result:</strong><br />';
 			echo 'controller: '.$this->controller.'<br />';
 			echo 'action: '.$this->action.'<br />';
-			echo 'params: '.var_dump($this->params).'<br />';
+			echo 'params: '.var_dump($router->params).'<br />';
 			exit;
 		}
 		// no matching route found, find route default way
@@ -205,7 +205,7 @@ class Router extends Hash {
 		// route names that are added after they are allready there become a copy
 		// of the original router if their params are empty
 		if ($router->hasKey($routeName) && empty($params)) {
-			$params = $this->get($routeName);
+			$params = $router->get($routeName);
 			$params['path'] = $path;
 			$router->add($routeName.'_copy_'.rand(), $params);
 		} else {
