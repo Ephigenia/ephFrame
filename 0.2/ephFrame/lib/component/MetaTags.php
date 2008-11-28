@@ -69,6 +69,9 @@ class MetaTags extends Hash implements Renderable {
 					break;
 			}
 		}
+		if (empty($value['content'])) {
+			return '';
+		}
 		$metaTag = new HTMLTag('meta', $tagAttributes);
 		return $metaTag->render();
 	}

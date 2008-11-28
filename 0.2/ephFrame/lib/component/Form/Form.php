@@ -307,7 +307,7 @@ class Form extends HTMLTag {
 						break;
 					case 'enum':
 						// enum can be checkbox
-						if ($fieldInfo->enumOptions == array('1', '0') || $fieldInfo->enumOptions == array('0', '1')) {
+						if (count($fieldInfo->enumOptions) == 2) {
 							$field = $this->newField('checkbox', $fieldInfo->name, true); 
 						}
 						break;
