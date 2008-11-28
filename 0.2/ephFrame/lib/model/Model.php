@@ -234,7 +234,9 @@ class Model extends Object {
 		if (is_array($id)) {
 			$this->fromArray($id);
 		} elseif (is_int($id)) {
-			$this->fromId($id);
+			if (!$this->fromId($id)) {
+				return false;
+			}
 		}
 		$this->afterConstruct();
 		$this->behaviors->call('afterConstruct');
