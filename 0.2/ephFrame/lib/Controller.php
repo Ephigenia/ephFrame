@@ -159,7 +159,7 @@ abstract class Controller extends Object implements Renderable {
 	public function delete($id = null) {
 		$id = (int) $this->params['id'];
 		if ($id > 0 && isset($this->{$this->name})) {
-			if ($entry = $this->{$this->name}->findById($id)) {
+			if ($entry = new $this->name($id)) {
 				return $entry->delete();
 			} else {
 				$this->name = 'error';

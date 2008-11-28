@@ -226,6 +226,7 @@ class ArrayHelper extends Helper {
 		} else {
 			$matchAgainst = $className;
 		}
+		$return = array();
 		foreach ($input as $possible) {
 			if (is_object($possible) && in_array(get_class($possible), $matchAgainst)) {
 				$return[] = $possible;

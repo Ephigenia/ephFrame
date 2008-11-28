@@ -132,7 +132,7 @@ class Dir extends FileSystemNode {
 	 * 	@return Array(File) of Files
 	 */
 	public function listFiles() {
-		return ArrayHelper::extractByClassName($this->contents(), 'File');
+		return ArrayHelper::extractByClassName($this->read(), 'File');
 	}
 	
 	/**
@@ -140,7 +140,7 @@ class Dir extends FileSystemNode {
 	 * 	@return Array(Dir) of Directories
 	 */
 	public function listDirectories() {
-		return ArrayHelper::extractByClassName($this->contents(), get_class($this));
+		return ArrayHelper::extractByClassName($this->read(), get_class($this));
 	}
 	
 	/**
