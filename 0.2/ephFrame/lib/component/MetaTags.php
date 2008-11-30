@@ -49,7 +49,7 @@ class MetaTags extends Hash implements Renderable {
 			$tagAttributes['name'] = $key;
 		}
 		if ($value instanceof Set) {
-			$tagAttributes['content'] = $value->implode(', ');	
+			$tagAttributes['content'] = $value->implode(',');
 		} else {
 			switch(gettype($value)) {
 				case 'boolean':
@@ -69,7 +69,7 @@ class MetaTags extends Hash implements Renderable {
 					break;
 			}
 		}
-		if (empty($value['content'])) {
+		if (empty($tagAttributes['content'])) {
 			return '';
 		}
 		$metaTag = new HTMLTag('meta', $tagAttributes);

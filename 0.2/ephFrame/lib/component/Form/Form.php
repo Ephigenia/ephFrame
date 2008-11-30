@@ -104,6 +104,7 @@ class Form extends HTMLTag {
 	public function beforeRender() {
 		// add multipart form data if file field in the form
 		if (!($this->attributes->hasKey('enctype'))) {
+			// add mulitpart if there are any files in the form
 			foreach($this->fieldset->children() as $child) {
 				if ($child instanceof FormFieldFile) {
 					$this->attributes->set('enctype', 'multipart/form-data');
@@ -111,6 +112,7 @@ class Form extends HTMLTag {
 				}
 			}
 		}
+		// add error messages on the top of the form
 		if ($this->submitted() && (!$this->validate() || count($this->errors) > 0)) {
 			$this->prepend(new HTMLTag('p', array('class' => 'error'), nl2br(implode(LF, $this->errors))));
 		}
@@ -124,12 +126,20 @@ class Form extends HTMLTag {
 		return $this->{$fieldname};
 	}
 	
+	/**
+	 *	Delete the field named $fieldname
+	 * 
+	 * 	@param $fieldname
+	 * 	@return boolean
+	 */
 	public function delete($fieldname = null) {
 		foreach($this->fieldset->children() as $field) {
 			if ($field->attributes->name == $fieldname) {
 				$field->delete();
+				return true;
 			}
 		}
+		return false;
 	}
 	
 	/**
@@ -146,6 +156,14 @@ class Form extends HTMLTag {
 		return $this;
 	}
 	
+	/**
+	 *	Create a new Form Field and return it
+	 * 	@param string $type
+	 * 	@param string $name
+	 * 	@param mixed $value
+	 * 	@param array(string) $attributes
+	 * 	@return FormField
+	 */
 	public function newField($type, $name, $value = null, Array $attributes = array()) {
 		if (strpos($type, '.') == false) {
 			$fieldClassname = 'FormField'.ucFirst($type);
@@ -161,8 +179,10 @@ class Form extends HTMLTag {
 	}
 	
 	/**
-	 *	Checks if the form is submitted by iterating over all elements and return
-	 * 	true if any of these fields was submitted
+	 *	Checks if the form is submitted.
+	 * 
+	 * 	This will check if the form has been submitted by iterating over all
+	 * 	elements and check if there is any data submitted.
 	 * 	@return boolean
 	 */
 	public function submitted() {
@@ -267,9 +287,10 @@ class Form extends HTMLTag {
 	);
 	
 	/**
-	 *	Adds form fields by parsing model structure, ignoring the model fields
-	 * 	with the $ignore names
-	 * 		
+	 *	Create form fields based on model structure
+	 * 	
+	 * 	@param Model $model
+	 * 	@param array(string) $ignore
 	 * 	@return Form
 	 */
 	public function configureModel(Model $model, Array $ignore = array()) {

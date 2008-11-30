@@ -808,7 +808,6 @@ class Image extends File implements Renderable {
 			}
 			if (is_null($width)) $width = $this->width();
 			if (is_null($height)) $height = $this->height();
-			assert($width > 0 && $height > 0);
 			// create JPG images in true color
 			if ($type == self::TYPE_JPG || $type == 'jpg' || $type == 'jpeg') {
 				$this->handle = imagecreatetruecolor($width, $height);
