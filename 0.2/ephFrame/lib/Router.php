@@ -99,6 +99,7 @@ class Router extends Hash {
 		$debug = false;
 		assert(is_string($url) || empty($url));
 		$routeMatch = false;
+		Log::write(LOG::VERBOSE, get_class($this).': finding route for \''.$url.'\'');
 		// add some default scaffolding routes
 		Router::addRoute('scaffold_actions', ':controller/(?P<id>\d+)/:action/');
 		Router::addRoute('scaffold_view', ':controller/(?P<id>\d+)/', array('action' => 'view'));

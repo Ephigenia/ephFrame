@@ -156,19 +156,24 @@ abstract class Controller extends Object implements Renderable {
 	 */
 	public function create() {}
 	
+	/**
+	 *	@param integer $id
+	 */
 	public function delete($id = null) {
 		$id = (int) $this->params['id'];
 		if ($id > 0 && isset($this->{$this->name})) {
-			if ($entry = new $this->name($id)) {
-				return $entry->delete();
-			} else {
+			if (!$entry = $this->{$this->name}->findById($id)) {
 				$this->name = 'error';
 				$this->action('404', array());
+				return false;
 			}
-			return false;
+			return $entry->delete();
 		}
 	}
 	
+	/**
+	 *	@param integer $id
+	 */
 	public function edit($id = null) {
 		$id = (int) $this->params['id'];
 		if ($id > 0 && in_array($this->name, $this->uses) && isset($this->{$this->name})) {

@@ -607,7 +607,7 @@ class Set extends Component implements Countable, Renderable, Iterator, ArrayAcc
 	}
 	
 	/**
-	 * 	Returns the set reversed as array
+	 * 	Returns a new set with all elements from this set but in reversed order
 	 * 	@param boolean $preserveKeys 
 	 * 	@return Set
 	 */
