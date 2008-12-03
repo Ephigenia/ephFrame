@@ -35,6 +35,26 @@ ephFrame::loadClass('ephFrame.lib.helper.Charset');
 class String extends Helper {
 	
 	/**
+	 *	convert string to url
+	 * 	@param string
+	 * 	@param string
+	 * 	@return string
+	 */
+	public static function toURL($string, $spaceReplace = '-') {
+		$string = trim($string);
+		$string = strip_tags($string);
+		$string = Charset::toASCII($string);
+		$string = preg_replace('@\s+@', '-', $string);
+		$string = preg_replace('@([^a-zA-Z0-9-])@', '', $string);
+		$string = trim($string, $spaceReplace);
+		$string = strtolower($string);
+		if (strlen($string) == 0) {
+			return false;
+		}
+		return $string;
+	}
+	
+	/**
 	 * 	Appends a string to an other
 	 *
 	 * 	@param string $string
@@ -47,15 +67,13 @@ class String extends Helper {
 	}
 	
 	/**
-	 *	Prepends a string at the beginning of an other and returns the resulting
-	 * 	string if you call it statically. If you call prepend on a string
-	 * 	instance the same string instance is returned.
+	 *	Prepends a string to an other
 	 * 	
 	 * 	@param string $string
 	 * 	@param string $prepend
 	 * 	@return string
 	 */
-	public function prepend($string, $prepend) {
+	public static function prepend($string, $prepend) {
 		assert(is_scalar($string) && is_scalar($prepend));
 		return $prepend.$string;
 	}
@@ -93,23 +111,6 @@ class String extends Helper {
 			return '';
 		}
 		return self::substr($string, -$i);
-	}
-	
-	/**
-	 * 	Converts a string to an url save string. A string that can be used in a
-	 * 	url. Stripping every shit out of it (including slashes!), just leaving
-	 * 	ascii chars, underscores and $spaceReplace. (ASCII converting is using
-	 * 	{@link Charset}.
-	 *
-	 * 	@param string $string
-	 * 	@param string $spaceReplace
-	 * 	@return string
-	 */
-	public static function toURL($string = null, $spaceReplace = '-') {
-		$string = Charset::toSingleBytes($string);
-		$string = preg_replace('/[^-_a-z0-9 '.preg_quote($spaceReplace, '/').']/i', '', $string);
-		$string = preg_replace('/\s+/', $spaceReplace, $string);
-		return $string;
 	}
 	
 	/**

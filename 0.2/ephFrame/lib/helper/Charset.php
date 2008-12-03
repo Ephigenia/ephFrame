@@ -45,9 +45,9 @@ class Charset extends Helper {
 	 * 	@return string
 	 */
 	public static function toASCII($string) {
+		$string = self::toSingleBytes($string);
 		if (function_exists('iconv')) {
 			if (self::isUTF8($string) && ($result = @iconv('UTF-8', 'ASCII//TRANSLIT', $string))) {
-					echo $string;
 				return $result;
 			} elseif ($result = @iconv('ISO-8859-1', 'ASCII', $string)) {
 				return $result;
@@ -86,6 +86,16 @@ class Charset extends Helper {
 				'Ì' => 'I', 'Í' => 'I', 'Î' => 'I',
 				'ú' => 'u', 'ù' => 'u', 'û' => 'u',
 				'Ú' => 'U', 'Ù' => 'U', 'Û' => 'U',
+				'˝' => '"',
+				'‶' => '"',
+				'″' => '"',
+				'“' => '"',
+				'”' => '"',
+				'„' => '"',
+				'‟' => '"',
+				'‘' => '\'',
+				'’' => '\'',
+				'‛' => '\''
 			);
 			self::$iso88591replaceArr = array(
 				chr(228) => 'ae', chr(196) => 'AE',

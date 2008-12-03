@@ -78,38 +78,45 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 	 */
 	public function addBehavior($behaviorName, Array $config = array()) {
 		$behaviorName = trim($behaviorName);
-		if (empty($behaviorName)) throw new ModelEmptyBehaviorNameException($this);
+		if (!preg_match('@Behavior$@', $behaviorName)) {
+			$behaviorName .= 'Behavior';
+		}
+		if (empty($behaviorName)) throw new ModelEmptyBehaviorNameException($this->model);
 		// simple behavior names (without dots)
 		if (strpos($behaviorName, '.') === false) {
 			// search behavior in app
-			$behaviorClassName = $behaviorName.'Behavior';
-			$behaviorClassPath = 'app.lib.model.behavior.'.$behaviorName.'Behavior';
+			$behaviorClassName = ucFirst($behaviorName);
+			$behaviorClassPath = 'app.lib.model.behavior.'.$behaviorClassName;
 			if (!class_exists($behaviorClassName) && !ClassPath::exists($behaviorClassPath)) {
 				// then search behavior in ephFrame
-				$behaviorClassPath = 'ephFrame.lib.model.behavior.'.$behaviorName.'Behavior';
+				$behaviorClassPath = 'ephFrame.lib.model.behavior.'.$behaviorName;
 				if (!ClassPath::exists($behaviorClassPath)) {
-					throw new ModelBehaviorNotFoundException($this, $behaviorClassName);
+					throw new ModelBehaviorNotFoundException($this->model, $behaviorClassName);
 				}
-				ephFrame::loadClass($behaviorClassPath);
 			}
 		// behavior names with dots
 		} else {
-			$behaviorClassPath = $behaviorName.'Behavior';
-			$behaviorName = ClassPath::className($behaviorName);
-			$behaviorClassName = $behaviorClassName.'Behavior';
-			if (!class_exists($behaviorClassName)) {
-				try {
-					ephFrame::loadClass($behaviorClassPath);
-				} catch (ephFrameClassFileNotFoundException $e) {
-					throw new ModelBehaviorNotFoundException($this, $behaviorName);
-				}
+			$behaviorClassName = ClassPath::className($behaviorName);
+			$behaviorClassPath = $behaviorClassName;
+			if (!class_exists($behaviorClassName) && ClassPath::exists($behaviorClassPath)) {
+				throw new ModelBehaviorNotFoundException($this->model, $behaviorName);
 			}
 		}
+		ephFrame::loadClass($behaviorClassPath);
 		if (!is_array($config)) {
 			$config = array();
 		}
 		$this->behaviors[$behaviorName] = new $behaviorClassName($this->model, $config);
 		return $this;
+	}
+	
+	/**
+	 *	Test if the handler has a behavior named $behaviorName added
+	 * 	@return boolean
+	 * 	@param string
+	 */
+	public function hasBehavior($behaviorName) {
+		return isset($this->behaviors[$behaviorName]);
 	}
 	
 	/**
@@ -134,16 +141,19 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 	}
 	
 	public function __call($methodName, $args) {
-		if (!in_array($methodName, $this->behaviorCallBacks)) {
-			trigger_error('Invalid callback method name \''.$methodName.'\'.', E_USER_ERROR);
-		}
+//		if (!in_array($methodName, $this->behaviorCallBacks)) {
+//			//trigger_error('Invalid callback method name \''.$methodName.'\'.', E_USER_ERROR);
+//			return false;
+//		}
+		$r = false;
 		foreach($this->behaviors as $behavior) {
+			if (!method_exists($behavior, $methodName)) continue;
 			$r = $behavior->callMethod($methodName, $args);
 			if (!$r) {
 				return $r;
 			}
 		}
-		return true;
+		return $r;
 	}
 	
 	public function count() {
@@ -194,7 +204,7 @@ class ModelEmptyBehaviorNameException extends ModelBehaviorHandlerException {
  */
 class ModelBehaviorNotFoundException extends ModelBehaviorHandlerException {
 	public function __construct(Model $model, $behaviorName) {
-		parent::__construct('Could not find class for model behaviro: \''.$behaviorName.'\'');
+		parent::__construct('Unable to find model behavior: \''.$behaviorName.'\'');
 	}
 }
 

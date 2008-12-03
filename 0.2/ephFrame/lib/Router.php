@@ -139,6 +139,7 @@ class Router extends Hash {
 				// merge with params coming from param array
 				$routeMatch = true;
 				if ($debug) echo 'MATCH!<br />';
+				Log::write(Log::VERBOSE, get_class($this).': result is: '.$this->controller.'Controller->'.$this->action);
 				break;
 			}
 			if ($debug) echo '<br />';

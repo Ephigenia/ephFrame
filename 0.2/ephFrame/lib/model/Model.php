@@ -197,9 +197,12 @@ class Model extends Object {
 	public $depth = 1;
 	
 	/**
+	 * 	List of Behaviors a model should load
 	 * 	@var ModelBehaviorHandler
 	 */
-	public $behaviors = array('Model');
+	public $behaviors = array(
+		'Model'
+	);
 	
 	/**
 	 * 	Create a new Model or Model Entry
@@ -224,8 +227,8 @@ class Model extends Object {
 				if (!isset($parentClassVars[$associationKey])) continue;
 				$this->__mergeParentProperty($associationKey);
 			}
-			$this->__mergeParentProperty('behaviors');
 		}
+		$this->__mergeParentProperty('behaviors');
 		// initialize model behavior callbacks
 		$this->behaviors = new ModelBehaviorHandler($this, $this->behaviors);
 		// initialize model bindings
@@ -1049,6 +1052,11 @@ class Model extends Object {
 		// catch $model->username() calls
 		} elseif (isset($this->structure[$methodName])) {
 			return $this->structure[$methodName];
+		} else {
+			$result = $this->behaviors->__call($methodName, $args);
+			if ($result !== null) {
+				return $result;
+			}
 		}
 		// all other method that could be called till here _must_ be defined
 		// in this class (they would be called instead of __call), so we can
