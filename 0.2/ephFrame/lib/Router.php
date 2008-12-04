@@ -163,7 +163,10 @@ class Router extends Hash {
 		if (substr($routeTemplate, -2, 2) == '/*') {
 			$routeTemplate = substr($routeTemplate, 0, -2).'/.*';
 		}
-		$parameterRegexp = preg_replace('/:([^:\/]+)/', '(?P<\\1>[^\/:]+)', $routeTemplate);
+		// first replace :id with integer matching
+		$parameterRegexp = preg_replace('/:id/', '(?P<id>\d+)', $routeTemplate);
+		// then replac all other :varname placeholders with real regexp patterns
+		$parameterRegexp = preg_replace('/:([^:\/]+)/', '(?P<\\1>[^\/:]+)', $parameterRegexp);
 		$regexp = '{^';
 		if (substr($routeTemplate, -1, 1) == '/') {
 			$regexp .= $parameterRegexp;

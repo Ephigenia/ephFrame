@@ -381,6 +381,15 @@ class Model extends Object {
 	}
 	
 	/**
+	 *	Return default URI to existing model detail pages
+	 * 	@return string
+	 */
+	public function detailPageUri() {
+		if (!$this->exists()) return false;
+		return WEBROOT.lcfirst($this->name).'/'.$this->id.'/';
+	}
+	
+	/**
 	 * 	Checks if the passed $associationType is one possible bind type for models
 	 *
 	 * 	@param string $associationType
