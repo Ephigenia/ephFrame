@@ -34,13 +34,9 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 	 */
 	public $model;
 	
-	protected $behaviorCallBacks = array('afterConstruct', 'beforeSave', 'afterSave', 'beforeDelete', 'afterDelete', 'beforeFind', 'afterFind', 'beforeInsert', 'beforeUpdate');
-	
 	public function __construct(Model $model, Array $behaviors = array()) {
 		$this->model = $model;
-		if (is_array($behaviors)) {
-			$this->behaviors = $behaviors;
-		}
+		$this->behaviors = $behaviors;
 		$this->initBehaviors();
 		return $this;
 	}
@@ -50,16 +46,11 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 			unset($this->behaviors[$behaviorName]);
 			// $behavior = array('Taggable', 'Deletable') notation
 			if (is_int($behaviorName)) {
-				$behaviorName = $config;
-				$config = array();
+				$this->addBehavior($config, array());
 			// $behavior = array('Taggable' => array('config')); notation
 			} elseif (is_string($behaviorName) && is_array($config)) {
-					
-			// other notations ignored
-			} else {
-				continue;
+				$this->addBehavior($behaviorName, $config);
 			}
-			$this->addBehavior($behaviorName, $config);
 		}
 		return true;
 	}
@@ -74,39 +65,35 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 	 *
 	 * 	@todo maybe create extra class handling the behaviors
 	 * 	@param string $behaviorName
-	 * 	@param array $config
+	 * 	@param array(string) $config
+	 * 	@return ModelBehaviorHandler
 	 */
 	public function addBehavior($behaviorName, Array $config = array()) {
+		if ($this->hasBehavior($behaviorName)) return $this;
 		$behaviorName = trim($behaviorName);
+		if (empty($behaviorName)) throw new ModelEmptyBehaviorNameException($this->model);
 		if (!preg_match('@Behavior$@', $behaviorName)) {
 			$behaviorName .= 'Behavior';
 		}
-		if (empty($behaviorName)) throw new ModelEmptyBehaviorNameException($this->model);
-		// simple behavior names (without dots)
-		if (strpos($behaviorName, '.') === false) {
-			// search behavior in app
-			$behaviorClassName = ucFirst($behaviorName);
-			$behaviorClassPath = 'app.lib.model.behavior.'.$behaviorClassName;
-			if (!class_exists($behaviorClassName) && !ClassPath::exists($behaviorClassPath)) {
-				// then search behavior in ephFrame
-				$behaviorClassPath = 'ephFrame.lib.model.behavior.'.$behaviorName;
-				if (!ClassPath::exists($behaviorClassPath)) {
-					throw new ModelBehaviorNotFoundException($this->model, $behaviorClassName);
-				}
-			}
-		// behavior names with dots
-		} else {
+		// Behavior Names as classpaths
+		if (strpos($behaviorName, '.') !== false) {
 			$behaviorClassName = ClassPath::className($behaviorName);
 			$behaviorClassPath = $behaviorClassName;
-			if (!class_exists($behaviorClassName) && ClassPath::exists($behaviorClassPath)) {
-				throw new ModelBehaviorNotFoundException($this->model, $behaviorName);
+		} else {
+			$behaviorClassName = ucFirst($behaviorName);
+			$behaviorClassPath = 'app.lib.model.behavior.'.$behaviorClassName;
+			if (!ClassPath::exists($behaviorClassPath)) {
+				$behaviorClassPath = 'ephFrame.lib.model.behavior.'.$behaviorClassName;
 			}
 		}
-		ephFrame::loadClass($behaviorClassPath);
-		if (!is_array($config)) {
-			$config = array();
+		// load Behavior Class if not allready loaded
+		if (!class_exists($behaviorClassName)) {
+			if (!ClassPath::exists($behaviorClassPath)) {
+				throw new ModelBehaviorNotFoundException($this->model, $behaviorClassName);
+			}
+			ephFrame::loadClass($behaviorClassPath);
 		}
-		$this->behaviors[$behaviorName] = new $behaviorClassName($this->model, $config);
+		$this->behaviors[substr($behaviorClassName, 0, -8)] = new $behaviorClassName($this->model, $config);
 		return $this;
 	}
 	
@@ -117,6 +104,10 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 	 */
 	public function hasBehavior($behaviorName) {
 		return isset($this->behaviors[$behaviorName]);
+	}
+	
+	public function implement($name) {
+		return $this->hasBehavior($name);
 	}
 	
 	/**
