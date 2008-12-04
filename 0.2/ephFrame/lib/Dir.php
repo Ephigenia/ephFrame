@@ -131,16 +131,16 @@ class Dir extends FileSystemNode {
 	 *	Returns Files in this directory
 	 * 	@return Array(File) of Files
 	 */
-	public function listFiles() {
-		return ArrayHelper::extractByClassName($this->read(), 'File');
+	public function listFiles($pattern = null) {
+		return ArrayHelper::extractByClassName($this->read($pattern), 'File');
 	}
 	
 	/**
 	 *	Returns Directories that are in this directory
 	 * 	@return Array(Dir) of Directories
 	 */
-	public function listDirectories() {
-		return ArrayHelper::extractByClassName($this->read(), get_class($this));
+	public function listDirectories($pattern = null) {
+		return ArrayHelper::extractByClassName($this->read($pattern), get_class($this));
 	}
 	
 	/**
@@ -152,14 +152,25 @@ class Dir extends FileSystemNode {
 	 * 	flags {@link listHiddenFiles} and {@link listHiddenDirectories} are on.
 	 *	Prevent listing hidden files by setting them to false.
 	 * 
-	 * 	@param string $pattern
+	 * 	$pattern should be a regular expression starting with @ to filter files
+	 * 	and directories:
+	 * 	<code>
+	 * 	$dir = new Dir('../tmp/');
+	 * 	foreach($dir->read('@(jpg|gif|png)$@i') as $found) {
+	 * 		echo $found->nodeName;
+	 * 	}
+	 * 	</code>
+	 * 
+	 * 	@param string $pattern regular expression (delimeter should be @) or simple file search like *.jpg
 	 * 	@return Set {@link Set} of files and directories
+	 * 	@throws DirNotFoundException if directory was not found
 	 */
 	public function read($pattern = null) {
-		$dh = scandir($this->nodeName.$pattern, 1);
+		$this->checkExistence();
 		$contents = new Set();
-		foreach ($dh as $possible) {
+		foreach (scandir($this->nodeName) as $possible) {
 			// create either file or directory objects depending on found
+			if (!empty($pattern) && !preg_match($pattern, $possible)) continue;
 			if (is_file($this->nodeName.$possible)
 				&& (($this->listHiddenFiles)
 				|| (!$this->listHiddenFiles && substr($possible, 0, 1) !== '.'))

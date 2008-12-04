@@ -61,7 +61,7 @@ class Hash extends Set {
 		return $this;
 	}
 	
-/**
+	/**
 	 * 	Alias for {@link push}
 	 *
 	 * 	@param mixed $val

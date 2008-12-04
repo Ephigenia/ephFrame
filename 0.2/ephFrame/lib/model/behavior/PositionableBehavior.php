@@ -31,41 +31,52 @@ class PositionableBehavior extends ModelBehavior {
 	
 	/**
 	 *	Return next model entry
+	 * 	@param array(string) additional conditions to use
 	 * 	@return boolean|Model
 	 */
-	public function next() {
+	public function next($additionalConditions = array()) {
 		if (!$this->model->exists()) return false;
 		$conditions = $this->collectModelConditions();
 		$conditions[] = $this->model->name.'.position > '.$this->model->position;
+		$conditions = ArrayHelper::append($additionalConditions);
 		return $this->model->find($conditions, array($this->model->name.'.position ASC'));
 	}
 	
 	/**
 	 *	Return model entry that is before this model
+	 * 	@param array(string) additional conditions to use
 	 * 	@return boolean|Model
 	 */
-	public function previous() {
+	public function previous($additionalConditions = array()) {
 		if (!$this->model->exists()) return false;
 		$conditions = $this->collectModelConditions();
 		$conditions[] = $this->model->name.'.position < '.$this->model->position;
+		$conditions = ArrayHelper::append($additionalConditions);
 		$r = $this->model->find($conditions, array($this->model->name.'.position DESC'));
 		return $r;
 	}
 	
 	/**
-	 *	
+	 *	@param array(string) additional conditions to use
+	 * 	@return boolean|Model
 	 */
-	public function first() {
+	public function first($additionalConditions = array()) {
 		if (!$this->model->exists()) return false;
 		$conditions = $this->collectModelConditions();
 		$conditions[] = $this->model->name.'.position < '.$this->model->position;
+		$conditions = ArrayHelper::append($additionalConditions);
 		return $this->model->find($conditions, array($this->model->name.'.position ASC'));
 	}
 	
-	public function last() {
+	/**
+	 * 	@param array(string) additional conditions to use
+	 * 	@return boolean|Model
+	 */
+	public function last($additionalConditions = array()) {
 		if (!$this->model->exists()) return false;
 		$conditions = $this->collectModelConditions();
 		$conditions[] = $this->model->name.'.position > '.$this->model->position;
+		$conditions = ArrayHelper::append($additionalConditions);
 		return $this->model->find($conditions, array($this->model->name.'.position DESC'));
 	}
 	

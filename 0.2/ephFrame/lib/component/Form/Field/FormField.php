@@ -63,6 +63,12 @@ abstract class FormField extends HTMLTag {
 	 * 	@var array
 	 */
 	public $validate = array();
+	
+	/**
+	 *	Standard sgml tag name for input fields is input
+	 * 	@var string
+	 */
+	public $tagName = 'input';
 
 	/**
 	 *	Creates a new Formfield with the $name, $value and $attributes
@@ -72,14 +78,15 @@ abstract class FormField extends HTMLTag {
 	 */
 	public function __construct($name, $value = null, Array $attributes = array()) {
 		$attributes['type'] = $this->type;
-		$attributes['name'] = $name;
-		$attributes['id'] = $name;
+		$attributes['name'] = &$name;
+		$attributes['id'] = &$name;
 		if (empty($this->label) && $this->label !== false) {
 			$this->label = ucwords(preg_replace('/_+/', ' ', $name)).':';
 		}
 		$this->label = new HTMLTag('label', array('for' => $name), $this->label);
-		parent::__construct('input', $attributes);
+		parent::__construct($this->tagName, $attributes);
 		$this->value($value);
+		$this->afterConstruct();
 		return $this;
 	}
 	

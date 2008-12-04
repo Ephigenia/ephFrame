@@ -823,6 +823,7 @@ class Model extends Object {
 		$return = new Set();
 		$classname = get_class($this);
 		while($modelData = $result->fetchAssoc()) {
+			
 			$model = new $classname($modelData);
 			if ($depth >= 1) {
 				foreach($belongsToAndHasOne as $associatedModelName => $config) {
@@ -1057,7 +1058,7 @@ class Model extends Object {
 			return $this->findAllBy(lcfirst(Inflector::underscore($found[3], true)), $args[0]);
 		// catch findBy[fieldname] calls 
 		} elseif (preg_match('/find(By)?(.*)/i', $methodName, $found)) {
-			return $this->findBy(lcfirst($found[2]), $args[0]);
+			return $this->findBy(lcfirst(Inflector::underscore($found[2])), $args[0]);
 		// catch $model->username() calls
 		} elseif (isset($this->structure[$methodName])) {
 			return $this->structure[$methodName];

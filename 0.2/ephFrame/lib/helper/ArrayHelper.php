@@ -24,6 +24,19 @@
 class ArrayHelper extends Helper {
 	
 	/**
+	 * 	Appends values from $append to $array
+	 * 	@param array(mixed) $array
+	 * 	@param array(mixed) $append
+	 * 	@return array(mixed)
+	 */
+	public function appendFromArray($array, $append) {
+		foreach($append as $value) {
+			$array[] = $value;
+		}
+		return $array;
+	}
+	
+	/**
 	 *	Returns the number of dimensions in $array
 	 * 	@param array(mixed)
 	 * 	@return integer
@@ -317,7 +330,7 @@ class ArrayHelper extends Helper {
 	 * 	@param boolean be-drop rekursive on the input array, or just 1-dimension
 	 * 	@return array(string) cleaned array
 	 */
-	public function dropIndex($input, $indexNames = array(), $recursive = false) {
+	public static function dropIndex($input, $indexNames = array(), $recursive = false) {
 		assert(is_array($input));
 		if (count($indexNames) == 0) return $input;
 		if (!is_array($indexNames)) {
