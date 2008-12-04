@@ -131,7 +131,7 @@ class Log extends Component {
 	 * 	@return Log
 	 */
 	public static function getInstance() {
-  		if (self::$instance === null) {
+  		if (!self::$instance) {
   			ephFrame::loadClass('ephFrame.lib.File');
   			$classname = __CLASS__;
   			self::$instance = new $classname();
@@ -158,7 +158,7 @@ class Log extends Component {
   	 */
 	public static function write($level, $message) {
 		// log message only if level is higher or equal current reporting level
-		if ($level >= self::$level) {
+		if (self::$level >= $level) {
 			$log = self::getInstance();
 			$logFile = new File(self::logFileName($level));
 			$logFile->append($log->createLogMessage($message));
