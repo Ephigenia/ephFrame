@@ -21,12 +21,15 @@ class PositionableBehavior extends ModelBehavior {
 	const MOVE_DIRECTION_DOWN = 'down';
 	const MOVE_DIRECTION_BOTTOM = 'borrom';
 	
+	/**
+	 *	@return Hash
+	 */
 	protected function collectModelConditions() {
 		$conditions = array();
 		foreach($this->model->belongsTo as $config) {
 			$conditions[$config['associationKey']] = $this->model->get(substr(strchr($config['associationKey'], '.'), 1));
 		}
-		return $conditions;
+		return new Hash($conditions);
 	}
 	
 	/**
@@ -37,9 +40,9 @@ class PositionableBehavior extends ModelBehavior {
 	public function next($additionalConditions = array()) {
 		if (!$this->model->exists()) return false;
 		$conditions = $this->collectModelConditions();
-		$conditions[] = $this->model->name.'.position > '.$this->model->position;
-		$conditions = ArrayHelper::append($additionalConditions);
-		return $this->model->find($conditions, array($this->model->name.'.position ASC'));
+		$conditions->push($this->model->name.'.position > '.$this->model->position);
+		$conditions->appendFromArray($additionalConditions);
+		return $this->model->find($conditions->toArray(), array($this->model->name.'.position ASC'));
 	}
 	
 	/**
@@ -50,9 +53,9 @@ class PositionableBehavior extends ModelBehavior {
 	public function previous($additionalConditions = array()) {
 		if (!$this->model->exists()) return false;
 		$conditions = $this->collectModelConditions();
-		$conditions[] = $this->model->name.'.position < '.$this->model->position;
-		$conditions = ArrayHelper::append($additionalConditions);
-		$r = $this->model->find($conditions, array($this->model->name.'.position DESC'));
+		$conditions->push($this->model->name.'.position < '.$this->model->position);
+		$conditions->appendFromArray($additionalConditions);
+		$r = $this->model->find($conditions->toArray(), array($this->model->name.'.position DESC'));
 		return $r;
 	}
 	
@@ -63,9 +66,9 @@ class PositionableBehavior extends ModelBehavior {
 	public function first($additionalConditions = array()) {
 		if (!$this->model->exists()) return false;
 		$conditions = $this->collectModelConditions();
-		$conditions[] = $this->model->name.'.position < '.$this->model->position;
-		$conditions = ArrayHelper::append($additionalConditions);
-		return $this->model->find($conditions, array($this->model->name.'.position ASC'));
+		$conditions->push($this->model->name.'.position < '.$this->model->position);
+		$conditions->appendFromArray($additionalConditions);
+		return $this->model->find($conditions->toArray(), array($this->model->name.'.position ASC'));
 	}
 	
 	/**
@@ -75,9 +78,9 @@ class PositionableBehavior extends ModelBehavior {
 	public function last($additionalConditions = array()) {
 		if (!$this->model->exists()) return false;
 		$conditions = $this->collectModelConditions();
-		$conditions[] = $this->model->name.'.position > '.$this->model->position;
-		$conditions = ArrayHelper::append($additionalConditions);
-		return $this->model->find($conditions, array($this->model->name.'.position DESC'));
+		$conditions->push($this->model->name.'.position > '.$this->model->position);
+		$conditions->appendFromArray($additionalConditions);
+		return $this->model->find($conditions->toArray(), array($this->model->name.'.position DESC'));
 	}
 	
 	public function move($direction) {

@@ -386,7 +386,7 @@ class Model extends Object {
 	 */
 	public function detailPageUri() {
 		if (!$this->exists()) return false;
-		return WEBROOT.lcfirst($this->name).'/'.$this->id.'/';
+		return WEBROOT.lcfirst(get_class($this)).'/'.$this->id.'/';
 	}
 	
 	/**
@@ -823,8 +823,17 @@ class Model extends Object {
 		$return = new Set();
 		$classname = get_class($this);
 		while($modelData = $result->fetchAssoc()) {
-			
-			$model = new $classname($modelData);
+			if (isset($modelData['use_model'])) {
+				$modelClassName = ucFirst($modelData['use_model']);
+			} elseif (isset($modelData[$this->name.'.use_model'])) {
+				$modelClassName = ucFirst($modelData[$this->name.'.use_model']);
+			} else {
+				$modelClassName = $classname;
+			}
+			if (!class_exists($modelClassName)) {
+				ephFrame::loadClass('app.lib.model.'.$modelClassName);
+			}
+			$model = new $modelClassName($modelData);
 			if ($depth >= 1) {
 				foreach($belongsToAndHasOne as $associatedModelName => $config) {
 					$model->{$associatedModelName} = new $associatedModelName($modelData);
