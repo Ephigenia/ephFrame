@@ -521,6 +521,10 @@ class Image extends File implements Renderable {
 	 *	@param	boolean $constrainProps
 	 */
 	public function resizeTo($width = null, $height = null, $constrainProps = true) {
+		if ($width == null && $height == null) {
+			$width = $this->width();
+			$height = $this->height();
+		}
 		if ($constrainProps) {
 			if ($width == null) {
 				$width = round($this->width() * ($height / $this->height()));

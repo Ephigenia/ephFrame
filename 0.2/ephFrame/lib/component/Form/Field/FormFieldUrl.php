@@ -35,6 +35,17 @@ class FormFieldUrl extends FormFieldText {
 		)
 	);
 	
+	public function value($value = null) {
+		if (func_num_args() == 0) {
+			$val = parent::value();
+			if (!empty($val) && substr($val, 0, 7) !== 'http://') {
+				$val = 'http://'.$val;
+			}
+			return $val;
+		}
+		return parent::value($value);
+	}
+	
 }
 
 ?>
