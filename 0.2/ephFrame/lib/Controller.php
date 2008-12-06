@@ -235,6 +235,7 @@ abstract class Controller extends Object implements Renderable {
 		if (isset($this->{$this->name})) {
 			$entries = $this->{$this->name}->findAll(null, null, null, $this->{$this->name}->perPage);
 			$this->set(Inflector::plural($this->name), $entries);
+			$this->set('RSSURL', Registry::get('WEBROOT_ABS').$this->request->get('__url'));
 			$this->layout = 'rss';
 			$this->viewClassName = 'XMLView';
 			Registry::set('DEBUG', DEBUG_DEVELOPMENT);

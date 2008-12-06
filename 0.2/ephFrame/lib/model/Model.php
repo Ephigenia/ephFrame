@@ -115,7 +115,7 @@ class Model extends Object {
 	 * 	re-read.
 	 * 	@var integer
 	 */
-	protected $modelCacheTTL = 0;
+	protected $modelCacheTTL = DAY;
 	
 	/**
 	 *	@var ModelStrutureCache

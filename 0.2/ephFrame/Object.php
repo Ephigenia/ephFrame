@@ -109,9 +109,13 @@ abstract class Object {
 		foreach($this->__parentClasses() as $parentClassName) {
 			$classVars = get_class_vars($parentClassName);
 			if (!isset($classVars[$name])) continue;
-			foreach($classVars[$name] as $var) {
-				if (!is_array($this->{$name}) || (is_array($this->{$name}) && in_array($var, $this->{$name}))) continue; 
-				array_unshift($this->{$name}, $var);
+			foreach($classVars[$name] as $index => $var) {
+				if (!is_array($this->{$name}) || (is_array($this->{$name}) && in_array($var, $this->{$name}))) continue;
+				if (is_string($index)) {
+					$this->{$name}[$index] = $var; 
+				} else {
+					array_unshift($this->{$name}, $var);
+				}
 			}
 		}
 	}

@@ -58,7 +58,13 @@ class CURL extends Object {
 		return substr($data, 0, -1);
 	}
 	
-	public function exec($return = true, $headers = false) {
+	/**
+	 *	Starts the HTTP Request and returns or prints the result
+	 * 	@param boolean $buffered
+	 * 	@param boolean $header return/print response headers as well
+	 * 	@return boolean|string
+	 */
+	public function exec($buffered = true, $headers = false) {
 		if (!empty($this->data)) {
 			if (strtolower($this->method) === 'post') {
 				curl_setopt($this->handle, CURLOPT_POST, true);
@@ -87,8 +93,8 @@ class CURL extends Object {
 		if (count($this->headers) > 0) {
 			curl_setopt($this->handle, CURLOPT_HTTPHEADER, $this->headers);
 		}
-		if ($return) {
-			curl_setopt($this->handle, CURLOPT_RETURNTRANSFER, $return);
+		if ($buffered) {
+			curl_setopt($this->handle, CURLOPT_RETURNTRANSFER, $buffered);
 		}
 		if ($headers) {
 			curl_setopt($this->handle, CURLOPT_HEADER, true);
