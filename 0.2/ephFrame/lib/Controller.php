@@ -124,18 +124,10 @@ abstract class Controller extends Object implements Renderable {
 		// controllers components and models ...
 		foreach ($this->__parentClasses() as $parentClass) {
 			$parentClassVars = get_class_vars($parentClass);
-			if (isset($parentClassVars['uses'])) {
-				$this->models = array_unique(array_merge($parentClassVars['uses'], $this->uses));
-			}
-			if (isset($parentClassVars['components'])) {
-				$this->components = array_unique(array_merge($parentClassVars['components'], array_values($this->components)));
-			}
-			if (isset($parentClassVars['helpers'])) {
-				$this->helpers = array_unique(array_merge($parentClassVars['helpers'], $this->helpers));
-			}
-			if (isset($parentClassVars['forms'])) {
-				$this->forms = array_unique(array_merge($parentClassVars['forms'], $this->forms));
-			}
+			$this->__mergeParentProperty('uses');
+			$this->__mergeParentProperty('components');
+			$this->__mergeParentProperty('helpers');
+			$this->__mergeParentProperty('forms');
 		}
 		// init components and helpers
 		$this->initComponents();

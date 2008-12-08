@@ -849,7 +849,11 @@ class Model extends Object {
 						$config['associationKey'] => $primaryKeyValue
 					));
 					if ($depth >= 1) {
-						if (!$associatedData = $this->{$associatedModelNamePlural}->findAll($joinConditions)) {
+						if ($this->{$associatedModelNamePlural} instanceof Model) {
+							if (!$associatedData = $this->{$associatedModelNamePlural}->findAll($joinConditions)) {
+								$associatedData = new Set();
+							}
+						} else {
 							$associatedData = new Set();
 						}
 						$model->{$associatedModelNamePlural} = $associatedData;
