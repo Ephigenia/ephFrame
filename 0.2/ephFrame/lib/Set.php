@@ -621,7 +621,8 @@ class Set extends Component implements Countable, Renderable, Iterator, ArrayAcc
 	 * 	@return Set
 	 */
 	public function unique() {
-		$this->data = array_map('json_decode', array_unique(array_map('json_encode', $this->data)));
+		$this->data = array_unique($this->data);
+		//$this->data = array_map('json_decode', array_unique(array_map('json_encode', $this->data)));
 		return $this;
 	}
 	

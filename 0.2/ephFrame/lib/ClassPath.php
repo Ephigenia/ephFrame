@@ -84,7 +84,7 @@ class ClassPath extends Object {
 	 */
 	public static function translatePath($classPath, $ignoreCache = false) {
 		if (!isset(self::$cache[$classPath]) || $ignoreCache === true) {
-			if (String::hasBrakes($classPath) || String::hasControlChars($classPath)) throw new IntrusionException();
+			if (preg_match('@[^A-Za-z0-9_. -]+@', $classPath)) throw new IntrusionException();
 			// check for valid classPath
 			if (!preg_match(self::VALID_CLASS_PATH, $classPath)) throw new ClassPathMalFormedException($classPath); 
 			$translatedPath = str_replace('.', DS, $classPath);

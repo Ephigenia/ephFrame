@@ -462,12 +462,12 @@ class Model extends Object {
 	 * 	@return boolean
 	 */
 	public function fromId($id) {
-		if (!$model = $this->findBy($this->primaryKeyName, (int) $id)) {
+		$this->id = (int) $id;
+		if (!$model = $this->findBy($this->primaryKeyName, $this->id)) {
 			return false;
-		} else {
-			$this->data = $model->toArray();
-			return true;
 		}
+		$this->data = $model->toArray();
+		return true;
 	}
 	
 	/**
@@ -848,16 +848,14 @@ class Model extends Object {
 					$joinConditions = array_merge($config['conditions'], array(
 						$config['associationKey'] => $primaryKeyValue
 					));
-					if ($depth >= 1) {
-						if ($this->{$associatedModelNamePlural} instanceof Model) {
-							if (!$associatedData = $this->{$associatedModelNamePlural}->findAll($joinConditions)) {
-								$associatedData = new Set();
-							}
-						} else {
+					if ($this->{$associatedModelNamePlural} instanceof Model) {
+						if (!$associatedData = $this->{$associatedModelNamePlural}->findAll($joinConditions)) {
 							$associatedData = new Set();
 						}
-						$model->{$associatedModelNamePlural} = $associatedData;
+					} else {
+						$associatedData = new Set();
 					}
+					$model->{$associatedModelNamePlural} = $associatedData;
 				}
 			}
 			$return->add($model);

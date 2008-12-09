@@ -737,7 +737,7 @@ class String extends Helper {
 		return crypt($string, substr($string, 0, 2));
 	}
 	
-	const REGEXP_CONTROL_CHARS = '!\p{C}!u';
+	const REGEXP_CONTROL_CHARS = '![\x00-\x1F\7F]!u';
 	const REGEXP_CONTROL_CHARS_WITH_BRAKES = '![\p{C}][\x0A\x0D]!u';
 	
 	/**

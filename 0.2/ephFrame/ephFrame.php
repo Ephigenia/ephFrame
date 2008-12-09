@@ -92,7 +92,6 @@ final class ephFrame {
 	 */
 	private function setErrorReporting() {
 		if (Registry::defined('ERROR_REPORTING') && Registry::get('DEBUG') > DEBUG_PRODUCTION) {
-			if (!is_int(Registry::defined('ERROR_REPORTING'))) throw new IntegerExpectedException();
 			error_reporting(Registry::get("ERROR_REPORTING"));
 		} elseif (Registry::defined('DEBUG')) {
 			if (Registry::get('DEBUG') > DEBUG_PRODUCTION) {
@@ -159,9 +158,7 @@ final class ephFrame {
 	public static function loadClass($classPath) {
 		if (empty($classPath)) throw new StringExpectedException();
 		$className = ClassPath::className($classPath);
-		
 		if (!class_exists($className)) {
-			
 			self::loadFrameWorkFile($classPath);
 		}
 		return $className;

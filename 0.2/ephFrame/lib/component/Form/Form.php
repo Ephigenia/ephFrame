@@ -69,6 +69,13 @@ class Form extends HTMLTag {
 	 */
 	public function __construct($action = null, Array $attributes = array()) {
 		$this->request = new HTTPRequest(true);
+//		foreach($this->__parentClasses($this) as $class) {
+//			$classVars = get_class_vars($class);
+//			if (isset($classVars['configureModel'])) {
+//				foreach($classVars['configu'])
+//			}
+//		}
+		//$this->configureModel = $this->__mergeParentProperty('configureModel');
 		if ($action != null) {
 			$this->action = $action;
 		}
@@ -355,7 +362,7 @@ class Form extends HTMLTag {
 			foreach($model->structure as $fieldInfo) {
 				if (!($field = $this->fieldset->childWithAttribute('name', $fieldInfo->name))) continue;
 				// checkboxes need special treatment
-				if ($fieldInfo->type == 'char' || $fieldInfo->type == 'enum') {
+				if ($field->type == 'checkbox' && (in_array($fieldInfo->type, array('char', 'enum')))) {
 					$field->value(true);
 					if ($model->get($fieldInfo->name)) {
 						$field->checked(true);
