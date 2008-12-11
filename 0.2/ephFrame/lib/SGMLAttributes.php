@@ -121,7 +121,7 @@ class SGMLAttributes extends Hash {
 		if (!$this->beforeRender()) return $rendered;
 		foreach ($this->toArray() as $attributeName => $attributeValue) {
 			if (!is_array($attributeValue) && strlen($attributeValue) === 0) continue;
-			$rendered .= sprintf('%s="%s" ', $this->renderAttributeName($attributeName), $this->renderAttributeValue($attributeValue));
+			$rendered .= $this->renderAttributeName($attributeName).'="'.$this->renderAttributeValue($attributeValue).'" ';
 		}
 		$rendered = trim($rendered);
 		return $this->afterRender($rendered);
@@ -135,6 +135,8 @@ class SGMLAttributes extends Hash {
 	 */
 	public function renderAttributeValue($input) {
 		$rendered = (is_array($input)) ? implode(' ',$input) : $input;
+		// encode entities
+		$rendered = preg_replace('@&(?!amp;)@i', '&amp;', $rendered);
 		$rendered = strtr($rendered, array('"' => '&quot;'));
 		$rendered = String::stripBrakes($rendered);
 		return $rendered;

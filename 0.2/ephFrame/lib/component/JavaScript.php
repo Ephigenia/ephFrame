@@ -63,11 +63,17 @@ class JavaScript extends Component implements Renderable {
 	}
 	
 	public function addScript($script) {
-		$this->plain[] = $script;
+		if (!in_array($script, $this->plain)) {
+			$this->plain[] = $script;
+		}
+		return $this;
 	}
 	
 	public function jQuery($script) {
-		$this->jQuery[] = $script;
+		if (!in_array($script, $this->jQuery)) {
+			$this->jQuery[] = $script;
+		}
+		return $this;
 	}
 	
 	public function link($filename) {

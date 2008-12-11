@@ -104,7 +104,9 @@ class CSS extends Component implements Renderable {
 	 * 	@return CSS
 	 */
 	public function add($css) {
-		$this->plain[] = $css;
+		if (!in_array($css, $this->plain)) {
+			$this->plain[] = $css;
+		}
 		return $this;
 	}
 	
