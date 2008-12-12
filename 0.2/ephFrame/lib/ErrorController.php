@@ -43,6 +43,10 @@ class ErrorController extends AppController {
 	public function missingTable() {
 		$this->set('tablename', $this->params['tablename']);
 	}
+	
+	public function missingDB() {
+		$this->set('databaseName', $this->params['databaseName']);
+	}
 
 	/**
 	 *	

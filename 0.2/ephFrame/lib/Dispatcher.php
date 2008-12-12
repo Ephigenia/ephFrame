@@ -78,6 +78,8 @@ class Dispatcher extends Object {
 			} else {
 				throw $e;
 			}
+		} catch (MySQLDBNotFoundException $e) {
+			die('Missing Database Table <q>'.$e->databaseName.'</q>');
 		}
 		return $controller;
 	}

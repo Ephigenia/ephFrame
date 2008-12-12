@@ -293,6 +293,7 @@ class MySQLNoDBSelectedException extends MySQLDBException {
  */
 class MySQLDBNotFoundException extends MySQLDBException {
 	public function __construct(MySQL $dao) {
+		$this->databaseName = $dao->DBDSN->db();
 		$this->message = 'Database \''.$dao->DBDSN->db().'\' not found.';
 		parent::__construct($dao);
 	}
