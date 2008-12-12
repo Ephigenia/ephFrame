@@ -59,12 +59,12 @@ class WikiText extends Component {
 			'/\[([^\]]+)\]/' => '<a href="\\1">\\1</a>'
 			),
 		'headlines' => array(
-			'/^= (.+) =/m' => '<h1>\\1</h1>',
-			'/^={2} (.+) ={2}/m' => '<h2>\\1</h2>',
-			'/^={3} (.+) ={3}/m' => '<h3>\\1</h3>',
-			'/^={4} (.+) ={4}/m' => '<h4>\\1</h4>',
-			'/^={5} (.+) ={5}/m' => '<h5>\\1</h5>',
-			'/^={6,} (.+) ={6,}/m' => '<h6>\\1</h6>',
+			'/^= (.+) =(\s+)?/m' => '<h1>\\1</h1>',
+			'/^={2} (.+) ={2}(\s+)?/m' => '<h2>\\1</h2>',
+			'/^={3} (.+) ={3}(\s+)?/m' => '<h3>\\1</h3>',
+			'/^={4} (.+) ={4}(\s+)?/m' => '<h4>\\1</h4>',
+			'/^={5} (.+) ={5}(\s+)?/m' => '<h5>\\1</h5>',
+			'/^={6,} (.+) ={6,}(\s+)?/m' => '<h6>\\1</h6>',
 			),
 		'hr' => array(
 			'/^-{4}/m' => '<hr />'
@@ -117,7 +117,8 @@ class WikiText extends Component {
 				}
 			}
 		}
-		$translated = preg_replace('/[\n\r]{2,}/s', '<br />'.LF, $translated);
+		$translated = String::normalizeBrakes($translated);
+		$translated = preg_replace('/(\n){1,}/s', '<br />'.LF, $translated);
 		return $translated;
 	}
 	
