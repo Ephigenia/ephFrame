@@ -462,8 +462,8 @@ class Model extends Object {
 	 * 	@return boolean
 	 */
 	public function fromId($id) {
-		$this->id = (int) $id;
-		if (!$model = $this->findBy($this->primaryKeyName, $this->id)) {
+		//$this->set($this->primaryKeyName, (int) $id);
+		if (!$model = $this->findBy($this->primaryKeyName, $id)) {
 			return false;
 		}
 		$this->data = $model->toArray();
@@ -667,8 +667,9 @@ class Model extends Object {
 	 * 	@return boolean|Model
 	 */
 	public function exists($id = null) {
-		if ($id !== null) {
-			$m = new $this->name((int) $id);
+		if ($id !== null || func_num_args() > 0) {
+			$classname = get_class($this);
+			$m = new $classname((int) $id);
 			if ($m->exists()) {
 				return $m;
 			}
