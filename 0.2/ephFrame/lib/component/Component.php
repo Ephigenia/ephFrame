@@ -53,6 +53,12 @@ abstract class Component extends Object implements ephFrameComponent {
 	public $components = array();
 	
 	/**
+	 *	List of helpers used in this component
+	 * 	@var array(string)
+	 */
+	public $helpers = array();
+	
+	/**
 	 *	Stores a link to the controller this component is attached to, after	
 	 * 	{@link startup} is called
 	 * 	@var Controller
@@ -65,6 +71,8 @@ abstract class Component extends Object implements ephFrameComponent {
 	 * 	@return Component
 	 */
 	public function __construct() {
+		$this->__mergeParentProperty('components');
+		$this->__mergeParentProperty('helpers');
 		return $this;
 	}
 	
@@ -76,6 +84,7 @@ abstract class Component extends Object implements ephFrameComponent {
 	public function init(Controller $controller) {
 		$this->controller = $controller;
 		$this->initComponents();
+		$this->initHelpers();
 		return $this;
 	}
 	
@@ -87,9 +96,9 @@ abstract class Component extends Object implements ephFrameComponent {
 	 */
 	protected function initComponents() {
 		// merge list of components from parent component class
-		$parentClass = get_parent_class($this);
-		$parentClassVars = get_class_vars($parentClass);
-		$this->components = array_merge($parentClassVars['components'], $this->components);
+		//$parentClass = get_parent_class($this);
+		//$parentClassVars = get_class_vars($parentClass);
+		//$this->components = array_merge($parentClassVars['components'], $this->components);
 		foreach ($this->components as $componentName) {
 			$componentClassName = ClassPath::className($componentName);
 			// component not attached to controller, therefore do that now 
@@ -98,6 +107,17 @@ abstract class Component extends Object implements ephFrameComponent {
 				$this->controller->addComponent($componentName, false);
 			}
 			$this->{$componentClassName} = $this->controller->{$componentClassName};
+		}
+		return true;
+	}
+	
+	protected function initHelpers() {
+		foreach($this->helpers as $HelperName) {
+			$className = ClassPath::className($HelperName);
+			if (!class_exists($className)) {
+				loadHelper($HelperName);
+			}
+			$this->{$className} = new $className();
 		}
 		return true;
 	}

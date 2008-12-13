@@ -76,7 +76,7 @@ class HTML extends Helper {
 	 * 	@param array(string) $attributes
 	 * 	@return HTMLTag
 	 */
-	public function link($url, $label, Array $attributes = array()) {
+	public function link($url, $label = null, Array $attributes = array()) {
 		if (!empty($url)) {
 			$attributes['href'] = $url;
 		}

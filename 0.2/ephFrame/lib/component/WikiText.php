@@ -55,8 +55,8 @@ class WikiText extends Component {
 	 */
 	public $syntax = array(
 		'links' => array(
-			'/\[([^\s]+)\s(.+)\]/' => '<a href="\\1" title="\\2">\\2</a>',
-			'/\[([^\]]+)\]/' => '<a href="\\1">\\1</a>'
+			'/\[{1}([^\]]+)\|(.+)\]{1}/' => '<a href="\\1" title="\\2">\\2</a>',
+			'/\[{1}([^\]]+)\]{1}/' => '<a href="\\1">\\1</a>'
 			),
 		'headlines' => array(
 			'/^= (.+) =(\s+)?/m' => '<h1>\\1</h1>',
@@ -67,7 +67,7 @@ class WikiText extends Component {
 			'/^={6,} (.+) ={6,}(\s+)?/m' => '<h6>\\1</h6>',
 			),
 		'hr' => array(
-			'/^-{4}/m' => '<hr />'
+			'/^-{4,}/m' => '<hr />'
 			),
 		'lists' => array(
 			'/^\#{1,} (.*)/m' => '<ul><li>\\1</li></ul>',
@@ -118,7 +118,7 @@ class WikiText extends Component {
 			}
 		}
 		$translated = String::normalizeBrakes($translated);
-		$translated = preg_replace('/(\n){1,}/s', '<br />'.LF, $translated);
+		$translated = preg_replace('/(\n){2,}/s', '<br />'.LF, $translated);
 		return $translated;
 	}
 	
