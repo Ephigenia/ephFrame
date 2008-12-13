@@ -152,7 +152,7 @@ abstract class Controller extends Object implements Renderable {
 	 *	@param integer $id
 	 */
 	public function delete($id = null) {
-		$id = (int) $this->params['id'];
+		$id = ($id === null) ? (int) $this->params['id'] : $id;
 		if ($id > 0 && isset($this->{$this->name})) {
 			if (!$entry = $this->{$this->name}->findById($id)) {
 				$this->name = 'error';
@@ -167,7 +167,7 @@ abstract class Controller extends Object implements Renderable {
 	 *	@param integer $id
 	 */
 	public function edit($id = null) {
-		$id = (int) $this->params['id'];
+		$id = ($id === null) ? (int) $this->params['id'] : $id;
 		if ($id > 0 && in_array($this->name, $this->uses) && isset($this->{$this->name})) {
 			if (!($this->{$this->name} = $this->{$this->name}->findById($id))) {
 				$this->name = 'error';
@@ -188,7 +188,7 @@ abstract class Controller extends Object implements Renderable {
 	 * @param integer $id
 	 */
 	public function view($id = null) {
-		$id = (int) $this->params['id'];
+		$id = ($id === null) ? (int) $this->params['id'] : $id;
 		if ($id > 0 && in_array($this->name, $this->uses) && isset($this->{$this->name})) {
 			if (!$entry = $this->{$this->name}->findById($id)) {
 				$this->name = 'error';
