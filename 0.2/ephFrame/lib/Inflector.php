@@ -47,7 +47,10 @@ class Inflector extends Object {
 	public static function pluralize($string) {
 		if (!is_string($string)) return $string;
 		if (empty($string)) return $string;
-		$consonants = 'bcdfghjklmnpqrstvwxy'; 
+		$consonants = 'bcdfghjklmnpqrstvwxy';
+		if (preg_match('@news@i', $string)) {
+			return $string; 
+		}
 		$rules = array(
 			// The -ies rule: nouns ending in a y preceded by a consonant usually drop the y and add -ies
 			'/(.*['.$consonants.'])y$/' => '\\1ies',
