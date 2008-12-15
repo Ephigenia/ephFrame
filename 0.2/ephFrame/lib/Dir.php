@@ -197,7 +197,7 @@ class Dir extends FileSystemNode {
 			$newDirname = implode(DS, $newDirname);
 		}
 		// return newDirname directory component if directory allread exists
-		if (is_dir($this->dirname.$newDirname)) {
+		if (is_dir($this->dirName().$newDirname)) {
 			return new Dir($this->dirname.$newDirname);
 		}
 		$folder = explode(DS, $this->dirname.$newDirname);
