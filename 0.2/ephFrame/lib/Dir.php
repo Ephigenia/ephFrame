@@ -212,7 +212,8 @@ class Dir extends FileSystemNode {
 			}
     		$mkfolder .= DS;
     	}
-    	return new Dir($newDirname);
+    	$mkfolder = preg_replace('@'.$mkfolder.'+@', DS, $mkfolder);
+    	return new Dir($mkfolder);
 	}
 	
 	/**
