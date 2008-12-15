@@ -232,7 +232,7 @@ class Model extends Object {
 		// initialize model behavior callbacks
 		$this->behaviors = new ModelBehaviorHandler($this, $this->behaviors);
 		// initialize model bindings
-		$this->initAssociations(is_object($id));
+		$this->initAssociations($id);
 		// load inital data from array data or primary id
 		if (is_array($id)) {
 			$this->fromArray($id);
@@ -276,17 +276,21 @@ class Model extends Object {
 				} else {
 					$this->bind($associationType, $modelName, $config);
 				}
-				if (!$bind) {
-					$modelClassname = $modelName;
-					if ($associationType == 'hasMany' || $associationType == 'hasAndBelongsToMany') {
-						$modelName = Inflector::plural($modelName);
-					}
-					$this->{$modelName} = new $modelClassname($this);
-					$this->{$modelName}->{$this->name} = $this;
-					//$this->depth = $this->depth-1;
+				if (is_object($bind) && isset($this->{get_class($bind)}) || get_class($bind) == $modelName) {
+					continue;
 				}
+				$modelClassname = $modelName;
+				if ($associationType == 'hasMany' || $associationType == 'hasAndBelongsToMany') {
+					$modelName = Inflector::plural($modelName);
+				}
+				$this->{$modelName} = new $modelClassname($this);
+				$this->{$modelName}->{$this->name} = $this;
+				//$this->depth = $this->depth-1;
 			}
 		}
+//		if (get_class($this) == 'Node') {
+//			var_dump($this->belongsTo);
+//		}
 		return true;
 	}
 	
@@ -793,18 +797,15 @@ class Model extends Object {
 		// belongsto / has one
 		if ($depth >= 1) {
 			$joinStuff = $this->hasOne + $this->belongsTo;
-			//echo $this->name.'<br />';
-			//var_dump($joinStuff);
 			foreach($joinStuff as $modelName => $config) {
 				foreach($this->{$modelName}->structure as $fieldInfo) {
 					$query->select($this->{$modelName}->name.'.'.$fieldInfo->name, $this->{$modelName}->name.'.'.$fieldInfo->name);
 				}
-				$joinConditions = array($config['associationKey'] => $config['foreignKey']);
-				$joinConditions = array_merge($joinConditions, $config['conditions']);
+				$joinConditions = $config['conditions'];
+				$joinConditions[$config['associationKey']] = $config['foreignKey'];
 				$query->join($this->{$modelName}->tablename, $modelName, DBQuery::JOIN_LEFT, $joinConditions);
 			}
 		}
-		//echo '<pre>'.$query.'</pre>';
 		return $query;
 	}
 	

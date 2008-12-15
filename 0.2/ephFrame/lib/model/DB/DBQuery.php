@@ -320,7 +320,7 @@ abstract class DBQuery extends Object implements Renderable {
 	 * 	@param string $type join type to use, use the JOIN_* constants of this class
 	 * 	@param array() $conditions Join conditions, rendered as where statement
 	 */
-	public function join($tablename, $alias = null, $type = self::JOIN, $conditions) {
+	public function join($tablename, $alias = null, $type = self::JOIN, Array $conditions = array()) {
 		$this->join->add(array($tablename, $alias, $type, $conditions));
 		return $this;
 	}
