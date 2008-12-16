@@ -280,11 +280,13 @@ class Model extends Object {
 					continue;
 				}
 				$modelClassname = $modelName;
-				if ($associationType == 'hasMany' || $associationType == 'hasAndBelongsToMany') {
-					$modelName = Inflector::plural($modelName);
-				}
 				$this->{$modelName} = new $modelClassname($this);
 				$this->{$modelName}->{$this->name} = $this;
+				if ($associationType == 'hasMany' || $associationType == 'hasAndBelongsToMany') {
+					$modelName = Inflector::plural($modelName);
+					$this->{$modelName} = new $modelClassname($this);
+					$this->{$modelName}->{$this->name} = $this;
+				}
 				//$this->depth = $this->depth-1;
 			}
 		}
@@ -806,6 +808,7 @@ class Model extends Object {
 				$query->join($this->{$modelName}->tablename, $modelName, DBQuery::JOIN_LEFT, $joinConditions);
 			}
 		}
+//		echo '<pre>'.$query.'</pre>';
 		return $query;
 	}
 	
@@ -857,7 +860,8 @@ class Model extends Object {
 					} else {
 						$associatedData = new Set();
 					}
-					$model->{$associatedModelNamePlural} = $associatedData;
+//					echo $modelClassName.'->'.$associatedModelNamePlural.' = '.get_class($associatedData);
+					$model->{$associatedModelNamePlural} = $this->{$associatedModelNamePlural} = $associatedData;
 				}
 			}
 			$return->add($model);

@@ -101,8 +101,9 @@ class Router extends Hash {
 		$routeMatch = false;
 		Log::write(LOG::VERBOSE, get_class($this).': finding route for \''.$url.'\'');
 		// add some default scaffolding routes
-		Router::addRoute('scaffold_actions', ':controller/(?P<id>\d+)/:action/');
 		Router::addRoute('scaffold_view', ':controller/(?P<id>\d+)/', array('action' => 'view'));
+		Router::addRoute('scaffold_actions', ':controller/(?P<id>\d+)/:action/');
+		Router::addRoute('scaffold_create', ':controller/:action/');
 		// go through routes and try to find a matching route
 		foreach(self::getInstance() as $routeName => $routeData) {
 			if (!isset($routeData['path'])) continue;

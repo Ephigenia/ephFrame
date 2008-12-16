@@ -52,6 +52,7 @@ class Element extends View {
 	}
 	
 	public function beforeRender() {
+		$this->data['elementName'] = $this->name;
 		return true;
 	}
 	
