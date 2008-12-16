@@ -853,14 +853,14 @@ class Model extends Object {
 					$joinConditions = array_merge($config['conditions'], array(
 						$config['associationKey'] => $primaryKeyValue
 					));
-					if ($this->{$associatedModelNamePlural} instanceof Model) {
-						if (!$associatedData = $this->{$associatedModelNamePlural}->findAll($joinConditions)) {
+					//if ($this->{$associatedModelNamePlural} instanceof Model) {
+						if (!$associatedData = $this->{$associatedModelName}->findAll($joinConditions)) {
 							$associatedData = new Set();
 						}
-					} else {
-						$associatedData = new Set();
-					}
-//					echo $modelClassName.'->'.$associatedModelNamePlural.' = '.get_class($associatedData);
+//					} else {
+//						$associatedData = new Set();
+//					}
+					//echo $modelClassName.'->'.$associatedModelNamePlural.' = '.get_class($associatedData);
 					$model->{$associatedModelNamePlural} = $this->{$associatedModelNamePlural} = $associatedData;
 				}
 			}
