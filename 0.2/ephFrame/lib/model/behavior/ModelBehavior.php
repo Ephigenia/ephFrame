@@ -13,7 +13,11 @@
  */
 
 /**
- * 	Simple Model Behavior
+ * 	Default Model Behavior
+ * 
+ * 	This Behavior implements basic callbacks for every standard model from
+ * 	ephFrame. This included defualt created, updated time stamp setting in
+ * 	beforeInsert and beforeUpdate.
  * 	
  * 	@package ephFrame
  * 	@subpackage ephFrame.lib.model
@@ -45,35 +49,25 @@ class ModelBehavior extends Object {
 	}
 	
 	public function beforeInsert() {
+		if (isset($this->structure['created']) && $this->created <= 0) {
+			if ($this->structure['created']->quoting == ModelFieldInfo::QUOTE_STRING) {
+				$this->created = time();
+			} elseif($this->structure['created']->quoting == ModelFieldInfo::QUOTE_INTEGER) {
+				$this->created = time();
+			}
+		}
 		return true;
 	}
 	
 	public function beforeUpdate() {
+		if (isset($this->model->structure['updated'])) {
+			if ($this->model->structure['updated']->quoting == ModelFieldInfo::QUOTE_STRING) {
+				$this->model->updated = time();
+			} elseif($this->model->structure['updated']->quoting == ModelFieldInfo::QUOTE_INTEGER) {
+				$this->model->updated = time();
+			}
+		}
 		return true;
-	}
-	
-	public function beforeFind() {
-		return true;
-	}
-	
-	public function afterFind() {
-		
-	}
-	
-	public function beforeSave() {
-		return true;
-	}
-	
-	public function afterSave() {
-		
-	}
-	
-	public function beforeDelete() {
-		return true;
-	}
-	
-	public function afterDelete() {
-		
 	}
 	
 }

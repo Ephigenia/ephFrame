@@ -485,18 +485,24 @@ class Model extends Object {
 	}
 	
 	/**
-	 *	Saves a single new field value in the model.
+	 *	Update a single field of a model
 	 * 
-	 * 	This can be used as some kind of short cut for:
+	 * 	Save a new value for one field of a model and save it emediently.
+	 * 	Returns true if everything worked fine, or false if the model did not
+	 * 	exists (i.e. the id was not set) or fieldname not found in this model.
+	 * 
+	 * 	This can be used to fast set publication status for example
 	 * 	<code>
-	 * 	$entry->is_public = true;
-	 * 	$entry->save();
+	 * 	$entry->saveField('public', true);
 	 * 	</code>
-	 * 	@param string $fieldname,
+	 * 	
+	 * 	@param string $fieldname
 	 * 	@param mixed $value
 	 * 	@return boolean
 	 */
 	public function saveField($fieldname, $value) {
+		if (!$this->exists() || !$this->hasField($fieldname)) return false;
+		$this->query('UPDATE '.$this->tablename.' SET `'.$fieldname.'` = '.DBQuery::quote($value, $this->structure[$fieldname]->quoting));
 		$this->set($fieldname, $value);
 		return $this->save();
 	}
@@ -510,22 +516,22 @@ class Model extends Object {
 	 */
 	public function save($validate = true, Array $fieldNames = array()) {
 		// use fieldnames to create data array that should be saved or inserted
-		$data = array();
-		if (empty($fieldNames)) {
-			$fieldNames = array_keys($this->structure);
-		}
-		foreach($fieldNames as $fieldName) {
-			if (!isset($this->structure[$fieldName]) || !isset($this->data[$fieldName])) continue;
-			$data[$fieldName] = $this->data[$fieldName];
-		}
-		if (!$this->beforeSave(&$data, $fieldNames) || !$this->behaviors->call('beforeSave', &$data, $fieldNames)) {
+//		$data = array();
+//		if (empty($fieldNames)) {
+//			$fieldNames = array_keys($this->structure);
+//		}
+//		foreach($fieldNames as $fieldName) {
+//			if (!isset($this->structure[$fieldName]) || !isset($this->data[$fieldName])) continue;
+//			$data[$fieldName] = $this->data[$fieldName];
+//		}
+		if (!$this->beforeSave() || !$this->behaviors->call('beforeSave')) {
 			return false;
 		}
 		// create save query for this model
 		if (!$this->exists()) {
-			$this->insert($data);
+			$this->insert();
 		} else {
-			$this->update($data);
+			$this->update();
 		}
 		$this->afterSave();
 		$this->behaviors->call('afterSave');;
@@ -547,29 +553,24 @@ class Model extends Object {
 	 * 	@param array(string) $data
 	 * 	@return boolean
 	 */
-	protected function insert(Array $data = array()) {
-		if (!$this->beforeInsert(&$data) || !$this->behaviors->call('beforeSave', &$data)) {
-			return false;
-		}
-		foreach($data as $key => $value) {
+	protected function insert() {
+		if (!$this->beforeInsert() || !$this->behaviors->call('beforeInsert')) return false;
+		foreach($this->data as $key => $value) {
 			$quotedData[$key] = DBQuery::quote($value, $this->structure[$key]->quoting);
-		}
-		// set created date if there's any
-		if (isset($this->structure['created']) && empty($quotedData['created'])) {
-			if ($this->structure['created']->quoting == ModelFieldInfo::QUOTE_STRING) {
-				// @todo set time string depending on sql type
-				$quotedData['created'] = 'NOW()';
-			} elseif($this->structure['created']->quoting == ModelFieldInfo::QUOTE_INTEGER) {
-				$quotedData['created'] = 'UNIX_TIMESTAMP()';
-			}
 		}
 		$q = new InsertQuery($this->tablename, $quotedData);
 		$this->DB->query($q);
 		$this->data[$this->primaryKeyName] = $this->DB->lastInsertId();
+		$this->afterInsert();
+		$this->behaviors->call('afterInsert');
 		return true;
 	}
 	
-	public function beforeInsert(Array $data = array()) {
+	public function beforeInsert() {
+		return true;
+	}
+	
+	public function afterInsert() {
 		return true;
 	}
 	
@@ -578,31 +579,27 @@ class Model extends Object {
 	 *	@param array(string) $data
 	 * 	@return unknown
 	 */
-	protected function update(Array $data = array()) {
-		if (!$this->beforeUpdate(&$data) || !$this->behaviors->call('beforeUpdate', &$data)) {
-			return false;
-		}
-		if (!$this->exists()) {
-			throw new ModelEmptyPrimaryKeyException($this);
-		}
-		foreach($data as $key => $value) {
+	protected function update() {
+		if (!$this->beforeUpdate() || !$this->behaviors->call('beforeUpdate')) return false;
+		foreach($this->data as $key => $value) {
 			$quotedData[$key] = DBQuery::quote($value, $this->structure[$key]->quoting);
-		}
-		// set created date if there's any
-		if (isset($this->structure['updated']) && isset($data['updated'])) {
-			if ($this->structure['updated']->quoting == ModelFieldInfo::QUOTE_STRING) {
-				// @todo set time string depending on sql type
-				$quotedData['updated'] = 'NOW()';
-			} elseif($this->structure['created']->quoting == ModelFieldInfo::QUOTE_INTEGER) {
-				$quotedData['updated'] = 'UNIX_TIMESTAMP()';
-			}
 		}
 		$q = new UpdateQuery($this->tablename, $quotedData, array($this->primaryKeyName => $this->data[$this->primaryKeyName]));
 		$this->query($q);
+		$this->afterUpdate();
+		$this->behaviors->call('afterUpdate');
 		return true;
 	}
 	
-	public function beforeUpdate($data = array()) {
+	public function beforeUpdate() {
+		// set created date if there's any
+		if (!$this->exists()) {
+			throw new ModelEmptyPrimaryKeyException($this);
+		}
+		return true;
+	}
+	
+	public function afterUpdate() {
 		return true;
 	}
 	
@@ -628,9 +625,7 @@ class Model extends Object {
 		} else {
 			$id = (int) $id;
 		}
-		if (!$this->beforeDelete() || !$this->behaviors->call('beforeDelete')) {
-			return false;
-		}
+		if (!$this->beforeDelete($id) || !$this->behaviors->call('beforeDelete', array($id))) return false;
 		$this->DB->query(new DeleteQuery($this->tablename, array($this->primaryKeyName => $id)));
 		$this->afterDelete();
 		$this->behaviors->call('afterDelete');
@@ -641,9 +636,10 @@ class Model extends Object {
 	/**
 	 *	Callback called before {@link delete} starts deleting, this should
 	 * 	return false to stop the deleting process.
+	 * 	@param integer $id
 	 * 	@return true
 	 */
-	protected function beforeDelete() {
+	protected function beforeDelete($id) {
 		return true;
 	}
 	
@@ -754,7 +750,7 @@ class Model extends Object {
 	 * 	@param integer $depth depth of model associations to use in select query
 	 * 	@return SelectQuery
 	 */
-	protected function createSelectQuery($conditions = array(), $order = null, $offset = 0, $count = null, $depth = null) {
+	public function createSelectQuery($conditions = array(), $order = null, $offset = 0, $count = null, $depth = null) {
 		if ($depth === null) {
 			$depth = $this->depth;
 		}
@@ -817,7 +813,7 @@ class Model extends Object {
 	 * 	@param QueryResult $result
 	 * 	@return Set
 	 */
-	protected function createSelectResultList(QueryResult $result, $justOne = false, $depth = null) {
+	public function createSelectResultList(QueryResult $result, $justOne = false, $depth = null) {
 		if ($depth === null) {
 			$depth = $this->depth;
 		}
@@ -853,13 +849,12 @@ class Model extends Object {
 					$joinConditions = array_merge($config['conditions'], array(
 						$config['associationKey'] => $primaryKeyValue
 					));
-					//if ($this->{$associatedModelNamePlural} instanceof Model) {
+					$associatedData = new Set();
+					if ($this->{$associatedModelName} instanceof Model) {
 						if (!$associatedData = $this->{$associatedModelName}->findAll($joinConditions)) {
 							$associatedData = new Set();
 						}
-//					} else {
-//						$associatedData = new Set();
-//					}
+					}
 					//echo $modelClassName.'->'.$associatedModelNamePlural.' = '.get_class($associatedData);
 					$model->{$associatedModelNamePlural} = $this->{$associatedModelNamePlural} = $associatedData;
 				}
@@ -1092,13 +1087,31 @@ class Model extends Object {
 	}
 	
 	/**
-	 * 	Tests if a model has a specific field in his structure
+	 * 	Tests if a field exists in model structure.
+	 * 
+	 * 	This tests if a specific field is defined for this model. This will
+	 * 	work with model and without model in front of fieldname:
+	 * 	<code>
+	 * 	// both the same
+	 * 	$user->hasField('username');
+	 * 	$user->hasField('User.username');
+	 * 	// but this will fail:
+	 * 	$user->hasField('Something.username');
+	 * 	</code>
 	 * 
 	 * 	@param string $fieldname
 	 * 	@return boolean
 	 */
 	public function hasField($fieldname) {
-		return isset($this->structure[trim($fieldname)]);
+		if (strpos($fieldname, '.') == false) {
+			return isset($this->structure[trim($fieldname)]);
+		} else {
+			$modelName = substr($fieldname, 0, strpos($fieldname, '.')-1);
+			if ($modelName !== $this->name) {
+				return false;
+			}
+			return $this->hasField(substr($fieldname, strpos($fieldname, '.') + 1));
+		}
 	}
 	
 	/**

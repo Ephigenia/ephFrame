@@ -124,27 +124,21 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 		return true;
 	}
 	
-	public function call($methodName) {
-		$args = func_get_args();
-		$args = array_slice($args,1);
-		$r = $this->__call($methodName, $args);
-		return $r;
-	}
-	
-	public function __call($methodName, $args) {
-//		if (!in_array($methodName, $this->behaviorCallBacks)) {
-//			//trigger_error('Invalid callback method name \''.$methodName.'\'.', E_USER_ERROR);
-//			return false;
-//		}
-		$r = false;
+	public function call($methodName, Array $args = array()) {
+		$r = true;
 		foreach($this->behaviors as $behavior) {
-			if (!method_exists($behavior, $methodName)) continue;
-			$r = $behavior->callMethod($methodName, $args);
-			if (!$r) {
+			if (!method_exists($behavior, $methodName)) {
+				continue;
+			}
+			if (!$r = $behavior->callMethod($methodName, $args)) {
 				return $r;
 			}
 		}
 		return $r;
+	}
+	
+	public function __call($methodName, Array $args = array()) {
+		return $this->call($methodName, $args);
 	}
 	
 	public function count() {
