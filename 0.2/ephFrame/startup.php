@@ -13,7 +13,7 @@
  */
 	
 // PHP Version Check, ephFrame would need 5.1.6!
-if ((int) str_pad(str_replace('.', '', phpversion()), 6, '0', STR_PAD_RIGHT) < 516000) {
+if ((int) str_pad(preg_replace('@[^\d]+@', '', phpversion()), 6, '0', STR_PAD_RIGHT) < 516000) { 
 	die ('The php version installed ('.phpversion().') does not work with ephFrame. Minimum php version is 5.1.6');
 }
 

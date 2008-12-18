@@ -80,6 +80,8 @@ class Dispatcher extends Object {
 			}
 		} catch (MySQLDBNotFoundException $e) {
 			die('Missing Database Table <q>'.$e->databaseName.'</q>');
+		} catch (MySQLConnectionAccessDeniedException $e) {
+			die('check db connection string, invalid login');
 		}
 		return $controller;
 	}
