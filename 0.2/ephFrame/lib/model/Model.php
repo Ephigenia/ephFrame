@@ -502,7 +502,7 @@ class Model extends Object {
 	 */
 	public function saveField($fieldname, $value) {
 		if (!$this->exists() || !$this->hasField($fieldname)) return false;
-		$this->query('UPDATE '.$this->tablename.' SET `'.$fieldname.'` = '.DBQuery::quote($value, $this->structure[$fieldname]->quoting));
+		$this->query('UPDATE '.$this->tablename.' SET `'.$fieldname.'` = '.DBQuery::quote($value, $this->structure[$fieldname]->quoting).' WHERE '.$this->primaryKeyName.' = '.$this->get($this->primaryKeyName));
 		$this->set($fieldname, $value);
 		return $this->save();
 	}
@@ -538,8 +538,8 @@ class Model extends Object {
 		return $this;
 	}
 	
-	public function beforeSave(Array $data = array(), Array $fieldNames = array()) {
-		if (!$this->validate($data, $fieldNames)) {
+	public function beforeSave() {
+		if (!$this->validate($this->data)) {
 			return false;
 		}
 		return true;
