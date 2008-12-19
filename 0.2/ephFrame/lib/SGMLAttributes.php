@@ -136,7 +136,8 @@ class SGMLAttributes extends Hash {
 	public function renderAttributeValue($input) {
 		$rendered = (is_array($input)) ? implode(' ',$input) : $input;
 		// encode entities
-		$rendered = preg_replace('@&(?!amp;)@i', '&amp;', $rendered);
+		$rendered = preg_replace('@&(?!(amp;|#\d{2,}))@i', '&amp;', $rendered);
+		$rendered = strtr($rendered, array('>' => '&gt;', '<' => '&lt;'));
 		$rendered = strtr($rendered, array('"' => '&quot;'));
 		$rendered = String::stripBrakes($rendered);
 		return $rendered;

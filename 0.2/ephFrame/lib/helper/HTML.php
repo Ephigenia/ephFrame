@@ -81,7 +81,7 @@ class HTML extends Helper {
 			$attributes['href'] = $url;
 		}
 		if (!empty($label) && !isset($attributes['title']) && !preg_match('/<[^>]+>/', $label)) {
-			$attributes['title'] = htmlentities($label);
+			$attributes['title'] = $label;
 		}
 		$tag = $this->createTag('a', $attributes);
 		if (is_object($label)) {

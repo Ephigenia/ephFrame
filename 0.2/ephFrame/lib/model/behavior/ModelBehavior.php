@@ -49,11 +49,11 @@ class ModelBehavior extends Object {
 	}
 	
 	public function beforeInsert() {
-		if (isset($this->structure['created']) && $this->created <= 0) {
-			if ($this->structure['created']->quoting == ModelFieldInfo::QUOTE_STRING) {
-				$this->created = time();
-			} elseif($this->structure['created']->quoting == ModelFieldInfo::QUOTE_INTEGER) {
-				$this->created = time();
+		if (isset($this->model->structure['created']) && $this->model->created <= 0) {
+			if ($this->model->structure['created']->quoting == ModelFieldInfo::QUOTE_STRING) {
+				$this->model->created = time();
+			} elseif($this->model->structure['created']->quoting == ModelFieldInfo::QUOTE_INTEGER) {
+				$this->model->created = time();
 			}
 		}
 		return true;
