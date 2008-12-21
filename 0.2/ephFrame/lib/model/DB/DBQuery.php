@@ -199,7 +199,7 @@ abstract class DBQuery extends Object implements Renderable {
 				if ($val == 'NULL') {
 					$quoted = 'NULL';
 				} else {
-					$quoted = '\''.mysql_real_escape_string($val).'\'';
+					$quoted = '\''.mysql_real_escape_string(stripslashes($val)).'\'';
 				}
 				break;
 			// non scalar values are not added, but their variable type

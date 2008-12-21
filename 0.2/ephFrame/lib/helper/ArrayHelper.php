@@ -214,16 +214,8 @@ class ArrayHelper extends Helper {
 		if (!is_array($array)) {
 			return stripslashes($array);
 		} else {
-			foreach ($array as $key => $val) {
-				if (is_array($val)) {
-					$val = self::stripslashes($val);
-				} else {
-					$val = stripslashes($val); 
-				}
-				$array[$key] = $val;
-			}
+			return array_map('stripslashes', $array);
 		}
-		return $array;
 	}
 	
 	/**

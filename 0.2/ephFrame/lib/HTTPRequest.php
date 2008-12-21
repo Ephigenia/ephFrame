@@ -133,8 +133,8 @@ class HTTPRequest extends Component {
 			$this->data = array_merge($_GET, $this->data);
 		}
 		// strip slashes from all values if magic quotes are on
-		if (ini_get('magic_quotes_gpc') == 1) {
-			$this->data = ArrayHelper::stripslashes($this->data);
+		if (function_exists('get_magic_quotes_gpc') && !get_magic_quotes_gpc()) {
+			$this->data = array_map('addslashes', $this->data);
 		}
 	}
 	

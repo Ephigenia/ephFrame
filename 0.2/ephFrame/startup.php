@@ -33,6 +33,11 @@ foreach (get_defined_vars() as $varname) {
 	unset($varname);
 }
 
+// disable magic quotes
+if(function_exists('set_magic_quotes_runtime')) {
+    set_magic_quotes_runtime(FALSE);
+}
+
 // ephFrame Basic Stuff
 require FRAME_ROOT.'lib/exception/BasicException.php';
 require FRAME_ROOT.'ephFrame.php';
