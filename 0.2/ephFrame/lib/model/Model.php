@@ -916,7 +916,12 @@ class Model extends Object {
 	/**
 	 *	Tries to return a Model from the table that matches the $key => $value
 	 * 	rule passed to this method. These method handles all the
-	 * 	$model->getby[fieldnam] calls.
+	 * 	$model->getby[fieldnam] calls.<br />
+	 * 	<br />
+	 * 	If the model has a field named like $fieldname the $value string is
+	 * 	automatically quoted with the fields appropriate quoting type. So you
+	 * 	don’t need to quote user names or passwords on user logins to prevent
+	 * 	SQL-Injections when using {@link findyBy}
 	 * 
 	 * 	<code>
 	 * 	// find user by email addy
@@ -1255,7 +1260,8 @@ class ModelException extends ObjectException {}
  */
 class ModelInvalidAssociationTypeException extends ModelException {
 	public function __construct(Model $model, $associationType) {
-		parent::__construct('Invalid assocation type \''.$associationType.'\' in Model '.$model->name. ' (class: '.get_class($model).')');
+		$messge = 'Invalid association type detected: ’'.$associationType.'’ in Model '.$model->name.' (class: '.get_class($model).')';
+		parent::construct($message);
 	}
 }
 
@@ -1271,7 +1277,8 @@ class ModelReflexiveException extends ModelException {}
  */
 class ModelEmptyPrimaryKeyException extends ModelException {
 	public function __construct(Model $model) {
-		parent::__construct('This model has no primary Key value and can not be updated.');
+		$message = 'The primary key on '.$model->name.'.'.$model->primaryKeyName.' is empty and can not be uesed!';
+		parent::__construct($message);
 	}
 }
 

@@ -104,6 +104,10 @@ class Router extends Hash {
 		Router::addRoute('scaffold_view', ':controller/(?P<id>\d+)/', array('action' => 'view'));
 		Router::addRoute('scaffold_actions', ':controller/(?P<id>\d+)/:action/');
 		Router::addRoute('scaffold_create', ':controller/:action/');
+		// only set root route if not existent allready
+		if (!Router::getInstance()->hasKey('root')) {
+			Router::addRoute('root', '/');
+		}
 		// go through routes and try to find a matching route
 		foreach(self::getInstance() as $routeName => $routeData) {
 			if (!isset($routeData['path'])) continue;
@@ -204,13 +208,20 @@ class Router extends Hash {
 		return false;
 	}
 	
+	/**
+	 *	Push a route to the list of routes
+	 * 	
+	 * 	@param string $routeName	name of that route
+	 * 	@param string $path uri for the route, including param regexps
+	 * 	@param array(string) $params default resulting parameters
+	 */
 	public static function addRoute($routeName = null, $path, Array $params = array()) {
 		$router = self::getInstance();
 		// strip / from path
 		$path = ltrim($path, '/');
 		// route names that are added after they are allready there become a copy
 		// of the original router if their params are empty
-		if ($router->hasKey($routeName) && empty($params)) {
+		if ($router->hasKey($routeName) && empty($params) && func_num_args() >= 3) {
 			$params = $router->get($routeName);
 			$params['path'] = $path;
 			$router->add($routeName.'_copy_'.rand(), $params);
