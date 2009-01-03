@@ -772,7 +772,7 @@ class Model extends Object {
 		if ($order == null) {
 			$order = array();
 		}
-		if (!is_array($order) && is_string($order)) {
+		if (!is_array($order) && !empty($order)) {
 			$order = array($order);
 		}
 		$order = array_merge($order, $this->order);

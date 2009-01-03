@@ -21,11 +21,14 @@ class PositionableBehavior extends ModelBehavior {
 	const MOVE_DIRECTION_DOWN = 'down';
 	const MOVE_DIRECTION_BOTTOM = 'borrom';
 	
+	/**
+	 *	@return boolean
+	 */
 	public function beforeInsert() {
-		if ($lastImage = $this->model->find(null, array($this->model->name.'.position DESC'))) {
-			$this->model->position =  $lastImage->position + 1;
+		if ($last = $this->model->find(null, array($this->model->name.'.position DESC'))) {
+			$this->model->set('position', (int) $last->position + 1);
 		} else {
-			$this->model->position =  0;
+			$this->model->set('position', 0);
 		}
 		return true;
 	}

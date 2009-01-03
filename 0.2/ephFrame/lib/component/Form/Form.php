@@ -273,10 +273,16 @@ class Form extends HTMLTag {
 			foreach($this->configureModel as $modelName => $config) {
 				if (!is_array($config)) {
 					$modelName = $config;
-					$config = array('ignore' => array());
+					$config = array();
+				}
+				if (!isset($config['ignore'])) {
+					$config['ignore'] = array();
+				}
+				if (!isset($config['fields'])) {
+					$config['fields'] = array();
 				}
 				if (isset($this->controller->$modelName)) {
-					$this->configureModel($this->controller->$modelName, $config['ignore']);
+					$this->configureModel($this->controller->$modelName, $config['ignore'], $config['fields']);
 				}
 			}
 		}
@@ -300,12 +306,17 @@ class Form extends HTMLTag {
 	 * 	@param array(string) $ignore
 	 * 	@return Form
 	 */
-	public function configureModel(Model $model, Array $ignore = array()) {
+	public function configureModel(Model $model, Array $ignore = array(), Array $fields = array()) {
 		if (empty($ignore)) {
 			$ignore = array('id');
 		}
 		foreach($model->structure as $fieldInfo) {
-			if (count($ignore) > 0 && in_array($fieldInfo->name, $ignore)) continue;
+			if (
+				// on ignore list
+				(count($ignore) > 0 && in_array($fieldInfo->name, $ignore)) ||
+				// on field list
+				(count($fields) > 0 && !in_array($fieldInfo->name, $fields))
+				) continue;
 			$field = false;
 			// create form field depending on db-table field type
 			if (in_array($fieldInfo->name, $this->fieldNameFormTypeMapping)) {
