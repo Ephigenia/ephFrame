@@ -21,6 +21,15 @@ class PositionableBehavior extends ModelBehavior {
 	const MOVE_DIRECTION_DOWN = 'down';
 	const MOVE_DIRECTION_BOTTOM = 'borrom';
 	
+	public function beforeInsert() {
+		if ($lastImage = $this->model->find(null, array($this->model->name.'.position DESC'))) {
+			$this->model->position =  $lastImage->position + 1;
+		} else {
+			$this->model->position =  0;
+		}
+		return true;
+	}
+	
 	/**
 	 * 	Collects all conditions that are important for retreiving lower or
 	 * 	higher positioned items and returns them.
