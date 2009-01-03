@@ -543,7 +543,7 @@ abstract class Controller extends Object implements Renderable {
 		// wrap layout around view
 		if (!empty($this->layout)) {
 			$layoutViewVars = array('content' => $viewRendered);
-			$layoutView = new $this->viewClassName('layouts', $this->layout, array_merge($this->data, $layoutViewVars));
+			$layoutView = new $this->viewClassName('Layout', $this->layout, array_merge($this->data, $layoutViewVars));
 			$content = $layoutView->render();
 		} else {
 			$content = $viewRendered;

@@ -99,7 +99,7 @@ abstract class View extends Hash implements Renderable {
 	 */
 	protected function createViewFilename () {
 		if ($this->name == 'Layout') {
-			$this->viewFilename = LAYOUT_DIR.$this->action.'.'.$this->templateExtension;	
+			$this->viewFilename = LAYOUT_DIR.$this->action.'.'.$this->templateExtension;
 		} else {
 			$this->viewFilename = VIEW_DIR.lcfirst($this->name).'/'.lcfirst($this->action).'.'.$this->templateExtension;
 			// if apps view does not exist, try to get view from ephFrame
@@ -110,7 +110,13 @@ abstract class View extends Hash implements Renderable {
 				}
 			}
 		}
-		if (!file_exists($this->viewFilename)) throw new ViewFileNotFoundException($this);
+		if (!file_exists($this->viewFilename)) {
+			if ($this->name == 'Layout') {
+				throw new LayoutFileNotFoundException($this);
+			} else {
+				throw new ViewFileNotFoundException($this);
+			}
+		}
 		return $this->viewFilename;
 	}
 	
