@@ -26,9 +26,9 @@ class PositionableBehavior extends ModelBehavior {
 	 */
 	protected function collectModelConditions() {
 		$conditions = array();
-		foreach($this->model->belongsTo as $config) {
+		/*foreach($this->model->belongsTo as $config) {
 			$conditions[$config['associationKey']] = $this->model->get(substr(strchr($config['associationKey'], '.'), 1));
-		}
+		}*/
 		return new Hash($conditions);
 	}
 	
@@ -38,10 +38,14 @@ class PositionableBehavior extends ModelBehavior {
 	 * 	@return boolean|Model
 	 */
 	public function next($additionalConditions = array()) {
-		if (!$this->model->exists()) return false;
+		if (!$this->model->exists()) return false;				
 		$conditions = $this->collectModelConditions();
+		var_dump($conditions->toArray());
+		
 		$conditions->push($this->model->name.'.position > '.$this->model->position);
 		$conditions->appendFromArray($additionalConditions);
+		var_dump($conditions->toArray());
+		
 		return $this->model->find($conditions->toArray(), array($this->model->name.'.position ASC'));
 	}
 	
@@ -83,7 +87,7 @@ class PositionableBehavior extends ModelBehavior {
 		return $this->model->find($conditions->toArray(), array($this->model->name.'.position DESC'));
 	}
 	
-	public function move($direction) {
+	public function move($direction) {	
 		if (!($this->model->exists())) {
 			return false;
 		}
