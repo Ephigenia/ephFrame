@@ -40,12 +40,8 @@ class PositionableBehavior extends ModelBehavior {
 	public function next($additionalConditions = array()) {
 		if (!$this->model->exists()) return false;				
 		$conditions = $this->collectModelConditions();
-		var_dump($conditions->toArray());
-		
 		$conditions->push($this->model->name.'.position > '.$this->model->position);
 		$conditions->appendFromArray($additionalConditions);
-		var_dump($conditions->toArray());
-		
 		return $this->model->find($conditions->toArray(), array($this->model->name.'.position ASC'));
 	}
 	
