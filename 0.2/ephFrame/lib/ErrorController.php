@@ -27,11 +27,13 @@ class ErrorController extends AppController {
 		return parent::beforeRender();
 	}
 	
-	public function controllerNotFound() {
+	public function missingController() {
+		var_dump($this->params);
+		exit;
 		if (isset($this->params['controllerName'])) {
-			$this->set('missingControllerName', $this->params['controllerName']);
+			$this->set('controllerName', $this->params['controllerName']);
 		} else {
-			$this->set('missingControllerName', '[unknownName]');
+			$this->set('controllerName', '[unknownName]');
 		}
 	}
 	

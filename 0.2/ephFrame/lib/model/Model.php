@@ -560,7 +560,7 @@ class Model extends Object {
 		}
 		$q = new InsertQuery($this->tablename, $quotedData);
 		$this->DB->query($q);
-		$this->data[$this->primaryKeyName] = $this->DB->lastInsertId();
+		$this->set($this->primaryKeyName, $this->DB->lastInsertId());
 		$this->afterInsert();
 		$this->behaviors->call('afterInsert');
 		return true;

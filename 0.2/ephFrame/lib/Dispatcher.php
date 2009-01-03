@@ -65,7 +65,10 @@ class Dispatcher extends Object {
 				return $this->dispatch('Error/ControllerNotFound', $params);
 			}
 		}
-		ephFrame::loadClass($controllerClassPath);
+		$controllerName = ephFrame::loadClass($controllerClassPath);
+		if (!class_exists($controllerName)) {
+			return $this->dispatch('Error/MissingController', array('controllerName' => $controllerName));
+		}
 		try {
 			$controller = new $controllerName($request);
 			$controller->action($router->action, $router->params);
