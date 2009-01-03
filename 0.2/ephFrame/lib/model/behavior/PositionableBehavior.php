@@ -22,44 +22,59 @@ class PositionableBehavior extends ModelBehavior {
 	const MOVE_DIRECTION_BOTTOM = 'borrom';
 	
 	/**
+	 * 	Collects all conditions that are important for retreiving lower or
+	 * 	higher positioned items and returns them.
 	 *	@return Hash
 	 */
 	protected function collectModelConditions() {
 		$conditions = array();
-		/*foreach($this->model->belongsTo as $config) {
+		foreach($this->model->belongsTo as $config) {
 			$conditions[$config['associationKey']] = $this->model->get(substr(strchr($config['associationKey'], '.'), 1));
-		}*/
+		}
 		return new Hash($conditions);
 	}
 	
 	/**
 	 *	Return next model entry
 	 * 	@param array(string) additional conditions to use
+	 * 	@param boolean $looped begin at the first element when model is last element, double linked
 	 * 	@return boolean|Model
 	 */
-	public function next($additionalConditions = array()) {
+	public function next($additionalConditions = array(), $looped = false) {
 		if (!$this->model->exists()) return false;				
 		$conditions = $this->collectModelConditions();
 		$conditions->push($this->model->name.'.position > '.$this->model->position);
 		$conditions->appendFromArray($additionalConditions);
-		return $this->model->find($conditions->toArray(), array($this->model->name.'.position ASC'));
+		$result = $this->model->find($conditions->toArray(), array($this->model->name.'.position ASC'));
+		if (!$result && $looped) {
+			return $this->first($additionalConditions);
+		} else {
+			return $result;
+		}
 	}
 	
 	/**
 	 *	Return model entry that is before this model
 	 * 	@param array(string) additional conditions to use
+	 * 	@param boolean $looped return the last element if your in the first element (double linked)
 	 * 	@return boolean|Model
 	 */
-	public function previous($additionalConditions = array()) {
+	public function previous($additionalConditions = array(), $looped = false) {
 		if (!$this->model->exists()) return false;
 		$conditions = $this->collectModelConditions();
 		$conditions->push($this->model->name.'.position < '.$this->model->position);
 		$conditions->appendFromArray($additionalConditions);
-		$r = $this->model->find($conditions->toArray(), array($this->model->name.'.position DESC'));
-		return $r;
+		$result = $this->model->find($conditions->toArray(), array($this->model->name.'.position DESC'));
+		if (!$result && $looped) {
+			return $this->this->last($additionalConditions);
+		} else {
+			return $result;
+		}
 	}
 	
 	/**
+	 * 	Returns the first element from all positionable models including the
+	 * 	belongsTo and hasOne Rules of the model.
 	 *	@param array(string) additional conditions to use
 	 * 	@return boolean|Model
 	 */
@@ -72,6 +87,8 @@ class PositionableBehavior extends ModelBehavior {
 	}
 	
 	/**
+	 * 	Returns the last element from all positionable models including the
+	 * 	belongsTo and hasOne Rules of the model.
 	 * 	@param array(string) additional conditions to use
 	 * 	@return boolean|Model
 	 */
@@ -83,32 +100,56 @@ class PositionableBehavior extends ModelBehavior {
 		return $this->model->find($conditions->toArray(), array($this->model->name.'.position DESC'));
 	}
 	
-	public function move($direction) {	
+	/**
+	 *	Tests if this model entry is the last element in the list
+	 * 	@return boolean
+	 */
+	public function isLast() {
+		if (!$this->next(null, false)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/**
+	 *	Tests if this model entry is the first element in the list
+	 * 	@return boolean
+	 */
+	public function isFirst() {
+		if (!$this->previous(null, false)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public function move($direction, $additionalConditions = array()) {	
 		if (!($this->model->exists())) {
 			return false;
 		}
 		switch($direction) {
 			case self::MOVE_DIRECTION_TOP:
-				if ($tmpImage = $this->first()) {
+				if ($tmpImage = $this->first($additionalConditions, false)) {
 					$this->model->saveField('position', $tmpImage->position - 1);
 				}
 				break;
 			case self::MOVE_DIRECTION_UP:
-				if ($tmpImage = $this->previous()) {
+				if ($tmpImage = $this->previous($additionalConditions, false)) {
 					$tmpPosition = $tmpImage->position;
 					$tmpImage->saveField('position', $this->model->position);
 					$this->model->saveField('position', $tmpPosition);
 				}
 				break;
 			case self::MOVE_DIRECTION_DOWN:
-				if ($tmpImage = $this->next()) {
+				if ($tmpImage = $this->next($additionalConditions, false)) {
 					$tmpPosition = $tmpImage->position;
 					$tmpImage->saveField('position', $this->model->position);
 					$this->model->saveField('position', $tmpPosition);
 				}
 				break;
 			case self::MOVE_DIRECTION_BOTTOM:
-				if ($tmpImage = $this->last()) {
+				if ($tmpImage = $this->last($additionalConditions, false)) {
 					$this->model->saveField('position', $tmpImage->position + 1);
 				}
 				break;
