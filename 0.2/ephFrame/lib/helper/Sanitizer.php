@@ -146,6 +146,7 @@ class Sanitizer extends Helper {
 		// first replace various encodings of < and > back to < and >
 		$string = preg_replace('@%3C|&gt;?|&#0*60;?|&#x0*3C;?|\\\x3C|\\\u003C@', '<', $string);
 		$string = preg_replace('@%3E|&lt;?|&#0*62;?|&#x0*3E;?|\\\x3E|\\\u003E@', '>', $string);
+		$string = preg_replace('@&(?!(amp;|#\d{2,}))@i', '&amp;', $string);
 		// then strip not allowed tags
 		if (!is_array($allowedTags)) {
 			$allowedTagsString = '';

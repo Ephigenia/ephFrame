@@ -500,15 +500,7 @@ class Image extends File implements Renderable {
 
 	/**
 	 *	Resize Image
-	 *	<br />
-	 * 	Use this method to resize your image to a tinier thumbnail or preview
-	 * 	sizes. The method will automatically check if the image is in panel or
-	 * 	portrait format and decide wich way to resize the image.<br />
-	 * 	The $width and $height parameters are the maximum width and height of
-	 * 	the resulting image.<br />
-	 * 	If you set $constrainProps to false your result may have false
-	 * 	proportions.<br />
-	 * 	<br />
+	 *	
 	 *	Resize uploaded image and save into folder:
 	 *	<code>
 	 *		$image = new Image($_FILES["image"]["tmp_name"]);
@@ -519,25 +511,41 @@ class Image extends File implements Renderable {
 	 *	@param	integer	$width
 	 *	@param integer	$height
 	 *	@param	boolean $constrainProps
+	 *	@param boolean $scale 
+	 *	@return Image
 	 */
-	public function resizeTo($width = null, $height = null, $constrainProps = true) {
+	public function resizeTo($width = null, $height = null, $constrainProps = true, $scale = true) {
+		// don't scale if no width and no height is paassed
 		if ($width == null && $height == null) {
-			$width = $this->width();
-			$height = $this->height();
+			return $this;
 		}
+		// detect maximum width or height for scaling when width or height
+		// is not passed or empty
+		if ($width == null) {
+			$width = round($this->width() * ($height / $this->height()));
+		} elseif ($height == null) {
+			$height = round($this->height() * ($width / $this->width()));
+		}
+		$newHeight = $height;
+		$newWidth = $width;
+		// scale proportianal
 		if ($constrainProps) {
-			if ($width == null) {
-				$width = round($this->width() * ($height / $this->height()));
-			} elseif ($height == null) {
-				$height = round($this->height() * ($width / $this->width()));
-			} elseif ($this->isPanelFormat() || $this->width() == $this->height()) {
-				$width = round($this->width() * ($height / $this->height()));
+			// calculate new width and height depending on new format orientation
+			if ($width > $height) {
+				$newHeight = round($this->height() * ($width / $this->width()));
 			} else {
-				$height = round($this->height() * ($width / $this->width()));
+				$newWidth = round($this->width() * ($height / $this->height()));
+			}
+			if ($newHeight > $height) {
+				$newWidth = round($this->width() * ($height / $this->height()));
+				$newHeight = $height;
+			} elseif ($newWidth > $width) {
+				$newHeight = round($this->height() * ($width / $this->width()));
+				$newWidth = $width;
 			}
 		}
 		$oldHandle = $this->handle();
-		$newHandle = $this->createHandle('jpg', $width, $height);
+		$newHandle = $this->createHandle('jpg', $newWidth, $newHeight);
 		imagecopyresampled($newHandle, $oldHandle, 0, 0, 0, 0, $width, $height, $this->width(), $this->height());
 		$this->handle = $newHandle;
 		$this->width = $width;
@@ -877,8 +885,6 @@ class Image extends File implements Renderable {
 	public function saveImage($filename = null, $quality = 60) {
 		if (is_null($filename)) {
 			$filename = $this->nodeName;
-		} else {
-			//$this->nodeName = $filename;
 		}
 		switch ($this->type()) {
 			default :

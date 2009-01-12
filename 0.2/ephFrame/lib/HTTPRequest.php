@@ -136,6 +136,23 @@ class HTTPRequest extends Component {
 		if (function_exists('get_magic_quotes_gpc') && !get_magic_quotes_gpc()) {
 			$this->data = array_map('addslashes', $this->data);
 		}
+		// collect received header data
+		// @todo include this to https ? or what? that is missing?
+		if (isset($_SERVER) && is_array($_SERVER)) {
+			foreach($_SERVER as $key => $value) {
+				if (substr($key, 0, 5) == 'HTTP_') {
+					$this->header->set(strtolower(substr($key,5)), $value);
+				}
+			}
+		}
+	}
+	
+	/**
+	 *	Tests if a sended request is ajax (only works with jquery)
+	 * 	@return boolean
+	 */
+	public function isAjax() {
+		return ($this->header->get('x_requested_with') == 'XMLHttpRequest');
 	}
 	
 	/**

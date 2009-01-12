@@ -1,6 +1,8 @@
 @CHARSET "UTF-8";
 
 .debugOutput {
+	color: #000000;
+	text-align: left;
 	background-color:#FFFBDF;
 	border: 1px solid #A99862;
 	font-family:'Pragmata','Monaco','Courier New',Courier,monospace;
@@ -10,5 +12,6 @@
 	margin: 20px;
 	margin-left: 200px;
 	white-space: normal;
+	font-weight: normal;
 	display: none;
 }

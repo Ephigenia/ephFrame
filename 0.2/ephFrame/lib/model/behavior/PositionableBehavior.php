@@ -22,14 +22,16 @@ class PositionableBehavior extends ModelBehavior {
 	const MOVE_DIRECTION_BOTTOM = 'borrom';
 	
 	/**
+	 * 	Callback called whenever a new item is inserted, it will increase
+	 * 	its position by one
 	 *	@return boolean
 	 */
 	public function beforeInsert() {
+		$newPosition = 0;
 		if ($last = $this->model->find(null, array($this->model->name.'.position DESC'))) {
-			$this->model->set('position', (int) $last->position + 1);
-		} else {
-			$this->model->set('position', 0);
+			$newPosition = (int) $last->position + 1;
 		}
+		$this->model->set('position', $newPosition);
 		return true;
 	}
 	
@@ -53,7 +55,7 @@ class PositionableBehavior extends ModelBehavior {
 	 * 	@return boolean|Model
 	 */
 	public function next($additionalConditions = array(), $looped = false) {
-		if (!$this->model->exists()) return false;				
+		if (!$this->model->exists()) return false;
 		$conditions = $this->collectModelConditions();
 		$conditions->push($this->model->name.'.position > '.$this->model->position);
 		$conditions->appendFromArray($additionalConditions);

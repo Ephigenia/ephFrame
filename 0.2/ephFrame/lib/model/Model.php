@@ -133,7 +133,7 @@ class Model extends Object {
 	 * 	is used
 	 * 	@var integer
 	 */
-	public $perPage = 10;
+	public $perPage = null;
 	
 	/**
 	 *	Default Order Command for every select query
@@ -555,8 +555,10 @@ class Model extends Object {
 	 */
 	protected function insert() {
 		if (!$this->beforeInsert() || !$this->behaviors->call('beforeInsert')) return false;
-		foreach($this->data as $key => $value) {
-			$quotedData[$key] = DBQuery::quote($value, $this->structure[$key]->quoting);
+		$quotedData = array();
+		foreach($this->structure as $key => $value) {
+			if (!isset($this->data[$key])) continue;
+			$quotedData[$key] = DBQuery::quote($this->data[$key], $this->structure[$key]->quoting);
 		}
 		$q = new InsertQuery($this->tablename, $quotedData);
 		$this->DB->query($q);
@@ -581,8 +583,10 @@ class Model extends Object {
 	 */
 	protected function update() {
 		if (!$this->beforeUpdate() || !$this->behaviors->call('beforeUpdate')) return false;
-		foreach($this->data as $key => $value) {
-			$quotedData[$key] = DBQuery::quote($value, $this->structure[$key]->quoting);
+		$quotedData = array();
+		foreach($this->structure as $key => $value) {
+			if (!isset($this->data[$key])) continue;
+			$quotedData[$key] = DBQuery::quote($this->data[$key], $this->structure[$key]->quoting);
 		}
 		$q = new UpdateQuery($this->tablename, $quotedData, array($this->primaryKeyName => $this->data[$this->primaryKeyName]));
 		$this->query($q);
@@ -857,6 +861,7 @@ class Model extends Object {
 					}
 					//echo $modelClassName.'->'.$associatedModelNamePlural.' = '.get_class($associatedData);
 					$model->{$associatedModelNamePlural} = $this->{$associatedModelNamePlural} = $associatedData;
+					//$model->{$associatedModelNamePlural} = $associatedData;
 				}
 			}
 			$return->add($model);
@@ -981,6 +986,24 @@ class Model extends Object {
 	}
 	
 	/**
+	 *	Returns random amount of entries from the model
+	 * 	@param array(string) $conditions
+	 * 	@return Set(Model)|boolean
+	 */
+	public function findAllRandom($conditions = null, $count = 0, $depth = null) {
+		return $this->findAll($conditions, array('RAND()'), 0, $count, $depth);
+	}
+	
+	/**
+	 *	Returns a single random row from the model
+	 * 	@param array(string) $conditions
+	 * 	@return Model|boolean
+	 */
+	public function findRandom($conditions = null) {
+		return $this->find($conditions, array('RAND()'));
+	}
+	
+	/**
 	 *	Returns the number of entries found
 	 * 	@param array(string) $conditions
 	 * 	@param integer $offset
@@ -1072,10 +1095,10 @@ class Model extends Object {
 	public function __call($methodName, Array $args) {
 		// catch findAllBy[fieldname] calls
 		if (preg_match('/(findAll(By)?)(.*)/i', $methodName, $found)) {
-			return $this->findAllBy(lcfirst(Inflector::underscore($found[3], true)), $args[0]);
+			return $this->findAllBy(lcfirst(Inflector::delimeterSeperate($found[3], true)), $args[0]);
 		// catch findBy[fieldname] calls 
 		} elseif (preg_match('/find(By)?(.*)/i', $methodName, $found)) {
-			return $this->findBy(lcfirst(Inflector::underscore($found[2])), $args[0]);
+			return $this->findBy(lcfirst(Inflector::delimeterSeperate($found[2])), $args[0]);
 		// catch $model->username() calls
 		} elseif (isset($this->structure[$methodName])) {
 			return $this->structure[$methodName];
@@ -1244,6 +1267,18 @@ class Model extends Object {
 		}
 		$this->reset();
 		return $this;
+	}
+	
+	/**
+	 * 	Returns an array of all fieldnames of this model
+	 * 	@return array(string)
+	 */
+	public function fieldNames() {
+		$fieldNames = array();
+		foreach($this->structure as $fieldInfo) {
+			$fieldNames[] = $fieldInfo->name;
+		}
+		return $fieldNames;
 	}
 	
 }

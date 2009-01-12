@@ -56,7 +56,8 @@ class Form extends HTMLTag {
 	
 	/**
 	 *	Name of Models from the controller that should autamticly used in this
-	 * 	form
+	 * 	form and more configuration stuff.
+	 * 	Set this to false if you don’t want the form to be auto generate
 	 * 	@param array(string)
 	 */
 	public $configureModel = array();
@@ -260,43 +261,50 @@ class Form extends HTMLTag {
 	 * 	@return true
 	 */
 	public function configure() {
-		if (empty($this->configureModel)) {
+		if (empty($this->configureModel) && $this->configureModel !== false) {
 			$possibleModelName = substr(get_class($this), 0, -4);
 			if (isset($this->controller->$possibleModelName)) {
 				$this->configureModel[] = $possibleModelName;
 			}
 		}
 		if (!empty($this->configureModel)) {
+			// catch $this->configureModel = 'User';
 			if (!is_array($this->configureModel)) {
 				$this->configureModel = array($this->configureModel);
 			}
+			// parse every model definition array for the form
 			foreach($this->configureModel as $modelName => $config) {
+				// create valid config array if not array or not properly filled
 				if (!is_array($config)) {
 					$modelName = $config;
 					$config = array();
 				}
-				if (!isset($config['ignore'])) {
-					$config['ignore'] = array();
-				}
-				if (!isset($config['fields'])) {
-					$config['fields'] = array();
-				}
-				if (isset($this->controller->$modelName)) {
+				if (!isset($config['ignore'])) $config['ignore'] = array();
+				if (!isset($config['fields'])) $config['fields'] = array();
+				// add fields depending on model if model attached to controller	
+				if (isset($this->controller->{$modelName})) {
 					$this->configureModel($this->controller->$modelName, $config['ignore'], $config['fields']);
+				} else {
+					Log::write(Log::VERBOSE, get_class($this).': missing model to configure in controller: '.$modelName);
 				}
 			}
 		}
+		// add missing submit field if missing
 		if (!$this->childWithAttribute('type', 'submit')) {
 			$this->add($this->newField('submit', 'submit', 'submit'));
 		}
 		return true;
 	}
 	
+	/**
+	 *	FieldName type depending on field names mapping
+	 * 	@var array(string)
+	 */
 	public $fieldNameFormTypeMapping = array(
-		'email' => 'email',
-		'url' 	=> 'url',
-		'text'	=> 'textarea',
-		'password' => 'password'
+		'email' 	=> 'email',
+		'url' 		=> 'url',
+		'text'		=> 'textarea',
+		'password' 	=> 'password'
 	);
 	
 	/**
@@ -353,7 +361,7 @@ class Form extends HTMLTag {
 				}
 			}
 			if ($field) {
-				// add validation rules from model to field
+				// copy validation rules from model to form field if possible
 				if (isset($model->validate[$fieldInfo->name])) {
 					$field->addValidationRule($model->validate[$fieldInfo->name]);
 				}

@@ -158,7 +158,7 @@ class Log extends Component {
   	 */
 	public static function write($level, $message) {
 		// log message only if level is higher or equal current reporting level
-		if (self::$level >= $level) {
+		if (self::$level <= $level) {
 			$log = self::getInstance();
 			$logFile = new File(self::logFileName($level));
 			$logFile->append($log->createLogMessage($message));

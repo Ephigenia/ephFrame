@@ -28,8 +28,6 @@ class ErrorController extends AppController {
 	}
 	
 	public function missingController() {
-		var_dump($this->params);
-		exit;
 		if (isset($this->params['controllerName'])) {
 			$this->set('controllerName', $this->params['controllerName']);
 		} else {

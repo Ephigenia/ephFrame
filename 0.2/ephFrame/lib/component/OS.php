@@ -26,6 +26,7 @@ loadHelper('Sanitize');
  * 	</code>
  * 
  * 	// TODO Find out windows vista os codes
+ * 	// @todo add isMobile to this class ('(iPhone|MIDP|AvantGo|BlackBerry|J2ME|Opera Mini|DoCoMo|NetFront|Nokia|PalmOS|PalmSource|portalmmm|Plucker|ReqwirelessWeb|SonyEricsson|Symbian|UP\.Browser|Windows CE|Xiino)')
  * 
  * 	@author	Marcel Eichner // Ephigenia <love at ephigenia dot de>
  * 	@since 22.02.2007
