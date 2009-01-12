@@ -1098,7 +1098,6 @@ class Model extends Object {
 			return $this->findAllBy(lcfirst(strtolower(Inflector::delimeterSeperate($found[3]))), $args[0]);
 		// catch findBy[fieldname] calls 
 		} elseif (preg_match('/find(By)?(.*)/i', $methodName, $found)) {
-			echo lcfirst(Inflector::delimeterSeperate($found[2]));
 			return $this->findBy(lcfirst(strtolower(Inflector::delimeterSeperate($found[2]))), $args[0]);
 		// catch $model->username() calls
 		} elseif (isset($this->structure[$methodName])) {
