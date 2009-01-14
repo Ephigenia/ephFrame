@@ -514,7 +514,7 @@ class Image extends File implements Renderable {
 	 *	@param boolean $scale 
 	 *	@return Image
 	 */
-	public function resizeTo($width = null, $height = null, $constrainProps = true, $scale = true) {
+	public function resizeTo($width = null, $height = null, $constrainProps = true, $upScale = true) {
 		// don't scale if no width and no height is paassed
 		if ($width == null && $height == null) {
 			return $this;
@@ -544,12 +544,16 @@ class Image extends File implements Renderable {
 				$newWidth = $width;
 			}
 		}
+		// if no upscaling (enlarge image) allowed, skip resizing)
+		if ($upScale == false && $newWidth > $this->width() && $newHeight > $this->height()) {
+			return $this;
+		}
 		$oldHandle = $this->handle();
-		$newHandle = $this->createHandle('jpg', $newWidth, $newHeight);
-		imagecopyresampled($newHandle, $oldHandle, 0, 0, 0, 0, $width, $height, $this->width(), $this->height());
+		$newHandle = $this->createHandle('jpg', round($newWidth), round($newHeight));
+		imagecopyresampled($newHandle, $oldHandle, 0, 0, 0, 0, round($newWidth), round($newHeight), $this->width(), $this->height());
 		$this->handle = $newHandle;
-		$this->width = $width;
-		$this->height = $height;
+		$this->width = $newWidth;
+		$this->height = $newHeight;
 		return $this;
 	}
 	
