@@ -545,7 +545,7 @@ class Image extends File implements Renderable {
 			}
 		}
 		// if no upscaling (enlarge image) allowed, skip resizing)
-		if ($upScale == false && $newWidth > $this->width() && $newHeight > $this->height()) {
+		if ($upScale == false && ($newWidth > $this->width() || $newHeight > $this->height())) {
 			return $this;
 		}
 		$oldHandle = $this->handle();
