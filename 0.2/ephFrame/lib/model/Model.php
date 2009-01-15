@@ -33,7 +33,6 @@ ephFrame::loadClass('ephFrame.lib.ObjectSet');
  *  - includes Behaviors
  *  - all CRUD Operations
  * 
- * 	@todo refactor this, there are to many lines!
  * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * 	@since 04.09.2008
  * 	@package ephFrame
@@ -335,11 +334,10 @@ class Model extends Object {
 		// their side of the join
 		if (!isset($config['foreignKey'])) {
 			switch ($associationType) {
+				//$config['foreignKey'] = ucFirst($modelVars['name']).'.'.Inflector::delimeterSeperate($this->name.'_id');
 				case 'belongsTo':
-					$config['foreignKey'] = ucFirst($modelVars['name']).'.'.$modelVars['primaryKeyName'];
-					break;
 				case 'hasOne':
-					$config['foreignKey'] = ucFirst($modelVars['name']).'.'.Inflector::delimeterSeperate($this->name.'_id');
+					$config['foreignKey'] = ucFirst($modelVars['name']).'.'.$modelVars['primaryKeyName'];
 					break;
 				case 'hasMany':
 					$config['foreignKey'] = ucFirst($this->name).'.'.$this->primaryKeyName;
@@ -351,11 +349,10 @@ class Model extends Object {
 		// my side of the join
 		if (!isset($config['associationKey'])) {
 			switch ($associationType) {
+				//$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
 				case 'belongsTo':
-					$config['associationKey'] = $this->name.'.'.Inflector::underscore($modelVars['name'].'_'.$modelVars['primaryKeyName'], true);
-					break;
 				case 'hasOne':
-					$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
+					$config['associationKey'] = $this->name.'.'.Inflector::underscore($modelVars['name'].'_'.$modelVars['primaryKeyName'], true);
 					break;
 				case 'hasMany':
 					$config['associationKey'] = $modelVars['name'].'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName, true);
