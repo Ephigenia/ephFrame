@@ -199,13 +199,39 @@ class Router extends Hash {
 		return $this;
 	}
 	
-	public static function getRoute($routeName) {
+	/**
+	 *	Return a uri route named $routeName
+	 *
+	 *	This can be very helpfull to fullfill DRY principles. This will return
+	 *	the uri to a named route you’ve defined in the router before using 
+	 *	{@link addRoute}.
+	 *
+	 *	<code>
+	 *	echo $HTML->link(Router::getRoute('login'), 'login');
+	 *	</code>
+	 *
+	 *	This will also replace some parameters you defined in the uri (not
+	 *	implemented yet!!!)
+	 *	<code>
+	 *	echo $HTML->link(Router::getRoute('userEdit', array('id' => $User->id)), 'User editieren');
+	 *	</code>
+	 *	
+	 * 	@param string			$routeName	name of route that should be returned
+	 * 	@param array(string)	$params		array of parameters to replace in the uri of the route if foudn
+	 * 	@param boolean 		$includeWebroot
+	 * 	@return string|boolean 	false if route name could not be found, otherwise the resulting uri
+	 */
+	public static function getRoute($routeName, $params = array(), $includeWebroot = true) {
 		$router = self::getInstance();
-		if ($router->hasKey($routeName)) {
-			$route = $router->get($routeName);
-			return $route['path'];
+		if (!$router->hasKey($routeName)) {
+			return false;
 		}
-		return false;
+		$routeConfig = $router->get($routeName);
+		$uri = $routeConfig['path'];
+		if ($includeWebroot) {
+			$uri = WEBROOT.$uri;
+		}
+		return $uri;
 	}
 	
 	/**
