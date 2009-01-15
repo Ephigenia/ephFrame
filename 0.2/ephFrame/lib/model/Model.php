@@ -336,13 +336,13 @@ class Model extends Object {
 		if (!isset($config['foreignKey'])) {
 			switch ($associationType) {
 				case 'belongsTo':
-					$config['foreignKey'] = $modelVars['name'].'.'.$modelVars['primaryKeyName'];
+					$config['foreignKey'] = ucFirst($modelVars['name']).'.'.$modelVars['primaryKeyName'];
 					break;
 				case 'hasOne':
-					$config['foreignKey'] = $modelVars['name'].'.'.Inflector::delimeterSeperate($this->name.'_id');
+					$config['foreignKey'] = ucFirst($modelVars['name']).'.'.Inflector::delimeterSeperate($this->name.'_id');
 					break;
 				case 'hasMany':
-					$config['foreignKey'] = $this->name.'.'.$this->primaryKeyName;
+					$config['foreignKey'] = ucFirst($this->name).'.'.$this->primaryKeyName;
 					break;
 				case 'hasAndBelongsToMany':
 					break;
@@ -805,10 +805,9 @@ class Model extends Object {
 				}
 				$joinConditions = $config['conditions'];
 				$joinConditions[$config['associationKey']] = $config['foreignKey'];
-				$query->join($this->{$modelName}->tablename, $modelName, DBQuery::JOIN_LEFT, $joinConditions);
+				$query->join($this->{$modelName}->tablename, ucFirst($modelName), DBQuery::JOIN_LEFT, $joinConditions);
 			}
 		}
-//		echo '<pre>'.$query.'</pre>';
 		return $query;
 	}
 	
@@ -846,6 +845,7 @@ class Model extends Object {
 				}
 			}
 			if ($depth >= 1) {
+				// fetch has many related model entries
 				foreach($this->hasMany as $associatedModelName => $config) {
 					$primaryKeyValue = $model->get($model->primaryKeyName);
 					$associatedModelNamePlural = Inflector::plural($associatedModelName);
