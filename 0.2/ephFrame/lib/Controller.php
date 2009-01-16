@@ -640,7 +640,7 @@ abstract class Controller extends Object implements Renderable {
 	 * 	@param boolean $exit exit after redirect
 	 * 	@return boolean
 	 */
-	public function redirect($url, $status = null, $exit = false) {
+	public function redirect($url, $status = 'p', $exit = false) {
 		if (!class_exists('HTTPStatusCode')) ephFrame::loadClass('ephFrame.lib.HTTPStatusCode');
 		if ($url !== null) {
 			header('Location: '.$url, true);
