@@ -1,4 +1,4 @@
-Apache Bench result  2008-12-04
+#Apache Bench result  2008-12-04
 -------------------------------------------------------------------------------
 
 ab -c 10 -t 60 http://localhost/ephFrameNew/ephFrame/ephFrame/app/
