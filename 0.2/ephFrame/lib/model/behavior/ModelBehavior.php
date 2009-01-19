@@ -36,6 +36,15 @@ class ModelBehavior extends Object {
 	 */
 	protected $model;
 	
+	/**
+	 *	ModelBehavior Constructor
+	 *	
+	 *	Expects an instance of a {@link Model} and an optional config array.
+	 *	
+	 * 	@param Model			$model
+	 * 	@param array(string) 	$config
+	 * 	@return ModelBehavior
+	 */
 	public function __construct(Model $model, Array $config = array()) {
 		$this->model = $model;
 		if (is_array($config)) {
@@ -48,6 +57,14 @@ class ModelBehavior extends Object {
 		return true;
 	}
 	
+	/**
+	 *	Default beforeInsert callback
+	 *
+	 *	You don’t need to call this with parent::beforeInsert from child classes
+	 *	because all models include the ModelBehavior by default.
+	 * 
+	 * 	@return boolean
+	 */
 	public function beforeInsert() {
 		if (isset($this->model->structure['created']) && $this->model->created <= 0) {
 			if ($this->model->structure['created']->quoting == ModelFieldInfo::QUOTE_STRING) {
@@ -59,6 +76,11 @@ class ModelBehavior extends Object {
 		return true;
 	}
 	
+	/**
+	 *	Default beforeUpdate callback
+	 *	
+	 * 	@return boolean
+	 */
 	public function beforeUpdate() {
 		if (isset($this->model->structure['updated'])) {
 			if ($this->model->structure['updated']->quoting == ModelFieldInfo::QUOTE_STRING) {

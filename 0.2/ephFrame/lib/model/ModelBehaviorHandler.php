@@ -106,6 +106,11 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 		return isset($this->behaviors[$behaviorName]);
 	}
 	
+	/**
+	 * 	Same as {@link hasBehavior}
+	 * 	@param string	$name
+	 * 	@return boolean
+	 */
 	public function implement($name) {
 		return $this->hasBehavior($name);
 	}
@@ -141,6 +146,25 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 		return $this->call($methodName, $args);
 	}
 	
+	/**
+	 *	Magic Method call for retreiving a single model behavior by name
+	 *	<code>
+	 *
+	 *	</code>
+	 * 	@param string	$behaviorName
+	 * 	@return ModelBehavior Model behavior class if found
+	 */
+	public function __get($behaviorName) {
+		if ($this->hasBehavior($behaviorName)) {
+			return $this->behaviors[$behaviorName];
+		}
+		return false;
+	}
+	
+	/**
+	 * 	Returns the number of behaviors
+	 * 	@return integer
+	 */
 	public function count() {
 		return count($this->behaviors);
 	}
