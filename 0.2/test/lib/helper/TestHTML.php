@@ -41,7 +41,7 @@ class TestHTML extends UnitTestCase {
 		$this->assertEqual((string) $HTML->link('/', 'test'), '<a href="/" title="test">test</a>');
 		$this->assertEqual((string) $HTML->link('', 'test'), '<a title="test">test</a>');
 		$this->assertEqual((string) $HTML->link('', ''), '');
-		$this->assertEqual((string) $HTML->link('?p=asdlkj&amp=tralala', 'values & werte'), '<a href="?p=asdlkj&amp=tralala" title="values &amp; werte">values & werte</a>');
+		$this->assertEqual((string) $HTML->link('?p=asdlkj&amp;=tralala', 'values & werte'), '<a href="?p=asdlkj&amp;=tralala" title="values &amp; werte">values & werte</a>');
 	}
 	
 }

@@ -55,8 +55,8 @@ class WikiText extends Component {
 	 */
 	public $syntax = array(
 		'links' => array(
-			'/\[{1}([^\]]+)\|(.+)\]{1}/' => '<a href="\\1" title="\\2">\\2</a>',
-			'/\[{1}([^\]]+)\]{1}/' => '<a href="\\1">\\1</a>'
+			'/\[([^\]]+)[| ](.+)\]/' => '<a href="\\1" title="\\2">\\2</a>',
+			'/\[([^\]]+)\]/' => '<a href="\\1">\\1</a>'
 			),
 		'headlines' => array(
 			'/^= (.+) =(\s+)?/m' => '<h1>\\1</h1>',

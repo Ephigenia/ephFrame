@@ -44,10 +44,12 @@ class String extends Helper {
 		$string = trim($string);
 		$string = strip_tags($string);
 		$string = Charset::toASCII($string);
-		$string = preg_replace('@\s+@', '-', $string);
-		$string = preg_replace('@([^a-zA-Z0-9-.])@', '', $string);
+		$string = preg_replace('@\s+@', $spaceReplace, $string);
+		$string = preg_replace('@([^a-zA-Z0-9_.-])@', '', $string);
 		$string = trim($string, $spaceReplace);
-		$string = preg_replace('@'.preg_quote($spaceReplace, '@').'{2,}@', $spaceReplace, $string);
+		if (strlen($spaceReplace) > 0) {
+			$string = preg_replace('@'.preg_quote($spaceReplace, '@').'{2,}@', $spaceReplace, $string);
+		}
 		$string = strtolower($string);
 		if (strlen($string) == 0) {
 			return false;
