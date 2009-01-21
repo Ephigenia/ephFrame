@@ -101,6 +101,14 @@ class Form extends HTMLTag {
 	}
 	
 	/**
+	 *	Callback that is called right before controller calls his action
+	 * 	@return true
+	 */
+	public function beforeAction() {
+		return true;
+	}
+	
+	/**
 	 *	Manual inherit Component init method, see docu in {@link Component}.
 	 * 	@return boolean
 	 */

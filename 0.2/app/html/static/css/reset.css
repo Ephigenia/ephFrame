@@ -1,22 +1,25 @@
 @CHARSET "UTF-8";
 
-body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,caption,input,textarea,p,blockquote,th,td,img {
-	margin: 0px;
-	padding: 0px;
-	vertical-align: baseline;
-	text-align: left;
-	border: none;
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td { 
+	margin:0;
+	padding:0;
 }
 table {
-	border-collapse:collapse; 
-	border-spacing: 0; 
+	border-collapse:collapse;
+	border-spacing:0;
+}
+fieldset,img { 
+	border:0;
 }
 address,caption,cite,code,dfn,em,strong,th,var {
-	font-style:normal; 
-	font-weight:normal; 
+	font-style:normal;
+	font-weight:normal;
 }
 ol,ul {
 	list-style:none;
+}
+caption,th {
+	text-align:left;
 }
 h1,h2,h3,h4,h5,h6 {
 	font-size:100%;
@@ -25,6 +28,22 @@ h1,h2,h3,h4,h5,h6 {
 q:before,q:after {
 	content:'';
 }
-abbr,acronym {
-	border:0; 
+abbr,acronym { border:0;
+}
+a:focus { outline: none; }
+
+.clear, .c {
+	clear:both;
+	float:none;
+	height: 0px;
+}
+.stegRechts{
+	padding-right: 30px;
+	width: 205px !important;
+}
+.fr {
+	float: right;
+}
+.fl {
+	float: left;
 }

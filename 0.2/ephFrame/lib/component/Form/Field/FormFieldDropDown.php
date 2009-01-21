@@ -67,6 +67,10 @@ class FormFieldDropDown extends FormField {
 		return $this;
 	}
 	
+	public function addOptions(Array $options = array()) {
+		return $this->options($options);
+	}
+	
 }
 
 ?>
