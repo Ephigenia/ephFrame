@@ -5,12 +5,15 @@
  *	It will create cool looking windows with buttons and inputs in it. No need
  *	for ugly OS-Depending Confirmation / Prompt Windows.
  *
- *	Example Usage of Prompt
+ *	Example Usage of dialog.prompt
  *	<code>
- *	
+ *	$().dialog.confirm('confirm', 'Do You really want to delete this?', function(result) {
+ *		if (result) {
+ *			document.location.href = '...deleteurl';
+ *		}
+ *	}));
  *	</code>
  *	
- *	@todo change the name of this plugin to fit 
  *	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
  *	@since 2008-11-12
  */
@@ -21,12 +24,12 @@
 		dialoges: [],
 		
 		init: function() {
-			$(this).loadCSS(document.WEBROOT + 'static/css/dialog.css');
+			//$(this).loadCSS(document.WEBROOT + 'static/css/dialog.css');
 		},
 		
 		createDialog: function(title, content) {
-			var window = '<div id="' + divId + '" class="dialog prompt">%s</div>';
 			var divId = 'dialog' + this.dialoges.length;
+			var window = '<div id="' + divId + '" class="dialog prompt">%s</div>';
 			var source = window.replace(/%s/, content);
 			$('body').prepend(source);
 			var dialog = $('#' + divId);
@@ -34,6 +37,8 @@
 				$(this).fadeOut(400);
 			}
 			this.dialoges[divId] = dialog;
+			$('#'+divId).centerOnScreen();
+			return dialog;
 		},
 		
 		prompt: function(title, message, value, callback) {
@@ -43,7 +48,7 @@
 			if (typeof(value) == 'undefined') value = '';
 			content += '<input type="text" name="prompt" class="value" value="' + value + '" /><br />';
 			content += '<input type="submit" value="OK" class="submit" />';
-			dialog = createDialog(title, content);
+			var dialog = this.createDialog(title, content);
 			$('.submit', dialog).click(function() {
 				if (typeof(callback) == 'function') {
 					callback($('input.value', dialog).val());
@@ -58,14 +63,23 @@
 					$('.submit', dialog).trigger('click');
 				}
 			});
-			dialog.centerOnScreen();
 			dialog.hide().fadeIn(400);
 		},
 		
 		confirm: function(title, message, callback) {
 			this.init();
-			dialog = this.createDialog(title, message);
-			dialog.centerOnScreen();
+			var content = message + '<br />' +
+				'<input type="button" value="Yes" id="confirmYes" class="confirmOption" />' + 
+				'<input type="button" value="No" id="confirmNo" class="confirmOption" />';
+			var dialog = this.createDialog(title, content);
+			$('#confirmYes').click(function() {
+				dialog.close();
+				callback(true);	
+			});
+			$('#confirmNo').click(function() {
+				dialog.close();
+				callback(false);
+			});
 			dialog.hide().fadeIn(400);
 		},
 		

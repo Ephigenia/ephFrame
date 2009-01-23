@@ -123,6 +123,46 @@ function preg_match_first($subject, $pattern) {
 }
 
 /**
+ *	Generates a better random number using different seed values
+ * 	It can also generate a range of numbers between min and max and return
+ * 	an array.
+ * 	@param integer $min
+ * 	@param integer $max
+ * 	@param integer $count number of random numbers that should be returned
+ * 	@param boolean $doubles create array of random numbers with no repitition
+ * 	@return integer|array(integer)
+ */
+function rnd($min = 0, $max, $count = null, $doubles = false) {
+	swapIfLt($max, $min);
+	// init random number generator with random seed
+	srand(microtime(true));
+	$distance = $max-$min;
+	if ($count == 0) {
+		return false;
+	}
+	// just one number
+	if ($count === null || func_num_args() == 2 || $count == 1) {
+		return rand($min, $max);
+	}
+	// turn of double value checking if $min and $max are not enough for $count
+	if ($distance < $count) {
+		$double = false;
+	}
+	// more than one random number
+	$randomNumbers = array();
+	$j = 0;
+	for ($i = 0; $i < $count; $i++) {
+		$rnd = rand($min, $max);
+		if (!in_array($rnd, $randomNumbers) || $doubles) {
+			$randomNumbers[] = $rnd;
+		} else {
+			$i--;
+		}
+	}
+	return $randomNumbers;
+}
+
+/**
  *	Swaps the values of two variables if the first one is larger than
  * 	the second.
  * 	@param integer|float $var1

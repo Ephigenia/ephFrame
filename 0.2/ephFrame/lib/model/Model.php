@@ -209,7 +209,7 @@ class Model extends Object {
 	 * 	@param integer|array(mixed) $id
 	 * 	@return Model
 	 */
-	public function __construct($id = null) {
+	public function __construct($id = null, $fieldNames = array()) {
 		if (!$this->name) {
 			$this->name = get_class($this);
 		}
@@ -234,7 +234,7 @@ class Model extends Object {
 		$this->initAssociations($id);
 		// load inital data from array data or primary id
 		if (is_array($id)) {
-			$this->fromArray($id);
+			$this->fromArray($id, $fieldNames);
 		} elseif (is_int($id)) {
 			if (!$this->fromId($id)) {
 				return false;
@@ -289,9 +289,6 @@ class Model extends Object {
 				//$this->depth = $this->depth-1;
 			}
 		}
-//		if (get_class($this) == 'Node') {
-//			var_dump($this->belongsTo);
-//		}
 		return true;
 	}
 	

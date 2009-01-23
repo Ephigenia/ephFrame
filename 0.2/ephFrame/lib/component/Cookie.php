@@ -234,7 +234,7 @@ class Cookie extends Component {
 			$ttl = (isset($cookieData['ttl'])) ? $cookieData['ttl'] : $this->TTL;
 			$domain = (isset($cookieData['domain'])) ? $cookieData['domain'] : null;
 			$secure = (isset($cookieData['secure'])) ? $cookieData['secure'] : true;
-			$value = $cookieData['value'];
+			$value = @$cookieData['value'];
 			@setcookie($cookieName, $value, time() + $ttl, $path); //, $domain, $secure);
 		}
 		$count = count($this->saveData);
