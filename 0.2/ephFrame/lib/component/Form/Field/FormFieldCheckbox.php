@@ -33,6 +33,14 @@ class FormFieldCheckbox extends FormField {
 		return $this;
 	}
 	
+	public function check() {
+		return $this->checked(true);
+	}
+	
+	public function uncheck() {
+		return $this->checked(false);
+	}
+	
 	public function value($value = null) {
 		if (func_num_args() == 0) {
 			if ($this->form->submitted() && !empty($this->form->request->data[$this->attributes->name])) {

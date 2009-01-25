@@ -544,6 +544,7 @@ class Model extends Object {
 	}
 	
 	/**
+	 * 	Insert Action
 	 * 	@param array(string) $data
 	 * 	@return boolean
 	 */
@@ -867,8 +868,8 @@ class Model extends Object {
 		return $return;
 	}
 	
-	public function query($query) {
-		return $this->createSelectResultList($this->DB->query($query));
+	public function query($query, $depth = null) {
+		return $this->createSelectResultList($this->DB->query($query), false, $depth);
 	}
 	
 	/**
@@ -893,6 +894,16 @@ class Model extends Object {
 			return $this->afterFind($resultSet);
 		}
 		return false;
+	}
+	
+	/**
+	 *	Alias for {@link find}
+	 * 	@param array(string)	$conditions
+	 * 	@param array(string)	$order
+	 * 	@return Model|boolean
+	 */
+	public function findOne($conditions, $order = null) {
+		return $this->find($conditions, $order);
 	}
 	
 	/**
@@ -1137,9 +1148,35 @@ class Model extends Object {
 	}
 	
 	/**
-	 *	Returns the value of a model field.
-	 * 	@param string $fieldname
-	 * 	@param mixed $default
+	 *	Tests if $fieldname field is not empty.
+	 *
+	 *	@param string	$fieldname
+	 *	@param mixed	$default
+	 *	@return boolean
+	 */
+	public function isEmpty($fieldname) {
+		return empty($this->data[$fieldname]);
+	}
+	
+	/**
+	 *	Returns the value of a model field or a default value if the field was
+	 *	empty.
+	 *
+	 *	<code>
+	 *	echo 'URL: '.$TextEntry->get('url', 'no url given').'<br />';
+	 *	</code>
+	 *
+	 *	You can also integrate this into boolean constructs
+	 *	<code>
+	 *	if ($url = $TextEntry->get('url', false)) {
+	 *		echo $url;
+	 *	} else {
+	 *		echo 'no url given';
+	 *	}
+	 *	</code>
+	 *	
+	 * 	@param string	$fieldname
+	 * 	@param mixed	$default
 	 */
 	public function get($fieldname, $default = null) {
 		if (is_scalar($fieldname)) {

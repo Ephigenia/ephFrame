@@ -105,7 +105,7 @@ class HTMLLink extends HTMLTag {
 	public function title($title = null) {
 		// remove shit from title
 		if (func_num_args() > 0) {
-			assert(is_string($title) || is_integer($title) || is_float($title));
+			assert(is_string($title) || is_integer($title) || is_float($title));
 			$title = String::stripTags($title);
 			$title = String::stripBrakes($tags);
 		}

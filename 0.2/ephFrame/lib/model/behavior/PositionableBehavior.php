@@ -1,6 +1,18 @@
 <?php
 
 /**
+ * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * 	Copyright 2007+, Ephigenia M. Eichner, Kopernikusstr. 8, 10245 Berlin
+ *
+ * 	Licensed under The MIT License
+ * 	Redistributions of files must retain the above copyright notice.
+ * 	@license http://www.opensource.org/licenses/mit-license.php The MIT License
+ * 	@copyright Copyright 2007+, Ephigenia M. Eichner
+ * 	@link http://code.ephigenia.de/projects/ephFrame/
+ * 	@filesource
+ */
+
+/**
  * 	Behavior for Models with position field
  * 
  * 	This is a simple Behavior that shows how behaviors could be used for models.
@@ -22,16 +34,22 @@ class PositionableBehavior extends ModelBehavior {
 	const MOVE_DIRECTION_BOTTOM = 'borrom';
 	
 	/**
+	 * 	Name of the field that stores the current position
+	 * 	@var integer
+	 */
+	protected $positionFieldName = 'position';
+	
+	/**
 	 * 	Callback called whenever a new item is inserted, it will increase
 	 * 	its position by one
 	 *	@return boolean
 	 */
 	public function beforeInsert() {
 		$newPosition = 0;
-		if ($last = $this->model->find(null, array($this->model->name.'.position DESC'))) {
-			$newPosition = (int) $last->position + 1;
+		if ($lastModel = $this->model->find(null, array($this->model->name.'.position DESC'))) {
+			$newPosition = (int) $lastModel->get($this->positionFieldName) + 1;
 		}
-		$this->model->set('position', $newPosition);
+		$this->model->set($this->positionFieldName, $newPosition);
 		return true;
 	}
 	
@@ -57,9 +75,9 @@ class PositionableBehavior extends ModelBehavior {
 	public function next($additionalConditions = array(), $looped = false) {
 		if (!$this->model->exists()) return false;
 		$conditions = $this->collectModelConditions();
-		$conditions->push($this->model->name.'.position > '.$this->model->position);
+		$conditions->push($this->model->name.'.'.$this->positionFieldName.' > '.$this->model->position);
 		$conditions->appendFromArray($additionalConditions);
-		$result = $this->model->find($conditions->toArray(), array($this->model->name.'.position ASC'));
+		$result = $this->model->find($conditions->toArray(), array($this->model->name.'.'.$this->positionFieldName.' ASC'));
 		if (!$result && $looped) {
 			return $this->first($additionalConditions);
 		} else {
@@ -76,9 +94,9 @@ class PositionableBehavior extends ModelBehavior {
 	public function previous($additionalConditions = array(), $looped = false) {
 		if (!$this->model->exists()) return false;
 		$conditions = $this->collectModelConditions();
-		$conditions->push($this->model->name.'.position < '.$this->model->position);
+		$conditions->push($this->model->name.'.'.$this->positionFieldName.' < '.$this->model->position);
 		$conditions->appendFromArray($additionalConditions);
-		$result = $this->model->find($conditions->toArray(), array($this->model->name.'.position DESC'));
+		$result = $this->model->find($conditions->toArray(), array($this->model->name.'.'.$this->positionFieldName.' DESC'));
 		if (!$result && $looped) {
 			return $this->this->last($additionalConditions);
 		} else {
@@ -95,9 +113,9 @@ class PositionableBehavior extends ModelBehavior {
 	public function first($additionalConditions = array()) {
 		if (!$this->model->exists()) return false;
 		$conditions = $this->collectModelConditions();
-		$conditions->push($this->model->name.'.position < '.$this->model->position);
+		$conditions->push($this->model->name.'.'.$this->positionFieldName.' < '.$this->model->position);
 		$conditions->appendFromArray($additionalConditions);
-		return $this->model->find($conditions->toArray(), array($this->model->name.'.position ASC'));
+		return $this->model->find($conditions->toArray(), array($this->model->name.'.'.$this->positionFieldName.' ASC'));
 	}
 	
 	/**
@@ -109,9 +127,9 @@ class PositionableBehavior extends ModelBehavior {
 	public function last($additionalConditions = array()) {
 		if (!$this->model->exists()) return false;
 		$conditions = $this->collectModelConditions();
-		$conditions->push($this->model->name.'.position > '.$this->model->position);
+		$conditions->push($this->model->name.'.'.$this->positionFieldName.' > '.$this->model->position);
 		$conditions->appendFromArray($additionalConditions);
-		return $this->model->find($conditions->toArray(), array($this->model->name.'.position DESC'));
+		return $this->model->find($conditions->toArray(), array($this->model->name.'.'.$this->positionFieldName.' DESC'));
 	}
 	
 	/**
@@ -119,11 +137,7 @@ class PositionableBehavior extends ModelBehavior {
 	 * 	@return boolean
 	 */
 	public function isLast() {
-		if (!$this->next(null, false)) {
-			return true;
-		} else {
-			return false;
-		}
+		return (!$this->next(null, false));
 	}
 	
 	/**
@@ -131,11 +145,7 @@ class PositionableBehavior extends ModelBehavior {
 	 * 	@return boolean
 	 */
 	public function isFirst() {
-		if (!$this->previous(null, false)) {
-			return true;
-		} else {
-			return false;
-		}
+		return (!$this->previous(null, false));
 	}
 	
 	public function move($direction, $additionalConditions = array()) {	
@@ -145,26 +155,26 @@ class PositionableBehavior extends ModelBehavior {
 		switch($direction) {
 			case self::MOVE_DIRECTION_TOP:
 				if ($tmpImage = $this->first($additionalConditions, false)) {
-					$this->model->saveField('position', $tmpImage->position - 1);
+					$this->model->saveField($this->positionFieldName, $tmpImage->get($this->positionFieldName) - 1);
 				}
 				break;
 			case self::MOVE_DIRECTION_UP:
 				if ($tmpImage = $this->previous($additionalConditions, false)) {
-					$tmpPosition = $tmpImage->position;
-					$tmpImage->saveField('position', $this->model->position);
-					$this->model->saveField('position', $tmpPosition);
+					$tmpPosition = $tmpImage->get($this->positionFieldName);
+					$tmpImage->saveField($this->positionFieldName, $this->model->get($this->positionFieldName));
+					$this->model->saveField($this->positionFieldName, $tmpPosition);
 				}
 				break;
 			case self::MOVE_DIRECTION_DOWN:
 				if ($tmpImage = $this->next($additionalConditions, false)) {
-					$tmpPosition = $tmpImage->position;
-					$tmpImage->saveField('position', $this->model->position);
-					$this->model->saveField('position', $tmpPosition);
+					$tmpPosition = $tmpImage->get($this->positionFieldName);
+					$tmpImage->saveField($this->positionFieldName, $this->model->get($this->positionFieldName));
+					$this->model->saveField($this->positionFieldName, $tmpPosition);
 				}
 				break;
 			case self::MOVE_DIRECTION_BOTTOM:
 				if ($tmpImage = $this->last($additionalConditions, false)) {
-					$this->model->saveField('position', $tmpImage->position + 1);
+					$this->model->saveField($this->positionFieldName, $tmpImage->get($this->positionFieldName) + 1);
 				}
 				break;
 			default:
