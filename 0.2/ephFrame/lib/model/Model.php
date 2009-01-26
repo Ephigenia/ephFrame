@@ -1103,13 +1103,12 @@ class Model extends Object {
 	 */
 	public function __call($methodName, Array $args) {
 		// catch findAllBy[fieldname] calls
-		if (preg_match('/(findAll(By)?)(.*)/i', $methodName, $found)) {
-			return $this->findAllBy(lcfirst(strtolower(Inflector::delimeterSeperate($found[3]))), $args[0]);
+		if (preg_match('/(findAll(By)?)(.+)/i', $methodName, $found)) {
+			return $this->findAllBy(Inflector::delimeterSeperate($found[3], null, true), $args[0]);
 		// catch findBy[fieldname] calls 
-		} elseif (preg_match('/find(By)?(.*)/i', $methodName, $found)) {
-			$args = array_unshift($args, lcfirst(strtolower(Inflector::delimeterSeperate($found[2]))));
+		} elseif (preg_match('/find(By)?(.+)/i', $methodName, $found)) {
+			array_unshift($args, Inflector::delimeterSeperate($found[2], null, true));
 			return $this->callMethod('findBy', $args);
-//			return $this->findBy(, $args[0]);
 		// catch $model->username() calls
 		} elseif (isset($this->structure[$methodName])) {
 			return $this->structure[$methodName];

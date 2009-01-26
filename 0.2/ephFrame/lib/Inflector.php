@@ -128,7 +128,10 @@ class Inflector extends Object {
 	 * 	@return string converted string
 	 */
 	public static function delimeterSeperate($string, $delimeter = '_', $lowered = false) {
-		assert(is_scalar($string) && is_scalar($delimeter));
+		assert(is_scalar($string));
+		if ($delimeter == null) {
+			$delimeter = '_';
+		}
 		$delimetered = trim($string);
 		$delimetered = preg_replace('@\\s+@', $delimeter, $delimetered);
 		$delimetered = preg_replace('@(?!^)([A-Z])@', $delimeter.'\\1', $delimetered);
