@@ -148,7 +148,7 @@ class OS extends Component implements Renderable {
 			}
 		} elseif (stristr($userAgentString, 'win')) {
 			$this->id(21);
-			if (stristr($userAgentString, 'windows nt 6.0') || stristr($userAgentString, 'vista')) {;
+			if (stristr($userAgentString, 'windows nt 6.0') || stristr($userAgentString, 'vista')) {;
 				$this->id(10);
 			} elseif (stristr($userAgentString, 'windows nt 5.02')) {
 				$this->id(11);

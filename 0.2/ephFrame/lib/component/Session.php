@@ -82,7 +82,7 @@ class Session extends Hash {
 	 */
 	public function id($id = null) {
 		if (func_num_args() > 0) {
-			if (!is_string($id) || strlen($id) == 0) throw new StringExpectedException();
+			if (!is_string($id) || strlen($id) == 0) throw new StringExpectedException();
 			session_id($id);
 		}
 		return session_id();

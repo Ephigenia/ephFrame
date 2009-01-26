@@ -492,7 +492,16 @@ abstract class DBQuery extends Object implements Renderable {
 		if ($asComment) {
 			$flag = '/* '.$flag.' */';
 		}
-		$this->flags->add($flagValue);
+		$this->flags->add($flag);
+		return $this;
+	}
+	
+	/**
+	 *	Adds a comment to the query
+	 *	@param string $comment
+	 */
+	public function addComment($comment) {
+		$this->flags->add('/* '.$comment.' */');
 		return $this;
 	}
 	

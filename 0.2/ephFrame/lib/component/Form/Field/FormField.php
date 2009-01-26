@@ -176,13 +176,18 @@ abstract class FormField extends HTMLTag {
 		if (!$this->validate()) {
 			$this->attributes['class'] .= ' errousField';
 		}
-		
 		// get posted value and set it as value for this field
 		if ($value = $this->value()) {
-			if ($this->type == 'textarea') {
-				$this->tagValue = $value;
-			} else {
-				$this->attributes->value = $value;
+			switch($this->type) {
+				case 'textarea':
+					$this->tagValue = $value;
+					break;
+				case 'checkbox':
+					$this->check();
+					break;
+				default:
+					$this->attributes->value = $value;
+					break;
 			}
 		}
 		return parent::beforeRender();

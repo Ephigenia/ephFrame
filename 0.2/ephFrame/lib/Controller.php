@@ -608,9 +608,9 @@ abstract class Controller extends Object implements Renderable {
 			$queryTime = QueryHistory::getInstance()->timeTotal(3);
 			$queryCompilePercent = round($queryTime / $compileTime * 100);
 			$debugOutput =
-				'Compile Time: '.round($compileTime, 3).'s ('.$queryTime.'s/'.$queryCompilePercent.'% querytime)'.LF.
+				'Compile Time: '.round($compileTime, 3).'s ('.$queryTime.'s/'.$queryCompilePercent.'% querytime, '.QueryHistory::getInstance()->count().' queries)'.LF.
 				'Memory Usage: '.ephFrame::memoryUsage(true).' ('.ephFrame::memoryUsage().' Bytes)'.LF.LF.
-				'DB QUERY HISTORY'.LF.'----------------'.LF.QueryHistory::getInstance()->render();
+				'<a class="queryHistoryLink">DB QUERY HISTORY</a><div class="queryHistory">'.LF.'----------------'.LF.QueryHistory::getInstance()->render().'</div>';
 			if ($this->viewClassName == 'HTMLView') {
 				$rendered .= '<pre class="debugOutput">'.nl2br($debugOutput).'</pre>';	
 			} else {

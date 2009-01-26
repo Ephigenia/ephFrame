@@ -120,19 +120,24 @@ class MySQL extends DB implements DBInterface {
 			$renderedQuery = $query;
 		}
 		// finally perform the query
-		$queryTimer = new Timer();
-		$result = @mysql_query($renderedQuery, $this->connectionHandle);
-		$queryTimer->stopTimer();
-		// check for errors and throw exception
-		if (!$result) {
-			$this->queries->add($query, new MySQLQueryResult($result), $queryTimer);
-			MySQLException::evoke($this);
-		} else {
+		if (!array_key_exists(md5($renderedQuery), $this->queryCache)) {
+			$queryTimer = new Timer();
+			$result = @mysql_query($renderedQuery, $this->connectionHandle);
+			$queryTimer->stopTimer();
+			if (!$result) {
+				$this->queries->add($query, new MySQLQueryResult($result), $queryTimer);
+				MySQLException::evoke($this);
+			}
 			$queryResult = new MySQLQueryResult($result);
 			$this->queries->add($query, $queryResult, $queryTimer);
+			$this->queryCache[md5($renderedQuery)] = $queryResult;
+			return $queryResult;
+		} else {
+			return $this->queryCache[md5($renderedQuery)];
 		}
-		return $queryResult;
 	}
+	
+	public $queryCache = array();
 	
 	/**
 	 * 	Returns the last id of the item that was inserted

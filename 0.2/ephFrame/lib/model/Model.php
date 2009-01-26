@@ -275,7 +275,8 @@ class Model extends Object {
 				} else {
 					$this->bind($associationType, $modelName, $config);
 				}
-				if (is_object($bind) && isset($this->{get_class($bind)}) || get_class($bind) == $modelName) {
+				// skip binding to prevent maximum method nesting (infinitive repitition)
+				if (is_object($bind) && (isset($this->{get_class($bind)}) || get_class($bind) == $modelName)) {
 					continue;
 				}
 				$modelClassname = $modelName;
@@ -840,6 +841,7 @@ class Model extends Object {
 				}
 			}
 			if ($depth >= 1) {
+//				echo $this->name.' '.$depth.'<br />';
 				// fetch has many related model entries
 				foreach($this->hasMany as $associatedModelName => $config) {
 					$primaryKeyValue = $model->get($model->primaryKeyName);
@@ -850,7 +852,7 @@ class Model extends Object {
 					));
 					$associatedData = new Set();
 					if ($this->{$associatedModelName} instanceof Model) {
-						if (!$associatedData = $this->{$associatedModelName}->findAll($joinConditions)) {
+						if (!$associatedData = $this->{$associatedModelName}->findAll($joinConditions, null, null, null, $depth - 1)) {
 							$associatedData = new Set();
 						}
 					}
@@ -886,11 +888,11 @@ class Model extends Object {
 	 * 	@param array $order
 	 * 	@return Model|boolean
 	 */
-	public function find($conditions, $order = null) {
-		$query = $this->createSelectQuery($conditions, $order);
+	public function find($conditions, $order = null, $depth = null) {
+		$query = $this->createSelectQuery($conditions, $order, null, null, $depth);
 		if (!$this->beforeFind(&$query)) return false;
-		$result = $this->DB->query($query);
-		if ($resultSet = $this->createSelectResultList($result, true)) { 
+		$result = $this->DB->query($query, $depth);
+		if ($resultSet = $this->createSelectResultList($result, true, $depth)) { 
 			return $this->afterFind($resultSet);
 		}
 		return false;
@@ -900,10 +902,11 @@ class Model extends Object {
 	 *	Alias for {@link find}
 	 * 	@param array(string)	$conditions
 	 * 	@param array(string)	$order
+	 * 	@param integer			$depth
 	 * 	@return Model|boolean
 	 */
-	public function findOne($conditions, $order = null) {
-		return $this->find($conditions, $order);
+	public function findOne($conditions, $order = null, $depth = null) {
+		return $this->find($conditions, $order, $depth);
 	}
 	
 	/**
@@ -942,11 +945,12 @@ class Model extends Object {
 	 * 	$User->findBy('lastlogin', null);
 	 * 	</code>
 	 * 	
-	 * 	@param string $fieldname
-	 * 	@param string $value
+	 * 	@param string 	$fieldname
+	 * 	@param string 	$value
+	 * 	@param integer $depth
 	 * 	@return Model|boolean
 	 */
-	public function findBy($fieldname, $value = null) {
+	public function findBy($fieldname, $value = null, $depth = null) {
 		if (func_num_args() == 1) {
 			$fieldname = $this->primaryKeyName;
 		}
@@ -959,7 +963,7 @@ class Model extends Object {
 			$value = DBQuery::quote($value);
 		}
 		$conditions[$fieldname] = $value;
-		return $this->find($conditions);
+		return $this->find($conditions, null, $depth);
 	}
 	
 	/**
@@ -983,7 +987,7 @@ class Model extends Object {
 	public function findAll($conditions = null, $order = null, $offset = 0, $count = null, $depth = null) {
 		$query = $this->createSelectQuery($conditions, $order, $offset, $count, $depth);
 		if (!$this->beforeFind($query)) return false;
-		$result = $this->DB->query($query);
+		$result = $this->DB->query($query, $depth);
 		if ($resultSet = $this->createSelectResultList($result, false, $depth)) {
 			return $this->afterFind($resultSet);
 		}
@@ -1103,7 +1107,9 @@ class Model extends Object {
 			return $this->findAllBy(lcfirst(strtolower(Inflector::delimeterSeperate($found[3]))), $args[0]);
 		// catch findBy[fieldname] calls 
 		} elseif (preg_match('/find(By)?(.*)/i', $methodName, $found)) {
-			return $this->findBy(lcfirst(strtolower(Inflector::delimeterSeperate($found[2]))), $args[0]);
+			$args = array_unshift($args, lcfirst(strtolower(Inflector::delimeterSeperate($found[2]))));
+			return $this->callMethod('findBy', $args);
+//			return $this->findBy(, $args[0]);
 		// catch $model->username() calls
 		} elseif (isset($this->structure[$methodName])) {
 			return $this->structure[$methodName];
