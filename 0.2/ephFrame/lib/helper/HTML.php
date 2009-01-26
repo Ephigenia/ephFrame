@@ -100,6 +100,15 @@ class HTML extends Helper {
 	 */
 	public function image($src, Array $attributes = array()) {
 		$attributes['src'] = $src;
+		if (empty($attributes['alt'])) {
+			$attributes['alt'] = '';
+			if (!empty($attributes['title'])) {
+				$attributes['alt'] = $attributes['title'];
+			}
+		}
+		if (empty($attributes['title'])) {
+			$attributes['title'] = $attributes['alt'];
+		}
 		$tag = $this->createTag('img', $attributes);
 		return $tag;
 	}
