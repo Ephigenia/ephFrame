@@ -568,13 +568,22 @@ class Image extends File implements Renderable {
 	 * 	http://flickr.com/photos/ephigenia/
 	 * 	<br />
 	 * 
-	 * 	@param	integer	$width
-	 * 	@param	integer	$height
+	 * 	@param	integer	$width	Desired image width
+	 * 	@param	integer	$height	
 	 * 	@return Image
 	 */
-	public function stretchResizeTo($width, $height) {
-		$srcX = 0;
-		$srcY = 0;
+	public function stretchResizeTo($width = null, $height = null) {
+		// no scaling at all if no width or height passed
+		if ($width == null && $height == null) {
+			return $this;
+		}
+		if ($width == null) {
+			$width = $this->width();
+		}
+		if ($height == null) {
+			$height = $this->height();
+		}
+		$srcX = $srcY = 0;
 		$srcW = $this->width();
 		$srcH = $this->height();
 		$scale = $this->height() / $height;
@@ -586,9 +595,8 @@ class Image extends File implements Renderable {
 		$srcH = $height * $scale;
 		$srcY = ($this->height() / 2) - ($srcH / 2);
 		$oldHandle = $this->handle();
-		$newHandle = $this->createHandle('jpg', $width, $height);
-		imagecopyresampled($newHandle, $oldHandle, 0, 0, $srcX, $srcY, $width, $height, $srcW, $srcH);
-		$this->handle = $newHandle;
+		$this->handle = $this->createHandle('jpg', $width, $height);
+		imagecopyresampled($this->handle, $oldHandle, 0, 0, $srcX, $srcY, $width, $height, $srcW, $srcH);
 		return $this;
 	}
 	
