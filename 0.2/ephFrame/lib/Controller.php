@@ -52,7 +52,7 @@ abstract class Controller extends Object implements Renderable {
 	public $response;
 	
 	/**
-	 *	@var array(mixed)
+	 *	@var Hash
 	 */
 	public $data = array(
 		'pageTitle' => 'ephFrame'
@@ -107,6 +107,18 @@ abstract class Controller extends Object implements Renderable {
 	 * 	@return Controller
 	 */
 	final public function __construct(HTTPRequest $request) {
+		// get component list from parent class and merge them with this
+		// controllers components and models ...
+		foreach ($this->__parentClasses() as $parentClass) {
+			$parentClassVars = get_class_vars($parentClass);
+			$this->__mergeParentProperty('uses');
+			$this->__mergeParentProperty('components');
+			$this->__mergeParentProperty('helpers');
+			$this->__mergeParentProperty('forms');
+			$this->__mergeParentProperty('data');
+		}
+		// init components and helpers
+		$this->data = new Hash($this->data);
 		$this->beforeConstruct();
 		$this->request = $request;
 		$this->response = new HTTPResponse();
@@ -120,16 +132,6 @@ abstract class Controller extends Object implements Renderable {
 		}
 		// set controller name in the view
 		$this->set('controller', $this->name);
-		// get component list from parent class and merge them with this
-		// controllers components and models ...
-		foreach ($this->__parentClasses() as $parentClass) {
-			$parentClassVars = get_class_vars($parentClass);
-			$this->__mergeParentProperty('uses');
-			$this->__mergeParentProperty('components');
-			$this->__mergeParentProperty('helpers');
-			$this->__mergeParentProperty('forms');
-		}
-		// init components and helpers
 		$this->initComponents();
 		$this->initModels();
 		$this->startUpComponents();
@@ -467,14 +469,52 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	/**
-	 *	Set a variable for the view
+	 *	Provide named variable for view
+	 *
+	 *	Use this method to set variables that should be available in the view
+	 *	when it’s rendered:
+	 *	<code>
+	 *	$this->set('UserName', $User->get('username');
+	 *	</code>
+	 *	Then you can access the variable like this:
+	 *	<code>
+	 *	Username: <?= $UserName; ?> (<a href="/logout/">logout</a>)
+	 *	</code>
+	 *	
+	 *	Variables that you’ve allready set to a value will be overwritten, you
+	 *	can use {@link append} to append to variables.
+	 *
 	 * 	@param string $name
 	 * 	@param mixed $value
+	 * 	@return Controller
 	 */
 	public function set($name, $value) {
 		$this->data[$name] = $value;
-		return true;
+		return $this;
 	}
+	
+	/**
+	 *	Append a mixed value to a view variable
+	 *
+	 *	This will append $value to the $name variable of the view data. Please
+	 *	note that $value is appended to an array if $name is an array and that
+	 *	nothing will happen if $name is an object. Otherwise $value is appended
+	 *	like a string.
+	 * 	@param $name
+	 * 	@param $value
+	 * 	@return Controller
+	 */
+//	public function append($name, $value) {
+//		if (!isset($this->data[$name])) {
+//			return $this->set($name, $value);
+//		}
+//		if (is_array($this->data[$name])) {
+//			$this->data[$name][] = $value;
+//		} else {
+//			$this->data[$name] .= $value; 
+//		}
+//		return $this;
+//	}
 	
 	/**
 	 *	Sets an other action for this controller, this affects the view that
@@ -541,12 +581,12 @@ abstract class Controller extends Object implements Renderable {
 			ephFrame::loadClass($this->viewClassName);
 		}
 		// render the view part
-		$view = new $this->viewClassName($this->name, &$this->action, $this->data);
+		$view = new $this->viewClassName($this->name, &$this->action, $this->data->toArray());
 		$viewRendered = $view->render();
 		// wrap layout around view
 		if (!empty($this->layout)) {
 			$layoutViewVars = array('content' => $viewRendered);
-			$layoutView = new $this->viewClassName('Layout', $this->layout, array_merge($this->data, $layoutViewVars));
+			$layoutView = new $this->viewClassName('Layout', $this->layout, array_merge($this->data->toArray(), $layoutViewVars));
 			$content = $layoutView->render();
 		} else {
 			$content = $viewRendered;

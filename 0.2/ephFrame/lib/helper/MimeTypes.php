@@ -37,7 +37,7 @@ class MimeTypes extends Helper {
 		if (strpos($filenameOrExtension, '.') !== false) {
 			$extension = strtolower(substr(strrchr(basename($filenameOrExtension), '.'), 1));
 		} else {
-			$extension = $filename;
+			$extension = $filenameOrExtension;
 		}
 		if (array_key_exists($extension, self::$mimeTypes)) {
 			return self::$mimeTypes[$extension];

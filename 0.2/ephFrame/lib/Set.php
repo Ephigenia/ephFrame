@@ -195,6 +195,17 @@ class Set extends Component implements Countable, Renderable, Iterator, ArrayAcc
 	}
 	
 	/**
+	 * 	Alias for {@link setValue}
+	 *
+	 * 	@param string|integer $key
+	 * 	@param mixed $value
+	 * 	@return Hash
+	 */
+	public function set($key, $value = null) {
+		return $this->setValue($key, $value);
+	}
+	
+	/**
 	 * 	Sorts the set values and returns the Set
 	 * 	Use the SORTMODE_* constants of the class to use different sort modes.
 	 *

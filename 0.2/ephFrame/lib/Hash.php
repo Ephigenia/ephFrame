@@ -102,17 +102,6 @@ class Hash extends Set {
 		return $this;
 	}
 	
-	/**
-	 * 	Alias for {@link setValue}
-	 *
-	 * 	@param string|integer $key
-	 * 	@param mixed $value
-	 * 	@return Hash
-	 */
-	public function set($key, $value = null) {
-		return $this->setValue($key, $value);
-	}
-	
 }
 
 /**

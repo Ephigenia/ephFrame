@@ -104,24 +104,30 @@ abstract class Object {
 	 *	merges an property array of the current class with all values from
 	 * 	parents.
 	 * 	@param string $name name of parent classes
+	 * 	@return Object
 	 */
 	public function __mergeParentProperty($name) {
 		foreach($this->__parentClasses() as $parentClassName) {
 			$classVars = get_class_vars($parentClassName);
-			if (!isset($classVars[$name])) continue;
+			// does parent class have a var named $name ?
+			if (!isset($classVars[$name]) || isset($classVars[$name]) && !is_array($classVars[$name])) continue;
+			// cycle through parents array values
 			foreach($classVars[$name] as $index => $var) {
 				if (!is_array($this->{$name}) || (is_array($this->{$name}) && in_array($var, $this->{$name}))) continue;
 				if (is_string($index)) {
-					$this->{$name}[$index] = $var; 
+					if (!isset($this->{$name}[$index])) {
+						$this->{$name}[$index] = $var;
+					} 
 				} else {
 					array_unshift($this->{$name}, $var);
 				}
 			}
 		}
+		return $this;
 	}
 	
 	public function __toString() {
-		return 'Object (class: '.get_class($this).')';
+		return 'Object (class: '.get_class($this).', '.parent::__toString().')';
 	}
 	
 }

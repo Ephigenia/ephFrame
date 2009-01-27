@@ -438,7 +438,8 @@ class Image extends File implements Renderable {
 			$color = $color->handle();
 		}
 		if ($backgroundColor !== null) {
-			$this->rectangle($x-2, $y, $x+$this->textWidth($size), $y + $this->textHeight($size), $backgroundColor);
+			$this->rectangle($x, $y, $x + $this->textWidth($text, $size), $y + $this->textHeight($size), $backgroundColor, $backgroundColor);
+			$x += 1;
 		}
 		if ($size === null) {
 			$size = $this->fontSize;
@@ -482,6 +483,10 @@ class Image extends File implements Renderable {
 		return strlen($text) * $this->fontWidth($font);
 	}
 	
+	public function textHeight($text, $font = null) {
+		return $this->fontHeight($font);
+	}
+	
 	/**
 	 * 	Image has Panel Format?
 	 * 	@return boolean
@@ -508,7 +513,7 @@ class Image extends File implements Renderable {
 	 *		$image->saveAs("images/products/product_1_thumb.jpg",100);
 	 *	</code>
 	 * 	
-	 *	@param	integer	$width
+	 *	@param	inger	$width
 	 *	@param integer	$height
 	 *	@param	boolean $constrainProps
 	 *	@param boolean $scale 
@@ -856,7 +861,7 @@ class Image extends File implements Renderable {
 	}
 
 	/**
-	 * 	Returns the image content itself
+	 * 	Returns the raw image content
 	 *
 	 * 	@param	integer	$quality optional JPG-Image quality (only applied if image is an jpeg)
 	 * 	@return boolean|string image string source or boolean failure
@@ -866,23 +871,28 @@ class Image extends File implements Renderable {
 			default :
 			case self::TYPE_GIF:
 			case 'gif' :
-				return imagegif($this->handle());
+				ob_start();
+				imagegif($this->handle());
 				break;
 			case self::TYPE_JPG:
 			case 'jpeg':
 			case 'jpg' :
-				return imagejpeg($this->handle(), '', $quality);
+				ob_start();
+				imagejpeg($this->handle(), '', $quality);
 				break;
 			case self::TYPE_PNG:
 			case 'png' :
-				return imagepng($this->handle());
+				ob_start();
+				imagepng($this->handle());
 				break;
 			case self::TYPE_SWF:
 			case 'swf' :
 				throw new ImageCreateUnableToCreateSWFException();
 				break;
 		}
-		return false;
+		$rawImage = ob_get_contents();
+		ob_end_clean();
+		return $rawImage;
 	}
 
 	/**
