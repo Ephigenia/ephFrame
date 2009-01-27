@@ -44,6 +44,7 @@ if (!defined('ELEMENTS_DIR')) define ('ELEMENTS_DIR', VIEW_DIR.'element/');
 if (!defined('LAYOUT_DIR')) define ('LAYOUT_DIR', VIEW_DIR.'layout/');
 if (!defined('TMP_DIR')) define ('TMP_DIR', APP_ROOT.'tmp/');
 if (!defined('LOG_DIR')) define ('LOG_DIR', TMP_DIR.'log/');
+if (!defined('CACHE_DIR')) define ('CACHE_DIR', TMP_DIR.'cache/');
 if (!defined('MODELCACHE_DIR')) define ('MODELCACHE_DIR', TMP_DIR.'model/');
 
 /**
