@@ -106,7 +106,7 @@ class HTML extends Helper {
 				$attributes['alt'] = $attributes['title'];
 			}
 		}
-		if (empty($attributes['title']) && (isset($attributes['title']) && $attributes['title'] !== false)) {
+		if (empty($attributes['title']) && (isset($attributes['title']) && $attributes['title'] !== false) && !empty($attributes['alt'])) {
 			$attributes['title'] = $attributes['alt'];
 		}
 		$tag = $this->createTag('img', $attributes);
