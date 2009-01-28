@@ -326,13 +326,22 @@ class Form extends HTMLTag {
 		if (empty($ignore)) {
 			$ignore = array('id');
 		}
-		foreach($model->structure as $fieldInfo) {
-			if (
-				// on ignore list
-				(count($ignore) > 0 && in_array($fieldInfo->name, $ignore)) ||
-				// on field list
-				(count($fields) > 0 && !in_array($fieldInfo->name, $fields))
-				) continue;
+		// just display these fields (ordered)
+		$fieldInfos = array();
+ 		if (count($fields) > 0) {
+ 			foreach($fields as $fieldName) {
+ 				if (!isset($model->structure[$fieldName])) continue;
+ 				$fieldInfos[$fieldName] = $model->structure[$fieldName];
+ 			}
+ 		} else {
+ 			$fieldInfos = $model->structure;
+ 		}
+ 		// remove ignored fields
+ 		if (count($ignore) > 0) {
+ 			foreach($ignore as $ignoredFieldName) unset($fieldInfos[$ignoredFieldName]);
+ 		}
+ 		// parse field infos and create form fields for them
+		foreach($fieldInfos as $fieldInfo) {
 			$field = false;
 			// create form field depending on db-table field type
 			if (in_array($fieldInfo->name, $this->fieldNameFormTypeMapping)) {

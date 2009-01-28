@@ -60,6 +60,7 @@ require_once dirname(__FILE__).'/Color.php';
  * 	@version 0.2
  *	@uses File
  * 	@uses Color
+ * 	@todo convert image resize to imagemagick methods
  */
 class Image extends File implements Renderable {
 

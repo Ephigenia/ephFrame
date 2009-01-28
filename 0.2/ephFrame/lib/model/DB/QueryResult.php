@@ -26,6 +26,9 @@ class QueryResult extends Set implements Iterator, Countable {
 	const FETCH_OBJECT = 'object';
 	const FETCH_INDEXED = 'indexed';
 	
+	const SEEK_END = 'end';
+	const SEEK_START = 'start';
+	
 	/**
 	 * 	Stores the sql result
 	 * 	@var ressource
@@ -95,6 +98,12 @@ class QueryResult extends Set implements Iterator, Countable {
 		return $this->data;
 	}
 	
+	public function seek($dataIndex) {
+		if ($dataIndex > $this->count()) return false;
+		$this->iteratorPosition = $dataIndex;
+		return $this;
+	}
+	
 	public function fetch($fetchMethod = null) {
 		if ($fetchMethod !== null) $this->fetchMethod($fetchMethod);
 		if ($row = $this->{'fetch'.ucFirst($this->fetchMethod)}()) {
@@ -119,8 +128,8 @@ class QueryResult extends Set implements Iterator, Countable {
 	}
 
 	public function rewind() {
-		$this->iteratorPosition = 0;
-		return true;
+		$this->seek(self::SEEK_START);
+		return parent::rewind();
 	}
 
 	public function next() {

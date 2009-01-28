@@ -839,26 +839,21 @@ class Model extends Object {
 					$model->{$associatedModelName} = new $associatedModelName($modelData);
 					$model->{$associatedModelName}->depth = $depth-1;
 				}
-			}
-			if ($depth >= 1) {
-//				echo $this->name.' '.$depth.'<br />';
 				// fetch has many related model entries
 				foreach($this->hasMany as $associatedModelName => $config) {
 					$primaryKeyValue = $model->get($model->primaryKeyName);
-					$associatedModelNamePlural = Inflector::plural($associatedModelName);
 					if (empty($primaryKeyValue)) continue;
+					$associatedModelNamePlural = Inflector::plural($associatedModelName);
 					$joinConditions = array_merge($config['conditions'], array(
 						$config['associationKey'] => $primaryKeyValue
 					));
 					$associatedData = new Set();
 					if ($this->{$associatedModelName} instanceof Model) {
-						if (!$associatedData = $this->{$associatedModelName}->findAll($joinConditions, null, null, null, $depth - 1)) {
-							$associatedData = new Set();
-						}
+						$associatedData = $this->{$associatedModelName}->findAll($joinConditions, null, null, null, $depth - 1);
 					}
-					//echo $modelClassName.'->'.$associatedModelNamePlural.' = '.get_class($associatedData);
-					$model->{$associatedModelNamePlural} = $this->{$associatedModelNamePlural} = $associatedData;
-					//$model->{$associatedModelNamePlural} = $associatedData;
+//					echo $modelClassName.'->'.$associatedModelNamePlural.' = '.get_class($associatedData);
+					$model->{$associatedModelNamePlural} = $associatedData;
+//					$model->{$associatedModelNamePlural} = $this->{$associatedModelNamePlural} = $associatedData;
 				}
 			}
 			$return->add($model);
@@ -891,8 +886,8 @@ class Model extends Object {
 	public function find($conditions, $order = null, $depth = null) {
 		$query = $this->createSelectQuery($conditions, $order, null, null, $depth);
 		if (!$this->beforeFind(&$query)) return false;
-		$result = $this->DB->query($query, $depth);
-		if ($resultSet = $this->createSelectResultList($result, true, $depth)) { 
+		$result = $this->DB->query($query, $depth); 
+		if ($resultSet = $this->createSelectResultList($result, true)) {
 			return $this->afterFind($resultSet);
 		}
 		return false;
@@ -951,9 +946,11 @@ class Model extends Object {
 	 * 	@return Model|boolean
 	 */
 	public function findBy($fieldname, $value = null, $depth = null) {
+		// if no fieldname passed and just single argument use this as id
 		if (func_num_args() == 1) {
 			$fieldname = $this->primaryKeyName;
 		}
+		// quote value field
 		if ($this->hasField($fieldname)) {
 			$value = DBQuery::quote($value, $this->structure[$fieldname]->quoting);
 			if (strpos($fieldname, '.') === false) {
@@ -962,8 +959,7 @@ class Model extends Object {
 		} else {
 			$value = DBQuery::quote($value);
 		}
-		$conditions[$fieldname] = $value;
-		return $this->find($conditions, null, $depth);
+		return $this->find(array($fieldname => $value), null, $depth);
 	}
 	
 	/**

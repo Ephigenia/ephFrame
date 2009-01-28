@@ -212,7 +212,7 @@ abstract class Controller extends Object implements Renderable {
 	public function index() {
 		if (isset($this->{$this->name})) {
 			$page = (isset($this->params['page'])) ? (int) $this->params['page'] : 1;
-			$entries = $this->{$this->name}->findAll(null,null, ($page-1) * $this->{$this->name}->perPage,$this->{$this->name}->perPage);
+			$entries = $this->{$this->name}->findAll(null, null, ($page-1) * $this->{$this->name}->perPage, $this->{$this->name}->perPage);
 			$this->set(Inflector::plural($this->name), $entries);
 			$this->set('pagination', $this->{$this->name}->paginate($page));
 			return $entries;

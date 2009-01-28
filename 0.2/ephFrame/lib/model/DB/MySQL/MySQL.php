@@ -108,33 +108,25 @@ class MySQL extends DB implements DBInterface {
 		if (!($query = $this->beforeQuery($query))) {
 			return false;	
 		}
-		if (is_object($query)) {
-			if (method_exists($query, '__toString')) {
-				$renderedQuery = $query->__toString();
-			} elseif ($query instanceof Renderable && method_exists($query, 'render')) {
-				$renderedQuery = $query->render();
-			} else {
-				trigger_error('Query object is not renderable.', E_USER_ERROR);
-			}
-		} else {
-			$renderedQuery = $query;
-		}
+		$renderedQuery = (string) $query;
+		$cacheIndex = md5($renderedQuery);
 		// finally perform the query
-		if (!array_key_exists(md5($renderedQuery), $this->queryCache)) {
+		if (!isset($this->queryCache[$cacheIndex])) {
 			$queryTimer = new Timer();
 			$result = @mysql_query($renderedQuery, $this->connectionHandle);
 			$queryTimer->stopTimer();
-			if (!$result) {
-				$this->queries->add($query, new MySQLQueryResult($result), $queryTimer);
-				MySQLException::evoke($this);
-			}
 			$queryResult = new MySQLQueryResult($result);
 			$this->queries->add($query, $queryResult, $queryTimer);
-			$this->queryCache[md5($renderedQuery)] = $queryResult;
-			return $queryResult;
+			// check for errors
+			if (!$result) {
+				MySQLException::evoke($this);
+			}
+			// save query result in query cache
+			$this->queryCache[$cacheIndex] = $queryResult;
 		} else {
-			return $this->queryCache[md5($renderedQuery)];
+			$this->queryCache[$cacheIndex]->rewind();
 		}
+		return $this->queryCache[$cacheIndex];
 	}
 	
 	public $queryCache = array();

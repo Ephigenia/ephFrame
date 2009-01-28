@@ -196,6 +196,15 @@ class File extends FileSystemNode {
 	}
 	
 	/**
+	 *	Alias method for {@link copy}
+	 * 	@param $newName
+	 * 	@return File
+	 */
+	public function copyTo($newName) {
+		return $this->copy($newName);
+	}
+	
+	/**
 	 * 	Returns the file extension of the File if there's any
 	 * 	@return string
 	 */

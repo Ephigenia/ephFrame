@@ -127,7 +127,7 @@ abstract class Object {
 	}
 	
 	public function __toString() {
-		return 'Object (class: '.get_class($this).', '.parent::__toString().')';
+		return 'Object (class: '.get_class($this).')';
 	}
 	
 }

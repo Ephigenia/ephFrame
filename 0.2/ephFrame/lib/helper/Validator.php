@@ -55,12 +55,12 @@ class Validator extends Helper {
 			if (isset($config['allowEmpty']) && $config['allowEmpty'] === true && empty($value)) {
 				return true;
 			}
+			// getting failure message
 			if (!isset($config['message'])) {
 				$message = false;
 			} else {
-				$message = $config['message'];
 				// replace wildcards in the failmessage
-				$message = String::substitute($message, array_merge($config, array(
+				$message = String::substitute($config['message'], array_merge($config, array(
 					'value' => $value,
 					'rule' => $ruleName,
 					'ruleName' => $ruleName,
@@ -68,6 +68,7 @@ class Validator extends Helper {
 					'type' => gettype($value)
 				)));
 			}
+			// testing callback if defined
 			if (isset($config['callback'])) {
 				if (isset($this->callbackObject)
 					&& method_exists($this->callbackObject, $config['callback'])
@@ -75,6 +76,7 @@ class Validator extends Helper {
 					return $message;
 				}
 			}
+			// test other rules
 			if (isset($config['regexp']) && !preg_match($config['regexp'], $value)) {
 				return $message;
 			} elseif (isset($config['notEmpty']) && empty($value)) {

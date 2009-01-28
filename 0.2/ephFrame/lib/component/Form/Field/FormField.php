@@ -153,7 +153,11 @@ abstract class FormField extends HTMLTag {
 		if (func_num_args() == 0) {
 			$value = $this->value();
 		}
+		if (!$this->mandatory && empty($value)) {
+			return true;
+		}
 		if ($this->mandatory && empty($value)) {
+			$this->error = 'The form field '.$this->attributes->name.' is not optional.';
 			return false;
 		}
 		$validator = new Validator($this->validate, $this);

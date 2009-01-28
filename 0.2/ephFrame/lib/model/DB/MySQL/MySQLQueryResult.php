@@ -25,6 +25,23 @@ ephFrame::loadClass('ephFrame.lib.model.DB.QueryResult');
 class MySQLQueryResult extends QueryResult {
 	
 	/**
+	 *	Moves the internal pointer of the mysql query result index to the 
+	 *	passed index.
+	 * 	@param integer $dataIndex
+	 */
+	public function seek($dataIndex) {
+		if ($this->count() > 0) {
+			if ($dataIndex == QueryResult::SEEK_END) {
+				$dataIndex = $this->count()-1;
+			} elseif ($dataIndex == QueryResult::SEEK_START) {
+				$dataIndex = 0;
+			}
+			mysql_data_seek($this->result, $dataIndex);
+		}
+		return parent::seek($dataIndex);
+	}
+	
+	/**
 	 *	Returns the next result as associative array or false if there
 	 * 	is no result left
 	 * 	@return array()|boolean
