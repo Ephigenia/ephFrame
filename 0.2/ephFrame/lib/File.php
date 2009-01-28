@@ -14,6 +14,7 @@
 
 // load parent class
 require_once dirname(__FILE__).'/FileSystemNode.php';
+require_once dirname(__FILE__).'/Dir.php';
 
 /**
  *	File Class
