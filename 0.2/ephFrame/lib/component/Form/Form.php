@@ -159,6 +159,13 @@ class Form extends HTMLTag {
 	}
 	
 	/**
+	 * 	Add one or more new {@link FormField} to this form
+	 * 
+	 * 	You can also add multiple form elements by passing arguments:
+	 * 	<code>
+	 * 	$form->add($emailField, $passwordField);
+	 * 	</code>
+	 * 
 	 * 	@param FormField $field
 	 * 	@return Form
 	 */
@@ -170,6 +177,15 @@ class Form extends HTMLTag {
 			$this->fieldset->addChild($field);
 		}
 		return $this;
+	}
+	
+	/**
+	 *	Alias for {@link add}
+	 *	@param FormField $field
+	 *	@return Form
+	 */
+	public function addField(FormField $field) {
+		return $this->add($field);
 	}
 	
 	/**
@@ -415,6 +431,18 @@ class Form extends HTMLTag {
 		return $this;
 	}
 	
+	/**
+	 * 	Returns all names of all form fields in the form
+	 * 	@return array(string)
+	 */
+	public function fieldNames() {
+		$fieldNames = array();
+		foreach($this->fieldset->children() as $formField) {
+			if (!$formField instanceof FormField) continue;
+			$fieldNames[] = $formField->attributes->name;
+		}
+		return $fieldNames;
+	}
 	
 }
 
