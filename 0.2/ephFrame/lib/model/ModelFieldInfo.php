@@ -35,12 +35,38 @@ class ModelFieldInfo extends Object {
 	public $primary = false;
 	public $type;
 	public $length;
+	
+	/**
+	 *	Stores the default value for this field if ther’s any
+	 * 	@var mixed
+	 */
 	public $default;
+	
+	/**
+	 *	Stores true if the field is any signed integer or float
+	 * 	@var boolean
+	 */
 	public $signed = true;
+	
+	/**
+	 *	Stores a constant starting with QUOTE_ that indicates the quoting
+	 *	type for the values of this field
+	 * 	@var string
+	 */
 	public $quoting = self::QUOTE_STRING;
+	
 	public $extra;
+	
+	/**
+	 *	Stores all options in an array for the ENUM type
+	 * 	@var array(string)
+	 */
 	public $enumOptions = array();
 	
+	/**
+	 * 	Stores a map for different field types and their quoting
+	 * 	@var array(string)
+	 */
 	protected $quoteMap = array(
 		self::QUOTE_STRING 	=> array('char', 'varchar', 'blob', 'tinyblob', 'mediumblob', 'text', 'mediumtext', 'tinytext', 'date', 'date', 'time', 'datetime'),
 		self::QUOTE_INTEGER	=> array('int', 'bigint', 'timestamp', 'year', 'smallint', 'mediumint', 'bigint'),
