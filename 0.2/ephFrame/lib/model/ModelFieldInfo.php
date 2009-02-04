@@ -140,7 +140,9 @@ class ModelFieldInfo extends Object {
 	}
 	
 	public function fromJson($data) {
-		return $this->fromArray(get_object_vars($data));
+		$this->fromArray(get_object_vars($data));
+		unset($data);
+		return true;
 	}
 	
 	public function fromArray(Array $data = array()) {

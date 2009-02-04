@@ -287,7 +287,6 @@ class Model extends Object {
 					$this->{$modelName} = new $modelClassname($this);
 					$this->{$modelName}->{$this->name} = $this;
 				}
-				//$this->depth = $this->depth-1;
 			}
 		}
 		return true;
@@ -295,6 +294,8 @@ class Model extends Object {
 	
 	/**
 	 * 	Dynamicly Binds an other model to this model
+	 * 
+	 * 	This will remove previously made bindings.
 	 *
 	 * 	@param string $associationType
 	 * 	@param string $modelName
@@ -304,6 +305,7 @@ class Model extends Object {
 	 * 	@return boolean
 	 */
 	public function bind($associationType, $modelName, Array $config = array()) {
+		// check association type
 		if (!$this->validAssociationType($associationType)) {
 			throw new ModelInvalidAssociationTypeException($this, $associationType);
 		}
@@ -317,6 +319,7 @@ class Model extends Object {
 			ephFrame::loadClass('app.lib.model.'.$modelName);
 		}
 		if (isset($this->{$modelName})) {
+			unset($this->{$modelName});
 			return;
 		}
 		$modelVars = get_class_vars($modelName);
@@ -327,9 +330,19 @@ class Model extends Object {
 		$config = array_merge(array(
 			'conditions' => array(),
 			'count' => null,
-			'order' => null
+			'order' => null,
+			'foreignKey' => null,
+			'associationKey' => null,
+			'joinTable' => null
 		), $config);
-		// their side of the join
+		// has and belongsToMany
+		if ($associationType == 'hasAndBelongsToMany') {
+			if (!isset($config['joinTable'])) {
+				$joinTable = $this->tablename.'_'.Inflector::underscore(Inflector::plural($modelVars['name']), true);
+				$config['joinTable'] = $joinTable;
+			}
+		}
+		// other model’s side
 		if (!isset($config['foreignKey'])) {
 			switch ($associationType) {
 				//$config['foreignKey'] = ucFirst($modelVars['name']).'.'.Inflector::delimeterSeperate($this->name.'_id');
@@ -341,6 +354,7 @@ class Model extends Object {
 					$config['foreignKey'] = ucFirst($this->name).'.'.$this->primaryKeyName;
 					break;
 				case 'hasAndBelongsToMany':
+					$config['foreignKey'] = $config['joinTable'].'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName, true);
 					break;
 			}
 		}
@@ -356,6 +370,7 @@ class Model extends Object {
 					$config['associationKey'] = $modelVars['name'].'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName, true);
 					break;
 				case 'hasAndBelongsToMany':
+					$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
 					break;
 			}
 		}
@@ -808,8 +823,11 @@ class Model extends Object {
 	}
 	
 	/**
-	 * 	Turns a database result into a list of models
+	 * 	Turns a database result into a list of models and returns it
+	 * 
 	 * 	@param QueryResult $result
+	 * 	@param boolean $justOne
+	 * 	@param integer	$depth	Depth of model association depth
 	 * 	@return Set
 	 */
 	public function createSelectResultList(QueryResult $result, $justOne = false, $depth = null) {
@@ -834,26 +852,47 @@ class Model extends Object {
 				ephFrame::loadClass('app.lib.model.'.$modelClassName);
 			}
 			$model = new $modelClassName($modelData);
+			// fetch associated data if detph is larger than one
 			if ($depth >= 1) {
-				foreach($belongsToAndHasOne as $associatedModelName => $config) {
-					$model->{$associatedModelName} = new $associatedModelName($modelData);
-					$model->{$associatedModelName}->depth = $depth-1;
+				// hasOne, belongsTo data
+				foreach($belongsToAndHasOne as $modelName => $config) {
+					$model->{$modelName} = new $modelName($modelData);
+					$model->{$modelName}->depth = $depth-1;
 				}
-				// fetch has many related model entries
-				foreach($this->hasMany as $associatedModelName => $config) {
+				// fetch hasMany associated Models
+				foreach($this->hasMany as $modelName => $config) {
 					$primaryKeyValue = $model->get($model->primaryKeyName);
 					if (empty($primaryKeyValue)) continue;
-					$associatedModelNamePlural = Inflector::plural($associatedModelName);
+					$associatedModelNamePlural = Inflector::plural($modelName);
 					$joinConditions = array_merge($config['conditions'], array(
 						$config['associationKey'] => $primaryKeyValue
 					));
-					$associatedData = new Set();
-					if ($this->{$associatedModelName} instanceof Model) {
-						$associatedData = $this->{$associatedModelName}->findAll($joinConditions, null, null, null, $depth - 1);
+					if ($this->{$modelName} instanceof Model) {
+						$associatedData = $this->{$modelName}->findAll($joinConditions, null, null, null, $depth - 1);
 					}
-//					echo $modelClassName.'->'.$associatedModelNamePlural.' = '.get_class($associatedData);
+					if (empty($associatedData)) {
+						$associatedData = new Set();
+					}
 					$model->{$associatedModelNamePlural} = $associatedData;
-//					$model->{$associatedModelNamePlural} = $this->{$associatedModelNamePlural} = $associatedData;
+				}
+				// fetch HMBTM associated models
+				foreach($this->hasAndBelongsToMany as $modelName => $config) {
+					$primaryKeyValue = $model->get($model->primaryKeyName);
+					if (empty($primaryKeyValue)) continue;
+					$associatedModelNamePlural = Inflector::plural($modelName);
+					$joinConditions = array_merge($config['conditions'], array(
+						$config['foreignKey'] => $primaryKeyValue,
+						$config['joinTable'].'.tag_id' => $modelName.'.id'
+					));
+					$q = $this->{$modelName}->createSelectQuery(null, $config['order']);
+					$q->join($config['joinTable'], null, DBQuery::JOIN, $joinConditions);
+					if ($this->{$modelName} instanceof Model) {
+						$model->{Inflector::plural($modelName)} = $this->{$modelName}->query($q);
+					};
+//					foreach($this->Tags as $Tag) {
+//						var_dump(get_class($Tag));
+//						var_dump($Tag->toArray());
+//					}
 				}
 			}
 			$return->add($model);
@@ -1285,6 +1324,7 @@ class Model extends Object {
 	 * 	@return Model
 	 */
 	protected function loadStructure() {
+//		$this->modelCacheTTL = 0;
 		if (!isset($this->modelStructureCache)) {
 			$this->modelStructureCache = new ModelStructureCache($this, $this->modelCacheTTL);
 		}

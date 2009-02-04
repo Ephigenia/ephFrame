@@ -16,7 +16,9 @@
  */
 Registry::set('DEBUG', DEBUG_VERBOSE);
 
-// default session name
+/**
+ * 	Session Name (also the name for the session cookie)
+ */
 define('SESSION_NAME', 'app');
 
 /**
@@ -27,7 +29,7 @@ Log::$level = Log::INFO;
 
 /**
  * 	Salt for use in password creation or anything else that need so be salted
- * 	change this as soon as you can to increase security!
+ * 	!!CHANGE THIS AS SOON AS POSSIBLE!!
  */
 define('SALT', 'priotaseloukeadotraeuocrailaejot');
 
@@ -37,12 +39,9 @@ define('SALT', 'priotaseloukeadotraeuocrailaejot');
  */ 
 date_default_timezone_set('Europe/Berlin');
 
-// ?XDEBUG_PROFILE=1
-
 /**
- *	Custom error reporting level, standard is E_ALL + E_STRICT if you 
- * 	set DEBUG to > DEBUG_PRODUCITON
- * 	But you can turn off E_STRICT for example by setting a new ERROR_REPORTING
+ *	Override DEBUGs level default error_reporting value by setting ERROR_REPORTING
+ *	value to your specific value
  */
 // Registry::set('ERROR_REPORTING', E_ALL);
 
