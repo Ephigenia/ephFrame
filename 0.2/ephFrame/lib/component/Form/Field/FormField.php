@@ -42,7 +42,7 @@ abstract class FormField extends HTMLTag {
 	/**
 	 * 	@var boolean
 	 */
-	public $mandatory = false;
+	public $mandatory = true;
 	
 	/**
 	 *	Stores a error message if validation failed for this form field, if no

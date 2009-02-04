@@ -405,7 +405,11 @@ class Set extends Component implements Countable, Renderable, Iterator, ArrayAcc
 	 * 	@return array(mixed)
 	 */
 	public function rand($count = 1) {
-		return array_rand($this->data, (int) $count);
+		$r = array();
+		foreach (array_rand($this->data, (int) $count) as $int) {
+			$r[] = $this[$i];
+		}
+		return $r;
 	}
 	
 	/**

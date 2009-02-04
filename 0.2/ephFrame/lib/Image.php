@@ -1106,6 +1106,10 @@ class Image extends File implements Renderable {
 		return $this->getImage($quality);
 	}
 	
+	public function __destruct() {
+		unset($this->handle);
+	}
+	
 }
 
 /**

@@ -55,6 +55,12 @@ class Form extends HTMLTag {
 	public $errors = array();
 	
 	/**
+	 *	Store success messages
+	 *	@var array(string)
+	 */
+	public $successMessages = array();
+	
+	/**
 	 *	Name of Models from the controller that should autamticly used in this
 	 * 	form and more configuration stuff.
 	 * 	Set this to false if you don’t want the form to be auto generate
@@ -128,9 +134,17 @@ class Form extends HTMLTag {
 				}
 			}
 		}
-		// add error messages on the top of the form
-		if ($this->submitted() && (!$this->validate() || count($this->errors) > 0)) {
-			$this->prepend(new HTMLTag('p', array('class' => 'error'), nl2br(implode(LF, $this->errors))));
+		// add error and success messages at the top of the form
+		if ($this->submitted()) {
+			// error messages
+			if (!$this->validate() || count($this->errors) > 0) {
+				if (!is_array($this->errors)) $this->errors = array($this->errors);
+				$this->prepend(new HTMLTag('p', array('class' => 'error'), nl2br(implode(LF, $this->errors))));
+			// success messages
+			} elseif (!empty($this->successMessages)) {
+				if (!is_array($this->successMessages)) $this->successMessages = array($this->successMessages);
+				$this->prepend(new HTMLTag('p', array('class' => 'success'), nl2br(implode(LF, $this->successMessages))));
+			}
 		}
 		return parent::beforeRender();
 	}

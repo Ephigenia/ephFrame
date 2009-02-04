@@ -26,6 +26,8 @@ class FormFieldSubmit extends FormField {
 	
 	public $label = false;
 	
+	public $mandatory = false;
+	
 }
 
 ?>
