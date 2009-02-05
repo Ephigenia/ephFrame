@@ -13,7 +13,7 @@
  */
 
 // load needed classes
-ephFrame::loadClass('ephFrame.lib.Hash');
+class_exists('Hash') or require dirname(__FILE__).'/Hash.php';
 
 /**
  * 	A Router

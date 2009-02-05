@@ -12,7 +12,7 @@
  * 	@filesource
  */
 
-require_once dirname(__FILE__).'/ephFrameComponent.php';
+interface_exists('ephFrameComponent') or require(dirname(__FILE__).'/ephFrameComponent.php');
 
 /**
  * 	Abstract Component Class
@@ -143,7 +143,7 @@ abstract class Component extends Object implements ephFrameComponent {
 	 *	Callback that is called right before controller calls his action
 	 * 	@return true
 	 */
-	public function beforeAction() {
+	public function beforeAction($actionName) {
 		return true;
 	}
 	

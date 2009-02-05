@@ -12,8 +12,8 @@
  * 	@filesource
  */
 
-require_once 'Hash.php';
-require_once 'HTTPStatusCode.php';
+class_exists('Hash') or require dirname(__FILE__).'/Hash.php';
+class_exists('HTTPStatusCode') or require dirname(__FILE__).'/HTTPStatusCode.php';
 
 /**
  * 	HTTP header

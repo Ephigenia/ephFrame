@@ -1,6 +1,6 @@
 <?php
 
-require_once dirname(__FILE__).'/Console.php';
+class_exists('Console') or require dirname(__FILE__).'/Console.php';
 
 define('WACS_ULCORNER',	"\342\224\214");
 define('WACS_URCORNER',	"\342\224\220");

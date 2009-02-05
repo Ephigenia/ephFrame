@@ -12,6 +12,8 @@
  * 	@filesource
  */
 
+class_exists('Component') or require dirname(__FILE__).'/component/Component.php';
+
 /**
  *	Set (or Indexed Array) Class
  * 	

@@ -12,8 +12,7 @@
  * 	@filesource
  */
 
-// load parent class
-ephFrame::loadClass('ephFrame.lib.component.Hash');
+class_exists('Hash') or require dirname(__FILE__).'/../Hash.php';
 
 /**
  *	Session Class
@@ -44,6 +43,12 @@ class Session extends Hash {
 	public $name = SESSION_NAME;
 	
 	/**
+	 *	Stores the time to live for a session
+	 * 	@var unknown_type
+	 */
+	public $ttl;
+	
+	/**
 	 * 	Creates a new Session, you can pass the sessions Name to
 	 * 	the constructor to split session in complex projects
 	 *
@@ -53,6 +58,11 @@ class Session extends Hash {
 	public function init(Controller $controller) {
 		$this->start();
 		$this->data = &$_SESSION;
+		if (!$this->ttl) {
+			$this->ttl = ini_get('session.gc_maxlifetime');
+		} else {
+			ini_set('session.gc_maxlifetime', $this->ttl);
+		}
 		// register session save
 		// todo use session_set_save_handler to register current session class
 		return parent::init($controller);

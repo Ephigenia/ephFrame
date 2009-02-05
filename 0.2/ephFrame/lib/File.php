@@ -12,14 +12,11 @@
  * 	@filesource
  */
 
-// load parent class
-require_once dirname(__FILE__).'/FileSystemNode.php';
-require_once dirname(__FILE__).'/Dir.php';
+class_exists('FileSystemNode') or require dirname(__FILE__).'/FileSystemNode.php';
+class_exists('Dir') or require dirname(__FILE__).'/Dir.php';
 
 /**
  *	File Class
- * 
- * 	
  * 
  * 	This class is partially tested by {@link TestFile}.
  * 
@@ -522,8 +519,8 @@ class FileNotWriteableException extends FileException {
  * 	@package ephFrame
  * 	@subpackage ephFrame.lib.exception
  */
-class FileWithPHPTagsException extends IntrusionException  {
-	
-}
+//class FileWithPHPTagsException extends IntrusionException  {
+//	
+//}
 
 ?>

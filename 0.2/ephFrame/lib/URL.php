@@ -13,7 +13,7 @@
  */
 
 // load renderable renderable interface
-ephFrame::loadInterface('ephFrame.lib.Renderable');
+interface_exists('Renderable') or require dirname(__FILE__).'/Renderable.php';
 
 /**
  *	URL Class

@@ -12,7 +12,7 @@
  * 	@filesource
  */
 
-require_once FRAME_LIB_DIR.'Controller.php';
+class_exists('Controller') or require dirname(__FILE__).'/Controller.php';
 
 /**
  * 	[add description here]

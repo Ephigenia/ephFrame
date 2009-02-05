@@ -13,10 +13,9 @@
  */
 
 // load classes needed for this class
-require_once dirname(__FILE__).'/FileSystemNode.php';
-require_once dirname(__FILE__).'/File.php';
-ephFrame::loadClass('ephFrame.lib.Set');
-ephFrame::loadClass('ephFrame.lib.helper.ArrayHelper');
+class_exists('FileSystemNode') or require dirname(__FILE__).'/FileSystemNode.php';
+class_exists('Set') or require dirname(__FILE__).'/Set.php';
+class_exists('ArrayHelper') or require dirname(__FILE__).'/helper/ArrayHelper.php';
 
 /**
  *	Directory Class

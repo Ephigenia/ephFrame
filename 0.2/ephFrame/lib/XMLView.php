@@ -12,7 +12,7 @@
  * 	@filesource
  */
 
-require_once dirname(__FILE__).'/HTMLView.php';
+class_exists('HTMLView') or require dirname(__FILE__).'/HTMLView.php';
 
 /**
  * 	Simple implementation for xml views, sending the correct content type

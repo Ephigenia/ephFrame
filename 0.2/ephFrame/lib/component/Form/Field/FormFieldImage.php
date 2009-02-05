@@ -12,8 +12,8 @@
  * 	@filesource
  */
 
-require_once dirname(__FILE__).'/FormFieldFile.php';
-require_once dirname(__FILE__).'/../../../Image.php';
+class_exists('FormFieldFile') or require dirname(__FILE__).'/FormFieldFile.php';
+class_exists('Image') or require dirname(__FILE__).'/../../../Image.php';
 
 /**
  * 	Image Upload Form Field

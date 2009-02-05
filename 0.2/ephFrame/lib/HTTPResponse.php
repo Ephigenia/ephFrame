@@ -12,7 +12,7 @@
  * 	@filesource
  */
 
-ephFrame::loadClass('ephFrame.lib.HTTPHeader');
+class_exists('HTTPHeader') or require dirname(__FILE__).'/HTTPHeader.php';
 
 /**
  *	A Raw HTTP Response

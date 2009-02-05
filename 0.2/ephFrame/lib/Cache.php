@@ -11,7 +11,7 @@
  * 	@filesource
  */
 
-ephFrame::loadInterface('ephFrame.lib.component.Cache.CacheEngine');
+interface_exists('CacheEngine') or require dirname(__FILE__).'/CacheEngine.php';
 
 /**
  * 	Cache

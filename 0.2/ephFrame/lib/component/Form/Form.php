@@ -12,7 +12,7 @@
  * 	@filesource
  */
 
-if (!class_exists('HTMLTag')) ephFrame::loadClass('ephFrame.lib.HTMLTag');
+class_exists('HTMLTag') or require dirname(__FILE__).'/../../HTMLTag.php';
 
 /**
  * 	Form Class

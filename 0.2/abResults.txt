@@ -1,16 +1,65 @@
 Apache Bench result  2008-12-04
 -------------------------------------------------------------------------------
 
+Command:
+--------
 ab -c 10 -t 60 http://localhost/ephFrameNew/ephFrame/ephFrame/app/
-Requests per second:    48.45 [#/sec] (mean)
 
-This is ApacheBench, Version 2.0.40-dev <$Revision: 1.146 $> apache-2.0
-Copyright 1996 Adam Twiss, Zeus Technology Ltd, http://www.zeustech.net/
-Copyright 2006 The Apache Software Foundation, http://www.apache.org/
+Summary:
+--------
+Date		r/s		requests
+2009-01-16	48.45	2907
+2009-02-05	51.70	3102
+2009-02-05	53.91	3239
 
-Benchmarking localhost (be patient)
+Single Tests:
+-------------
+
+2009-02-05
+--------------------------------------------------------------------------------
+Finished 3102 requests
+
+Server Software:        Apache/2.0.59
+Server Hostname:        localhost
+Server Port:            80
+
+Document Path:          /ephFrameNew/ephFrame/ephFrame/app/
+Document Length:        2005 bytes
+
+Concurrency Level:      10
+Time taken for tests:   60.002 seconds
+Complete requests:      3102
+Failed requests:        303
+   (Connect: 0, Receive: 0, Length: 303, Exceptions: 0)
+Write errors:           0
+Total transferred:      7530897 bytes
+HTML transferred:       6211149 bytes
+Requests per second:    51.70 [#/sec] (mean)
+Time per request:       193.431 [ms] (mean)
+Time per request:       19.343 [ms] (mean, across all concurrent requests)
+Transfer rate:          122.57 [Kbytes/sec] received
+
+Connection Times (ms)
+              min  mean[+/-sd] median   max
+Connect:        0    1   1.2      0      11
+Processing:    30  186 663.6    157   20630
+Waiting:        0  161  83.6    155     621
+Total:         30  187 663.6    157   20631
+
+Percentage of the requests served within a certain time (ms)
+  50%    157
+  66%    196
+  75%    219
+  80%    235
+  90%    276
+  95%    309
+  98%    354
+  99%    386
+ 100%  20631 (longest request)
+
+2009-01-16
+--------------------------------------------------------------------------------
 Finished 2907 requests
-
 
 Server Software:        Apache/2.0.59
 Server Hostname:        localhost

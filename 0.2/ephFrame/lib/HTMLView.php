@@ -13,7 +13,7 @@
  */
 
 // load parent class
-require_once dirname(__FILE__).'/View.php';
+class_exists('View') or require dirname(__FILE__).'/View.php';
 
 /**
  *	A view that is a HTML Page

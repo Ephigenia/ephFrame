@@ -1,6 +1,6 @@
 <?php
 
-require_once(dirname(__FILE__).'/../ConsoleDrawing.php');
+class_exists('ConsoleDrawing') or require dirname(__FILE__).'/../ConsoleDrawing.php';
 
 /**
  * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>

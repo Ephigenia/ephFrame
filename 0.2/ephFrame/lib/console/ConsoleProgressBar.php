@@ -1,8 +1,8 @@
 <?php
 
-require_once dirname(__FILE__).'/ConsoleDrawing.php';
-require_once dirname(__FILE__).'/ConsoleWindow.php';
-require_once dirname(__FILE__).'/../Set.php';
+class_exists('ConsoleDrawing') or require dirname(__FILE__).'/ConsoleDrawing.php';
+class_exists('ConsoleWindow') or require dirname(__FILE__).'/ConsoleWindow.php';
+class_exists('Set') or require dirname(__FILE__).'/../Set.php';
 
 /**
  * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>

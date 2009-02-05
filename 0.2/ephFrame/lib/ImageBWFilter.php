@@ -13,7 +13,7 @@
  */
 
 // load parent class
-ephFrame::loadClass('ephFrame.lib.ImageFilter');
+interface_exists('ImageFilter') or require dirname(__FILE__).'/ImageFilter.php';
 
 /**
  *	Experimental pure black & white filter

@@ -12,7 +12,7 @@
  * 	@filesource
  */
 
-require_once dirname(__FILE__).'/DBQuery.php';
+class_exists('DBQuery') or require dirname(__FILE__).'/DBQuery.php';
 
 /**
  *  A Database UPDATE query

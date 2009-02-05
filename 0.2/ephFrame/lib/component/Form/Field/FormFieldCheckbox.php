@@ -12,9 +12,11 @@
  * 	@filesource
  */
 
-require_once dirname(__FILE__).'/FormFieldText.php';
+class_exists('FormField') or require(dirname(__FILE__).'/FormField.php');
 
 /**
+ * 	Single checkbox form field class
+ * 	
  * 	@package ephFrame
  * 	@subpackage ephFrame.lib.component.Form.Field
  *	@author Marcel Eichner // Ephigenia <love@ephigenia.de>

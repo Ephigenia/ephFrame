@@ -12,6 +12,8 @@
  * 	@filesource
  */
 
+class_exists('Set') or require dirname(__FILE__).'/Set.php';
+
 /**
  * 	Set of Objects
  * 	

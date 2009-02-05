@@ -12,7 +12,7 @@
  * 	@filesource
  */
 
-require_once dirname(__FILE__).'/HTTPRequest.php';
+class_exists('HTTPRequest') or require dirname(__FILE__).'/HTTPRequest.php';
 
 /**
  *	Controller Class
@@ -370,7 +370,7 @@ abstract class Controller extends Object implements Renderable {
 		$className = ClassPath::className($componentName);
 		// try app and frame paths
 		if (!class_exists($className)) {
-			loadComponent($componentName);
+			ephFrame::loadComponent($componentName);
 		}
 		// attach component to controller
 		if (!isset($this->$className)) {
@@ -643,14 +643,18 @@ abstract class Controller extends Object implements Renderable {
 	public function afterRender($rendered) {
 		// if we're in debugging mode we add the sql history dump to the view
 		// content (this can be overwritten in the AppController.
-		if (Registry::get('DEBUG') >= DEBUG_DEBUG && class_exists('QueryHistory')) {
+		if (Registry::get('DEBUG') >= DEBUG_DEBUG) {
 			$compileTime = ephFrame::compileTime(6);
-			$queryTime = QueryHistory::getInstance()->timeTotal(3);
-			$queryCompilePercent = round($queryTime / $compileTime * 100);
-			$debugOutput =
-				'Compile Time: '.round($compileTime, 3).'s ('.$queryTime.'s/'.$queryCompilePercent.'% querytime, '.QueryHistory::getInstance()->count().' queries)'.LF.
-				'Memory Usage: '.ephFrame::memoryUsage(true).' ('.ephFrame::memoryUsage().' Bytes)'.LF.LF.
+			$debugOutput = 'Compile Time: '.$compileTime.'s ';
+			if (class_exists('QueryHistory')) {
+				$queryTime = QueryHistory::getInstance()->timeTotal(3);
+				$queryCompilePercent = round($queryTime / $compileTime * 100);
+				$debugOutput .= '('.$queryTime.'s/'.$queryCompilePercent.'% querytime, '.QueryHistory::getInstance()->count().' queries)';
+			}
+			$debugOutput .= LF.'Memory Usage: '.ephFrame::memoryUsage(true).' ('.ephFrame::memoryUsage().' Bytes)'.LF.LF;
+			if (class_exists('QueryHistory')) {
 				'<a class="queryHistoryLink">DB QUERY HISTORY</a><div class="queryHistory">'.LF.'----------------'.LF.QueryHistory::getInstance()->render().'</div>';
+			}
 			if ($this->viewClassName == 'HTMLView') {
 				$rendered .= '<pre class="debugOutput">'.nl2br($debugOutput).'</pre>';	
 			} else {

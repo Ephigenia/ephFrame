@@ -12,11 +12,12 @@
  * 	@filesource
  */
 
-require_once dirname(__FILE__).'/FormField.php';
-require_once dirname(__FILE__).'/../../../File.php';
+class_exists('FormField') or require(dirname(__FILE__).'/FormField.php');
+class_exists('File') or require(dirname(__FILE__).'/../../../File.php');
 
 /**
- * 	Simple Form File Upload Field	
+ * 	Simple Form File Upload Field
+ * 
  * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * 	@since 04.11.2008
  * 	@package ephFrame

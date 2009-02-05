@@ -12,7 +12,7 @@
  * 	@filesource
  */
 
-require_once dirname(__FILE__).'/ConsoleDrawing.php';
+class_exists('ConsoleDrawing') or require dirname(__FILE__).'/ConsoleDrawing.php';
 
 /**
  * 	Box Drawing class in Console

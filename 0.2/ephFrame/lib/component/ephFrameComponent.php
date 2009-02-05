@@ -28,7 +28,7 @@ interface ephFrameComponent {
 	
 	public function beforeRender();
 	
-	public function beforeAction();
+	public function beforeAction($actionName);
 
 }
 

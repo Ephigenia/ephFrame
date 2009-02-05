@@ -27,6 +27,10 @@
  */
 class GEOCoords extends Component {
 	
+	/**
+	 *	Stores the constant radius at the equator
+	 * 	@var float
+	 */
 	const EQUATORIAL_RADIUS_KM = 6378.137;
 	
 	/**

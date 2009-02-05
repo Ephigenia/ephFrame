@@ -271,7 +271,7 @@ class Tree extends Object implements Countable, Iterator, Renderable {
 	 * 	@param string $path
 	 */
 	final public function extract($path) {
-		ephFrame::loadClass('ephFrame.lib.helper.ArrayHelper');
+		class_exists('ArrayHelper') or require dirname(__FILE__).'helper/ArrayHelper.php';
 		return ArrayHelper::extract($this->hash, $path);
 	}
 	

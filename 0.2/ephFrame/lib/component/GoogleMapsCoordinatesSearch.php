@@ -12,7 +12,7 @@
  * 	@filesource
  */
 
-ephFrame::loadClass('ephFrame.lib.HTTPRequest');
+class_exists('HTTPRequest') or require dirname(__FILE__).'/../HTTPRequest.php';
 
 /**
  *	A Class for retreiving information from the google maps api

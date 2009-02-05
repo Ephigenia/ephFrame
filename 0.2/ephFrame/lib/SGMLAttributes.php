@@ -13,8 +13,8 @@
  */
 
 // load classes needed for this one
-require_once dirname(__FILE__).'/Hash.php';
-require_once dirname(__FILE__).'/helper/String.php';
+class_exists('Hash') or require dirname(__FILE__).'/Hash.php';
+class_exists('String') or require dirname(__FILE__).'/helper/String.php';
 
 /**
  * 	SGML Attribute Class, inherited from {@link Hash}

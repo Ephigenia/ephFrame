@@ -12,7 +12,7 @@
  * 	@filesource
  */
 
-ephFrame::loadClass('ephFrame.lib.SGMLAttributes');
+class_exists('SGMLAttributes') or require dirname(__FILE__).'/SGMLAttributes.php';
 
 /**
  * 	HTML Attributes

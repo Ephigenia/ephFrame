@@ -13,7 +13,8 @@
  */
 
 // load classes that are used
-ephFrame::loadClass('ephFrame.lib.helper.ArrayHelper');
+class_exists('ArrayHelper') or require dirname(__FILE__).'/../helper/ArrayHelper.php';
+class_exists('File') or require dirname(__FILE__).'/../File.php';
 
 /**
  *	A class for logging messages to files
@@ -132,7 +133,6 @@ class Log extends Component {
 	 */
 	public static function getInstance() {
   		if (!self::$instance) {
-  			ephFrame::loadClass('ephFrame.lib.File');
   			$classname = __CLASS__;
   			self::$instance = new $classname();
   		}

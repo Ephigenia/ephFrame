@@ -13,9 +13,9 @@
  */
 
 // load classes used by this class
-ephFrame::loadClass('ephFrame.lib.Dir');
-ephFrame::loadClass('ephFrame.lib.File');
-ephFrame::loadClass('ephFrame.lib.helper.String');
+class_exists('Dir') or require dirname(__FILE__).'/../Dir.php';
+class_exists('File') or require dirname(__FILE__).'/../File.php';
+class_exists('String') or require dirname(__FILE__).'/../helper/String.php';
 
 /**
  * 	Stores and returns files

@@ -12,6 +12,8 @@
  * 	@filesource
  */
 
+class_exists('File') or require dirname(__FILE__).'/../File.php';
+
 /**
  * 	CSS Packer, packs CSS Files into single files
  * 
@@ -72,7 +74,6 @@ class CSSPacker extends Component {
 	 * 	@return CSSPacker
 	 */
 	public function __construct() {
-		ephFrame::loadClass('ephFrame.lib.File');
 		loadComponent($this->compressorClassname);
 		$this->compressor = new $this->compressorClassname();
 		return $this;

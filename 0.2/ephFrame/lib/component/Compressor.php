@@ -12,6 +12,8 @@
  * 	@filesource
  */
 
+class_exists('File') or require dirname(__FILE__).'/../File.php';
+
 /**
  * 	Abstract Compressor
  * 
@@ -24,11 +26,6 @@
  * 	@uses File
  */
 abstract class Compressor extends Component {
-	
-	public function __construct() {
-		ephFrame::loadClass('ephFrame.lib.File');
-		return true;
-	}
 	
 	/**
 	 *	Compresses the passes string

@@ -12,9 +12,9 @@
  * 	@filesource
  */
 
-ephFrame::loadClass('ephFrame.lib.helper.ArrayHelper');
-ephFrame::loadClass('ephFrame.lib.HTTPResponse');
-ephFrame::loadClass('ephFrame.lib.HTTPHeader');
+class_exists('ArrayHelper') or require dirname(__FILE__).'/helper/ArrayHelper.php';
+class_exists('HTTPResponse') or require dirname(__FILE__).'/HTTPResponse.php';
+class_exists('HTTPHeader') or require dirname(__FILE__).'/HTTPHeader.php';
 
 /**
  *	Http Request Class

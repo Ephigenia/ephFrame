@@ -12,7 +12,7 @@
  * 	@filesource
  */
 
-ephFrame::loadClass('ephFrame.lib.Set');
+class_exists('Set') or require dirname(__FILE__).'/Set.php';
 
 /**
  * 	Collection Class

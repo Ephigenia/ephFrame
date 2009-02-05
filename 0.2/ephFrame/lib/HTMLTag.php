@@ -12,7 +12,7 @@
  * 	@filesource
  */
 
-require_once dirname(__FILE__).'/SGMLTag.php';
+class_exists('SGMLTag') or require dirname(__FILE__).'/SGMLTag.php';
 
 /**
  *	A HTML Tag

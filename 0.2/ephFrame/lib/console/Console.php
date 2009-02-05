@@ -12,7 +12,7 @@
  * 	@filesource
  */
 
-if (!class_exists('Object')) require_once dirname(__FILE__).'/../../Object.php';
+class_exists('Object') or require dirname(__FILE__).'/../../Object.phpFormFieldText.php';
 
 /**
  *	Terminal Class

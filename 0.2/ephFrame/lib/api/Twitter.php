@@ -12,7 +12,7 @@
  * 	@filesource
  */
 
-require_once dirname(__FILE__).'/../CURL.php';
+class_exists('CURL') or require(dirname(__FILE__).'/../CURL.php');
 
 /**
  * 	Simple Twitter API Integration

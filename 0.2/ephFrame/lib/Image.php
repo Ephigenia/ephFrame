@@ -12,8 +12,8 @@
  * 	@filesource
  */
 
-require_once dirname(__FILE__).'/File.php';
-require_once dirname(__FILE__).'/Color.php';
+class_exists('File') or require dirname(__FILE__).'/File.php';
+class_exists('Color') or require dirname(__FILE__).'/Color.php';
 
 /**
  *	Image Class

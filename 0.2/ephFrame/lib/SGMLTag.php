@@ -12,8 +12,8 @@
  * 	@filesource
  */
 
-require_once dirname(__FILE__).'/Tree.php';
-require_once dirname(__FILE__).'/SGMLAttributes.php';
+class_exists('Tree') or require dirname(__FILE__).'/Tree.php';
+class_exists('SGMLAttributes') or require dirname(__FILE__).'/SGMLAttributes.php';
 
 /**
  *	SGML Class

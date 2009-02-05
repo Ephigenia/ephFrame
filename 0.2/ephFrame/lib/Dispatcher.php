@@ -12,12 +12,8 @@
  * 	@filesource
  */
 
-require_once FRAME_LIB_DIR.'Router.php';
-require_once FRAME_LIB_DIR.'HTTPRequest.php';
- 
-
-//ephFrame::loadClass('ephFrame.lib.Router');
-//ephFrame::loadClass('ephFrame.lib.HTTPRequest');
+class_exists('Router') or require dirname(__FILE__).'/Router.php';
+class_exists('HTTPRequest') or require dirname(__FILE__).'/HTTPRequest.php';
 
 /**
  * 	Application Router / Controller / action dispatcher

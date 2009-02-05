@@ -12,7 +12,7 @@
  * 	@filesource
  */
 
-require_once dirname(__FILE__).'/FormFieldText.php';
+class_exists('FormFieldText') or require dirname(__FILE__).'/FormFieldText.php';
 
 /**
  * 	URL-Input Field
@@ -31,7 +31,7 @@ class FormFieldUrl extends FormFieldText {
 	public $validate = array(
 		'valid' => array(
 			'regexp' => Validator::URL,
-			'message' => 'The URL you\'ve entered is not valid.'
+			'message' => 'The URL you’ve entered is not valid.'
 		)
 	);
 	

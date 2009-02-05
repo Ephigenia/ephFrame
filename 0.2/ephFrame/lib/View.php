@@ -13,7 +13,7 @@
  */
 
 // load required parent classes
-require_once dirname(__FILE__).'/Hash.php';
+class_exists('Hash') or require dirname(__FILE__).'/Hash.php';
 
 /**
  * 	View (part of MVC)
@@ -163,7 +163,7 @@ abstract class View extends Hash implements Renderable {
 	 * 	@return string
 	 */
 	public function renderElement($elementName, $data = array(), $output = true) {
-		ephFrame::loadClass('ephFrame.lib.Element');
+		class_exists('Element') or require dirname(__FILE__).'/Element.php';
 		if ($this->data instanceof Hash) {
 			$data = array_merge($this->data->toArray(), $data);
 		} elseif (is_array($this->data)) {

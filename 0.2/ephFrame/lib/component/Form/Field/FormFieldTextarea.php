@@ -12,7 +12,7 @@
  * 	@filesource
  */
 
-require_once dirname(__FILE__).'/FormField.php';
+class_exists('FormField') or require dirname(__FILE__).'/FormField.php';
 
 /**
  * 	Textarea Form Field

@@ -12,12 +12,13 @@
  * 	@filesource
  */
 
-ephFrame::loadClass('ephFrame.lib.model.DB.DBConnectionManager');
-ephFrame::loadClass('ephFrame.lib.Inflector');
-ephFrame::loadClass('ephFrame.lib.model.DB.SelectQuery');
-ephFrame::loadClass('ephFrame.lib.model.DB.InsertQuery');
-ephFrame::loadClass('ephFrame.lib.model.DB.UpdateQuery');
-ephFrame::loadClass('ephFrame.lib.model.DB.DeleteQuery');
+class_exists('DBConnectionManager') or require dirname(__FILE__).'/DB/DBConnectionManager.php';
+class_exists('Inflector') or require dirname(__FILE__).'/../Inflector.php';
+class_exists('SelectQuery') or require dirname(__FILE__).'/DB/SelectQuery.php';
+class_exists('InsertQuery') or require dirname(__FILE__).'/DB/InsertQuery.php';
+class_exists('UpdateQuery') or require dirname(__FILE__).'/DB/UpdateQuery.php';
+class_exists('DeleteQuery') or require dirname(__FILE__).'/DB/DeleteQuery.php';
+
 ephFrame::loadClass('ephFrame.lib.model.ModelFieldInfo');
 ephFrame::loadClass('ephFrame.lib.model.ModelStructureCache');
 ephFrame::loadClass('ephFrame.lib.model.ModelBehaviorHandler');

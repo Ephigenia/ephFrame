@@ -12,8 +12,8 @@
  * 	@filesource
  */
 
-ephFrame::loadClass('ephFrame.lib.File');
-ephFrame::loadClass('ephFrame.lib.Collection');
+class_exists('File') or require dirname(__FILE__).'/../File.php';
+class_exists('Collection') or require dirname(__FILE__).'/../Collection.php';
 
 /**
  * 	Class Collecting CSS definitions and files for the view

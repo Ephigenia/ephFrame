@@ -13,7 +13,7 @@
  */
 
 // load parent class
-ephFrame::loadClass('ephFrame.lib.HTMLTag');
+class_exists('HTMLTag') or require dirname(__FILE__).'/HTMLTag.php';
 
 /**
  *	A Class for HTML Links, just like the 'a'-tag in HTML

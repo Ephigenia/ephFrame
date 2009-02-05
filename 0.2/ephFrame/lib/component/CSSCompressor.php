@@ -12,7 +12,7 @@
  * 	@filesource
  */
 
-ephFrame::loadClass('ephFrame.lib.component.Compressor');
+class_exists('Compressor') or require dirname(__FILE__).'/Compressor.php';
 
 /**
  * 	CSS Compressor

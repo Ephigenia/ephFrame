@@ -12,7 +12,7 @@
  * 	@filesource
  */
 
-ephFrame::loadClass('ephFrame.lib.File');
+class_exists('File') or require dirname(__FILE__).'/File.php';
 
 /**
  *	CSV File

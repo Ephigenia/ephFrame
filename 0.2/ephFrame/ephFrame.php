@@ -26,7 +26,7 @@ final class ephFrame {
 	 *	Stores the ephFrame version
 	 * 	@var integer
 	 */
-	const VERSION = 0.2;
+	const VERSION = '0.2a';
 	
 	/**
 	 *	Stores the instance of {@link ephFrame} as soon
@@ -62,10 +62,10 @@ final class ephFrame {
 			include (APP_ROOT.'config/config.php');
 			include (APP_ROOT.'config/paths.php');
 			include (APP_ROOT.'config/db.php');
-			require_once APP_LIB_DIR.'AppController.php';
-			require_once APP_LIB_DIR.'model/AppModel.php';
-			if (file_exists(APP_LIB_DIR.'component/Form/AppForm.php')) {
-				require_once APP_LIB_DIR.'component/Form/AppForm.php';
+			class_exists('AppController') or require APP_LIB_DIR.'AppController.php';
+			class_exists('AppModel') or require APP_LIB_DIR.'model/AppModel.php';
+			if (file_exists(APP_LIB_DIR.'component/Form/AppForm.php') && !class_exists('AppForm')) {
+				require APP_LIB_DIR.'component/Form/AppForm.php';
 			}
 			self::setErrorReporting();
 			logg(Log::VERBOSE_SILENT, 'ephFrame: successfully loaded, now going to dispatcher');
@@ -189,7 +189,7 @@ final class ephFrame {
 	public static function loadFrameWorkFile($path) {
 		$translatedPath = ClassPath::translatePath($path);
 		if (!ClassPath::exists($path)) throw new ephFrameClassFileNotFoundException($path);
-		require ($translatedPath);
+		require $translatedPath;
 		return true;
 	}
 	

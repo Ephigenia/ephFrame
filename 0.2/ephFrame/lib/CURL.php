@@ -15,8 +15,6 @@
 /**
  * 	Simple CURL integration
  * 	
- * 	
- * 	
  * 	@package ephFrame
  * 	@subpackage ephFrame.lib
  * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>

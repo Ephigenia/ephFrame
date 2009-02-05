@@ -12,7 +12,7 @@
  * 	@filesource
  */
 
-require_once dirname(__FILE__).'/FormFieldText.php';
+class_exists('FormFieldText') or require(dirname(__FILE__).'/FormFieldText.php');
 
 /**
  * 	Email Form Field Text
