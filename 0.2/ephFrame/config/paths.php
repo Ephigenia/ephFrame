@@ -35,7 +35,11 @@ define ('VENDOR_ROOT', FRAME_ROOT.'../vendor/');
  * 	Absolute Path to application root, always one up before webroot/ or html!
  */
 if (!defined('APP_ROOT')) {
-	define('APP_ROOT', realpath(getcwd().'/../').'/');
+	if (!CLI_MODE) {
+		define('APP_ROOT', realpath(getcwd().'/../').'/');
+	} else {
+		define('APP_ROOT', realpath(getcwd().'/').'/');
+	}
 }
 
 if (!defined('CONFIG_DIR')) define('CONFIG_DIR', APP_ROOT.'config/');

@@ -12,17 +12,18 @@
  * 	@filesource
  */
 
-class_exists('DBConnectionManager') or require dirname(__FILE__).'/DB/DBConnectionManager.php';
-class_exists('Inflector') or require dirname(__FILE__).'/../Inflector.php';
-class_exists('SelectQuery') or require dirname(__FILE__).'/DB/SelectQuery.php';
-class_exists('InsertQuery') or require dirname(__FILE__).'/DB/InsertQuery.php';
-class_exists('UpdateQuery') or require dirname(__FILE__).'/DB/UpdateQuery.php';
-class_exists('DeleteQuery') or require dirname(__FILE__).'/DB/DeleteQuery.php';
-
-ephFrame::loadClass('ephFrame.lib.model.ModelFieldInfo');
-ephFrame::loadClass('ephFrame.lib.model.ModelStructureCache');
-ephFrame::loadClass('ephFrame.lib.model.ModelBehaviorHandler');
-ephFrame::loadClass('ephFrame.lib.ObjectSet');
+$___d = dirname(__FILE__);
+class_exists('DBConnectionManager') or require $___d.'/DB/DBConnectionManager.php';
+class_exists('Inflector') or require $___d.'/../Inflector.php';
+class_exists('SelectQuery') or require $___d.'/DB/SelectQuery.php';
+class_exists('InsertQuery') or require $___d.'/DB/InsertQuery.php';
+class_exists('UpdateQuery') or require $___d.'/DB/UpdateQuery.php';
+class_exists('DeleteQuery') or require $___d.'/DB/DeleteQuery.php';
+class_exists('ModelFieldInfo') or require $___d.'/ModelFieldInfo.php';
+class_exists('ModelStructureCache') or require $___d.'/ModelStructureCache.php';
+class_exists('ModelBehaviorHandler') or require $___d.'/ModelBehaviorHandler.php';
+class_exists('ObjectSet') or require $___d.'/../ObjectSet.php';
+unset($___d);
 
 /**
  * 	Model Class
@@ -284,9 +285,10 @@ class Model extends Object {
 				$this->{$modelName} = new $modelClassname($this);
 				$this->{$modelName}->{$this->name} = $this;
 				if ($associationType == 'hasMany' || $associationType == 'hasAndBelongsToMany') {
-					$modelName = Inflector::plural($modelName);
-					$this->{$modelName} = new $modelClassname($this);
-					$this->{$modelName}->{$this->name} = $this;
+					$modelNamePlural = Inflector::plural($modelName);
+					$this->{$modelNamePlural} = new $modelClassname($this);
+					$this->{$modelNamePlural}->{$this->name} = $this;
+					$this->{$modelNamePlural} = new Set();
 				}
 			}
 		}
@@ -557,6 +559,27 @@ class Model extends Object {
 	}
 	
 	public function afterSave() {
+		// save HABTM associated models
+		if (is_array($this->hasAndBelongsToMany)) {
+			foreach($this->hasAndBelongsToMany as $modelName => $config) {
+				$pluralName = Inflector::plural($modelName);
+				if (!$this->{$pluralName} instanceof Set) continue;
+				foreach($this->{$pluralName} as $model) {
+					if (!($model instanceof Model)) continue;
+					// if model does not exists add to associatedTable
+					$insert = !$model->exists();
+					$model->save();
+					if ($insert) {
+						$values = array(
+							Inflector::underscore($this->name, true).'_'.$this->primaryKeyName => $this->get($this->primaryKeyName),
+							Inflector::underscore($model->name, true).'_'.$model->primaryKeyName => $model->get($model->primaryKeyName)
+						);
+						$q = new InsertQuery($config['joinTable'], $values);
+						$this->query($q);
+					}
+				}	
+			}
+		}
 		return true;
 	}
 	
@@ -665,6 +688,17 @@ class Model extends Object {
 	 * 	@return boolean.
 	 */
 	protected function afterDelete() {
+		if (is_array($this->hasAndBelongsToMany)) {
+			foreach($this->hasAndBelongsToMany as $modelName => $config) {
+				$pluralName = Inflector::plural($modelName);
+				if (isset($this->{$pluralName})) {
+					foreach($this->{$pluralName} as $model) {
+						$model->delete();
+					}
+				}
+				$this->{$pluralName}->q('DELETE * FROM '.$config['joinTable'].' WHERE '.$config['foreignKey'].' = '.$this->get($this->primaryKeyName));
+			}
+		}
 		return true;
 	}
 	
@@ -853,6 +887,7 @@ class Model extends Object {
 				ephFrame::loadClass('app.lib.model.'.$modelClassName);
 			}
 			$model = new $modelClassName($modelData);
+			$model->{$this->name} = $this;
 			// fetch associated data if detph is larger than one
 			if ($depth >= 1) {
 				// hasOne, belongsTo data
@@ -869,11 +904,12 @@ class Model extends Object {
 						$config['associationKey'] => $primaryKeyValue
 					));
 					if ($this->{$modelName} instanceof Model) {
-						$associatedData = $this->{$modelName}->findAll($joinConditions, null, null, null, $depth - 1);
+						$associatedData = $this->{$modelName}->findAll($joinConditions, null, 0, $config['count'], $depth - 1);
 					}
 					if (empty($associatedData)) {
 						$associatedData = new Set();
 					}
+					$model->{$associatedModelNamePlural}->{$this->name} = $this;
 					$model->{$associatedModelNamePlural} = $associatedData;
 				}
 				// fetch HMBTM associated models
@@ -887,13 +923,18 @@ class Model extends Object {
 					));
 					$q = $this->{$modelName}->createSelectQuery(null, $config['order']);
 					$q->join($config['joinTable'], null, DBQuery::JOIN, $joinConditions);
+					if (is_array($config['order'])) {
+						$q->order($config['order']);
+					}
+					$q->count($config['count']);
 					if ($this->{$modelName} instanceof Model) {
-						$model->{Inflector::plural($modelName)} = $this->{$modelName}->query($q);
+						if ($r = $this->{$modelName}->query($q)) {
+							$model->{$associatedModelNamePlural} = $r;
+						} else {
+							$model->{$associatedModelNamePlural} = new Set();
+						}
+						//$model->{$associatedModelNamePlural}->{$this->name} = $this;
 					};
-//					foreach($this->Tags as $Tag) {
-//						var_dump(get_class($Tag));
-//						var_dump($Tag->toArray());
-//					}
 				}
 			}
 			$return->add($model);

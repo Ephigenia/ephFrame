@@ -372,43 +372,43 @@ class Form extends HTMLTag {
  		}
  		// parse field infos and create form fields for them
 		foreach($fieldInfos as $fieldInfo) {
-			$field = false;
+			$fieldType = $fieldValue = null;
+			//$fieldName = $model->name.'['.$fieldInfo->name.']';
+			$fieldName = $fieldInfo->name;
 			// create form field depending on db-table field type
 			if (in_array($fieldInfo->name, $this->fieldNameFormTypeMapping)) {
-				$field = $this->newField($this->fieldNameFormTypeMapping[$fieldInfo->name], $fieldInfo->name);
+				$fieldType = $this->fieldNameFormTypeMapping[$fieldInfo->name];
 			} else {
 				switch($fieldInfo->type) {
-					case 'varchar':
-					case 'int':
-					case 'float':
-						$field = $this->newField('text', $fieldInfo->name);
+					case 'varchar': case 'int': case 'float':
+						$fieldType = 'text';
 						break;
-					case 'blob':
-					case 'text':
-					case 'mediumtext':
-					case 'mediumblob':
-					case 'tinyblob':
-					case 'tinytext':
-					case 'longblob':
-					case 'longtext':
-						$field = $this->newField('textarea', $fieldInfo->name);
+					case 'blob': case 'text': case 'mediumtext': case 'mediumblob':
+					case 'tinyblob': case 'tinytext': case 'longblob': case 'longtext':
+						$fieldType = 'textarea';
 						break;
 					case 'date':
-						$field = $this->newField('text', $fieldInfo->name, gmdate('Y-m-d'));
+						$fieldType = 'text';
+						$fieldValue = gmdate('Y-m-d');
 						break;
 					case 'char':
-						$field = $this->newField('checkbox', $fieldInfo->name, true);
+						$fieldType = 'checkbox';
+						$fieldValue = true;
 						break;
 					case 'enum':
 						// enum can be checkbox
-						if (count($fieldInfo->enumOptions) == 2) {
-							$field = $this->newField('checkbox', $fieldInfo->name, true); 
+						if (count($fieldInfo->enumOptions) <= 2) {
+							$fieldValue = true;
+							$fieldType = 'checkbox'; 
+						} else {
+							$fieldType = 'DropDown';
 						}
 						break;
 				}
 			}
-			if ($field) {
+			if ($fieldType && $fieldName) {
 				// copy validation rules from model to form field if possible
+				$field = $this->newField($fieldType, $fieldName, $fieldValue);
 				if (isset($model->validate[$fieldInfo->name])) {
 					$field->addValidationRule($model->validate[$fieldInfo->name]);
 				}

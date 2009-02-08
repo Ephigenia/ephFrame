@@ -101,9 +101,10 @@ class Router extends Hash {
 		$routeMatch = false;
 		Log::write(LOG::VERBOSE, get_class($this).': finding route for \''.$url.'\'');
 		// add some default scaffolding routes
-		Router::addRoute('scaffold_view', ':controller/(?P<id>\d+)/', array('action' => 'view'));
-		Router::addRoute('scaffold_actions', ':controller/(?P<id>\d+)/:action/');
-		Router::addRoute('scaffold_create', ':controller/:action/');
+		Router::addRoute('scaffold_view', ':controller/(?P<id>\d+)/?', array('action' => 'view'));
+		Router::addRoute('scaffold_actions', ':controller/(?P<id>\d+)/:action/?');
+		Router::addRoute('scaffold_create', ':controller/:action/?');
+		Router::addRoute('scaffold_search', ':controller/search/:searchTerm', array('action' => 'search'));
 		// only set root route if not existent allready
 		if (!Router::getInstance()->hasKey('root')) {
 			Router::addRoute('root', '/');
@@ -120,7 +121,7 @@ class Router extends Hash {
 				echo 'reg: '.htmlentities($paramRegExp).'<br />';
 			}
 			if (preg_match_all($paramRegExp, $url, $match)) {
-				$this->params = $routeData;
+				$this->params = array_merge($this->params, $routeData);
 				// extract controller and action if found
 				if (isset($this->params['controller'])) {
 					$this->controller = $this->params['controller'];
@@ -153,50 +154,38 @@ class Router extends Hash {
 			echo '<br /><strong>result:</strong><br />';
 			echo 'controller: '.$this->controller.'<br />';
 			echo 'action: '.$this->action.'<br />';
-			echo 'params: '.var_dump($router->params).'<br />';
+			echo 'params: '.var_export($this->params, true).'<br />';
 			exit;
 		}
-		// no matching route found, find route default way
-		// otherwise try to parse the default way
-		if (!$routeMatch) {
-			$this->parseDefaultAction($url);
-		}
 		return $this;
 	}
 	
+	/**
+	 *	Translates a route template to a valid regular expression and returns it
+	 *	
+	 * 	@param string	$routeTemplate
+	 * 	@return string
+	 */
 	private function createRouteRegexp($routeTemplate) {
-		if (substr($routeTemplate, -2, 2) == '/*') {
-			$routeTemplate = substr($routeTemplate, 0, -2).'/.*';
+		$regexp = trim($routeTemplate);
+		// return root uri for empty templates
+		if ($regexp == '/' || $regexp == '') {
+			return '@^/?$@';
 		}
-		// first replace :id with integer matching
-		$parameterRegexp = preg_replace('/:id/', '(?P<id>\d+)', $routeTemplate);
-		// then replac all other :varname placeholders with real regexp patterns
-		$parameterRegexp = preg_replace('/:([^:\/]+)/', '(?P<\\1>[^\/:]+)', $parameterRegexp);
-		$regexp = '{^';
-		if (substr($routeTemplate, -1, 1) == '/') {
-			$regexp .= $parameterRegexp;
-		} else {
-			$regexp .= $parameterRegexp.'/?';
+		// replace varnames
+		$regexp = preg_replace('@:id@', '(?P<id>\d+)', $regexp);
+		// replace typed :varname notation regexp
+		$regexp = preg_replace('@:([^:\/]+)_int@', '(?P<\\1>\d+)', $regexp);
+		// replace :varname notation with regexp named match
+		$regexp = preg_replace('@:([^:\/]+)@', '(?P<\\1>[^\/:]+)', $regexp);
+		// routes with /* at the end match everything else
+		if (substr($regexp, -2) == '/*') {
+			$regexp = substr($regexp, 0, -2).'/.*';
+		// add trailing optional slash
+		} elseif (substr($regexp, -2) != '/?') {
+			$regexp .= '/?';
 		}
-		$regexp .= '$}i';
-		return $regexp;
-	}
-	
-	private function parseDefaultAction($url = null) {
-		preg_match('!^/?(?P<controller>[^\/]+)\/?(?P<action>[^\/]+)?/?!', $url, $found);
-		// do the controller boogie ...
-		if (isset($found['controller'])) {
-			$this->controller = $found['controller'];
-		} else {
-			$this->controller = $this->data['root']['controller'];
-		}
-		// ... the action way
-		if (isset($found['action'])) {
-			$this->action = $found['action'];
-		} else {
-			$this->action = $this->data['root']['action'];	
-		}
-		return $this;
+		return '@^'.$regexp.'$@i';
 	}
 	
 	/**
@@ -235,7 +224,7 @@ class Router extends Hash {
 	}
 	
 	/**
-	 *	Push a route to the list of routes
+	 *	Add route to routes list
 	 * 	
 	 * 	@param string $routeName	name of that route
 	 * 	@param string $path uri for the route, including param regexps

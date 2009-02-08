@@ -97,21 +97,28 @@ class MySQL extends DB implements DBInterface {
 		return parent::beforeQuery($query);
 	}
 	
+	public $queryCacheUseRegExp = '@^\s*(DESCRIBE|SELECT)@i';
+	public $queryCache = array();
+	
 	/**
 	 *	Sends a Query (@link DBQuery} to the Database and returns 
 	 * 	a {@link DBResult} object with the results
 	 * 	@param DBQuery $query
+	 * 	@param boolean	$cached
 	 * 	@return QueryResult
 	 * 	@throws MySQLException
 	 */
-	public function query($query) {
+	public function query($query, $cached = true) {
 		if (!($query = $this->beforeQuery($query))) {
 			return false;	
 		}
 		$renderedQuery = (string) $query;
 		$cacheIndex = md5($renderedQuery);
 		// finally perform the query
-		if (!isset($this->queryCache[$cacheIndex])) {
+		if ($cached && !preg_match($this->queryCacheUseRegExp, $renderedQuery)) {
+			$cached = false;
+		}
+		if (!$cached || !isset($this->queryCache[$cacheIndex])) {
 			$queryTimer = new Timer();
 			$result = @mysql_query($renderedQuery, $this->connectionHandle);
 			$queryTimer->stopTimer();
@@ -128,8 +135,6 @@ class MySQL extends DB implements DBInterface {
 		}
 		return $this->queryCache[$cacheIndex];
 	}
-	
-	public $queryCache = array();
 	
 	/**
 	 * 	Returns the last id of the item that was inserted

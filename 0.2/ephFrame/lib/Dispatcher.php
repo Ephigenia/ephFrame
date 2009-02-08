@@ -33,6 +33,7 @@ class Dispatcher extends Object {
 	 * 	@return Controller
 	 */
 	public function dispatch($requestObjectOrUrl = null, Array $params = array()) {
+		
 		// use original request
 		if (is_object($requestObjectOrUrl)) {
 			assert($requestObjectOrUrl instanceof HTTPRequest);
@@ -57,8 +58,7 @@ class Dispatcher extends Object {
 			if ($controllerName == 'ErrorController') {
 				$controllerClassPath = 'ephFrame.lib.ErrorController';
 			} else {
-				$params = array('controllerName' => $controllerName);
-				return $this->dispatch('Error/ControllerNotFound', $params);
+				return $this->dispatch('Error/MissingController', array('controllerName' => $controllerName));
 			}
 		}
 		$controllerName = ephFrame::loadClass($controllerClassPath);
@@ -71,14 +71,17 @@ class Dispatcher extends Object {
 			echo $controller->render();
 		} catch (ViewFileNotFoundException $e) {
 			return $this->dispatch('Error/MissingView', array('controller' => $router->controller, 'action' => $router->action));
+		// missing database tables
 		} catch (MySQLTableNotFoundException $e) {
 			if ($router->controller !== 'Error' && $router->action !== 'MissingTable') {
 				return $this->dispatch('Error/MissingTable', array('tablename' => $e->tablename));
 			} else {
 				throw $e;
 			}
+		// missing Databases
 		} catch (MySQLDBNotFoundException $e) {
 			die('Missing Database <q>'.$e->databaseName.'</q>');
+		// failed DB Connection 
 		} catch (MySQLConnectionAccessDeniedException $e) {
 			die('check db connection string, invalid login');
 		}

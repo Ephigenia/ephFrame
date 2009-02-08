@@ -166,17 +166,18 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	/**
+	 * 	Standard edit action method
 	 *	@param integer $id
 	 */
 	public function edit($id = null) {
-		$id = ($id === null) ? (int) $this->params['id'] : $id;
-		if ($id > 0 && in_array($this->name, $this->uses) && isset($this->{$this->name})) {
+		$id = (int) ($id === null) ? $this->params['id'] : $id;
+		if (!empty($id) && isset($this->{$this->name})) {
 			if (!($this->{$this->name} = $this->{$this->name}->findById($id))) {
 				$this->name = 'error';
 				$this->action('404', array());
 				return false;
 			}
-			$this->set($this->name, $this->{$this->name});
+			$this->data->set($this->name, $this->{$this->name});
 			// if form is also attached, fill form data
 			if (isset($this->{$this->name.'Form'})) {
 				$this->{$this->name.'Form'}->fillModel($this->{$this->name});
@@ -190,14 +191,14 @@ abstract class Controller extends Object implements Renderable {
 	 * @param integer $id
 	 */
 	public function view($id = null) {
-		$id = ($id === null) ? (int) $this->params['id'] : $id;
-		if ($id > 0 && in_array($this->name, $this->uses) && isset($this->{$this->name})) {
-			if (!$entry = $this->{$this->name}->findById($id)) {
+		$id = (int) ($id === null) ? $this->params['id'] : $id;
+		if (!empty($id) && isset($this->{$this->name})) {
+			if (!($this->{$this->name} = $this->{$this->name}->findById($id))) {
 				$this->name = 'error';
 				$this->action('404', array());
 			}
-			$this->set($this->name, $entry);
-			return $entry;
+			$this->data->set($this->name, $this->{$this->name});
+			return $this->{$this->name};
 		}
 	}
 	
@@ -214,7 +215,9 @@ abstract class Controller extends Object implements Renderable {
 			$page = (isset($this->params['page'])) ? (int) $this->params['page'] : 1;
 			$entries = $this->{$this->name}->findAll(null, null, ($page-1) * $this->{$this->name}->perPage, $this->{$this->name}->perPage);
 			$this->set(Inflector::plural($this->name), $entries);
-			$this->set('pagination', $this->{$this->name}->paginate($page));
+			if ($this->{$this->name}->perPage > 0) {
+				$this->set('pagination', $this->{$this->name}->paginate($page));
+			}
 			return $entries;
 		}
 	}
@@ -653,7 +656,7 @@ abstract class Controller extends Object implements Renderable {
 			}
 			$debugOutput .= LF.'Memory Usage: '.ephFrame::memoryUsage(true).' ('.ephFrame::memoryUsage().' Bytes)'.LF.LF;
 			if (class_exists('QueryHistory')) {
-				'<a class="queryHistoryLink">DB QUERY HISTORY</a><div class="queryHistory">'.LF.'----------------'.LF.QueryHistory::getInstance()->render().'</div>';
+				$debugOutput .= '<div class="queryHistory">'.QueryHistory::getInstance()->render().'</div>';
 			}
 			if ($this->viewClassName == 'HTMLView') {
 				$rendered .= '<pre class="debugOutput">'.nl2br($debugOutput).'</pre>';	

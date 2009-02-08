@@ -442,7 +442,7 @@ abstract class DBQuery extends Object implements Renderable {
 	 * 	@return integer
 	 */
 	public function count($count = null) {
-		if ($count < 0) return $this;
+		if ($count < 0 || $count == null) return $this;
 		return $this->__getOrSet('count', $count);
 	}
 	

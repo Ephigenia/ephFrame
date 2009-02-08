@@ -3,6 +3,8 @@
 body {
 	font-family: Book Antiqua, Palatino, Garamond, Times, Georgia, Serif;
 	margin: 0px;
+	font-size: 100.01%;
+	line-height: 100.01%;
 }
 
 a {
@@ -24,7 +26,8 @@ a:visited {
 	color: #ffffff;
 }
 #content {
-	padding: 20px;	
+	padding: 20px;
+	line-height: 1.8em;	
 }
 #footer {
 	padding: 20px;	

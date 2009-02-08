@@ -38,6 +38,8 @@ define('DEBUG_DEVELOPMENT', 1);
 define('DEBUG_DEBUG', 2);
 define('DEBUG_VERBOSE', 3);
 
+define('CLI_MODE', !isset($_SERVER['SERVER_PORT']));
+
 /**
  * 	String literals, used by many classes
  */

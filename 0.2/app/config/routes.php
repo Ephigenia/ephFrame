@@ -19,6 +19,6 @@
  * 	@package app
  * 	@subpackage app.config
  */
-Router::addRoute('example', '/example/', array('controller' => 'Error', 'action' => '404'));
+Router::addRoute('root', '/', array('controller' => 'App', 'action' => 'index'));
 
 ?>
