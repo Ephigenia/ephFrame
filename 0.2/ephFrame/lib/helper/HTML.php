@@ -35,8 +35,8 @@ class HTML extends Helper {
 	 * 	@param array $attributes
 	 * 	@return HTMLTag
 	 */
-	private function createTag($tagName, Array $attributes = array()) {
-		return new HTMLTag($tagName, $attributes);
+	private function tag($tagName, $content = null, Array $attributes = array()) {
+		return new HTMLTag($tagName, $attributes, $content);
 	}
 	
 	/**
@@ -83,7 +83,7 @@ class HTML extends Helper {
 		if (!empty($label) && !isset($attributes['title']) && !preg_match('/<[^>]+>/', $label)) {
 			$attributes['title'] = $label;
 		}
-		$tag = $this->createTag('a', $attributes);
+		$tag = $this->tag('a', null, $attributes);
 		if (is_object($label)) {
 			$tag->addChild($label);
 		} else {
@@ -109,7 +109,7 @@ class HTML extends Helper {
 		if (empty($attributes['title']) && (isset($attributes['title']) && $attributes['title'] !== false) && !empty($attributes['alt'])) {
 			$attributes['title'] = $attributes['alt'];
 		}
-		$tag = $this->createTag('img', $attributes);
+		$tag = $this->tag('img', null, $attributes);
 		return $tag;
 	}
 	

@@ -928,6 +928,7 @@ class Image extends File implements Renderable {
 				throw new ImageCreateUnableToCreateSWFException();
 				break;
 		}
+		$this->nodeName = $filename;
 		return true;
 	}
 	

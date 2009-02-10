@@ -266,7 +266,11 @@ class Model extends Object {
 	protected function initAssociations($bind = true) {
 		// init models associated with this model
 		foreach($this->associationTypes as $associationType) {
-			if (!isset($this->$associationType) || (isset($this->$associationType) && !is_array($this->$associationType))) continue;
+			// continue if no config defined
+			if (!isset($this->{$associationType}) || (isset($this->{$associationType}) && !is_array($this->$associationType))) {
+				$this->{$associationType} = array();
+				continue;
+			}
 			foreach($this->$associationType as $modelName => $config) {
 				// simple notation $belongsTo = arryay('User')
 				if (is_int($modelName)) {
@@ -350,6 +354,8 @@ class Model extends Object {
 			switch ($associationType) {
 				//$config['foreignKey'] = ucFirst($modelVars['name']).'.'.Inflector::delimeterSeperate($this->name.'_id');
 				case 'belongsTo':
+					$config['foreignKey'] = ucFirst($modelVars['name']).'.'.$modelVars['primaryKeyName'];
+					break;
 				case 'hasOne':
 					$config['foreignKey'] = ucFirst($modelVars['name']).'.'.$modelVars['primaryKeyName'];
 					break;
@@ -366,8 +372,10 @@ class Model extends Object {
 			switch ($associationType) {
 				//$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
 				case 'belongsTo':
-				case 'hasOne':
 					$config['associationKey'] = $this->name.'.'.Inflector::underscore($modelVars['name'].'_'.$modelVars['primaryKeyName'], true);
+					break;
+				case 'hasOne':
+					$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
 					break;
 				case 'hasMany':
 					$config['associationKey'] = $modelVars['name'].'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName, true);
@@ -551,7 +559,22 @@ class Model extends Object {
 		return $this;
 	}
 	
+	/**
+	 *	Called before insert or update action takes places
+	 * 	@return boolean
+	 */
 	public function beforeSave() {
+		// check if associate models defined
+		foreach($this->belongsTo + $this->hasOne as $modelName => $config) {
+			if (!isset($this->{$modelName})) {
+				continue;
+			}
+			$model = $this->{$modelName};
+			if ($model instanceof Model && !$this->{$modelName}->isEmpty($this->{$modelName}->primaryKeyName)) {
+				$this->set(Inflector::delimeterSeperate($modelName.'_'.$this->{$modelName}->primaryKeyName, '_', true), $this->{$modelName}->get($this->{$modelName}->primaryKeyName));
+			}
+		}
+		// validate model data first
 		if (!$this->validate($this->data)) {
 			return false;
 		}
@@ -975,17 +998,6 @@ class Model extends Object {
 	}
 	
 	/**
-	 *	Alias for {@link find}
-	 * 	@param array(string)	$conditions
-	 * 	@param array(string)	$order
-	 * 	@param integer			$depth
-	 * 	@return Model|boolean
-	 */
-	public function findOne($conditions, $order = null, $depth = null) {
-		return $this->find($conditions, $order, $depth);
-	}
-	
-	/**
 	 *	Callback get's called before {@link find} query is send to database
 	 * 	@param string $query
 	 * 	@return boolean
@@ -1069,6 +1081,22 @@ class Model extends Object {
 			return $this->afterFind($resultSet);
 		}
 		return false;
+	}
+	
+	/**
+	 *	Finds one entry from the model with the matching conditions and order rules
+	 *	@param array(string)|string $conditions
+	 *	@param array(string)|string $order
+	 *	@param integer	$depth
+	 *	@return Model|boolean
+	 */
+	public function findOne($conditions, $order = null, $depth = null) {
+		$ret = $this->findAll($conditions, $order, 0, 1, $depth);
+		if ($ret) {
+			return $ret[0];
+		} else {
+			return false;
+		}
 	}
 	
 	/**

@@ -24,6 +24,8 @@ class_exists('FormField') or require(dirname(__FILE__).'/FormField.php');
  */
 class FormFieldCheckbox extends FormField {
 	
+	public $mandatory = false;
+	
 	public $type = 'checkbox';
 	
 	public function checked($bool) {
