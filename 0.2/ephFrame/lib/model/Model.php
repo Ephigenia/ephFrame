@@ -357,7 +357,8 @@ class Model extends Object {
 					$config['foreignKey'] = ucFirst($modelVars['name']).'.'.$modelVars['primaryKeyName'];
 					break;
 				case 'hasOne':
-					$config['foreignKey'] = ucFirst($modelVars['name']).'.'.$modelVars['primaryKeyName'];
+					$config['foreignKey'] = ucFirst($modelVars['name']).'.'.Inflector::delimeterSeperate($this->name.'_id');
+					//$config['foreignKey'] = ucFirst($modelVars['name']).'.'.$modelVars['primaryKeyName'];
 					break;
 				case 'hasMany':
 					$config['foreignKey'] = ucFirst($this->name).'.'.$this->primaryKeyName;

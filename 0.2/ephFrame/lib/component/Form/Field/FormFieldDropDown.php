@@ -54,13 +54,30 @@ class FormFieldDropDown extends FormField {
 		}
 		$childOption = new HTMLTag('option', array('value' => $value), $label);
 		$this->addChild($childOption);
+		return $this;
+	}
+	
+	public function beforeRender() {
+		if ($this->attributes->multiple && substr($this->attributes->name, -2) != '[]') {
+			$this->attributes->name .= '[]';
+		}
+		return parent::beforeRender();
 	}
 	
 	public function value($value = null) {
 		if (func_num_args() == 1) {
-			foreach($this->children as $child) {
-				if ($child->attributes->value != $value) continue;
-				$child->attributes->set('selected', 'selected');
+			if (is_array($value)) {
+				foreach($value as $key => $val) {
+					foreach($this->children as $child) {
+						if ($child->attributes->value != $val) continue;
+						$child->attributes->set('selected', 'selected');
+					}
+				}	
+			} else {
+				foreach($this->children as $child) {
+					if ($child->attributes->value != $value) continue;
+					$child->attributes->set('selected', 'selected');
+				}
 			}
 			return $this;
 		}

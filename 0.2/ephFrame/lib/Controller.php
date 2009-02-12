@@ -172,17 +172,17 @@ abstract class Controller extends Object implements Renderable {
 	public function edit($id = null) {
 		$id = (int) ($id === null) ? $this->params['id'] : $id;
 		if (!empty($id) && isset($this->{$this->name})) {
-			if (!($this->{$this->name} = $this->{$this->name}->findById($id))) {
+			if (!($model = $this->{$this->name}->findById($id))) {
 				$this->name = 'error';
 				$this->action('404', array());
 				return false;
 			}
-			$this->data->set($this->name, $this->{$this->name});
+			$this->data->set($this->name, $model);
 			// if form is also attached, fill form data
 			if (isset($this->{$this->name.'Form'})) {
-				$this->{$this->name.'Form'}->fillModel($this->{$this->name});
+				$this->{$this->name.'Form'}->fillModel($model);
 			}
-			return $this->{$this->name};
+			return $model;
 		}
 	}
 	
@@ -446,11 +446,13 @@ abstract class Controller extends Object implements Renderable {
 		if (!in_array($this->name.'Form', $this->forms) && ClassPath::exists('app.lib.component.Form.'.$this->name.'Form')) {
 			$this->forms[] = $this->name.'Form';
 		}
+		// add all forms as objects
 		foreach($this->forms as $formName) {
 			$this->addForm($formName);
 		}
+		// startup and init all forms
 		foreach($this->forms as $formName) {
-			$this->{$formName}->startup();
+			$this->{$formName}->startup($this);
 			$this->{$formName}->configure();
 		}
 		return $this;

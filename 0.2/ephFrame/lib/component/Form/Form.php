@@ -402,6 +402,7 @@ class Form extends HTMLTag {
 							$fieldType = 'checkbox'; 
 						} else {
 							$fieldType = 'DropDown';
+							$fieldValue = $fieldInfo->enumOptions;
 						}
 						break;
 				}
@@ -411,6 +412,11 @@ class Form extends HTMLTag {
 				$field = $this->newField($fieldType, $fieldName, $fieldValue);
 				if (isset($model->validate[$fieldInfo->name])) {
 					$field->addValidationRule($model->validate[$fieldInfo->name]);
+				}
+				if ($fieldInfo->type == 'enum' && count($fieldInfo->enumOptions) > 2) {
+					foreach($fieldInfo->enumOptions as $optionValue) {
+						$field->addOption($optionValue);
+					}
 				}
 				$this->add($field);
 			}

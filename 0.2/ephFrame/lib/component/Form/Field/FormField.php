@@ -109,16 +109,39 @@ abstract class FormField extends HTMLTag {
 		return $this;
 	}
 	
+	/**
+	 *	Sets the form field value or returns the submitted value
+	 *	
+	 * 	@param string	$value
+	 * 	@return string|FormField
+	 */
 	public function value($value = null) {
+		// set form field value
 		if (func_num_args() == 1) {
 			if ($value !== null) {
 				$this->attributes->set('value', $value);
 			}
 			return $this;
-		} elseif (isset($this->form) && $this->form->submitted() && isset($this->form->request->data[$this->attributes->name])) {
-			return $this->form->request->data[$this->attributes->name];
+		// return value, form submitted
+		} elseif (isset($this->form) && $this->form->submitted()) {
+			$fieldname = $this->attributes->name;
+			if (substr($fieldname, -2) == '[]') {
+				$fieldname = substr($fieldname, 0, -2);
+			}
+			if (isset($this->form->request->data[$fieldname])) {
+				return $this->form->request->data[$fieldname];
+			}
 		}
 		return false;
+	}
+	
+	/**
+	 *	Checks if this field has any submitted value
+	 * 	@return boolean
+	 */
+	public function isEmpty() {
+		$val = $this->value();
+		return empty($val);
 	}
 	
 	/**
@@ -180,25 +203,13 @@ abstract class FormField extends HTMLTag {
 		if (!$this->validate()) {
 			$this->attributes['class'] .= ' errousField';
 		}
-		// get posted value and set it as value for this field
 		if ($value = $this->value()) {
-			switch($this->type) {
-				case 'textarea':
-					$this->tagValue = $value;
-					break;
-				case 'checkbox':
-					$this->check();
-					break;
-				default:
-					$this->attributes->value = $value;
-					break;
-			}
+			$this->value($value);
 		}
 		return parent::beforeRender();
 	}
 	
 	public function render() {
-		if (!$this->beforeRender()) return false;
 		$rendered = '';
 		if (!empty($this->label->tagValue)) {
 			$rendered .= $this->label->render();
