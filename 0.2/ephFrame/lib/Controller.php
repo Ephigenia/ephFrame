@@ -546,7 +546,7 @@ abstract class Controller extends Object implements Renderable {
 			$this->beforeAction($action);
 			$arguments = array_diff_key($params, array('controller' => 0, 'action' => 0, 'path' => 0));
 			$return = $this->callMethod($action, $arguments);
-			if ($return == false) {
+			if ($return === false) {
 				$this->name = 'error';
 				$this->action('404', array());
 			}
