@@ -150,6 +150,10 @@ class Router extends Hash {
 			}
 			if ($debug) echo '<br />';
 		}
+		if ($routeMatch) {
+			$this->controller = 'Error';
+			$this->action = '404';
+		}
 		if ($debug) {
 			echo '<br /><strong>result:</strong><br />';
 			echo 'controller: '.$this->controller.'<br />';
