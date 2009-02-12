@@ -105,6 +105,7 @@ class Router extends Hash {
 		Router::addRoute('scaffold_actions', ':controller/(?P<id>\d+)/:action/?');
 		Router::addRoute('scaffold_create', ':controller/:action/?');
 		Router::addRoute('scaffold_search', ':controller/search/:searchTerm', array('action' => 'search'));
+		Router::addRoute('scaffold_controller', ':controller');
 		// only set root route if not existent allready
 		if (!Router::getInstance()->hasKey('root')) {
 			Router::addRoute('root', '/');
@@ -150,7 +151,7 @@ class Router extends Hash {
 			}
 			if ($debug) echo '<br />';
 		}
-		if (!$routeMatch) {
+		if (!$routeMatch && Registry::get('DEBUG') < DEBUG_DEVELOPMENT) {
 			$this->controller = 'Error';
 			$this->action = '404';
 		}
