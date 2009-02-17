@@ -100,17 +100,18 @@ class Form extends HTMLTag {
 	public function startup() {
 		// set form variable for view
 		if (isset($this->controller)) {
-			$this->controller->set(get_class($this), $this);
+			$this->controller->data->set(get_class($this), $this);
 			// set default action of form to the current url
 			$this->attributes->action = WEBROOT.$this->controller->request->get('__url'); 
 		}
+		return $this;
 	}
 	
 	/**
 	 *	Callback that is called right before controller calls his action
 	 * 	@return true
 	 */
-	public function beforeAction() {
+	public function beforeAction($actionName = null) {
 		return true;
 	}
 	
@@ -227,20 +228,33 @@ class Form extends HTMLTag {
 	/**
 	 *	Checks if the form is submitted.
 	 * 
-	 * 	This will check if the form has been submitted by iterating over all
-	 * 	elements and check if there is any data submitted.
+	 * 	This will be true if the form has more than one elements and any of it
+	 * 	filled or the single element of a form is filled and submitted.
 	 * 	@return boolean
 	 */
 	public function submitted() {
 		// test if a form was submitted by checking every field of the form
 		// for content
+		$formFieldCount = 0;
 		foreach($this->fieldset->children as $child) {
-			if ($child instanceof FormFieldFile) {
-				if (empty($_FILES[$child->attributes->name])) continue;
-			} else if (empty($this->request->data[$child->attributes->name])) {
-				continue;
+			if ($child instanceof FormField) $formFieldCount++;	
+		}
+		$filledFields = 0;
+		foreach($this->fieldset->children as $child) {
+			$val = false;
+			if ($child instanceof FormFieldFile && isset($_FILES[$child->attributes->name])) {
+				$val = $_FILES[$child->attributes->name];
+			} elseif (isset($this->request->data[$child->attributes->name])) {
+				$val = $this->request->data[$child->attributes->name];
 			}
-			return true;
+			if (!empty($val)) {
+				$filledFields++;
+			}
+			if (!empty($val) &&
+				($formFieldCount == 1 || $formFieldCount > 1 && $filledFields > 1))
+				{
+				return true;
+			}
 		}
 		return false;
 	}

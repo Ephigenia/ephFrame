@@ -214,9 +214,13 @@ abstract class FormField extends HTMLTag {
 		if (!empty($this->label->tagValue)) {
 			$rendered .= $this->label->render();
 		}
-		$rendered .= parent::render();
+		if ($this->type == 'checkbox') {
+			$rendered = parent::render().$rendered;
+		} else {
+			$rendered .= parent::render();
+		}
 		if ($this->type !== 'hidden') {
-			$rendered = '<p>'.$rendered.'</p>'.LF;
+			$rendered = '<p class="'.$this->type.'">'.$rendered.'</p>'.LF;
 		}
 		return ($this->afterRender($rendered));
 	}

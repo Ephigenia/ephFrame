@@ -438,12 +438,12 @@ class Image extends File implements Renderable {
 			$color = $this->createColor($color);
 			$color = $color->handle();
 		}
+		if ($size === null) {
+			$size = $this->fontSize;
+		}
 		if ($backgroundColor !== null) {
 			$this->rectangle($x, $y, $x + $this->textWidth($text, $size), $y + $this->textHeight($size), $backgroundColor, $backgroundColor);
 			$x += 1;
-		}
-		if ($size === null) {
-			$size = $this->fontSize;
 		}
 		imagestring($this->handle(), $size, $x, $y, $text, $color);
 		return $this;
@@ -455,7 +455,7 @@ class Image extends File implements Renderable {
 	 *	@return integer
 	 */
 	public function fontHeight($font = null) {
-		return ImageFontHeight(($font == null) ? $this->fontSize : $font);
+		return imagefontheight(($font == null) ? $this->fontSize : $font);
 	}							   
 		
 	/**
@@ -484,7 +484,7 @@ class Image extends File implements Renderable {
 		return strlen($text) * $this->fontWidth($font);
 	}
 	
-	public function textHeight($text, $font = null) {
+	public function textHeight($font = null) {
 		return $this->fontHeight($font);
 	}
 	
@@ -677,6 +677,16 @@ class Image extends File implements Renderable {
 		}
 		foreach ($header as $line) header($line);
 		return $header;
+	}
+	
+	/**
+	 * 	Crop image content to the given coords
+	 * 
+	 * 	@return Image
+	 */
+	public function crop($x1, $y1, $x2, $y2) {
+		$this->handle = imagecopyresampled($this->handle, $oldHandle, 0, 0, $srcX, $srcY, $width, $height, $srcW, $srcH);
+		return $this;
 	}
 
 	/**

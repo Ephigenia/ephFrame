@@ -226,7 +226,7 @@ class File extends FileSystemNode {
 		if (($pos = strrpos($filename, '.')) === false) {
 			return false;
 		} else {
-			return trim(substr($filename, $pos + 1));
+			return strtolower(trim(substr($filename, $pos + 1)));
 		}
 	}
 	

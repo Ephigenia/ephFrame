@@ -173,8 +173,6 @@ abstract class Controller extends Object implements Renderable {
 		$id = (int) ($id === null) ? $this->params['id'] : $id;
 		if (!empty($id) && isset($this->{$this->name})) {
 			if (!($model = $this->{$this->name}->findById($id))) {
-				$this->name = 'error';
-				$this->action('404', array());
 				return false;
 			}
 			$this->data->set($this->name, $model);
@@ -194,11 +192,11 @@ abstract class Controller extends Object implements Renderable {
 		$id = (int) ($id === null) ? $this->params['id'] : $id;
 		if (!empty($id) && isset($this->{$this->name})) {
 			if (!($this->{$this->name} = $this->{$this->name}->findById($id))) {
-				$this->name = 'error';
-				$this->action('404', array());
+				return false;
+			} else {
+				$this->data->set($this->name, $this->{$this->name});
+				return $this->{$this->name};
 			}
-			$this->data->set($this->name, $this->{$this->name});
-			return $this->{$this->name};
 		}
 	}
 	
@@ -214,7 +212,7 @@ abstract class Controller extends Object implements Renderable {
 		if (isset($this->{$this->name})) {
 			$page = (isset($this->params['page'])) ? (int) $this->params['page'] : 1;
 			$entries = $this->{$this->name}->findAll(null, null, ($page-1) * $this->{$this->name}->perPage, $this->{$this->name}->perPage);
-			$this->set(Inflector::plural($this->name), $entries);
+			$this->data->set(Inflector::plural($this->name), $entries);
 			if ($this->{$this->name}->perPage > 0) {
 				$this->set('pagination', $this->{$this->name}->paginate($page));
 			}
@@ -464,11 +462,17 @@ abstract class Controller extends Object implements Renderable {
 	 * 	@return Controller
 	 */
 	public function addForm($formName) {
+		if (!in_array($formName, $this->forms)) {
+			$this->forms[] = $formName;
+		}
 		if (!class_exists($formName)) {
 			ephFrame::loadClass('app.lib.component.Form.'.$formName);
 		}
 		$this->{$formName} = new $formName();
 		$this->{$formName}->init($this);
+		if ($this->action !== 'index') {
+			$this->{$formName}->startup($this)->configure();
+		}
 		logg(Log::VERBOSE_SILENT, 'ephFrame: '.get_class($this).' loaded form '.$formName.'');
 		return $this;
 	}
@@ -497,29 +501,6 @@ abstract class Controller extends Object implements Renderable {
 		$this->data[$name] = $value;
 		return $this;
 	}
-	
-	/**
-	 *	Append a mixed value to a view variable
-	 *
-	 *	This will append $value to the $name variable of the view data. Please
-	 *	note that $value is appended to an array if $name is an array and that
-	 *	nothing will happen if $name is an object. Otherwise $value is appended
-	 *	like a string.
-	 * 	@param $name
-	 * 	@param $value
-	 * 	@return Controller
-	 */
-//	public function append($name, $value) {
-//		if (!isset($this->data[$name])) {
-//			return $this->set($name, $value);
-//		}
-//		if (is_array($this->data[$name])) {
-//			$this->data[$name][] = $value;
-//		} else {
-//			$this->data[$name] .= $value; 
-//		}
-//		return $this;
-//	}
 	
 	/**
 	 *	Sets an other action for this controller, this affects the view that

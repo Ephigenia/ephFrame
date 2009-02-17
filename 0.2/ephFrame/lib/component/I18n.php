@@ -141,7 +141,7 @@ function __html($string) {
 	$translated = call_user_func_array('__', $args);
 	$translated = preg_replace('/[\r\n]/', '<br />', $translated);
 	// @todo find a better regular expression to replace & with amp;
-	$translated = preg_replace('( & )', ' &amp; ', $translated);
+	$translated = preg_replace('@&(?!(amp;|#\d{2,}))@i', ' &amp; ', $translated);
 	return $translated;
 }
 
