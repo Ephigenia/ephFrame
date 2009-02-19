@@ -32,7 +32,7 @@ class I18n extends Component {
 	 * 	Current locale used
 	 * 	@var string
 	 */
-	protected $locale = 'de_DE';
+	public static $locale = 'de';
 	
 	/**
 	 * 	Location of locale files
@@ -50,9 +50,10 @@ class I18n extends Component {
 	
 	public function startup() {
 		if (defined('DEFAULT_LANGUAGE')) {
-			$this->locale = DEFAULT_LANGUAGE;
+			self::$locale = DEFAULT_LANGUAGE;
 		}
-		$this->locale($this->locale);
+		$this->controller->data->set(get_class($this), $this);
+		self::locale(self::$locale);
 		$this->domain($this->domainLocation, $this->domainName, $this->domainEncoding);
 		return $this;
 	}
@@ -62,16 +63,16 @@ class I18n extends Component {
 	 * 	@param string $locale
 	 * 	@return I18n
 	 */
-	public function locale($locale = null) {
+	public static function locale($locale = null) {
 		if ($locale === null || func_num_args() == 0) {
-			return $this->locale;
+			return self::$locale;
 		}
 		assert(is_string($locale) && !empty($locale));
 		$localeType = LC_MESSAGES;
-		$this->locale = $locale;
-		setlocale($localeType, $this->locale);
-		logg(Log::VERBOSE_SILENT, 'ephFrame: Component '.get_class($this).' setting locale \''.$localeType.'\' to \''.$locale.'\'');
-		return $this;	
+		self::$locale = $locale;
+		setlocale($localeType, self::$locale);
+		logg(Log::VERBOSE_SILENT, 'ephFrame: Component '.__CLASS__.' setting locale \''.$localeType.'\' to \''.$locale.'\'');
+		return true;	
 	}
 	
 	public function domain($location, $name, $encoding = null) {

@@ -42,6 +42,15 @@ class FormFieldTextarea extends FormField {
 		return $this;
 	}
 	
+	public function rows($rows) {
+		$this->attribute('rows', (int) $rows);
+		return $this;
+	}
+	
+	public function cols($cols) {
+		$this->attribute('cols', (int) $cols);	
+	}
+	
 	public function value($value = null) {
 		if (func_num_args() > 0) {
 			$this->tagValue = $value;

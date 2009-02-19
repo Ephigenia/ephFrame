@@ -357,7 +357,7 @@ class Model extends Object {
 					$config['foreignKey'] = ucFirst($modelVars['name']).'.'.$modelVars['primaryKeyName'];
 					break;
 				case 'hasOne':
-					$config['foreignKey'] = ucFirst($modelVars['name']).'.'.Inflector::delimeterSeperate($this->name.'_id');
+					$config['foreignKey'] = ucFirst($modelVars['name']).'.'.Inflector::delimeterSeperate($this->name.'_id', '_', true);
 					//$config['foreignKey'] = ucFirst($modelVars['name']).'.'.$modelVars['primaryKeyName'];
 					break;
 				case 'hasMany':
@@ -694,6 +694,15 @@ class Model extends Object {
 		$this->behaviors->call('afterDelete');
 		$this->reset();
 		return true;
+	}
+	
+	/**
+	 *	Deletes model entries matching the $conditions
+	 * 	@param $conditions
+	 * 	@return Model|boolean
+	 */
+	public function deleteWhere($conditions) {
+		
 	}
 	
 	/**
@@ -1266,7 +1275,8 @@ class Model extends Object {
 	 *	@return boolean
 	 */
 	public function isEmpty($fieldname) {
-		return empty($this->data[$fieldname]);
+		$r = $this->get($fieldname);
+		return empty($r);
 	}
 	
 	/**
@@ -1333,6 +1343,7 @@ class Model extends Object {
 			$modelName = substr($fieldName, 0, $pointPos);
 			$fieldName = substr($fieldName, $pointPos+1);
 		}
+		//echo $this->id.'.'.$modelName.'.'.$fieldName.'<br />';
 		// assign value to this models data
 		if ($modelName == $this->name) {
 			if (isset($this->structure[$fieldName])) {

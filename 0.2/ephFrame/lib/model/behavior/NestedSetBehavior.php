@@ -142,7 +142,7 @@ class NestedSetBehavior extends ModelBehavior {
 			return false;
 		}
 		// retreive parent from model
-		if (!isset($this->model->Parent)) {
+		if (empty($this->model->Parent)) {
 			$this->model->Parent = $this->model->findById($this->model->parent_id, $modelDepth);
 		}
 		return $this->model->Parent;
@@ -168,11 +168,11 @@ class NestedSetBehavior extends ModelBehavior {
 		if (!$this->model->exists()) {
 			return false;
 		}
-		if (isset($this->cachedPath)) {
+		if (!empty($this->cachedPath)) {
 			return $this->cachedPath;
 		}
 		$q = $this->model->createSelectQuery();
-		$q->addComment($this->model->name.'->'.get_class($this).'->path(depth: '.$modelDepth.')');
+		$q->addComment($this->model->name.'->'.get_class($this).'->path(depth: '.$modelDepth.') id:'.$this->model->get($this->model->primaryKeyName));
 		$q->where($this->model->lft.' BETWEEN '.$this->model->name.'.lft AND '.$this->model->name.'.rgt');
 		if (!$includeCurrent) {
 			$q->where($this->model->name.'.'.$this->model->primaryKeyName.' <> '.$this->model->get($this->model->primaryKeyName));
