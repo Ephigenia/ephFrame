@@ -24,6 +24,8 @@ class_exists('FormField') or require(dirname(__FILE__).'/FormField.php');
  */
 class FormFieldDropDown extends FormField {
 	
+	public $type = 'dropDown';
+	
 	public $multiple = false;
 	
 	public $tagName = 'select';

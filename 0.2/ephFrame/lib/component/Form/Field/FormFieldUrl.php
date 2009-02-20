@@ -23,6 +23,8 @@ class_exists('FormFieldText') or require dirname(__FILE__).'/FormFieldText.php';
  * 	@since 04.11.2008
  */
 class FormFieldUrl extends FormFieldText {
+	
+	public $type = 'url';
 
 	/**
 	 *	Default validation rules for urls

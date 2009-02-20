@@ -27,6 +27,8 @@ class FormFieldImage extends FormFieldFile {
 	
 	public $fileClassName = 'Image';
 	
+	public $type = 'image';
+	
 }
 
 ?>
