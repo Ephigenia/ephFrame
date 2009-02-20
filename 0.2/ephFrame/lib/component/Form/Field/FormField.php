@@ -220,7 +220,7 @@ abstract class FormField extends HTMLTag {
 			$rendered .= parent::render();
 		}
 		if ($this->type !== 'hidden') {
-			$rendered = '<p class="'.$this->type.'">'.$rendered.'</p>'.LF;
+			$rendered = '<p class="'.lcFirst(substr(get_class($this), 9)).'">'.$rendered.'</p>'.LF;
 		}
 		return ($this->afterRender($rendered));
 	}

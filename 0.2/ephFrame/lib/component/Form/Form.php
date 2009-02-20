@@ -164,11 +164,9 @@ class Form extends HTMLTag {
 	 * 	@return boolean
 	 */
 	public function delete($fieldname = null) {
-		foreach($this->fieldset->children() as $field) {
-			if ($field->attributes->name == $fieldname) {
-				$field->delete();
-				return true;
-			}
+		if ($field = $this->fieldset->childWithAttribute('name', $fieldname)) {
+			$field->delete();
+			return true;
 		}
 		return false;
 	}
@@ -356,7 +354,9 @@ class Form extends HTMLTag {
 		'email' 	=> 'email',
 		'url' 		=> 'url',
 		'text'		=> 'textarea',
-		'password' 	=> 'password'
+		'password' 	=> 'password',
+		'created'	=> 'dateTime',
+		'updated'	=> 'dateTime'
 	);
 	
 	/**
@@ -390,7 +390,7 @@ class Form extends HTMLTag {
 			//$fieldName = $model->name.'['.$fieldInfo->name.']';
 			$fieldName = $fieldInfo->name;
 			// create form field depending on db-table field type
-			if (in_array($fieldInfo->name, $this->fieldNameFormTypeMapping)) {
+			if (array_key_exists($fieldInfo->name, $this->fieldNameFormTypeMapping)) {
 				$fieldType = $this->fieldNameFormTypeMapping[$fieldInfo->name];
 			} else {
 				switch($fieldInfo->type) {
@@ -455,14 +455,23 @@ class Form extends HTMLTag {
 					} else {
 						$field->checked(false);
 					}
-				} elseif (in_array($fieldInfo->name, array('created', 'edited'))) {
-					$field->value(date('d.m.Y H:i', $model->get($fieldInfo->name)));
 				} else {
 					$field->value($model->get($fieldInfo->name));
 				}
 			}
 		}
 		return $this;
+	}
+	
+	public function toModel(Model $model) {
+		foreach($this->fieldset->children() as $formField) {
+			if (!$formField instanceof FormField) continue;
+			$fieldname = $formField->attributes->name;
+			if ($model->hasField($fieldname)) {
+				$model->set($fieldname, $formField->value());
+			}
+		}
+		return $model;
 	}
 	
 	/**
