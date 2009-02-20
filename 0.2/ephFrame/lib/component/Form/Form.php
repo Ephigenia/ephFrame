@@ -370,65 +370,74 @@ class Form extends HTMLTag {
 		if (empty($ignore)) {
 			$ignore = array('id');
 		}
+		
 		// just display these fields (ordered)
 		$fieldInfos = array();
  		if (count($fields) > 0) {
- 			foreach($fields as $fieldName) {
+ 			foreach($fields as $fieldName => $config) {
+ 				if (is_int($fieldName)) {
+ 					$fieldName = $config;
+ 					$config = array();
+ 				}
  				if (!isset($model->structure[$fieldName])) continue;
- 				$fieldInfos[$fieldName] = $model->structure[$fieldName];
+ 				$config['modelFieldInfo'] = $model->structure[$fieldName];
+ 				$fieldInfos[$fieldName] = $config;
  			}
  		} else {
  			$fieldInfos = $model->structure;
  		}
+ 		
  		// remove ignored fields
  		if (count($ignore) > 0) {
  			foreach($ignore as $ignoredFieldName) unset($fieldInfos[$ignoredFieldName]);
  		}
+ 		
  		// parse field infos and create form fields for them
 		foreach($fieldInfos as $fieldInfo) {
-			$fieldType = $fieldValue = null;
-			//$fieldName = $model->name.'['.$fieldInfo->name.']';
-			$fieldName = $fieldInfo->name;
+			$modelFieldInfo = $fieldInfo['modelFieldInfo'];
+			$fieldInfo['name'] = $modelFieldInfo->name;
+			// type of field defined in field config
+			if (!empty($fieldInfo['type'])) {
+				
 			// create form field depending on db-table field type
-			if (array_key_exists($fieldInfo->name, $this->fieldNameFormTypeMapping)) {
-				$fieldType = $this->fieldNameFormTypeMapping[$fieldInfo->name];
+			} else if (array_key_exists($modelFieldInfo->name, $this->fieldNameFormTypeMapping)) {
+				$fieldInfo['type'] = $this->fieldNameFormTypeMapping[$modelFieldInfo->name];
 			} else {
-				switch($fieldInfo->type) {
+				switch($modelFieldInfo->type) {
 					case 'varchar': case 'int': case 'float':
-						$fieldType = 'text';
+						$fieldInfo['type'] = 'text';
 						break;
 					case 'blob': case 'text': case 'mediumtext': case 'mediumblob':
 					case 'tinyblob': case 'tinytext': case 'longblob': case 'longtext':
-						$fieldType = 'textarea';
+						$fieldInfo['type'] = 'textarea';
 						break;
 					case 'date':
-						$fieldType = 'text';
-						$fieldValue = gmdate('Y-m-d');
+						$fieldInfo['type'] = 'date';
 						break;
 					case 'char':
-						$fieldType = 'checkbox';
-						$fieldValue = true;
+						$fieldInfo['type'] = 'checkbox';
+						$fieldInfo['value'] = true;
 						break;
 					case 'enum':
 						// enum can be checkbox
 						if (count($fieldInfo->enumOptions) <= 2) {
-							$fieldValue = true;
-							$fieldType = 'checkbox'; 
+							$fieldInfo['value'] = true;
+							$fieldInfo['type'] = 'checkbox'; 
 						} else {
-							$fieldType = 'DropDown';
-							$fieldValue = $fieldInfo->enumOptions;
+							$fieldInfo['type'] = 'DropDown';
+							$fieldInfo['value'] = $fieldInfo->enumOptions;
 						}
 						break;
 				}
 			}
-			if ($fieldType && $fieldName) {
+			if (!empty($fieldInfo['type']) && !empty($fieldInfo['name'])) {
 				// copy validation rules from model to form field if possible
-				$field = $this->newField($fieldType, $fieldName, $fieldValue);
-				if (isset($model->validate[$fieldInfo->name])) {
-					$field->addValidationRule($model->validate[$fieldInfo->name]);
+				$field = $this->newField($fieldInfo['type'], $fieldInfo['name'], @$fieldInfo['value']);
+				if (isset($model->validate[$fieldInfo['name']])) {
+					$field->addValidationRule($model->validate[$fieldInfo['name']]);
 				}
-				if ($fieldInfo->type == 'enum' && count($fieldInfo->enumOptions) > 2) {
-					foreach($fieldInfo->enumOptions as $optionValue) {
+				if ($fieldInfo['type'] == 'enum' && count($modelFieldInfo->enumOptions) > 2) {
+					foreach($modelFieldInfo->enumOptions as $optionValue) {
 						$field->addOption($optionValue);
 					}
 				}
@@ -463,6 +472,12 @@ class Form extends HTMLTag {
 		return $this;
 	}
 	
+	/**
+	 *	Assign submitted values to model
+	 *	
+	 * 	@param Model $model
+	 * 	@return Model
+	 */
 	public function toModel(Model $model) {
 		foreach($this->fieldset->children() as $formField) {
 			if (!$formField instanceof FormField) continue;
