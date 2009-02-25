@@ -605,7 +605,7 @@ abstract class DBQuery extends Object implements Renderable {
 					$rendered .= $left.$connector.$right;
 				}
 			}
-			if (!preg_match('/\s+(AND|OR)$/', $right)) {
+			if (!preg_match('/((AND|OR)\s*$)|(^\s*(AND|OR))/', $right)) {
 				$rendered .= ' AND ';
 			}
 		}

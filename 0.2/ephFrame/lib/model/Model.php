@@ -999,7 +999,7 @@ class Model extends Object {
 	 */
 	public function find($conditions, $order = null, $depth = null) {
 		$query = $this->createSelectQuery($conditions, $order, null, null, $depth);
-		if (!$this->beforeFind(&$query)) return false;
+		if (!$this->beforeFind($query)) return false;
 		$result = $this->DB->query($query, $depth); 
 		if ($resultSet = $this->createSelectResultList($result, true)) {
 			return $this->afterFind($resultSet);

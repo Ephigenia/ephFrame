@@ -35,7 +35,7 @@ class HTML extends Helper {
 	 * 	@param array $attributes
 	 * 	@return HTMLTag
 	 */
-	private function tag($tagName, $content = null, Array $attributes = array()) {
+	public function tag($tagName, $content = null, Array $attributes = array()) {
 		return new HTMLTag($tagName, $attributes, $content);
 	}
 	

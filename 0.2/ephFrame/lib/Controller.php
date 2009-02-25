@@ -154,7 +154,7 @@ abstract class Controller extends Object implements Renderable {
 	 *	@param integer $id
 	 */
 	public function delete($id = null) {
-		$id = ($id === null) ? (int) $this->params['id'] : $id;
+		$id = ($id === null) ? (int) @$this->params['id'] : $id;
 		if ($id > 0 && isset($this->{$this->name})) {
 			if (!$entry = $this->{$this->name}->findById($id)) {
 				$this->name = 'error';
@@ -571,7 +571,7 @@ abstract class Controller extends Object implements Renderable {
 			ephFrame::loadClass($this->viewClassName);
 		}
 		// render the view part
-		$view = new $this->viewClassName($this->name, &$this->action, $this->data->toArray());
+		$view = new $this->viewClassName($this->name, $this->action, $this->data->toArray());
 		$viewRendered = $view->render();
 		// wrap layout around view
 		if (!empty($this->layout)) {

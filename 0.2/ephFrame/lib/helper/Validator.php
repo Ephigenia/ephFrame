@@ -60,6 +60,9 @@ class Validator extends Helper {
 				$message = false;
 			} else {
 				// replace wildcards in the failmessage
+				if (!is_array($config)) {
+					$config = array('message' => $config);
+				}
 				$message = String::substitute($config['message'], array_merge($config, array(
 					'value' => $value,
 					'rule' => $ruleName,

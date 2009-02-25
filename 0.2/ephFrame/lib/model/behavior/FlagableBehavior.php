@@ -48,7 +48,8 @@ class FlagableBehavior extends ModelBehavior {
 		}
 		$flags = array_map('intval', $flags);
 		foreach($flags as $flag) {
-			if ((int) $this->model->get($this->flagFieldname) & $flag) return true;
+			if (!$this->hasFlag($flag)) continue;
+			return true;
 		}
 		return false;
 	}
@@ -60,6 +61,9 @@ class FlagableBehavior extends ModelBehavior {
 	 * 	@return boolean
 	 */
 	public function hasFlag($flag) {
+		if ($flag == 0 && $this->model->isEmpty($this->flagFieldname)) {
+			return true;
+		}
 		return $this->model->{$this->flagFieldname} & (int) $flag;
 	}
 	

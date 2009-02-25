@@ -669,6 +669,25 @@ class String extends Helper {
 	}
 	
 	/**
+	 *	Convert a string to base36
+	 *	{@link http://en.wikipedia.org/wiki/Base_36}
+	 *	@param string
+	 *	@return string
+	 */
+	public static function toBase36($string) {
+		return base_convert($string, 10, 36);
+	}
+	
+	/**
+	 * 	Convert a string back form base36
+	 * 	@param $string
+	 * 	@return string
+	 */
+	public static function fromBase36($string) {
+		return base_convert($string, 36, 10);
+	}
+	
+	/**
 	 * 	Encodes every character in the string to HTML Encoded characters,
 	 *	this is multibyte save
 	 * 	@param string $string String to encode
