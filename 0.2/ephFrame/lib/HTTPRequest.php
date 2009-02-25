@@ -134,7 +134,10 @@ class HTTPRequest extends Component {
 		}
 		// strip slashes from all values if magic quotes are on
 		if (function_exists('get_magic_quotes_gpc') && !get_magic_quotes_gpc()) {
-			$this->data = array_map('addslashes', $this->data);
+			if (!defined('ephFrameHTTPRequestAddSlashesOk')) {
+				$this->data = array_map('addslashes', $this->data);
+				define('ephFrameHTTPRequestAddSlashesOk', true);
+			}
 		}
 		// collect received header data
 		// @todo include this to https ? or what? that is missing?
