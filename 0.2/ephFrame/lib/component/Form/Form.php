@@ -384,7 +384,11 @@ class Form extends HTMLTag {
  				$fieldInfos[$fieldName] = $config;
  			}
  		} else {
- 			$fieldInfos = $model->structure;
+ 			$fieldInfos = array();
+ 			foreach($model->structure as $g) {
+ 				$fieldInfos[$g->name]['modelFieldInfo'] = $g;
+ 			}
+// 			$fieldInfos = $model->structure;/
  		}
  		
  		// remove ignored fields
