@@ -68,6 +68,11 @@ class Inflector extends Object {
 		return $string.'s';
 	}
 	
+	/**
+	 *	Shortcut for {@link pluralize}
+	 * 	@param $string string
+	 * 	@return string
+	 */
 	public static function plural($string) {
 		return self::pluralize($string);
 	}
@@ -108,7 +113,6 @@ class Inflector extends Object {
 	 * 	@return string
 	 */
 	public static function camellize($string, $upper = false) {
-		if (!is_scalar($string)) return $string;
 		$result = preg_replace('@\s+@', '', ucwords(preg_replace('@(_|\s)+@', ' ', $string)));
 		if ($upper == false) {
 			$result = lcfirst($result);
@@ -123,28 +127,44 @@ class Inflector extends Object {
 	 * 	// echoes 'Hello_my_Name_is_karl'
 	 * 	echo String::delimeterSeperate($example);
 	 * 	</code>
-	 * 	@param string $in
+	 * 	@param string $string
 	 * 	@param string $delimeter The delimeter ot use, usually its an underscore _
 	 * 	@return string converted string
 	 */
-	public static function delimeterSeperate($string, $delimeter = '_', $lowered = false) {
-		assert(is_scalar($string));
-		if ($delimeter == null) {
-			$delimeter = '_';
-		}
-		$delimetered = trim($string);
-		$delimetered = preg_replace('@\\s+@', $delimeter, $delimetered);
-		$delimetered = preg_replace('@(?!^)([A-Z])@', $delimeter.'\\1', $delimetered);
-		// remove double delimeters
-		$delimetered = preg_replace('@('.preg_quote($delimeter).'){2,}@', $delimeter, $delimetered);
+	public static function delimeterSeperate($string, $delimeter = '_', $lowered = true) {
+		if ($delimeter == null) $delimeter = '_';
+		$string = preg_replace('@(?!^)([A-Z]|\s+)@', $delimeter.'\\1', $string);
+		$string = preg_replace('@('.$delimeter.'){2,}@', $delimeter, $string);
 		if ($lowered) {
-			$delimetered = String::lower($delimetered);
+			$string = strtolower($string);
 		}
-		return $delimetered;
+		return $string;
 	}
 	
-	public static function underscore($string, $lowered = false) {
-		return self::delimeterSeperate($string, '_', $lowered);
+	/**
+	 *	Alias for {@link delimeterSeperate}
+	 * 	@param string $string
+	 * 	@return string
+	 */
+	public static function underscore($string) {
+		return self::delimeterSeperate($string, '_', true);
+	}
+	
+	/**
+	 *	Seperates string into modelname and fieldname and returns an array
+	 *	<code>
+	 *	// will return array('ModelName', 'fieldName');
+	 *	var_dump(Inflector::modelAndFieldName('ModelName.fieldName');
+	 *	</code>
+	 *	@param string $string
+	 *	@return array(string)
+	 */
+	public static function splitModelAndFieldName($string) {
+		$string = trim($string);
+		if (strpos($string, '.') !== false) {
+			return explode('.', $string);
+		}
+		return array('', $string);
 	}
 	
 }

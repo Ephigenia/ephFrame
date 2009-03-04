@@ -89,41 +89,52 @@ abstract class Object {
 	 * 	@return array(string)
 	 */
 	public function __parentClasses($obj = null) {
-		$parents = array();
-		if ($obj == null) {
+		global $parentClassesCache;
+		if (func_num_args() == 0) {
 			$obj = $this;
 		}
-		while($parentClass = get_parent_class($obj)) {
-			$parents[] = $parentClass;
-			$obj = $parentClass;
+		// create list of parent classes
+		$className = get_class($obj);
+		if (!isset($parentClassesCache[$className])) {
+			$parentClassesCache[$className] = array();
+			while($parentClass = get_parent_class($obj)) {
+				$parentClassesCache[$className][] = $parentClass;
+				$obj = $parentClass;
+			}
 		}
-		return $parents;
+		return $parentClassesCache[$className];
 	}
 	
 	/**
-	 *	merges an property array of the current class with all values from
-	 * 	parents.
-	 * 	@param string $name name of parent classes
+	 *	Merge class properties with values from parent classes
+	 *	
+	 * 	@param string $varname name of parent classes
 	 * 	@return Object
 	 */
-	public function __mergeParentProperty($name) {
-		foreach($this->__parentClasses() as $parentClassName) {
-			$classVars = get_class_vars($parentClassName);
-			// does parent class have a var named $name ?
-			if (!isset($classVars[$name]) || isset($classVars[$name]) && !is_array($classVars[$name])) continue;
-			// cycle through parents array values
-			foreach($classVars[$name] as $index => $var) {
-				if (!is_array($this->{$name}) || (is_array($this->{$name}) && in_array($var, $this->{$name}))) continue;
-				if (is_string($index)) {
-					if (!isset($this->{$name}[$index])) {
-						$this->{$name}[$index] = $var;
-					} 
-				} else {
-					array_unshift($this->{$name}, $var);
-				}
-			}
-		}
-		return $this;
+	public function __mergeParentProperty($varname, $cached = true) {
+		global $mergeParentProperty;
+		// do nothing if var not defined
+		$className = get_class($this);
+		if (!is_array($this->{$varname})) return $this;
+		if (!isset($mergeParentProperty[$className.$varname]) || $cached == false) {
+			foreach($this->__parentClasses($this) as $parentClassName) {
+				$classVars = get_class_vars($parentClassName);
+				// does parent class have a var named $name ?
+				if (!isset($classVars[$varname]) || !is_array($classVars[$varname])) continue;
+				$value = $classVars[$varname];
+				// cycle through parents array values
+				foreach($value as $index => $var) {
+					if (in_array($var, $this->$varname)) continue;
+					if (is_int($index)) {
+						array_unshift($this->$varname, $var);
+					} elseif (!isset($this->$varname[$index])) {
+						$this->$varname[$index] = $var;
+					}
+				} // foreach
+			} // foreach
+			$mergeParentProperty[$className.$varname] = $this->$varname;
+		} // if
+		return $mergeParentProperty[$className.$varname];
 	}
 	
 	public function __toString() {

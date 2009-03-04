@@ -341,10 +341,13 @@ class File extends FileSystemNode {
 	 * 	@param string
 	 * 	@return File
 	 */
-	public function append($string) {
+	public function append($string, $glue = LF) {
 		if (!$this->exists()) $this->create();
 		if (!$this->readable()) throw new FileNotFoundException($this);
 		$fp = fopen($this->nodeName, 'a');
+		if (is_array($string)) {
+			$string = implode($glue, $string);
+		}
 		fputs($fp, $string);
 		fclose($fp);
 		return $this;

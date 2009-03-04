@@ -25,10 +25,10 @@
  */
 class ModelFieldInfo extends Object {
 	
-	const QUOTE_STRING = 'string';
-	const QUOTE_INTEGER = 'integer';
-	const QUOTE_FLOAT = 'float';
-	const QUOTE_BOOLEAN = 'bool';
+	const QUOTE_STRING 	= 'string';
+	const QUOTE_INTEGER 	= 'integer';
+	const QUOTE_FLOAT 	= 'float';
+	const QUOTE_BOOLEAN 	= 'bool';
 	
 	public $name;
 	public $null = false;

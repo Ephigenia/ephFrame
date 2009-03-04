@@ -206,6 +206,13 @@ class Model extends Object {
 	);
 	
 	/**
+	 * 	List of models used by this model but not directly connected with it
+	 * 	by any association.
+	 * 	@var string
+	 */
+	public $uses = array();
+	
+	/**
 	 * 	Create a new Model or Model Entry
 	 * 
 	 * 	@param integer|array(mixed) $id
@@ -222,14 +229,11 @@ class Model extends Object {
 		// create structure array by reading structure from database
 		$this->loadStructure();
 		// merge associations of this model with associations from parent models
-		foreach ($this->__parentClasses() as $parentClass) {
-			$parentClassVars = get_class_vars($parentClass);
-			foreach ($this->associationTypes as $associationKey) {
-				if (!isset($parentClassVars[$associationKey])) continue;
-				$this->__mergeParentProperty($associationKey);
-			}
+		foreach ($this->associationTypes as $associationKey) {
+			$this->__mergeParentProperty($associationKey);
 		}
 		$this->__mergeParentProperty('behaviors');
+		$this->__mergeParentProperty('uses');
 		// initialize model behavior callbacks
 		$this->behaviors = new ModelBehaviorHandler($this, $this->behaviors);
 		// initialize model bindings
@@ -266,35 +270,27 @@ class Model extends Object {
 	protected function initAssociations($bind = true) {
 		// init models associated with this model
 		foreach($this->associationTypes as $associationType) {
-			// continue if no config defined
-			if (!isset($this->{$associationType}) || (isset($this->{$associationType}) && !is_array($this->$associationType))) {
-				$this->{$associationType} = array();
-				continue;
-			}
+			if (!is_array($this->$associationType)) continue;
 			foreach($this->$associationType as $modelName => $config) {
 				// simple notation $belongsTo = arryay('User')
 				if (is_int($modelName)) {
 					unset($this->{$associationType}[$modelName]);
 					$modelName = $config;
 					$config = array();
-					$this->bind($associationType, $modelName, $config);
-				} else {
-					$this->bind($associationType, $modelName, $config);
+				}
+				if (in_array($associationType, array('hasMany', 'hasAndBelongsToMany'))) {
+					$this->{Inflector::plural($modelName)} = new ObjectSet($this->name);
 				}
 				// skip binding to prevent maximum method nesting (infinitive repitition)
 				if (is_object($bind) && (isset($this->{get_class($bind)}) || get_class($bind) == $modelName)) {
 					continue;
 				}
-				$modelClassname = $modelName;
-				$this->{$modelName} = new $modelClassname($this);
-				$this->{$modelName}->{$this->name} = $this;
-				if ($associationType == 'hasMany' || $associationType == 'hasAndBelongsToMany') {
-					$modelNamePlural = Inflector::plural($modelName);
-					$this->{$modelNamePlural} = new $modelClassname($this);
-					$this->{$modelNamePlural}->{$this->name} = $this;
-					$this->{$modelNamePlural} = new Set();
-				}
+				$this->bind($modelName, $associationType, $config);
 			}
+		}
+		// add models from uses array
+		if (is_array($this->uses) && count($this->uses) > 0) {
+			foreach($this->uses as $modelName) $this->bind($modelName);
 		}
 		return true;
 	}
@@ -311,28 +307,19 @@ class Model extends Object {
 	 * 	@throws ModelReflexiveException if you try to bin the model to itsself
 	 * 	@return boolean
 	 */
-	public function bind($associationType, $modelName, Array $config = array()) {
-		// check association type
-		if (!$this->validAssociationType($associationType)) {
-			throw new ModelInvalidAssociationTypeException($this, $associationType);
-		}
-		if (empty($modelName)) {
-			return false;
-		}
-		if ($this->name == $modelName) {
-			throw new ModelReflexiveException($this);
-		}
-		if (!class_exists($modelName)) {
-			ephFrame::loadClass('app.lib.model.'.$modelName);
-		}
-		if (isset($this->{$modelName})) {
-			unset($this->{$modelName});
-			return;
-		}
-		$modelVars = get_class_vars($modelName);
-		if (empty($modelVars['name'])) {
-			$modelVars['name'] = $modelName;
-		}
+	public function bind($modelName, $associationType = null, Array $config = array()) {
+		if (empty($modelName)) return false;
+		if (!empty($associationType) && !$this->validAssociationType($associationType)) throw new ModelInvalidAssociationTypeException($this, $associationType);
+		if ($this->name == $modelName) throw new ModelReflexiveException($this);
+		// load model class
+		if (strpos($modelName, '.')) {
+			$modelName = ephFrame::loadClass($modelName);
+		} else {
+			class_exists($modelName) or ephFrame::loadClass('app.lib.model.'.$modelName);
+		}		
+		// create model instance
+		$this->{$modelName} = new $modelName($this);
+		$this->{$modelName}->{$this->name} = $this;
 		// create default config
 		$config = array_merge(array(
 			'conditions' => array(),
@@ -343,21 +330,22 @@ class Model extends Object {
 			'joinTable' => null
 		), $config);
 		// has and belongsToMany
-		if ($associationType == 'hasAndBelongsToMany') {
-			if (!isset($config['joinTable'])) {
-				$joinTable = $this->tablename.'_'.Inflector::underscore(Inflector::plural($modelVars['name']), true);
-				$config['joinTable'] = $joinTable;
-			}
+		switch($associationType) {
+			case 'hasAndBelongsToMany':
+				if (!isset($config['joinTable'])) {
+					$config['joinTable'] = $this->tablename.'_'.Inflector::underscore(Inflector::plural($modelName), true);
+				}
+				break;
 		}
 		// other model’s side
 		if (!isset($config['foreignKey'])) {
 			switch ($associationType) {
 				//$config['foreignKey'] = ucFirst($modelVars['name']).'.'.Inflector::delimeterSeperate($this->name.'_id');
 				case 'belongsTo':
-					$config['foreignKey'] = ucFirst($modelVars['name']).'.'.$modelVars['primaryKeyName'];
+					$config['foreignKey'] = ucFirst($modelName).'.'.$this->$modelName->primaryKeyName;
 					break;
 				case 'hasOne':
-					$config['foreignKey'] = ucFirst($modelVars['name']).'.'.Inflector::delimeterSeperate($this->name.'_id', '_', true);
+					$config['foreignKey'] = ucFirst($modelName).'.'.Inflector::delimeterSeperate($this->name.'_id', '_', true);
 					//$config['foreignKey'] = ucFirst($modelVars['name']).'.'.$modelVars['primaryKeyName'];
 					break;
 				case 'hasMany':
@@ -373,13 +361,13 @@ class Model extends Object {
 			switch ($associationType) {
 				//$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
 				case 'belongsTo':
-					$config['associationKey'] = $this->name.'.'.Inflector::underscore($modelVars['name'].'_'.$modelVars['primaryKeyName'], true);
+					$config['associationKey'] = $this->name.'.'.Inflector::underscore($modelName.'_'.$this->$modelName->primaryKeyName, true);
 					break;
 				case 'hasOne':
 					$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
 					break;
 				case 'hasMany':
-					$config['associationKey'] = $modelVars['name'].'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName, true);
+					$config['associationKey'] = $modelName.'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName, true);
 					break;
 				case 'hasAndBelongsToMany':
 					$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
@@ -701,8 +689,14 @@ class Model extends Object {
 	 * 	@param $conditions
 	 * 	@return Model|boolean
 	 */
-	public function deleteWhere($conditions) {
-		
+	public function deleteWhere($conditions, $callbacks = false) {
+		if ($callbacks) {
+			
+		} else {
+			$deleteQuery = new DeleteQuery($this->tablename(), $conditions);
+			$this->query($deleteQuery);
+		}
+		return $this;
 	}
 	
 	/**
@@ -861,8 +855,9 @@ class Model extends Object {
 		$order = array_merge($order, $this->order);
 		if (count($order) > 0) {
 			foreach($order as $orderRule) {
+				$fieldname = substr($orderRule, 0, strpos($orderRule, ' '));
 				// add model table alias name if missing
-				if ($this->hasField(substr($orderRule, 0, strpos($orderRule, ' ')))) {
+				if (!strpos($fieldname, '.') && $this->hasField($fieldname)) {
 					$orderRule = $this->name.'.'.$orderRule;
 				}
 				$query->orderBy($orderRule);
@@ -1256,15 +1251,12 @@ class Model extends Object {
 	 * 	@return boolean
 	 */
 	public function hasField($fieldname) {
-		if (strpos($fieldname, '.') == false) {
-			return isset($this->structure[trim($fieldname)]);
-		} else {
-			$modelName = substr($fieldname, 0, strpos($fieldname, '.')-1);
-			if ($modelName !== $this->name) {
-				return false;
-			}
-			return $this->hasField(substr($fieldname, strpos($fieldname, '.') + 1));
+		if (empty($fieldname)) return false;
+		list($modelname, $fieldname) = Inflector::splitModelAndFieldName($fieldname);
+		if (!empty($modelname) && $modelname !== $this->name) {
+			return false;
 		}
+		return isset($this->structure[$fieldname]);
 	}
 	
 	/**
@@ -1298,13 +1290,14 @@ class Model extends Object {
 	 *	
 	 * 	@param string	$fieldname
 	 * 	@param mixed	$default
+	 * 	@return mixed
 	 */
 	public function get($fieldname, $default = null) {
 		if (is_scalar($fieldname)) {
-			if (isset($this->data[$fieldname])) {
-				return $this->data[$fieldname];
-			} elseif (empty($this->data[$fieldname]) && func_num_args() > 1) {
+			if (empty($this->data[$fieldname]) && func_num_args() > 1) {
 				return $default;
+			} elseif (isset($this->data[$fieldname])) {
+				return $this->data[$fieldname];
 			} elseif (isset($this->structure[$fieldname])) {
 				return null;
 			}
@@ -1328,56 +1321,52 @@ class Model extends Object {
 	 * 
 	 * 	Setting values of models associated with the model
 	 * 	<code>
+	 * 	$user->set('Company.status', false);
 	 * 	$user->Company->set('status', false');
 	 * 	$user->Company->save();
 	 * 	</code>
 	 *
-	 * @param unknown_type $fieldName
-	 * @param unknown_type $value
-	 * @return unknown
+	 * @param string $fieldname
+	 * @param mixed $value
+	 * @return Model
 	 */
-	public function set($fieldName, $value = null) {
-		$modelName = $this->name;
-		// catch associated model setters
-		if (($pointPos = strpos($fieldName, '.')) !== false) {
-			$modelName = substr($fieldName, 0, $pointPos);
-			$fieldName = substr($fieldName, $pointPos+1);
-		}
-		//echo $this->id.'.'.$modelName.'.'.$fieldName.'<br />';
-		// assign value to this models data
-		if ($modelName == $this->name) {
-			if (isset($this->structure[$fieldName])) {
-				// type conversion
-				if (!is_scalar($value)) {
-					$value = (string) $value;
-				}
-				// use quoting type of structure
-				switch($this->structure[$fieldName]->quoting) {
-					case ModelFieldInfo::QUOTE_BOOLEAN:
-						$value = (bool) $value;
-						break;
-					case ModelFieldInfo::QUOTE_FLOAT:
-						$value = (float) $value;
-						break;
-					case ModelFieldInfo::QUOTE_STRING:
-						$value = (string) $value;
-						break;
-					case ModelFieldInfo::QUOTE_INTEGER:
-						$value = (int) $value;
-						break;
-				}
-				$this->data[$fieldName] = $value;
-			} elseif (is_object($value)) {
-				$this->$fieldName = $value;
-			} else {
-				$this->data[$fieldName] = $value;
+	public function set($fieldname, $value = null) {
+		list($modelname, $fieldname) = Inflector::splitModelAndFieldName($fieldname);
+		if (!empty($modelname) && $modelname !== $this->name) {
+			if (isset($this->$modelname) && $this->$modelname instanceof Model) {
+				return $this->$modelname->get($fieldname);
 			}
-		} elseif (isset($this->$modelName)) {
-			$this->$modelName->set($fieldName, $value);
+		} elseif (isset($this->structure[$fieldname])) {
+			// use quoting type of structure
+			switch($this->structure[$fieldname]->quoting) {
+				case ModelFieldInfo::QUOTE_BOOLEAN:
+					$this->data[$fieldname] = (bool) $value;
+					break;
+				case ModelFieldInfo::QUOTE_FLOAT:
+					$this->data[$fieldname] = (float) $value;
+					break;
+				case ModelFieldInfo::QUOTE_INTEGER:
+					$this->data[$fieldname] = (int) $value;
+					break;
+				case ModelFieldInfo::QUOTE_STRING:
+				default:
+					$this->data[$fieldname] = (string) $value;
+					break;
+			}
+		} elseif (is_object($value)) {
+			$this->$fieldname = $value;
+		} else {
+			$this->data[$fieldname] = $value;
 		}
 		return $this;
 	}
 	
+	/**
+	 *	Magic method
+	 * 	@param $fieldName
+	 * 	@param $value
+	 * 	@return unknown_type
+	 */
 	public function __set($fieldName, $value) {
 		return $this->set($fieldName, $value);
 	}

@@ -424,7 +424,7 @@ class Form extends HTMLTag {
 						break;
 					case 'enum':
 						// enum can be checkbox
-						if (count($fieldInfo->enumOptions) <= 2) {
+						if (count($modelFieldInfo->enumOptions) <= 2) {
 							$fieldInfo['value'] = true;
 							$fieldInfo['type'] = 'checkbox'; 
 						} else {

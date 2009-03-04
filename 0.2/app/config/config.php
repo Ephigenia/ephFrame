@@ -44,6 +44,7 @@ date_default_timezone_set('Europe/Berlin');
  *	value to your specific value
  */
 // Registry::set('ERROR_REPORTING', E_ALL);
+// ?XDEBUG_PROFILE=1
 
 
 ?>
