@@ -333,7 +333,7 @@ class Model extends Object {
 		switch($associationType) {
 			case 'hasAndBelongsToMany':
 				if (!isset($config['joinTable'])) {
-					$config['joinTable'] = $this->tablename.'_'.Inflector::underscore(Inflector::plural($modelName), true);
+					$config['joinTable'] = $this->tablename.'_'.Inflector::underscore(Inflector::plural($this->{$modelName}->name), true);
 				}
 				break;
 		}
@@ -342,10 +342,10 @@ class Model extends Object {
 			switch ($associationType) {
 				//$config['foreignKey'] = ucFirst($modelVars['name']).'.'.Inflector::delimeterSeperate($this->name.'_id');
 				case 'belongsTo':
-					$config['foreignKey'] = ucFirst($modelName).'.'.$this->$modelName->primaryKeyName;
+					$config['foreignKey'] = ucFirst($this->{$modelName}->name).'.'.$this->$modelName->primaryKeyName;
 					break;
 				case 'hasOne':
-					$config['foreignKey'] = ucFirst($modelName).'.'.Inflector::delimeterSeperate($this->name.'_id', '_', true);
+					$config['foreignKey'] = ucFirst($this->{$modelName}->name).'.'.Inflector::delimeterSeperate($this->name.'_id', '_', true);
 					//$config['foreignKey'] = ucFirst($modelVars['name']).'.'.$modelVars['primaryKeyName'];
 					break;
 				case 'hasMany':
@@ -367,7 +367,7 @@ class Model extends Object {
 					$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
 					break;
 				case 'hasMany':
-					$config['associationKey'] = $modelName.'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName, true);
+					$config['associationKey'] = $this->{$modelName}->name.'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName, true);
 					break;
 				case 'hasAndBelongsToMany':
 					$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
