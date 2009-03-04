@@ -279,7 +279,7 @@ class Model extends Object {
 					$config = array();
 				}
 				if (in_array($associationType, array('hasMany', 'hasAndBelongsToMany'))) {
-					$this->{Inflector::plural($modelName)} = new ObjectSet($this->name);
+					$this->{Inflector::plural($modelName)} = new Set();
 				}
 				// skip binding to prevent maximum method nesting (infinitive repitition)
 				if (is_object($bind) && (isset($this->{get_class($bind)}) || get_class($bind) == $modelName)) {
@@ -290,7 +290,9 @@ class Model extends Object {
 		}
 		// add models from uses array
 		if (is_array($this->uses) && count($this->uses) > 0) {
-			foreach($this->uses as $modelName) $this->bind($modelName);
+			foreach($this->uses as $modelName) {
+				$this->bind($modelName);
+			}
 		}
 		return true;
 	}
@@ -374,7 +376,9 @@ class Model extends Object {
 					break;
 			}
 		}
-		$this->{$associationType}[$modelName] = $config;
+		if (!empty($associationType)) {
+			$this->{$associationType}[$modelName] = $config;
+		}
 		return true;
 	}
 	
@@ -388,9 +392,6 @@ class Model extends Object {
 	 */
 	public function undbind($modelName) {
 		if (isset($this->{$modelName})) {
-			foreach($this->associationTypes as $types) {
-
-			}
 			unset($this->{$modelName});
 		}
 		return true;
