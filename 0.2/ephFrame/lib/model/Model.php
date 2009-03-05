@@ -272,7 +272,6 @@ class Model extends Object {
 		foreach($this->associationTypes as $associationType) {
 			if (!is_array($this->$associationType)) continue;
 			foreach($this->$associationType as $modelName => $config) {
-				// simple notation $belongsTo = arryay('User')
 				if (is_int($modelName)) {
 					unset($this->{$associationType}[$modelName]);
 					$modelName = $config;
@@ -281,11 +280,7 @@ class Model extends Object {
 				if (in_array($associationType, array('hasMany', 'hasAndBelongsToMany'))) {
 					$this->{Inflector::plural($modelName)} = new Set();
 				}
-				// skip binding to prevent maximum method nesting (infinitive repitition)
-				if (is_object($bind) && (isset($this->{get_class($bind)}) || get_class($bind) == $modelName)) {
-					continue;
-				}
-				$this->bind($modelName, $associationType, $config);
+				$this->bind($modelName, $associationType, $config, $bind);
 			}
 		}
 		// add models from uses array
@@ -309,7 +304,7 @@ class Model extends Object {
 	 * 	@throws ModelReflexiveException if you try to bin the model to itsself
 	 * 	@return boolean
 	 */
-	public function bind($modelName, $associationType = null, Array $config = array()) {
+	public function bind($modelName, $associationType = null, Array $config = array(), $bind = false) {
 		if (empty($modelName)) return false;
 		if (!empty($associationType) && !$this->validAssociationType($associationType)) throw new ModelInvalidAssociationTypeException($this, $associationType);
 		if ($this->name == $modelName) throw new ModelReflexiveException($this);
@@ -318,10 +313,14 @@ class Model extends Object {
 			$modelName = ephFrame::loadClass($modelName);
 		} else {
 			class_exists($modelName) or ephFrame::loadClass('app.lib.model.'.$modelName);
-		}		
-		// create model instance
-		$this->{$modelName} = new $modelName($this);
-		$this->{$modelName}->{$this->name} = $this;
+		}
+		if (is_object($bind) && (get_class($bind) == $modelName || isset($this->$modelName) || isset($bind->{$modelName}))) {
+			$this->$modelName = $bind;
+		} else {
+			// create model instance
+			$this->$modelName = new $modelName($this);
+			$this->$modelName->{$this->name} = $this;
+		}
 		// create default config
 		$config = array_merge(array(
 			'conditions' => array(),
@@ -335,7 +334,7 @@ class Model extends Object {
 		switch($associationType) {
 			case 'hasAndBelongsToMany':
 				if (!isset($config['joinTable'])) {
-					$config['joinTable'] = $this->tablename.'_'.Inflector::underscore(Inflector::plural($this->{$modelName}->name), true);
+					$config['joinTable'] = $this->tablename.'_'.Inflector::underscore(Inflector::plural($this->$modelName->name), true);
 				}
 				break;
 		}
