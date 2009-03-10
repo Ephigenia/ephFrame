@@ -106,6 +106,9 @@ class NestedSetBehavior extends ModelBehavior {
 		// general conditions
 		$q->from($this->model->tablename, 'p');
 		$q->where($this->model->name.'.lft BETWEEN p.lft AND p.rgt');
+		if ($depth == null) {
+			$q->orderBy->clear();
+		}
 		$q->orderBy->append($this->model->name.'.lft');
 		$q->groupBy($this->model->name.'.lft');
 		

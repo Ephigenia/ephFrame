@@ -92,6 +92,11 @@ class Set extends Component implements Countable, Renderable, Iterator, ArrayAcc
 		return $this;
 	}
 	
+	public function reset() {
+		$this->data = array();
+		return $this;
+	}
+	
 	/**
 	 * 	Adds more values to the set.
 	 * 	Accepting single and multiple arguments.
