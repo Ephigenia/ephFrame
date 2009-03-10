@@ -83,7 +83,7 @@ class HTML extends Helper {
 		if (!empty($label) && !isset($attributes['title']) && !preg_match('/<[^>]+>/', $label)) {
 			$attributes['title'] = $label;
 		}
-		if (empty($label) && $label !== false) {
+		if ($label === null || $label === false || $label === '') {
 			$label = $url;
 		}
 		$tag = $this->tag('a', null, $attributes);

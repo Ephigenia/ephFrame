@@ -197,7 +197,7 @@ abstract class SGMLTag extends Tree implements Traversable {
 		if (strpos($value, self::OPEN)) $value = str_replace(self::OPEN, htmlentities(self::OPEN), $value);
 		if (strpos($value, self::CLOSE)) $value = str_replace(self::CLOSE, htmlentities(self::CLOSE), $value);
 		$rendered = $this->renderOpenTag();
-		if (!empty($value)) {
+		if (strlen($value) !== 0) {
 			$rendered .= $this->renderValue($escaped);
 		}
 		if ($this->hasChildren()) {
