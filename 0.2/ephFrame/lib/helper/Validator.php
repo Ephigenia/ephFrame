@@ -175,7 +175,41 @@ class Validator extends Helper {
 	 *	Regular Expression for checking for valid urls
 	 *	@var string
 	 */
-	const URL = '/^((ht|f)tp(s?)\:\/\/|~\/|\/)?([\w]+:\w+@)?([a-zA-Z]{1}([\w\-]+\.)+([\w]{2,5}))(:[\d]{1,5})?((\/?\w+\/)+|\/?)(\w+\.[\w]{3,4})?((\?\w+=\w+)?(&\w+=\w+)*)?/';
+	const URL = '{
+  \\b
+  # Match the leading part (proto://hostname, or just hostname)
+  (
+    # http://, or https:// leading part
+    (https?)://[-\\w]+(\\.\\w[-\\w]*)+
+  |
+    # or, try to find a hostname with more specific sub-expression
+    (?i: [a-z0-9] (?:[-a-z0-9]*[a-z0-9])? \\. )+ # sub domains
+    # Now ending .com, etc. For these, require lowercase
+    (?-i: com\\b
+        | edu\\b
+        | biz\\b
+        | gov\\b
+        | in(?:t|fo)\\b # .int or .info
+        | mil\\b
+        | net\\b
+        | org\\b
+        | [a-z][a-z]\\.[a-z][a-z]\\b # two-letter country code
+    )
+  )
+
+  # Allow an optional port number
+  ( : \\d+ )?
+
+  # The rest of the URL is optional, and begins with /
+  (
+    /
+    # The rest are heuristics for what seems to work well
+    [^.!,?;"\'<>()\[\]\{\}\s\x7F-\\xFF]*
+    (
+      [.!,?]+ [^.!,?;"\'<>()\\[\\]\{\\}\s\\x7F-\\xFF]+
+    )*
+  )?
+}ix';
 	/**
 	 * 	Returns true if the url is valid or not
 	 *	@param	string	$url	

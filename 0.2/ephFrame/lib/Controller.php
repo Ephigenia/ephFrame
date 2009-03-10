@@ -614,7 +614,7 @@ abstract class Controller extends Object implements Renderable {
 	 * 	is called and after all component are called.
 	 * 	@return boolean
 	 */
-	public function beforeAction() {
+	public function beforeAction($actionName) {
 		return true;
 	}
 	

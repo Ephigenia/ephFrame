@@ -106,17 +106,22 @@ class NestedSetBehavior extends ModelBehavior {
 		// general conditions
 		$q->from($this->model->tablename, 'p');
 		$q->where($this->model->name.'.lft BETWEEN p.lft AND p.rgt');
-		$q->orderBy($this->model->name.'.lft');
+		$q->orderBy->append($this->model->name.'.lft');
 		$q->groupBy($this->model->name.'.lft');
+		
 		// view on part of the tree
 		if ($this->model->exists()) {
 			$q->where($this->model->name.'.lft > '.$this->model->lft.'');
 			$q->where($this->model->name.'.rgt < '.$this->model->rgt.'');
 		}
+//		echo '<pre>'.$q.'</pre>';
 		$r = $this->model->query($q, $depthModel);
 		// crappy implementation of depth parameter!
 		if ($depth > 0 && $r instanceof Set) {
-			$baseLevel = $r[0]->level;
+			$baseLevel = 20000;
+			foreach($r as $node){
+				if ($node->level < $baseLevel) $baseLevel = $node->level;
+			}
 			foreach($r as $index => $Node) {
 				if ($Node->level - $baseLevel > $depth - 1) {
 					$r->delete($index);

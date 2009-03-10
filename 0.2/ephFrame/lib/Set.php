@@ -305,7 +305,7 @@ class Set extends Component implements Countable, Renderable, Iterator, ArrayAcc
 	 * 	@return Set
 	 */
 	public function prepend($val) {
-		$this->data = array_unshift($this->data, $val);
+		array_unshift($this->data, $val);
 		return $this;
 	}
 	

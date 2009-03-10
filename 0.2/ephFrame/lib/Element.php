@@ -52,7 +52,7 @@ class Element extends View {
 	}
 	
 	public function beforeRender() {
-		$this->data['elementName'] = $this->name;
+		$this->data['elementName'] = str_replace('/', '_', $this->name);
 		return true;
 	}
 	

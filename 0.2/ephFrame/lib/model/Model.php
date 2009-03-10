@@ -304,22 +304,32 @@ class Model extends Object {
 	 * 	@throws ModelReflexiveException if you try to bin the model to itsself
 	 * 	@return boolean
 	 */
-	public function bind($modelName, $associationType = null, Array $config = array(), $bind = false) {
-		if (empty($modelName)) return false;
+	public function bind($modelname, $associationType = null, Array $config = array(), $bind = false) {
+		// pre-checkup
+		if (empty($modelname)) return false;
 		if (!empty($associationType) && !$this->validAssociationType($associationType)) throw new ModelInvalidAssociationTypeException($this, $associationType);
-		if ($this->name == $modelName) throw new ModelReflexiveException($this);
-		// load model class
-		if (strpos($modelName, '.')) {
-			$modelName = ephFrame::loadClass($modelName);
+		// custom class name specified in config
+		if (!empty($config['class'])) {
+			$classname = $config['class'];
 		} else {
-			class_exists($modelName) or ephFrame::loadClass('app.lib.model.'.$modelName);
+			$classname = $modelname;
 		}
-		if (is_object($bind) && (get_class($bind) == $modelName || isset($this->$modelName) || isset($bind->{$modelName}))) {
-			$this->$modelName = $bind;
+		// load model class
+		if (strpos($classname, '.')) {
+			$classname = ephFrame::loadClass($class);
+		} else {
+			class_exists($classname) or ephFrame::loadClass('app.lib.model.'.$classname);
+		}
+		if (is_object($bind) && (get_class($bind) == $classname || isset($this->$modelname) || isset($bind->{$modelname}))) {
+			$this->$modelname = $bind;
 		} else {
 			// create model instance
-			$this->$modelName = new $modelName($this);
-			$this->$modelName->{$this->name} = $this;
+			$this->$modelname = new $classname($this);
+			
+			$this->$modelname->{$this->name} = $this;
+		}
+		if (!empty($config['class'])) {
+			$this->$modelname->name = $modelname;
 		}
 		// create default config
 		$config = array_merge(array(
@@ -334,7 +344,7 @@ class Model extends Object {
 		switch($associationType) {
 			case 'hasAndBelongsToMany':
 				if (!isset($config['joinTable'])) {
-					$config['joinTable'] = $this->tablename.'_'.Inflector::underscore(Inflector::plural($this->$modelName->name), true);
+					$config['joinTable'] = $this->tablename.'_'.Inflector::underscore(Inflector::plural($this->$modelname->name), true);
 				}
 				break;
 		}
@@ -343,17 +353,17 @@ class Model extends Object {
 			switch ($associationType) {
 				//$config['foreignKey'] = ucFirst($modelVars['name']).'.'.Inflector::delimeterSeperate($this->name.'_id');
 				case 'belongsTo':
-					$config['foreignKey'] = ucFirst($this->{$modelName}->name).'.'.$this->$modelName->primaryKeyName;
+					$config['foreignKey'] = ucFirst($this->{$modelname}->name).'.'.$this->$modelname->primaryKeyName;
 					break;
 				case 'hasOne':
-					$config['foreignKey'] = ucFirst($this->{$modelName}->name).'.'.Inflector::delimeterSeperate($this->name.'_id', '_', true);
+					$config['foreignKey'] = ucFirst($this->{$modelname}->name).'.'.Inflector::delimeterSeperate($this->name.'_id', '_');
 					//$config['foreignKey'] = ucFirst($modelVars['name']).'.'.$modelVars['primaryKeyName'];
 					break;
 				case 'hasMany':
 					$config['foreignKey'] = ucFirst($this->name).'.'.$this->primaryKeyName;
 					break;
 				case 'hasAndBelongsToMany':
-					$config['foreignKey'] = $config['joinTable'].'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName, true);
+					$config['foreignKey'] = $config['joinTable'].'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName);
 					break;
 			}
 		}
@@ -362,21 +372,19 @@ class Model extends Object {
 			switch ($associationType) {
 				//$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
 				case 'belongsTo':
-					$config['associationKey'] = $this->name.'.'.Inflector::underscore($modelName.'_'.$this->$modelName->primaryKeyName, true);
+					$config['associationKey'] = $this->name.'.'.Inflector::underscore($modelname.'_'.$this->$modelname->primaryKeyName);
 					break;
 				case 'hasOne':
+				case 'hasAndBelongsToMany':
 					$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
 					break;
 				case 'hasMany':
-					$config['associationKey'] = $this->{$modelName}->name.'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName, true);
-					break;
-				case 'hasAndBelongsToMany':
-					$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
+					$config['associationKey'] = $this->{$modelname}->name.'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName);
 					break;
 			}
 		}
 		if (!empty($associationType)) {
-			$this->{$associationType}[$modelName] = $config;
+			$this->{$associationType}[$modelname] = $config;
 		}
 		return true;
 	}
@@ -920,7 +928,12 @@ class Model extends Object {
 			if ($depth >= 1) {
 				// hasOne, belongsTo data
 				foreach($belongsToAndHasOne as $modelName => $config) {
-					$model->{$modelName} = new $modelName($modelData);
+					if (isset($config['class'])) {
+						$modelClassname2 = $config['class']; 
+					} else {
+						$modelClassname2 = $modelName;
+					}
+					$model->{$modelName} = new $modelClassname2($modelData);
 					$model->{$modelName}->depth = $depth-1;
 				}
 				// fetch hasMany associated Models
@@ -1451,12 +1464,6 @@ class ModelInvalidAssociationTypeException extends ModelException {
 		parent::construct($message);
 	}
 }
-
-/**
- * 	@package ephFrame
- *	@subpackage ephFrame.exception
- */
-class ModelReflexiveException extends ModelException {}
 
 /**
  *	@package ephFrame
