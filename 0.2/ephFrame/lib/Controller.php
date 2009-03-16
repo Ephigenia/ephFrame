@@ -450,8 +450,7 @@ abstract class Controller extends Object implements Renderable {
 		}
 		// startup and init all forms
 		foreach($this->forms as $formName) {
-			$this->{$formName}->startup($this);
-			$this->{$formName}->configure();
+			$this->{$formName}->startup($this)->configure();
 		}
 		return $this;
 	}

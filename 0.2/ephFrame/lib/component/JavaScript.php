@@ -55,6 +55,13 @@ class JavaScript extends Component implements Renderable {
 	
 	public $compress = false;
 	public $pack = false;
+
+	public function clear() {
+		$this->files = array();
+		$this->plain = array();
+		$this->jquery = array();
+		return $this;
+	}
 	
 	public function startup() {
 		$this->dir = STATIC_DIR.'js'.DS;
@@ -143,10 +150,7 @@ class JavaScript extends Component implements Renderable {
 	public function beforeRender() {
 		// pack files, if {@link pack} is on and everything is smooothy
 		if ($this->pack && count($this->files) > 0) {
-			$dir = $this->dir;
-			if (substr($dir, 0, 1) == '/') {
-				$dir = substr($dir, 1);
-			}
+			$dir = ltrim($this->dir, '/');
 			// prepend dir to all files
 			$files = array();
 			foreach($this->files as $filename) {
@@ -169,7 +173,7 @@ class JavaScript extends Component implements Renderable {
 	public function afterRender($rendered) {
 		return $rendered;
 	}
-	
+		
 }
 
 /**

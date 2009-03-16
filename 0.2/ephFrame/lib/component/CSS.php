@@ -85,8 +85,14 @@ class CSS extends Component implements Renderable {
 	public $dir;
 	
 	public function __construct() {
-		$this->files = new Collection();
+		$this->clear();
 		return parent::__construct();
+	}
+	
+	public function clear() {
+		$this->files = new Collection();
+		$this->plain = array();
+		return $this;
 	}
 	
 	public function startup() {
@@ -126,8 +132,8 @@ class CSS extends Component implements Renderable {
 				$this->addFile($file);
 			}
 		} else {
-			$file = basename($file);
-			// add file extension
+//			$file = basename($file);
+			// add file extension if missing
 			if (strcasecmp(File::ext($file), 'css') !== 0) {
 				$file .= '.css';
 			}
@@ -179,10 +185,7 @@ class CSS extends Component implements Renderable {
 	public function beforeRender() {
 		// pack files, if {@link pack} is on and everything is smooothy
 		if ($this->pack && count($this->files) > 0) {
-			$dir = $this->dir;
-			if (substr($dir, 0, 1) == '/') {
-				$dir = substr($dir, 1);
-			}
+			$dir = ltrim($this->dir, '/');
 			// prepend dir to all files
 			$files = array();
 			foreach($this->files as $filename) {

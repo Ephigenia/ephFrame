@@ -64,7 +64,7 @@ class FlagableBehavior extends ModelBehavior {
 		if ($flag == 0 && $this->model->isEmpty($this->flagFieldname)) {
 			return true;
 		}
-		return $this->model->{$this->flagFieldname} & (int) $flag;
+		return (((int) $this->model->{$this->flagFieldname} & (int) $flag) != 0);
 	}
 	
 	/**
@@ -77,7 +77,7 @@ class FlagableBehavior extends ModelBehavior {
 	 * 	@return Model
 	 */
 	public function addFlag($flag) {
-		$this->model->{$this->flagFieldname} |= (int) $flag;
+		(int) $this->model->{$this->flagFieldname} |= (int) $flag;
 		return $this->model;
 	}
 	
@@ -87,8 +87,17 @@ class FlagableBehavior extends ModelBehavior {
 	 * 	@return Model
 	 */
 	public function removeFlag($flag) {
-		$this->model->{$this->flagFieldname} &= ~(int) $flag;
+		(int) $this->model->{$this->flagFieldname} &= ~(int) $flag;
 		return $this->model;
+	}
+	
+	/**
+	 * 	Alias for {@link removeFlag}
+	 * 	@param $flag
+	 * 	@return Model
+	 */
+	public function deleteFlag($flag) {
+		return $this->removeFlag($flag);
 	}
 	
 	/**
@@ -112,7 +121,7 @@ class FlagableBehavior extends ModelBehavior {
 	 *	@return Model
 	 */
 	public function toggleFlag($flag) {
-		$this->model->{$this->flagFieldname} = !$this->model->{$this->flagFieldname};
+		(int) $this->model->{$this->flagFieldname} ^= (int) $flag;
 		return $this->model;
 	}
 	

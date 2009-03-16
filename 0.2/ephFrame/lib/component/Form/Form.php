@@ -388,9 +388,7 @@ class Form extends HTMLTag {
  			foreach($model->structure as $g) {
  				$fieldInfos[$g->name]['modelFieldInfo'] = $g;
  			}
-// 			$fieldInfos = $model->structure;/
  		}
- 		
  		// remove ignored fields
  		if (count($ignore) > 0) {
  			foreach($ignore as $ignoredFieldName) unset($fieldInfos[$ignoredFieldName]);
@@ -437,6 +435,12 @@ class Form extends HTMLTag {
 			if (!empty($fieldInfo['type']) && !empty($fieldInfo['name'])) {
 				// copy validation rules from model to form field if possible
 				$field = $this->newField($fieldInfo['type'], $fieldInfo['name'], @$fieldInfo['value']);
+				if (isset($fieldInfo['label'])) {
+					$field->label($fieldInfo['label']);
+				}
+				if (isset($fieldInfo['mandatory'])) {
+					$field->mandatory = $fieldInfo['mandatory'];
+				}
 				if (isset($model->validate[$fieldInfo['name']])) {
 					$field->addValidationRule($model->validate[$fieldInfo['name']]);
 				}
