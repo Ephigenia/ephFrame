@@ -202,6 +202,22 @@ class Form extends HTMLTag {
 	}
 	
 	/**
+	 *	Checks if this form has a field with the name $name
+	 *	
+	 *	<code>
+	 *	if ($userForm->hasField('username')) {
+	 *		$userForm->username->value('Your Username');
+	 *	}
+	 *	</code>
+	 *	
+	 * 	@param string $name name of userfield to search for
+	 * 	@return boolean
+	 */
+	public function hasField($name) {
+		return $this->fieldset->childWithAttribute('name', $name);
+	}
+	
+	/**
 	 *	Create a new Form Field and return it
 	 * 	@param string $type
 	 * 	@param string $name
@@ -481,15 +497,24 @@ class Form extends HTMLTag {
 	}
 	
 	/**
-	 *	Assign submitted values to model
+	 *	Assign submitted values to a model
+	 *
+	 *	<code>
+	 *	// in a controller action
+	 *	$this->UserForm->toModel($this->User);
+	 *	</code>
 	 *	
 	 * 	@param Model $model
+	 * 	@param array(string) $fields name of fields used, if empty all fields are used
+	 * 	@param array(string) $ignore name of form fields to ignore
 	 * 	@return Model
 	 */
-	public function toModel(Model $model) {
+	public function toModel(Model $model, $fields = array(), $ignore = array()) {
 		foreach($this->fieldset->children() as $formField) {
 			if (!$formField instanceof FormField) continue;
 			$fieldname = $formField->attributes->name;
+			if (!empty($ignore) && in_array($fieldname, $ignore)) continue;
+			if (!empty($fields) && !in_array($fieldname, $fields)) continue;
 			if ($model->hasField($fieldname)) {
 				$model->set($fieldname, $formField->value());
 			}

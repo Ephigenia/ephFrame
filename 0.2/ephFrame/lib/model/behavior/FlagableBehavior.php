@@ -77,7 +77,21 @@ class FlagableBehavior extends ModelBehavior {
 	 * 	@return Model
 	 */
 	public function addFlag($flag) {
+		if (func_num_args() > 1) {
+			$args = func_get_args();
+			return $this->callMethod('addFlags', $args); 
+		}
 		(int) $this->model->{$this->flagFieldname} |= (int) $flag;
+		return $this->model;
+	}
+	
+	/**
+	 *	Set multiple flags in one method call
+	 * 	@return Model
+	 */
+	public function addFlags() {
+		$args = func_get_args();
+		foreach($args as $flag) $this->addFlag($flag);
 		return $this->model;
 	}
 	
