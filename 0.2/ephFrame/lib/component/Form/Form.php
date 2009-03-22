@@ -347,7 +347,7 @@ class Form extends HTMLTag {
 				}
 				if (!isset($config['ignore'])) $config['ignore'] = array();
 				if (!isset($config['fields'])) $config['fields'] = array();
-				// add fields depending on model if model attached to controller	
+				// add fields depending on model if model attached to controller
 				if (isset($this->controller->{$modelName})) {
 					$this->configureModel($this->controller->$modelName, $config['ignore'], $config['fields']);
 				} else {

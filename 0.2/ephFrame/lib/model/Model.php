@@ -219,7 +219,7 @@ class Model extends Object {
 	 * 	@return Model
 	 */
 	public function __construct($id = null, $fieldNames = array()) {
-		if (!$this->name) {
+		if (empty($this->name)) {
 			$this->name = get_class($this);
 		}
 		// set db source
@@ -316,7 +316,7 @@ class Model extends Object {
 		}
 		// load model class
 		if (strpos($classname, '.')) {
-			$classname = ephFrame::loadClass($class);
+			$classname = ephFrame::loadClass($classname);
 		} else {
 			class_exists($classname) or ephFrame::loadClass('app.lib.model.'.$classname);
 		}
@@ -325,12 +325,11 @@ class Model extends Object {
 		} else {
 			// create model instance
 			$this->$modelname = new $classname($this);
-			
-			$this->$modelname->{$this->name} = $this;
 		}
 		if (!empty($config['class'])) {
 			$this->$modelname->name = $modelname;
 		}
+		$this->$modelname->{$this->name} = $this;
 		// create default config
 		$config = array_merge(array(
 			'conditions' => array(),
@@ -397,9 +396,9 @@ class Model extends Object {
 	 * 	</code>
 	 * @param unknown_type $modelName
 	 */
-	public function undbind($modelName) {
+	public function unbind($modelName) {
 		if (isset($this->{$modelName})) {
-			unset($this->{$modelName});
+			$this->{$modelName} = false;
 		}
 		return true;
 	}
@@ -933,8 +932,10 @@ class Model extends Object {
 					} else {
 						$modelClassname2 = $modelName;
 					}
-					$model->{$modelName} = new $modelClassname2($modelData);
-					$model->{$modelName}->depth = $depth-1;
+					$model->$modelName = new $modelClassname2();
+					$model->$modelName->name = $modelName;
+					$model->$modelName->fromArray($modelData);
+					$model->$modelName->depth = $depth-1;
 				}
 				// fetch hasMany associated Models
 				foreach($this->hasMany as $modelName => $config) {
@@ -987,6 +988,12 @@ class Model extends Object {
 		return $return;
 	}
 	
+	/**
+	 *	Send a query to the db 
+	 * @param $query
+	 * @param $depth
+	 * @return unknown_type
+	 */
 	public function query($query, $depth = null) {
 		return $this->createSelectResultList($this->DB->query($query), false, $depth);
 	}
@@ -1347,7 +1354,7 @@ class Model extends Object {
 		list($modelname, $fieldname) = Inflector::splitModelAndFieldName($fieldname);
 		if (!empty($modelname) && $modelname !== $this->name) {
 			if (isset($this->$modelname) && $this->$modelname instanceof Model) {
-				return $this->$modelname->get($fieldname);
+				return $this->$modelname->set($fieldname, $value);
 			}
 		} elseif (isset($this->structure[$fieldname])) {
 			// use quoting type of structure
@@ -1366,6 +1373,7 @@ class Model extends Object {
 					$this->data[$fieldname] = (string) $value;
 					break;
 			}
+//			echo get_class($this).' '.$modelname.'.'.$fieldname.' = '.$value.'<br />';
 		} elseif (is_object($value)) {
 			$this->$fieldname = $value;
 		} else {

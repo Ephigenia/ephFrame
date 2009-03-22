@@ -320,7 +320,10 @@ abstract class DBQuery extends Object implements Renderable {
 	 * 	@param string $type join type to use, use the JOIN_* constants of this class
 	 * 	@param array() $conditions Join conditions, rendered as where statement
 	 */
-	public function join($tablename, $alias = null, $type = self::JOIN, Array $conditions = array()) {
+	public function join($tablename, $alias = null, $type = self::JOIN, $conditions = array()) {
+		if (!is_array($conditions)) {
+			$conditions = array($conditions);
+		}
 		$this->join->add(array($tablename, $alias, $type, $conditions));
 		return $this;
 	}
@@ -564,7 +567,11 @@ abstract class DBQuery extends Object implements Renderable {
 				$from .= $fromArr[0].', ';
 			}
 		}
-		return substr($from, 0, -2);
+		if (count($tables) > 1) {
+			return '('.substr($from, 0, -2).')';
+		} else {
+			return substr($from, 0, -2);
+		}
 	}
 	
 	/**

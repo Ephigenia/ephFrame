@@ -753,6 +753,10 @@ class Set extends Component implements Countable, Renderable, Iterator, ArrayAcc
 		return $this->offsetExists($index);
 	}
 	
+	public function defined($index) {
+		return $this->offsetExists($index);
+	}
+	
 	public function hasKey($index) {
 		return $this->hasIndex($index);
 	}
