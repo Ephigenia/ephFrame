@@ -485,11 +485,18 @@ class Model extends Object {
 	 * 	@return boolean
 	 */
 	public function fromId($id) {
-		//$this->set($this->primaryKeyName, (int) $id);
+		$this->set($this->primaryKeyName, (int) $id);
 		if (!$model = $this->findBy($this->primaryKeyName, $id)) {
 			return false;
 		}
 		$this->data = $model->toArray();
+		foreach($this->belongsTo + $this->hasOne as $modelName => $config) {
+			$this->$modelName = $model->$modelName;
+		}
+		foreach($this->hasMany as $modelName => $config) {
+			$modelPlural = Inflector::plural($modelName);
+			$this->{$modelPlural} = $model->$modelPlural;
+		}
 		return true;
 	}
 	
@@ -860,15 +867,22 @@ class Model extends Object {
 			$order = array($order);
 		}
 		$order = array_merge($order, $this->order);
+		// add this models
 		if (count($order) > 0) {
 			foreach($order as $orderRule) {
-				$fieldname = substr($orderRule, 0, strpos($orderRule, ' '));
-				// add model table alias name if missing
+				// trim ASC / DESC
+				if (strpos($orderRule, ' ')) {
+					$fieldname = substr($orderRule, 0, strpos($orderRule, ' '));
+				} else {
+					$fieldname = $orderRule;
+				}
 				if (!strpos($fieldname, '.') && $this->hasField($fieldname)) {
 					$orderRule = $this->name.'.'.$orderRule;
 				}
 				$query->orderBy($orderRule);
+				
 			}
+			
 		}
 		// count and limit
 		if ($count !== null) {
@@ -878,7 +892,7 @@ class Model extends Object {
 			$query->offset((int) $offset);
 		}
 		// belongsto / has one
-		if ($depth >= 1) {
+		if ($depth >= 0) {
 			$joinStuff = $this->hasOne + $this->belongsTo;
 			foreach($joinStuff as $modelName => $config) {
 				foreach($this->{$modelName}->structure as $fieldInfo) {

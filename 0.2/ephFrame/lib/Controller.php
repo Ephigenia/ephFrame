@@ -216,6 +216,9 @@ abstract class Controller extends Object implements Renderable {
 			if ($this->{$this->name}->perPage > 0) {
 				$this->set('pagination', $this->{$this->name}->paginate($page));
 			}
+			if (!$entries) {
+				return true;
+			}
 			return $entries;
 		}
 	}
@@ -632,7 +635,7 @@ abstract class Controller extends Object implements Renderable {
 	public function afterRender($rendered) {
 		// if we're in debugging mode we add the sql history dump to the view
 		// content (this can be overwritten in the AppController.
-		if (Registry::get('DEBUG') >= DEBUG_DEBUG) {
+		if (Registry::get('DEBUG') >= DEBUG_DEBUG && $this->viewClassName == 'HTMLView') {
 			$compileTime = ephFrame::compileTime(6);
 			$debugOutput = 'Compile Time: '.$compileTime.'s ';
 			if (class_exists('QueryHistory')) {

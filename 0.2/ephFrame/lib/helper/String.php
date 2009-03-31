@@ -431,7 +431,7 @@ class String extends Helper {
 				}
 				if (preg_match('/\s/', $char)) {
 					$charsSinceLastBreak = 0;
-					$cutPosition = $length;
+					$cutPosition = $maxLineLength;
 				} elseif ($charsSinceLastBreak >= $cutPosition) {
 					$charsSinceLastBreak = 0;
 					$wrapped .= LF;

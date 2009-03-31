@@ -24,6 +24,17 @@
  */
 class NestedSetBehavior extends ModelBehavior {
 	
+	const MOVE_UP = 'previous';
+	const MOVE_DOWN = 'next';
+	
+	public function isRoot() {
+		return ($this->model->lft == 1);
+	}
+	
+	public function isChild() {
+		return !$this_>isRoot();
+	}
+	
 	/**
 	 *	@return integer
 	 */
@@ -32,14 +43,30 @@ class NestedSetBehavior extends ModelBehavior {
 	}
 	
 	/**
-	 *	Returns the number of children in this node
-	 *	<code>
-	 *	printf('ther$node->children();
-	 *	</code>
+	 *	Returns the number of children in the subtree of this node.
 	 * 	@return integer
 	 */
 	public function numChildren() {
 		return (int) floor(($this->distance() - 1) / 2);
+	}
+	
+	/**
+	 *	Alias for {@link numChildren}
+	 * @return unknown_type
+	 */
+	public function childrenCount() {
+		return $this->numChildren();
+	}
+	
+	/**
+	 *	Determine level of depth of the current node and return it (cached)
+	 * 	@return integer
+	 */
+	public function level() {
+		if (!isset($this->model->data['level'])) {
+			$this->model->set('level', count($this->path(false, 0)));
+		}
+		return $this->model->level;
 	}
 	
 	/**
@@ -50,17 +77,24 @@ class NestedSetBehavior extends ModelBehavior {
 		return $this->numChildren() > 0;
 	}
 	
+	/**
+	 * 	Before Save callback
+	 * @return boolean
+	 */
 	public function beforeSave() {
 		if (isset($this->model->Parent)) {
 			$this->model->parent_id = $this->model->Parent->id;
+			// increase level
+			if ($this->model->hasField('level')) {
+				$this->model->set('level', $this->model->Parent->get('level', 0) + 1);
+			}
 		}
 		return true;
 	}
 	
 	public function beforeInsert() {
-		// lock tables ?
-		$this->model->query('UPDATE '.$this->model->tablename.' SET rgt=rgt+2 WHERE rgt>='.$this->model->Parent->rgt);
-		$this->model->query('UPDATE '.$this->model->tablename.' SET lft=lft+2 WHERE lft>'.$this->model->Parent->rgt); // AND rgt>'.$this->model->Parent->rgt);
+		$this->model->query('UPDATE '.$this->model->tablename.' SET rgt = rgt + 2 WHERE rgt >= '.$this->model->Parent->rgt);
+		$this->model->query('UPDATE '.$this->model->tablename.' SET lft = lft + 2 WHERE lft > '.$this->model->Parent->rgt);
 		$this->model->lft = (int) $this->model->Parent->rgt;
 		$this->model->rgt = (int) $this->model->Parent->rgt + 1;
 		return true;
@@ -88,8 +122,8 @@ class NestedSetBehavior extends ModelBehavior {
 	 * 	@param $depth
 	 * 	@return Set
 	 */
-	public function children($depth = null) {
-		return $this->tree($depth);
+	public function children($depth = null, $depthModel = null) {
+		return $this->tree($depth, $depthModel);
 	}
 	
 	/**
@@ -117,7 +151,6 @@ class NestedSetBehavior extends ModelBehavior {
 			$q->where($this->model->name.'.lft > '.$this->model->lft.'');
 			$q->where($this->model->name.'.rgt < '.$this->model->rgt.'');
 		}
-//		echo '<pre>'.$q.'</pre>';
 		$r = $this->model->query($q, $depthModel);
 		// crappy implementation of depth parameter!
 		if ($depth > 0 && $r instanceof Set) {
@@ -131,7 +164,6 @@ class NestedSetBehavior extends ModelBehavior {
 				}
 			}
 		}
-		// setting parents
 		return $r;
 	}
 	
@@ -146,7 +178,7 @@ class NestedSetBehavior extends ModelBehavior {
 	 * 	@return Model|boolean
 	 */
 	public function parent($modelDepth = null) {
-		if (!$this->model->exists() || (int) $this->model->lft <= 1) {
+		if (!$this->model->exists() || $this->isRoot()) {
 			return false;
 		}
 		// retreive parent from model
@@ -180,7 +212,6 @@ class NestedSetBehavior extends ModelBehavior {
 			return $this->cachedPath;
 		}
 		$q = $this->model->createSelectQuery();
-		$q->addComment($this->model->name.'->'.get_class($this).'->path(depth: '.$modelDepth.') id:'.$this->model->get($this->model->primaryKeyName));
 		$q->where($this->model->lft.' BETWEEN '.$this->model->name.'.lft AND '.$this->model->name.'.rgt');
 		if (!$includeCurrent) {
 			$q->where($this->model->name.'.'.$this->model->primaryKeyName.' <> '.$this->model->get($this->model->primaryKeyName));
@@ -192,6 +223,101 @@ class NestedSetBehavior extends ModelBehavior {
 		}
 		$this->cachedPath = $path;
 		return $path;
+	}
+	
+	/**
+	 *	Returns the node thas is on the left of the current node.
+	 *	@return Model|boolean
+	 */
+	public function previous() {
+		if ($this->isRoot()) return false;
+		if ($previousLeaf = $this->model->findBy('rgt', $this->model->lft - 1)) {
+			return $previousLeaf;
+		}
+		return false;
+	}
+	
+	/**
+	 * 	Returns the node to the right of the current node.
+	 * 	@return Model|boolean
+	 */
+	public function next() {
+		if ($this->isRoot()) return false;
+		if ($nextLeaf = $this->model->findBy('lft', $this->model->rgt + 1)) {
+			return $nextLeaf;
+		}
+		return false;
+	}
+	
+	/**
+	 *	Move node and subtree to an other node
+	 * 	@param $model
+	 * 	@return model
+	 */
+	public function moveTo(Model $model) {
+		
+	}
+	
+	/**
+	 *	Move node in his level of the tree into one direction
+	 *	@param string $direction
+	 *	@return Model
+	 */
+	public function move($direction) {
+		switch(String::lower((string) $direction)) {
+			case self::MOVE_DOWN:
+				$this->moveToNext();
+				break;
+			case self::MOVE_UP:
+				$this->moveToPrevious();
+				break;
+		}
+		if (is_int($direction)) {
+			$to = $direction;
+			$treeSize = $this->model->rgt - $this->model->lft + 1;
+			$this->_shiftRLValues($to, $treeSize);
+			if($this->model->lft >= $to){ // src was shifted too?
+                $this->model->lft += $treeSize;
+                $this->model->rgt += $treeSize;
+            }
+            /* now there's enough room next to target to move the subtree*/
+            $newpos = $this->_shiftRLRange($this->model->lft, $this->model->rgt, $to - $this->model->lft);
+            /* correct values after source */
+            $this->_shiftRLValues($this->model->rgt + 1, -$treeSize);
+            if($this->model->lft <= $to){ // dst was shifted too?
+                $this->model->lft -= $treeSize;
+                $this->model->rgt -= $treeSize;
+            }
+		}
+		return $this->model;
+	}
+	
+	/**
+	 *	Move Node on down on the same level
+	 * 	@return Model
+	 */
+	public function moveToNext() {
+		if ($next = $this->next()) {
+			
+			$this->move($next->rgt+1);
+		}
+	}
+	
+	public function moveToPrevious() {
+		if ($prev = $this->previous()) {
+			$this->move($prev->lft);
+		}
+	}
+	
+	public function _shiftRLValues($first, $delta) {
+		$this->model->query('UPDATE '.$this->model->tablename.' SET lft = lft + '.$delta.' WHERE lft >= '.$first);
+		$this->model->query('UPDATE '.$this->model->tablename.' SET rgt = rgt + '.$delta.' WHERE rgt >= '.$first);
+	}
+	
+	public function _shiftRLRange($first, $last, $delta) {
+		$this->model->query('UPDATE '.$this->model->tablename.' SET lft = lft + '.$delta.' WHERE lft >= '.$first.' AND lft <= '.$last);
+		$this->model->query('UPDATE '.$this->model->tablename.' SET rgt = rgt + '.$delta.' WHERE rgt >= '.$first.' AND rgt <= '.$last);
+		return array('l' => $first+$delta, 'r' => $last+$delta);
 	}
 	
 }

@@ -37,7 +37,7 @@ class FlagableBehavior extends ModelBehavior {
 	 *		echo 'permission to edit entry';
 	 *	}
 	 *	</code>
-	 * 	@param $flag
+	 * 	@param array(integer) $flag
 	 * 	@return boolean
 	 */
 	public function hasFlags($flag) {
