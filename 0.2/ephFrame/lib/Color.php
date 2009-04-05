@@ -57,6 +57,10 @@ class Color extends Object {
     	if (count($args) == 2 && is_string($args[1])) {
     		$this->image = $args[0];
     		list($this->r, $this->g, $this->b) = Color::HexToRGB($args[1]);
+    	// parameters passed: image, int
+    	} elseif(count($args) == 2 && is_int($args[1])) {
+    		$this->image = $args[0];
+    		$this->hex($args[1]);
     	// parameters passed: image, r, g, b
     	} elseif (count($args) == 4) {
     		$this->image = $args[0];
@@ -131,9 +135,14 @@ class Color extends Object {
      *	Returns Hex Value for this Color as String
      *	@return string
      */
-    public function hex() {
-    	$hex = self::RGBtoHex($this->r, $this->g, $this->b);
-    	return $hex;
+    public function hex($value = null) {
+    	if ($value !== null) {
+    		list($this->r, $this->g, $this->b) = Color::HexToRGB($value);
+    		return $this;
+    	} else {
+    		$hex = self::RGBtoHex($this->r, $this->g, $this->b);
+    		return $hex;
+    	}
     }
     
     /**
@@ -168,8 +177,12 @@ class Color extends Object {
      */
     public static function HexToRGB($hex) {
     	// cut #
-    	if (substr($hex,0,1) == '#') $hex = substr($hex, 1);
-    	$rgb = hexdec($hex);
+    	if (!is_int($hex)) {
+    		$hex = trim($hex, '#');
+    		$rgb = hexdec($hex);
+    	} else {
+    		$rgb = $hex;
+    	}
     	return array(($rgb >> 16) & 0xFF, ($rgb >> 8) & 0xFF, $rgb & 0xFF);
     }
     

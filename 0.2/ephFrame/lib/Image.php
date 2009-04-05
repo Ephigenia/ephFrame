@@ -95,6 +95,8 @@ class Image extends File implements Renderable {
 	const TYPE_PNG = 3;
 	const TYPE_SWF = 4;
 	
+	const CENTERED = 'center';
+	
 	private $imageTypes = array(
 		'none',
 		self::TYPE_GIF => 'gif',
@@ -105,7 +107,7 @@ class Image extends File implements Renderable {
 	
 	/**
 	 *	Size uses by the text drawing options
-	 * 	@param integer
+	 * 	@var integer
 	 */
 	private $textSize = 2;
 	
@@ -115,6 +117,10 @@ class Image extends File implements Renderable {
 	 */
 	private $imgInfo = array ();
 	
+	/**
+	 *	Size used when rendering TTF Fonts
+	 * 	@var integer
+	 */
 	public $fontSize = 2;
 
 	/**
@@ -137,9 +143,10 @@ class Image extends File implements Renderable {
 	 * 
 	 *	@param string|integer|ressource	$filenameWithOrHandle Filename of the Image
 	 * 	@param integer	$height
+	 * 	@param integer $backgroundColor
 	 * 	@return Image
 	 */
-	public function __construct($filenameWidthOrHandle = null, $height = null) {
+	public function __construct($filenameWidthOrHandle = null, $height = null, $backgroundColor = 0xffffff) {
 		// first check for gd lib installed
 		if (!$this->phpHasGDLib()) throw new ImageGDLibNotFoundException();
 		// create from ressource
@@ -150,11 +157,14 @@ class Image extends File implements Renderable {
 			parent::__construct($filenameWidthOrHandle);
 			$this->checkExistence();
 			//if (!$this->exists()) throw new FileNotFoundException($this);
-		} elseif (is_int($filenameWidthOrHandle) && is_int($height)) {
+		} else  {
 			assert($filenameWidthOrHandle > 0 && $height > 0);
 			$this->width = $filenameWidthOrHandle;
 			$this->height = $height;
 			$this->createHandle();
+			if ($backgroundColor) {
+				$this->createColor($backgroundColor);
+			}
 		}
 		return $this;
 	}
@@ -193,7 +203,10 @@ class Image extends File implements Renderable {
 	 *  @param string $backgroundColor
 	 * 	@return Image
 	 */
-	public function rectangle($x1, $y1, $x2, $y2, $borderColor = null, $backgroundColor = null) {
+	public function rectangle($x1, $y1, $x2, $y2, $borderColor = null, $backgroundColor = null, $antialias = false) {
+		if ($antialias) {
+			imageantialias($this->handle(), $antialias);
+		}
 		if ($backgroundColor !== null) {
 			$backgroundColor = $this->createColor($backgroundColor);
 			imagefilledrectangle($this->handle(), $x1, $y1, $x2, $y2, $backgroundColor->handle());
@@ -209,8 +222,8 @@ class Image extends File implements Renderable {
 	 * 	Alias for {@link rectangle}
 	 * 	@return Image
 	 */
-	public function rect($x1, $y1, $x2, $y2, $borderColor = null, $backgroundColor = null) {
-		return $this->rectangle($x1, $y1, $x2, $y2, $borderColor = null, $backgroundColor = null);
+	public function rect($x1, $y1, $x2, $y2, $borderColor = null, $backgroundColor = null, $antialias = false) {
+		return $this->rectangle($x1, $y1, $x2, $y2, $borderColor, $backgroundColor, $antialias);
 	}
 	
 	/**
@@ -221,11 +234,12 @@ class Image extends File implements Renderable {
 	 * 	@param integer $y2
 	 * 	@param array|Color $color
 	 */
-	public function line($x1, $y1, $x2, $y2, $color, $thickness = 1) {
+	public function line($x1, $y1, $x2, $y2, $color, $thickness = 1, $antialias = false) {
 		if (func_num_args() == 6) $this->setThickness($thickness);
-		if (!is_integer($color)) {
-			$color = $this->createColor($color);
-			$color = $color->handle();
+		$color = $this->createColor($color);
+		$color = $color->handle();
+		if ($antialias) {
+			imageantialias($this->handle(), $antialias);
 		}
 		imageline($this->handle(), $x1, $y1, $x2, $y2, $color);
 		$this->resetThickness();
@@ -368,6 +382,9 @@ class Image extends File implements Renderable {
 		if (empty($this->imgInfo)) {
 			$this->checkExistence();
 			$this->imgInfo = getimagesize($this->nodeName);
+			if(!isset($this->imgInfo['channels'])) {
+				$this->imgInfo['channels'] = 8;
+			}
 		}
 		return $this->imgInfo;
 	}
@@ -434,15 +451,31 @@ class Image extends File implements Renderable {
 				$text = $text->render();
 			}
 		}
-		if (!is_integer($color)) {
-			$color = $this->createColor($color);
-			$color = $color->handle();
+		// split in lines?
+		if (preg_match('/[\n\r]/', $text)) {
+			$lines = preg_split('/[\r\n]/', $text);
+			 for($lineNum = 0; $lineNum < count($lines); $lineNum++) {
+			 	if ($y === Image::CENTERED) {
+			 		$y = $this->height() / 2 - (count($lines) * $this->textHeight($size) / 2);
+			 	}
+			 	$y += ($lineNum * $this->textHeight($size));
+			 	$this->text($x, $y, $lines[$lineNum], $color, $size, $backgroundColor);
+			 }
+			 return $this;
 		}
+		$color = $this->createColor($color);
+		$color = $color->handle();
 		if ($size === null) {
 			$size = $this->fontSize;
 		}
+		if ($x === Image::CENTERED) {
+			$x = ($this->width() / 2) - ($this->textWidth($text, $size) / 2);
+		}
+		if ($y === Image::CENTERED) {
+			$y = ($this->height() / 2) - ($this->textHeight($text, $size));
+		}
 		if ($backgroundColor !== null) {
-			$this->rectangle($x, $y, $x + $this->textWidth($text, $size), $y + $this->textHeight($size), $backgroundColor, $backgroundColor);
+			$this->rectangle($x - 1, $y, $x + $this->textWidth($text, $size) + 1, $y + $this->textHeight($size), $backgroundColor, $backgroundColor);
 			$x += 1;
 		}
 		imagestring($this->handle(), $size, $x, $y, $text, $color);
@@ -564,6 +597,52 @@ class Image extends File implements Renderable {
 	}
 	
 	/**
+	 *	Calculates width and height of a thumb
+	 *	
+	 * 	@param $width
+	 * 	@param $height
+	 * 	@param $constrainProps
+	 * 	@param $upScale	
+	 * 	@return array(int) 0 => widht, 1 => height
+	 */
+	public function calculateThumbSize($width = null, $height = null, $constrainProps = true, $upScale = true) {
+		$r = array(null, null);
+		if ($width == null && $height == null) {
+			return $r;
+		}
+		// detect maximum width or height for scaling when width or height
+		// is not passed or empty
+		if ($width == null) {
+			$width = round($this->width() * ($height / $this->height()));
+		} elseif ($height == null) {
+			$height = round($this->height() * ($width / $this->width()));
+		}
+		$newHeight = $height;
+		$newWidth = $width;
+		// scale proportianal
+		if ($constrainProps) {
+			// calculate new width and height depending on new format orientation
+			if ($width > $height) {
+				$newHeight = round($this->height() * ($width / $this->width()));
+			} else {
+				$newWidth = round($this->width() * ($height / $this->height()));
+			}
+			if ($newHeight > $height) {
+				$newWidth = round($this->width() * ($height / $this->height()));
+				$newHeight = $height;
+			} elseif ($newWidth > $width) {
+				$newHeight = round($this->height() * ($width / $this->width()));
+				$newWidth = $width;
+			}
+		}
+		// if no upscaling (enlarge image) allowed, skip resizing)
+		if ($upScale == false && ($newWidth > $this->width() || $newHeight > $this->height())) {
+			return $r;
+		}
+		return array($width, $height);
+	}
+	
+	/**
 	 *	Resizes the image to the full thumbnail width, like flickr does
 	 * 	also portrait sizes are scaled to full thumbnail sizes. Overlapping
 	 * 	areas of the images are cropped.<br />
@@ -660,7 +739,7 @@ class Image extends File implements Renderable {
 	 * 	@param 	boolean	$download	if set to true a download header is created
 	 *	@return string
 	 */
-	public function header($filename = null, $download = false) {
+	public function header($filename = null, $download = false) {		
 		$header[] = "Content-Type: image/" . $this->imageTypes[$this->type()];
 		if ($download) {
 			if ($filename !== null) {
@@ -699,10 +778,9 @@ class Image extends File implements Renderable {
 	 */
 	public function type($type = null) {
 		if (func_num_args() > 0) {
+			// check if image type valid
 			if (is_integer($type)) {
-				if (array_key_exists($type, $this->imageTypes)) {
-					$type = $this->imageTypes[$type];
-				} else {
+				if (!array_key_exists($type, $this->imageTypes)) {
 					throw new ImageInvalidTypeException($type);
 				}
 			} elseif (!in_array($type, $this->availableTypes())) {
@@ -710,10 +788,11 @@ class Image extends File implements Renderable {
 			}
 			$this->type = $type;
 			return $this;
+		} elseif ($this->exists()) {
+			$imgInfo = $this->getImageInfo();
+			if (!isset($imgInfo[2])) throw new ImageIndeterminateFormat($this);
+			$this->type = $imgInfo[2];
 		}
-		$imgInfo = $this->getImageInfo();
-		if (!isset($imgInfo[2])) throw new ImageIndeterminateFormat($this);
-		$this->type = $imgInfo[2];
 		return $this->type;
 	}
 	
@@ -820,6 +899,12 @@ class Image extends File implements Renderable {
 	public function createHandle($type = null, $width = null, $height = null) {
 		// create handle from existing file
 		if ($this->exists() && func_num_args() == 0) {
+			// check if enough memory available
+			$imgInfo = $this->getImageInfo();
+			if ($imgInfo[0] * $imgInfo[1] * $imgInfo['bits'] * $imgInfo['channels'] / 8 > ini_get('memory_limit') * MEGABYTE - memory_get_usage()) {
+				throw new ImageToLargeToLoadException($this);
+			}
+			// create image handle
 			switch ($this->type()) {
 				case self::TYPE_GIF :
 					$this->handle = imagecreatefromgif($this->nodeName);
@@ -1055,12 +1140,12 @@ class Image extends File implements Renderable {
 		if (get_class($args[0]) == 'Color') {
 			$color = $args[0];
 			$color->image = $this;
+		} elseif (is_string($args[0]) || is_array($args[0])) {
+			$color = new Color($this, $args[0]);
+		} elseif (count($args) == 3) {
+			$color = new Color($this, $args[0], $args[1], $args[2]);
 		} else {
-			if (is_string($args[0]) || is_array($args[0])) {
-				$color = new Color($this, $args[0]);
-			} elseif (count($args) == 3) {
-				$color = new Color($this, $args[0], $args[1], $args[2]);
-			}
+			$color = new Color($this, $color);
 		}
 		return $color;
 	}
@@ -1175,7 +1260,17 @@ class ImageUndetectableImageType extends ImageException {
  */
 class ImageInvalidTypeException extends ImageException {
 	public function __construct($type) {
-		parent::__construct('Invalid Image Type \''.$type.'\'.');
+		parent::__construct('Invalid image type \''.$type.'\'.');
+	}
+}
+
+/**
+ *	Thrown if createHandle called for images that would let the memory
+ * 	used by php be to large
+ */
+class ImageToLargeToLoadException extends ImageException {
+	public function __construct(Image $image) {
+		parent::__construct('Unable to create image handle because image is to large.');
 	}
 }
 
