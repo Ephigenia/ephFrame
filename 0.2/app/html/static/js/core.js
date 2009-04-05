@@ -14,19 +14,6 @@ if (navigator.userAgent.match(/msie/ig)) {
 }
 
 /**
- *	Returns the classname of any object if defined
- *	@return string
- */
-Object.prototype.getClassname = function() {
-	if(this.constructor && this.constructor.toString) {
-		var arr = this.constructor.toString().match(/function\s*(\w+)/);
-		return (arr && (arr.length==2?arr[1]:undefined));
-	} else {
-		return undefined;
-	}
-}
-
-/**
  *	Checks if the given var is empty in any kind of perspective
  *	@param mixed string
  *  @return boolean

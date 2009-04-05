@@ -258,15 +258,16 @@ class Form extends HTMLTag {
 			$val = false;
 			if ($child instanceof FormFieldFile && isset($_FILES[$child->attributes->name])) {
 				$val = $_FILES[$child->attributes->name];
+				if (!empty($val)) {
+					return true;
+				}
 			} elseif (isset($this->request->data[$child->attributes->name])) {
 				$val = $this->request->data[$child->attributes->name];
 			}
 			if (!empty($val)) {
 				$filledFields++;
 			}
-			if (!empty($val) &&
-				($formFieldCount == 1 || $formFieldCount > 1 && $filledFields > 1))
-				{
+			if (($formFieldCount > 1 && $filledFields > 1) || ($formFieldCount == 1 && $filledFields == 1)) {
 				return true;
 			}
 		}

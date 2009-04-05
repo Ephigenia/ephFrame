@@ -32,8 +32,13 @@
 	$.fn.centerOnScreen = function() {
 		r = $(this);
 		setTimeout(function() {
+			if (BROWSER == 'IE') {
+				var posY = document.body.scrollTop;
+			} else {
+				var posY = window.pageYOffset;
+			}
 			r.css('position', 'absolute')
-				.css('top', (Screen.height / 2 - r.outerHeight() / 2 + window.pageYOffset) + 'px')
+				.css('top', (Screen.height / 2 - r.outerHeight() / 2 + posY) + 'px')
 				.css('left', (Screen.width / 2 - r.outerWidth() / 2) + 'px');
 		}, 100);
 	}
@@ -62,4 +67,6 @@ var Screen = {
 		return new Array(this.width, this.height);
 	}
 }
-Screen.detectSize();
+$(document).ready(function() {
+	Screen.detectSize();
+});
