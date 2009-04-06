@@ -68,7 +68,7 @@ class Session extends Hash {
 		$this->start();
 		$this->data = &$_SESSION;
 		if (!$this->ttl) {
-			$this->ttl = ini_get('session.gc_maxlifetime');
+			$this->ttl = (int) ini_get('session.gc_maxlifetime');
 		} else {
 			ini_set('session.gc_maxlifetime', $this->ttl);
 		}
