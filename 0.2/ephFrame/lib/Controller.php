@@ -214,7 +214,9 @@ abstract class Controller extends Object implements Renderable {
 			$entries = $this->{$this->name}->findAll(null, null, ($page-1) * $this->{$this->name}->perPage, $this->{$this->name}->perPage);
 			$this->data->set(Inflector::plural($this->name), $entries);
 			if ($this->{$this->name}->perPage > 0) {
-				$this->set('pagination', $this->{$this->name}->paginate($page));
+				$pagination = $this->{$this->name}->paginate($page);
+				$pagination['url'] = Router::getRoute($this->name.'Index');
+				$this->set('pagination', $pagination);
 			}
 			if (!$entries) {
 				return true;

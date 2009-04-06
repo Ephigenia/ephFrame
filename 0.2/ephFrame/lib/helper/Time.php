@@ -136,7 +136,11 @@ class Time extends Helper {
 				} else {
 					$days = $weekday - gmstrftime("%w", time());
 				}
-				return 'vor '.abs($days).' Tagen';
+				if (abs($days) == 1) {
+					return 'vor 1 Tag';
+				} else {
+					return 'vor '.abs($days).' Tagen';
+				}
 			} else if ($daysDifference == 7) {
 				return 'vor einer Woche';
 			} else {
