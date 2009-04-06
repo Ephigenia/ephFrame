@@ -520,6 +520,18 @@ class Form extends HTMLTag {
 				$model->set($fieldname, $formField->value());
 			}
 		}
+		foreach($model->belongsTo + $model->hasMany as $modelName => $config) {
+			$concreteModel = $model->{$modelName};
+			$fieldName = Inflector::underscore($modelName).'_'.$concreteModel->primaryKeyName;
+			if ($field = $this->fieldset->childWithAttribute('name', $fieldName)) {
+				$id = $field->value();
+				if (!empty($id)) {
+					$model->$modelName = new $config['class']($id);
+				} else {
+					$model->$modelName = null;	
+				}
+			}
+		}
 		return $model;
 	}
 	

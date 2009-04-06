@@ -74,6 +74,18 @@
 class Cookie extends Component {
 	
 	/**
+	 * 	Use this when setting a cockie for http only
+	 * 	@var integer
+	 */
+	const FLAG_HTTPONLY 	= 1;
+	
+	/**
+	 *	Use when setting a cookie
+	 * 	@var integer
+	 */
+	const FLAG_SECURE 	= 2;
+	
+	/**
 	 *	Standard Expiration Time for new create cookies
 	 * 	that have no duration
 	 * 	@var integer
@@ -150,18 +162,22 @@ class Cookie extends Component {
 	 * 	<code>
 	 * 		// set user login session for one week
 	 * 		$Cookie->write('userId', $userId, WEEK);
+	 * 		// or 256 days
+	 * 		$Cookie->write('userId', $userId, '+256days');
 	 * 	</code>
 	 * 
-	 * 	Value is checked for XSS Intrusion
+	 * 	$varname and $value are checked to be proper string values, otherwise an
+	 * 	{@link StringExpectedException} will be thrown.
 	 * 
-	 * 	@param	string	$varname	Cookiename
-	 * 	@param	string|integer	$value	
-	 *	@param	integer	$ttl	time-to-live for this cookie
-	 * 	@param	string $domain 
+	 * 	@param	string	$varname		Cookiename
+	 * 	@param	scalar	$value	
+	 *	@param	integer	$ttl			Time to live for this cookie, a timestamp in the future or a string
+	 * 	@param	string	$domain		Domain String where cookie should be set
+	 * 	@param integer $flags		Set specific flags for the cookie like COOKIE_SECURE or COOKIE_HTTPONLY
+	 * 	@param boolean $httpOnly	 
 	 * 	@throws StringExpectedException on invalid varname or value
-	 * 	@throws IntegerExpectedException on invalid duration inputs
 	 */
-	public function write($varname, $value, $ttl = null, $path = null, $domain = null, $secure = true) {
+	public function write($varname, $value, $ttl = null, $path = null, $domain = null, $flags = null) {
 		if (!is_string($varname) || strlen($varname) == 0) throw new StringExpectedException();
 		if (is_object($value) || is_array($value)) throw new StringExpectedException();
 		$this->data[$varname] = $value;
@@ -170,13 +186,17 @@ class Cookie extends Component {
 			'ttl' => ($ttl === null) ? $this->TTL : $ttl,
 			'path' => ($path === null) ? $this->path : $path,
 			'domain' => $domain,
-			'secure' => $secure
+			'flags' => (int) $flags
 		);
 		return true;
 	}
 	
-	public function set($varname, $value, $ttl = null, $path = null, $domain = null, $secure = true) {
-		return $this->write($varname, $value, $ttl, $path, $domain, $secure);
+	/**
+	 *	Alias for {@link write}
+	 *	@return Cookie
+	 */
+	public function set($varname, $value, $ttl = null, $path = null, $domain = null, $flags = null) {
+		return $this->write($varname, $value, $ttl, $path, $domain, $flags);
 	}
 	
 	/**
@@ -208,7 +228,7 @@ class Cookie extends Component {
 	 * 	@return mixed
 	 */
 	public function get($varname) {
-		return read($varname);
+		return $this->read($varname);
 	}
 	
 	/**
@@ -220,6 +240,7 @@ class Cookie extends Component {
 		if ($this->defined($cookiename)) {
 			$this->saveData[$cookiename]['ttl'] = -1;
 			unset($this->data[$cookiename]);
+			unset($_COOKIE[$cookiename]);
 		}
 		return true;
 	}
@@ -232,10 +253,16 @@ class Cookie extends Component {
 		foreach ($this->saveData as $cookieName => $cookieData) {
 			$path = (isset($cookieData['path'])) ? $cookieData['path'] : $this->path;
 			$ttl = (isset($cookieData['ttl'])) ? $cookieData['ttl'] : $this->TTL;
+			if (is_string($ttl)) {
+				$death = strtotime($ttl);
+			} else {
+				$death = time() + $ttl;
+			}
 			$domain = (isset($cookieData['domain'])) ? $cookieData['domain'] : null;
-			$secure = (isset($cookieData['secure'])) ? $cookieData['secure'] : true;
+			$secure = (isset($cookieData['flags'])) ? $cookieData['flags'] & self::FLAG_SECURE : false;
+			$httpOnly = (isset($cookieData['flags'])) ? $cookieData['flags'] & self::FLAG_HTTPONLY : false;
 			$value = @$cookieData['value'];
-			@setcookie($cookieName, $value, time() + $ttl, $path); //, $domain, $secure);
+			@setcookie($cookieName, $value, $death, $path, $domain, $secure, $httpOnly);
 		}
 		$count = count($this->saveData);
 		$this->saveData = array();
@@ -246,6 +273,7 @@ class Cookie extends Component {
 		if ($this->autosave) {
 			$this->save();
 		}
+		return parent::beforeRender();
 	}
 	
 	public function __destruct() {

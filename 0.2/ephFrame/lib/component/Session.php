@@ -43,10 +43,19 @@ class Session extends Hash {
 	public $name = SESSION_NAME;
 	
 	/**
-	 *	Stores the time to live for a session
-	 * 	@var unknown_type
+	 *	Stores the time to live for a session in seconds. You can set
+	 * 	this to your custom value in your projects to increase session lifetime.
+	 * 	@var integer
 	 */
 	public $ttl;
+	
+	/**
+	 *	Components used by session component
+	 * 	@var array(string)
+	 */
+	public $components = array(
+		'Cookie'
+	);
 	
 	/**
 	 * 	Creates a new Session, you can pass the sessions Name to
@@ -108,8 +117,14 @@ class Session extends Hash {
 	public function name($name = null) {
 		if (func_num_args() > 0 && $name !== null) {
 			session_name((string) $name);
+			$this->name = $name;
 		}
 		return session_name();
+	}
+	
+	public function beforeRender() {
+		$this->Cookie->set($this->name(), $this->id(), $this->ttl);
+		return parent::beforeRender();
 	}
 	
 	/**

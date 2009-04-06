@@ -381,6 +381,9 @@ class Image extends File implements Renderable {
 	private function getImageInfo() {
 		if (empty($this->imgInfo)) {
 			$this->checkExistence();
+			if (!$this->readable()) {
+				throw new FileNotReadableException($this);
+			}
 			$this->imgInfo = getimagesize($this->nodeName);
 			if(!isset($this->imgInfo['channels'])) {
 				$this->imgInfo['channels'] = 8;

@@ -337,7 +337,8 @@ class Model extends Object {
 			'order' => null,
 			'foreignKey' => null,
 			'associationKey' => null,
-			'joinTable' => null
+			'joinTable' => null,
+			'class' => $classname
 		), $config);
 		// has and belongsToMany
 		switch($associationType) {
