@@ -400,6 +400,9 @@ class Model extends Object {
 	public function unbind($modelName) {
 		if (isset($this->{$modelName})) {
 			$this->{$modelName} = false;
+			unset($this->belongsTo[$modelName]);
+			unset($this->hasMany[$modelName]);
+			unset($this->hasOne[$modelName]);
 		}
 		return true;
 	}
