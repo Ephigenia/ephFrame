@@ -338,6 +338,7 @@ class Model extends Object {
 			'foreignKey' => null,
 			'associationKey' => null,
 			'joinTable' => null,
+			'dependent' => false,
 			'class' => $classname
 		), $config);
 		// has and belongsToMany
@@ -733,18 +734,32 @@ class Model extends Object {
 	 * 	@return boolean.
 	 */
 	protected function afterDelete() {
+		foreach($this->hasOne as $name => $config) {
+			if (!$config['dependent'] || empty($this->{$name})) continue;
+			$this->{$name}->delete();
+		}
+		// delete hasMany stuff
+		if ($this->hasMany) {
+			foreach($this->hasMany as $name => $config) {
+				$plural = Inflector::plural($name);
+				if (!$config['dependent'] || empty($this->{$plural})) continue;
+				foreach($this->{$plural} as $model) {
+					$model->delete();
+				}
+			}
+		}
+		// delete hasAndBelongsToMany associated 
 		if (is_array($this->hasAndBelongsToMany)) {
 			foreach($this->hasAndBelongsToMany as $modelName => $config) {
 				$pluralName = Inflector::plural($modelName);
-				if (isset($this->{$pluralName})) {
-					foreach($this->{$pluralName} as $model) {
-						$model->delete();
-					}
+				if (!$config['dependent'] || empty($this->{$plural})) continue;
+				foreach($this->{$pluralName} as $model) {
+					$model->delete();
 				}
 				$this->{$pluralName}->q('DELETE * FROM '.$config['joinTable'].' WHERE '.$config['foreignKey'].' = '.$this->get($this->primaryKeyName));
 			}
 		}
-		return true;
+		return $this;
 	}
 	
 	/**

@@ -111,6 +111,11 @@ class NestedSetBehavior extends ModelBehavior {
 	}
 	
 	public function afterDelete() {
+		if ($children = $this->tree(1, 1)) {
+			foreach($children as $child) {
+				$child->delete();
+			}
+		}
 		$this->model->query(new DeleteQuery($this->model->tablename, array('lft >= '.$this->model->lft, 'rgt <= '.$this->model->rgt)));
 		$this->model->query('UPDATE '.$this->model->tablename.' SET lft=lft-ROUND(' . ($this->model->rgt - $this->model->lft + 1) . ') WHERE lft > ' . $this->model->rgt);
 		$this->model->query('UPDATE '.$this->model->tablename.' SET rgt=rgt-ROUND(' . ($this->model->rgt - $this->model->lft + 1) . ') WHERE rgt > ' . $this->model->rgt);

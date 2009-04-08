@@ -48,11 +48,13 @@ class_exists('File') or require dirname(__FILE__).'/../File.php';
  * 	</code>
  * 	<br />
  * 
- * 	If you wish to use your own file for app specific messages, pass a string
- * 	instead of an integer:
+ * 	It’s also possible to create your own log files by passing a string as first
+ * 	parameter:
  * 	<code>
  * 	logg('app', 'user logged in'.$User->name);
  * 	</code>
+ * 	This will log a message in <code>/app/tmp/log/app.log</code>
+ * 
  * 
  * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de
  * 	@since 27.12.2007
@@ -238,11 +240,11 @@ class Log extends Component {
 			$logFileBasename = preg_replace('/[^-_., \d\w]/u', '', $logFileBasename);
 			// limit size of level name to unix type filename length
 			$logFileBasename = substr($logFileBasename, 0, 255);
-			if (empty($logFileBaseName)) {
+			if (empty($logFileBasename)) {
 				$logFileBasename = 'unknown_level';
 			}
 			// return the resulting path to the logfile
-			self::$logFilenames[$level] = $path.$logFileBaseName.self::$extension;
+			self::$logFilenames[$level] = $path.$logFileBasename.self::$extension;
 		} 
 		return self::$logFilenames[$level];
 	}

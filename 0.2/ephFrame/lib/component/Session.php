@@ -122,6 +122,11 @@ class Session extends Hash {
 		return session_name();
 	}
 	
+	/**
+	 *	Session cookie is refreshed with lifetime each time before views
+	 * 	are rendered.
+	 * 	@return Session
+	 */
 	public function beforeRender() {
 		$this->Cookie->set($this->name(), $this->id(), $this->ttl);
 		return parent::beforeRender();

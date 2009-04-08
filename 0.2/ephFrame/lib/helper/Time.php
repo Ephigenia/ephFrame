@@ -144,7 +144,7 @@ class Time extends Helper {
 			} else if ($daysDifference == 7) {
 				return 'vor einer Woche';
 			} else {
-				return gmstrftime("am %e.%m.%Y", $timestamp);
+				return gmstrftime("am %d.%m.%Y", $timestamp);
 			}
 		}
 		return false;

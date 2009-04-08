@@ -90,7 +90,7 @@ class Cookie extends Component {
 	 * 	that have no duration
 	 * 	@var integer
 	 */
-	public $TTL = WEEK;
+	public $ttl = WEEK;
 	
 	/**
 	 *	Domain for newly created cookies
@@ -183,12 +183,12 @@ class Cookie extends Component {
 		$this->data[$varname] = $value;
 		$this->saveData[$varname] = array(
 			'value' => $value,
-			'ttl' => ($ttl === null) ? $this->TTL : $ttl,
-			'path' => ($path === null) ? $this->path : $path,
+			'ttl' => $ttl,
+			'path' => $path,
 			'domain' => $domain,
 			'flags' => (int) $flags
 		);
-		return true;
+		return $this;
 	}
 	
 	/**
@@ -242,7 +242,7 @@ class Cookie extends Component {
 			unset($this->data[$cookiename]);
 			unset($_COOKIE[$cookiename]);
 		}
-		return true;
+		return $this;
 	}
 	
 	/**
@@ -250,9 +250,10 @@ class Cookie extends Component {
 	 * 	@return integer
 	 */
 	public function save() {
+		$debug = false;
 		foreach ($this->saveData as $cookieName => $cookieData) {
 			$path = (isset($cookieData['path'])) ? $cookieData['path'] : $this->path;
-			$ttl = (isset($cookieData['ttl'])) ? $cookieData['ttl'] : $this->TTL;
+			$ttl = (isset($cookieData['ttl'])) ? $cookieData['ttl'] : $this->ttl;
 			if (is_string($ttl)) {
 				$death = strtotime($ttl);
 			} else {
@@ -262,8 +263,12 @@ class Cookie extends Component {
 			$secure = (isset($cookieData['flags'])) ? $cookieData['flags'] & self::FLAG_SECURE : false;
 			$httpOnly = (isset($cookieData['flags'])) ? $cookieData['flags'] & self::FLAG_HTTPONLY : false;
 			$value = @$cookieData['value'];
+			if (!empty($debug)) {
+				echo '<pre>setting '.$cookieName.': '.$cookieData['value'].' (ttl: '.$ttl.' - till: '.date('d.m.Y H:i', $death).')</pre>';
+			}
 			@setcookie($cookieName, $value, $death, $path, $domain, $secure, $httpOnly);
 		}
+		if (!empty($debug)) die('debug set to true in Cookie->save()');
 		$count = count($this->saveData);
 		$this->saveData = array();
 		return $count;
