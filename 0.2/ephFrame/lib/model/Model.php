@@ -367,6 +367,9 @@ class Model extends Object {
 					$config['foreignKey'] = $config['joinTable'].'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName);
 					break;
 			}
+		// add model name to foreignkeys with no model name like user_id
+		} elseif (strpos($config['foreignKey'], '.') === false) {
+			$config['foreignKey'] = $modelname.'.'.$config['foreignKey'];
 		}
 		// my side of the join
 		if (!isset($config['associationKey'])) {
@@ -383,6 +386,8 @@ class Model extends Object {
 					$config['associationKey'] = $this->{$modelname}->name.'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName);
 					break;
 			}
+		} elseif (strpos($config['associationKey'], '.') === false) {
+			$config['associationKey'] = $this->name.'.'.$config['associationKey'];
 		}
 		if (!empty($associationType)) {
 			$this->{$associationType}[$modelname] = $config;
@@ -1355,7 +1360,7 @@ class Model extends Object {
 				return null;
 			}
 		}
-		user_error('undefined variable \''.$fieldname.'\' of class '.get_class($this), E_USER_ERROR);
+		user_error(sprintf('%s->%s undefined variable name', get_class($this), $fieldname), E_USER_ERROR);
 	}
 	
 	public function __get($fieldname) {

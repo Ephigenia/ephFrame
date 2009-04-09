@@ -297,6 +297,11 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	public function addModel($modelName) {
+		if (func_num_args() > 1) {
+			$args = func_get_args();
+			foreach($args as $arg) $this->addModel($arg);
+			return true;
+		}
 		assert(is_string($modelName) && !empty($modelName));
 		$classPath = $modelName;
 		if (strpos($modelName, ClassPath::$classPathDevider) === false) {
