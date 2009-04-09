@@ -129,7 +129,7 @@ class Cookie extends Component {
 	public function __construct() {
 		parent::__construct();
 		$this->data = &$_COOKIE;
-		if (empty($this->domain)) {
+		if (empty($this->domain) && isset($_SERVER['HTTP_HOST'])) {
 			$this->domain = $_SERVER['HTTP_HOST'];
 		}
 		return $this; 

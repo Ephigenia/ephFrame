@@ -33,7 +33,7 @@
 		r = $(this);
 		setTimeout(function() {
 			if (BROWSER == 'IE') {
-				var posY = document.body.scrollTop;
+				var posY = document.documentElement.scrollTop;
 			} else {
 				var posY = window.pageYOffset;
 			}
@@ -67,6 +67,4 @@ var Screen = {
 		return new Array(this.width, this.height);
 	}
 }
-$(document).ready(function() {
-	Screen.detectSize();
-});
+Screen.detectSize();
