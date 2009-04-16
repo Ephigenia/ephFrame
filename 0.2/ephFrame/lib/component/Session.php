@@ -89,7 +89,11 @@ class Session extends Hash {
 		} else {
 			$this->name($this->name);
 		}
-		@session_start();
+		if (!isset($_SESSION)) {
+			if (!session_start()) {
+				throw new SessionStartException();
+			}
+		}
 		return true;
 	}
 	
@@ -144,6 +148,26 @@ class Session extends Hash {
 		return true;
 	}
 
+}
+
+/**
+ * 	@package ephFrame
+ *	@subpackage ephFrame.lib.exceptions
+ *	@author Ephigenia // Marcel Eichner <love@ephigenia.de>
+ *	@since 16.04.2009
+ */
+class SessionException extends ComponentException {}
+
+/**
+ * 	@package ephFrame
+ *	@subpackage ephFrame.lib.exceptions
+ *	@author Ephigenia // Marcel Eichner <love@ephigenia.de>
+ *	@since 16.04.2009
+ */
+class SessionStartException extends SessionException {
+	public function __construct() {
+		parent::__construct('Unable to start session: \''.error_get_last().'\'');
+	}
 }
 
 ?>

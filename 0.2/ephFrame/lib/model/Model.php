@@ -419,6 +419,9 @@ class Model extends Object {
 	 */
 	public function detailPageUri() {
 		if (!$this->exists()) return false;
+		if ($uri = Router::getRoute($this->name.'Id', array('id' => $this->id))) {
+			return $uri;
+		}
 		return WEBROOT.lcfirst(get_class($this)).'/'.$this->id.'/';
 	}
 	

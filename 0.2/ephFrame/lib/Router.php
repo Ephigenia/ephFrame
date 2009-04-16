@@ -223,10 +223,28 @@ class Router extends Hash {
 		}
 		$routeConfig = $router->get($routeName);
 		$uri = $routeConfig['path'];
+		// replace params
+		if (is_array($params)) {
+			$uri = self::insertParams($uri, $params);
+		}
 		if ($includeWebroot) {
 			$uri = WEBROOT.$uri;
 		}
 		return $uri;
+	}
+	
+	/**
+	 *	Replaces all parameter placeholders (:id or :username) in an uri-string
+	 *	with the values from the second parameter array
+	 * 	@param string			$uri
+	 * 	@param array(string)	$params
+	 * 	@return string
+	 */
+	public static function insertParams($uri, Array $params = array())  {
+		foreach($params as $k => $v) {
+			$uri = str_replace(':'.$k, $v, $uri);
+		}
+		return $uri;	
 	}
 	
 	/**

@@ -90,12 +90,14 @@ final class ephFrame {
 	 * 	that if the DEBUG level is set to Production, then every
 	 * 	error will be ignored
 	 */
-	private function setErrorReporting() {
+	public static function setErrorReporting() {
 		if (Registry::defined('ERROR_REPORTING') && Registry::get('DEBUG') > DEBUG_PRODUCTION) {
-			error_reporting(Registry::get("ERROR_REPORTING"));
+			error_reporting(Registry::get('ERROR_REPORTING'));
 		} elseif (Registry::defined('DEBUG')) {
 			if (Registry::get('DEBUG') > DEBUG_PRODUCTION) {
 				error_reporting(E_ALL + E_STRICT);
+				ini_set('display_errors', 'yes');
+				ini_set('display_startup_errors', 'yes');
 			} else if (Registry::get('DEBUG') == DEBUG_PRODUCTION) {
 				error_reporting(0);
 			}

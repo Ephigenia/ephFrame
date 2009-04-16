@@ -295,42 +295,47 @@ if (!function_exists('len')) {
 }
 
 
-if ( !function_exists( 'json_encode' ) ) {
-/**
- *	Encodes php stuff to json code {@link http://www.json.org}.
- * 	This method provides json encoding if current php version is lower than
- * 	5.2 where json_encode was implemented. This does not handle character
- * 	encodings.
- * 	@param mixed $data
- * 	@return string
- */
-function json_encode( $data ) {
-	$data = trim($data);
-	if (is_null($data)) return 'null';
-	if (is_numeric($data)) return $data;
-	if (is_array($data)) {
-		$only_numeric = true;
-		$last_key = -1;
-		foreach (array_keys($data) as $key) {
-			if (!is_numeric($key) || $last_key + 1 != $key) {
-				$only_numeric = false;
-				break;
+if (!function_exists('json_encode')) {
+	/**
+	 *	Encodes php stuff to json code {@link http://www.json.org}.
+	 * 	This method provides json encoding if current php version is lower than
+	 * 	5.2 where json_encode was implemented. This does not handle character
+	 * 	encodings.
+	 * 	@param mixed $data
+	 * 	@return string
+	 */
+	function json_encode($a=false) {
+	    if (is_null($a)) return 'null';
+	    if ($a === false) return 'false';
+	    if ($a === true) return 'true';
+	    if (is_scalar($a)) {
+ 			if (is_float($a)) {
+	        	// Always use "." for floats.
+	        	return floatval(str_replace(",", ".", strval($a)));
+	      	}
+	      	if (is_string($a)) {
+				static $jsonReplaces = array(array("\\", "/", "\n", "\t", "\r", "\b", "\f", '"'), array('\\\\', '\\/', '\\n', '\\t', '\\r', '\\b', '\\f', '\"'));
+				return '"' . str_replace($jsonReplaces[0], $jsonReplaces[1], $a) . '"';
+		 	} else {
+				return $a;
 			}
-			$last_key++;
-		}
-		$render = '';
-		$data_render = array();
-		if ($only_numeric) {
-			foreach ($data as $item) $data_render[]= json_encode( $item );
-			$render = '['.join(',', $data_render).']';
+	    }
+	    $isList = true;
+	    for ($i = 0, reset($a); $i < count($a); $i++, next($a)) {
+			if (key($a) !== $i) {
+				$isList = false;
+	        	break;
+	      	}
+	    }
+	    $result = array();
+	    if ($isList) {
+			foreach ($a as $v) $result[] = json_encode($v);
+			return '[' . join(',', $result) . ']';
 		} else {
-			foreach ($data as $key => $value) $data_render[] = json_encode($key).':'.json_encode($value);
-			$render .= '{'.join( ',', $data_render ).'}';
+			foreach ($a as $k => $v) $result[] = json_encode($k).':'.json_encode($v);
+	      	return '{' . join(',', $result) . '}';
 		}
-		return $render;
 	}
-    return '"'.quotemeta($data).'"';
-    }
 }
 
 ?>

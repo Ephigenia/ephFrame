@@ -215,7 +215,7 @@ abstract class Controller extends Object implements Renderable {
 			$this->data->set(Inflector::plural($this->name), $entries);
 			if ($this->{$this->name}->perPage > 0) {
 				$pagination = $this->{$this->name}->paginate($page);
-				$pagination['url'] = Router::getRoute($this->name.'Index');
+				$pagination['url'] = Router::getRoute($this->name.'Paged');
 				$this->set('pagination', $pagination);
 			}
 			if (!$entries) {
@@ -460,7 +460,8 @@ abstract class Controller extends Object implements Renderable {
 		}
 		// startup and init all forms
 		foreach($this->forms as $formName) {
-			$this->{$formName}->startup($this)->configure();
+			$this->{$formName}->startup($this);
+			$this->{$formName}->configure();
 		}
 		return $this;
 	}

@@ -498,6 +498,15 @@ class Form extends HTMLTag {
 	}
 	
 	/**
+	 * 	Alias according to {@link toModel} for {@link fillModel}
+	 * @param $model
+	 * @return unknown_type
+	 */
+	public function fromModel(Model $model) {
+		return $this->fillModel($model);
+	}
+	
+	/**
 	 *	Assign submitted values to a model
 	 *
 	 *	<code>
