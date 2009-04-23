@@ -1,1 +1,1 @@
-<?= (isset($content)) ? $content : '' ?>
+<?= @$content ?>

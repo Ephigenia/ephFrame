@@ -404,6 +404,13 @@ class Model extends Object {
 	 * @param unknown_type $modelName
 	 */
 	public function unbind($modelName) {
+		if (func_num_args() > 1) {
+			$args = func_get_args();
+			foreach($args as $modelName) {
+				$this->unbind($modelName);
+			}
+			return true;
+		}
 		if (isset($this->{$modelName})) {
 			$this->{$modelName} = false;
 			unset($this->belongsTo[$modelName]);
@@ -422,7 +429,16 @@ class Model extends Object {
 		if ($uri = Router::getRoute($this->name.'Id', array('id' => $this->id))) {
 			return $uri;
 		}
-		return WEBROOT.lcfirst(get_class($this)).'/'.$this->id.'/';
+		// try to generate detail from model information
+		return WEBROOT.lcfirst($this->name).'/'.$this->id.'/';
+	}
+	
+	/**
+	 *	Alias for {@link detailPageUri}
+	 * 	@return string
+	 */
+	public function permaLink() {
+		return $this->detailPageUri();
 	}
 	
 	/**
@@ -952,9 +968,9 @@ class Model extends Object {
 		$return = new Set();
 		$classname = get_class($this);
 		while($modelData = $result->fetchAssoc()) {
-			if (isset($modelData['use_model'])) {
+			if (!empty($modelData['use_model'])) {
 				$modelClassName = ucFirst($modelData['use_model']);
-			} elseif (isset($modelData[$this->name.'.use_model'])) {
+			} elseif (!empty($modelData[$this->name.'.use_model'])) {
 				$modelClassName = ucFirst($modelData[$this->name.'.use_model']);
 			} else {
 				$modelClassName = $classname;

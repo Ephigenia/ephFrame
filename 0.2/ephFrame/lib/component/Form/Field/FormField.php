@@ -211,7 +211,7 @@ abstract class FormField extends HTMLTag {
 	
 	public function render() {
 		$rendered = '';
-		if (!empty($this->label->tagValue)) {
+		if (!empty($this->label->tagValue) && strtolower($this->type) !== 'hidden') {
 			$rendered .= $this->label->render();
 		}
 		if ($this->type == 'checkbox') {
@@ -219,7 +219,8 @@ abstract class FormField extends HTMLTag {
 		} else {
 			$rendered .= parent::render();
 		}
-		if ($this->type !== 'hidden') {
+		// @todo encapsulate <p> decorator into decorator class or element
+		if (strtolower($this->type) !== 'hidden') {
 			$rendered = '<p class="'.lcFirst(substr(get_class($this), 9)).'">'.$rendered.'</p>'.LF;
 		}
 		return ($this->afterRender($rendered));

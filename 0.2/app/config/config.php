@@ -14,7 +14,7 @@
  * 	third argument for Registry::set, see {@link Registry}
  * 	(The Debug Level Constants are set in ephFrame/config/constants.php)
  */
-Registry::set('DEBUG', DEBUG_VERBOSE);
+Registry::set('DEBUG', DEBUG_DEBUG);
 
 /**
  * 	Session Name (also the name for the session cookie)

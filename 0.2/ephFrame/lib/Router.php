@@ -221,7 +221,9 @@ class Router extends Hash {
 		if (!$router->hasKey($routeName)) {
 			return false;
 		}
-		$routeConfig = $router->get($routeName);
+		if (!($routeConfig = $router->get($routeName))) {
+			return false;
+		}
 		$uri = $routeConfig['path'];
 		// replace params
 		if (is_array($params)) {

@@ -69,31 +69,31 @@ class Charset extends Helper {
 			chr(228) => 'ä', chr(196) => 'Ä',
 			chr(0xF6) => 'ö', chr(0xD6) => 'Ö',
 			chr(0xFC) => 'ü', chr(0xDC) => 'Ü', 
-			chr(0xDF) => 'ß',
+			chr(0xDF) => 'ß'
 			// è			  é					ê
-			chr(0xE8) => 'è', chr(0xE9) => 'é', chr(0xEA) => 'ê',
-			// È			  É					Ê
-			chr(0xC8) => 'È', chr(0xC9) => 'É', chr(0xCA) => 'Ê',
-			// à			  á					â
-			chr(0xE0) => 'à', chr(0xE1) => 'á', chr(0xE2) => 'â',
-			// À			  Á					Â
-			chr(0xC0) => 'À', chr(0xC1) => 'Á', chr(0xC2) => 'Â',
-			// ò			  ó					ô
-			chr(0xF2) => 'ò', chr(0xF3) => 'ó', chr(0xF4) => 'ô',
-			// Ò			  Ó					Ô
-			chr(0xD2) => 'Ò', chr(0xD3) => 'Ó', chr(0xD4) => 'Ô',
-			// ì			  í				    î
-			chr(0xEC) => 'ì', chr(0xED) => 'í', chr(0xEE) => 'î',
-			// Ì			  Í					Î
-			chr(0xCC) => 'Ì', chr(0xCD) => 'Í', chr(0xCE) => 'Î',
-			// ù			  ú					û
-			chr(0xF9) => 'ù', chr(0xFA) => 'ú', chr(0xFB) => 'û',
-			// Ù			  Ú					Û
-			chr(0xD9) => 'Ù', chr(0xDA) => 'Ú', chr(0xDB) => 'Û',
-			// ©			  ®
-			chr(0xA9) => '©', chr(0xAE) => '®',
-			// « 			  »
-			chr(0xAB) => '«', chr(0xBB) => '»'
+//			chr(0xE8) => 'è', chr(0xE9) => 'é', chr(0xEA) => 'ê',
+//			// È			  É					Ê
+//			chr(0xC8) => 'È', chr(0xC9) => 'É', chr(0xCA) => 'Ê',
+//			// à			  á					â
+//			chr(0xE0) => 'à', chr(0xE1) => 'á', chr(0xE2) => 'â',
+//			// À			  Á					Â
+//			chr(0xC0) => 'À', chr(0xC1) => 'Á', chr(0xC2) => 'Â',
+//			// ò			  ó					ô
+//			chr(0xF2) => 'ò', chr(0xF3) => 'ó', chr(0xF4) => 'ô',
+//			// Ò			  Ó					Ô
+//			chr(0xD2) => 'Ò', chr(0xD3) => 'Ó', chr(0xD4) => 'Ô',
+//			// ì			  í				    î
+//			chr(0xEC) => 'ì', chr(0xED) => 'í', chr(0xEE) => 'î',
+//			// Ì			  Í					Î
+//			chr(0xCC) => 'Ì', chr(0xCD) => 'Í', chr(0xCE) => 'Î',
+//			// ù			  ú					û
+//			chr(0xF9) => 'ù', chr(0xFA) => 'ú', chr(0xFB) => 'û',
+//			// Ù			  Ú					Û
+//			chr(0xD9) => 'Ù', chr(0xDA) => 'Ú', chr(0xDB) => 'Û',
+//			// ©			  ®
+//			chr(0xA9) => '©', chr(0xAE) => '®',
+//			// « 			  »
+//			chr(0xAB) => '«', chr(0xBB) => '»'
 		);
 		return strtr($string, self::$iso88591ToUtf8);
 	}
