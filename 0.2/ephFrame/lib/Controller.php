@@ -210,7 +210,7 @@ abstract class Controller extends Object implements Renderable {
 	 */
 	public function index() {
 		if (isset($this->{$this->name})) {
-			$page = (isset($this->params['page'])) ? (int) $this->params['page'] : 1;
+			$page = intval((@$this->params['page'] > 1) ? $this->params['page'] : 1);
 			$entries = $this->{$this->name}->findAll(null, null, ($page-1) * $this->{$this->name}->perPage, $this->{$this->name}->perPage);
 			$this->data->set(Inflector::plural($this->name), $entries);
 			if ($this->{$this->name}->perPage > 0) {
@@ -218,6 +218,7 @@ abstract class Controller extends Object implements Renderable {
 				$pagination['url'] = Router::getRoute($this->name.'Paged');
 				$this->set('pagination', $pagination);
 			}
+			
 			if (!$entries) {
 				return true;
 			}
@@ -231,7 +232,7 @@ abstract class Controller extends Object implements Renderable {
 	 * 
 	 * 	@return boolean
 	 */
-	public function rss($itemCount = 10) {
+	public function rss() {
 		if (isset($this->{$this->name})) {
 			$entries = $this->{$this->name}->findAll(null, null, null, $this->{$this->name}->perPage);
 			$this->set(Inflector::plural($this->name), $entries);
@@ -249,7 +250,8 @@ abstract class Controller extends Object implements Renderable {
 	 *
 	 * 	@param string $keyword
 	 */
-	public function search($keyword, $fields = array()) {
+	public function search($keyword = null, $fields = array()) {
+		if (empty($keyword)) return true;
 		$searchTerm = '%'.$keyword.'%';
 		$searchTermQuoted = DBQuery::quote($searchTerm);
 		if (isset($this->{$this->name}) && strlen($keyword) > 0) {
@@ -263,7 +265,9 @@ abstract class Controller extends Object implements Renderable {
 				return new Set();
 			}
 			$page = (isset($this->params['page'])) ? $this->params['page'] : 1;
-			$this->set('pagination', $this->{$this->name}->paginate($page, null, $conditions));
+			$pagination = $this->{$this->name}->paginate($page, null, $conditions);
+			$pagination['url'] = Router::getRoute(lcfirst($this->name).'SearchPaged', array('term' => $keyword));
+			$this->set('pagination', $pagination);
 			$results = $this->{$this->name}->findAll($conditions, null, ($page-1) * $this->{$this->name}->perPage, $this->{$this->name}->perPage);
 			$this->set(Inflector::plural($this->name), $results);
 			return $results;
@@ -458,6 +462,7 @@ abstract class Controller extends Object implements Renderable {
 		foreach($this->forms as $formName) {
 			$this->addForm($formName);
 		}
+		
 		// startup and init all forms
 		foreach($this->forms as $formName) {
 			$this->{$formName}->startup($this);

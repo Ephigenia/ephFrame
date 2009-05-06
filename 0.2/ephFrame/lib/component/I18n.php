@@ -49,9 +49,13 @@ class I18n extends Component {
 	public $domainName = 'default';
 	
 	public function startup() {
-		if (defined('DEFAULT_LANGUAGE')) {
+		if ($acceptLanguage = $this->controller->request->header->get('accept_language')) {
+			self::$locale = strtolower(substr($acceptLanguage, 0, 2));
+		}
+		if (!preg_match('@\w{2}@', self::$locale) && defined('DEFAULT_LANGUAGE')) {
 			self::$locale = DEFAULT_LANGUAGE;
 		}
+		
 		$this->controller->data->set(get_class($this), $this);
 		self::locale(self::$locale);
 		$this->domain($this->domainLocation, $this->domainName, $this->domainEncoding);

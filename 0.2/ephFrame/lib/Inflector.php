@@ -160,7 +160,6 @@ class Inflector extends Object {
 	 *	@return array(string)
 	 */
 	public static function splitModelAndFieldName($string) {
-		$string = trim($string);
 		if (strpos($string, '.') !== false) {
 			return explode('.', $string);
 		}

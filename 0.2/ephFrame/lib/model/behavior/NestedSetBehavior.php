@@ -156,6 +156,14 @@ class NestedSetBehavior extends ModelBehavior {
 			$q->where($this->model->name.'.lft > '.$this->model->lft.'');
 			$q->where($this->model->name.'.rgt < '.$this->model->rgt.'');
 		}
+		// optimize query by using level field if possible
+		if ($this->model->hasField('level')) {
+			if ($depth > 0) {
+				$q->where($this->model->name.'.level BETWEEN '.$this->model->level.' AND '.($this->model->level + $depth));
+			} elseif ($this->model->level > 0) {
+				$q->where($this->model->name.'.level > '.$this->model->level);
+			}
+		}
 		$r = $this->model->query($q, $depthModel);
 		// crappy implementation of depth parameter!
 		if ($depth > 0 && $r instanceof Set) {

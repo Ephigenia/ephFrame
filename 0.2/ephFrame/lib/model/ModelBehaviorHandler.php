@@ -55,6 +55,8 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 		return true;
 	}
 	
+	public static $cache = array();
+	
 	/**
 	 * 	Dynamicly adds a new Behavior to this model. Behaviors should have NO
 	 * 	'Behavior' at the end of their name (it's automatically added)
@@ -69,29 +71,34 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 	 * 	@return ModelBehaviorHandler
 	 */
 	public function addBehavior($behaviorName, Array $config = array()) {
-		if ($this->hasBehavior($behaviorName)) return $this;
 		$behaviorName = trim($behaviorName);
-		if (empty($behaviorName)) throw new ModelEmptyBehaviorNameException($this->model);
-		if (!preg_match('@Behavior$@', $behaviorName)) {
-			$behaviorName .= 'Behavior';
-		}
-		// Behavior Names as classpaths
-		if (strpos($behaviorName, '.') !== false) {
-			$behaviorClassName = ClassPath::className($behaviorName);
-			$behaviorClassPath = $behaviorClassName;
+		if (!isset(self::$cache[$behaviorName])) {
+			if ($this->hasBehavior($behaviorName)) return $this;
+			if (empty($behaviorName)) throw new ModelEmptyBehaviorNameException($this->model);
+			if (substr($behaviorName, 0, -8) !== 'Behavior') {
+				$behaviorName .= 'Behavior';
+			}
+			// Behavior Names as classpaths
+			if (strpos($behaviorName, '.') !== false) {
+				$behaviorClassName = ClassPath::className($behaviorName);
+				$behaviorClassPath = $behaviorClassName;
+			} else {
+				$behaviorClassName = ucFirst($behaviorName);
+				$behaviorClassPath = 'app.lib.model.behavior.'.$behaviorClassName;
+				if (!ClassPath::exists($behaviorClassPath)) {
+					$behaviorClassPath = 'ephFrame.lib.model.behavior.'.$behaviorClassName;
+				}
+			}
+			// load Behavior Class if not allready loaded
+			if (!class_exists($behaviorClassName)) {
+				if (!ClassPath::exists($behaviorClassPath)) {
+					throw new ModelBehaviorNotFoundException($this->model, $behaviorClassName);
+				}
+				ephFrame::loadClass($behaviorClassPath);
+			}
+			self::$cache[$behaviorName] = $behaviorClassName;
 		} else {
-			$behaviorClassName = ucFirst($behaviorName);
-			$behaviorClassPath = 'app.lib.model.behavior.'.$behaviorClassName;
-			if (!ClassPath::exists($behaviorClassPath)) {
-				$behaviorClassPath = 'ephFrame.lib.model.behavior.'.$behaviorClassName;
-			}
-		}
-		// load Behavior Class if not allready loaded
-		if (!class_exists($behaviorClassName)) {
-			if (!ClassPath::exists($behaviorClassPath)) {
-				throw new ModelBehaviorNotFoundException($this->model, $behaviorClassName);
-			}
-			ephFrame::loadClass($behaviorClassPath);
+			$behaviorClassName = self::$cache[$behaviorName];
 		}
 		$this->behaviors[substr($behaviorClassName, 0, -8)] = new $behaviorClassName($this->model, $config);
 		return $this;

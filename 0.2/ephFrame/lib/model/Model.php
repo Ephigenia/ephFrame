@@ -979,6 +979,7 @@ class Model extends Object {
 				ephFrame::loadClass('app.lib.model.'.$modelClassName);
 			}
 			$model = new $modelClassName($modelData);
+			$model->findConditions = $this->findConditions;
 			$model->{$this->name} = $this;
 			// fetch associated data if detph is larger than one
 			if ($depth >= 1) {
@@ -1069,7 +1070,7 @@ class Model extends Object {
 	 * 	@param array $order
 	 * 	@return Model|boolean
 	 */
-	public function find($conditions, $order = null, $depth = null) {
+	public function find($conditions = array(), $order = null, $depth = null) {
 		$query = $this->createSelectQuery($conditions, $order, null, null, $depth);
 		if (!$this->beforeFind($query)) return false;
 		$result = $this->DB->query($query, $depth); 
@@ -1445,8 +1446,8 @@ class Model extends Object {
 	 * 	@param $value
 	 * 	@return unknown_type
 	 */
-	public function __set($fieldName, $value) {
-		return $this->set($fieldName, $value);
+	public function __set($fieldname, $value) {
+		return $this->set($fieldname, $value);
 	}
 	
 	/**

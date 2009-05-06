@@ -184,6 +184,17 @@ class Set extends Component implements Countable, Renderable, Iterator, ArrayAcc
 	}
 	
 	/**
+	 * 	Prepends values from an array to the beginning of the set.
+	 * 	
+	 * 	@param array(mixed) $array
+	 * 	@return Set
+	 */
+	public function prependFromArray(Array $array) {
+		foreach(array_reverse($array) as $v) $this->prepend($v);
+		return $this;
+	}
+	
+	/**
 	 *	Set a specific Index in the {@link Set} to a specific value
 	 * 	
 	 * 	<code>

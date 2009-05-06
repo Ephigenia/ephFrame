@@ -124,15 +124,15 @@ class Router extends Hash {
 			if (preg_match_all($paramRegExp, $url, $match)) {
 				$this->params = array_merge($this->params, $routeData);
 				// extract controller and action if found
-				if (isset($this->params['controller'])) {
-					$this->controller = $this->params['controller'];
-				} elseif (isset($match['controller'])) {
+				if (isset($match['controller'])) {
 					$this->controller = $match['controller'][0];
+				} elseif (isset($this->params['controller'])) {
+					$this->controller = $this->params['controller'];
 				}
-				if (isset($this->params['action'])) {
-					$this->action = $this->params['action'];
-				} elseif (isset($match['action'])) {
+				if (isset($match['action'])) {
 					$this->action = $match['action'][0];
+				} elseif (isset($this->params['action'])) {
+					$this->action = $this->params['action'];
 				}
 				// extract other parameter names
 				foreach($match as $key => $value) {

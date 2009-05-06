@@ -932,7 +932,6 @@ class String extends Helper {
 	 */
 	public static function capitalize($string) {
 		return ucwords($string);
-		//return preg_replace_callback('/[A-Z]/', 'mb_strtoupper', $string);
 	}
 	
 	/**

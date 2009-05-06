@@ -264,10 +264,13 @@ class Form extends HTMLTag {
 			} elseif (isset($this->request->data[$child->attributes->name])) {
 				$val = $this->request->data[$child->attributes->name];
 			}
+			if ($child instanceof FormFieldSubmit && !empty($val)) {
+				return true;
+			}
 			if (!empty($val)) {
 				$filledFields++;
 			}
-			if (($formFieldCount > 1 && $filledFields > 1) || ($formFieldCount == 1 && $filledFields == 1)) {
+			if (($formFieldCount > 1 && $filledFields > 1) || ($formFieldCount <= 2 && $filledFields == 1)) {
 				return true;
 			}
 		}
