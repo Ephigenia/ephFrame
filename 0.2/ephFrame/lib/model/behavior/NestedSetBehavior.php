@@ -168,7 +168,7 @@ class NestedSetBehavior extends ModelBehavior {
 		// crappy implementation of depth parameter!
 		if ($depth > 0 && $r instanceof Set) {
 			$baseLevel = 20000;
-			foreach($r as $node){
+			foreach($r as $node) {
 				if ($node->level < $baseLevel) $baseLevel = $node->level;
 			}
 			foreach($r as $index => $Node) {

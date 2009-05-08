@@ -117,9 +117,8 @@ abstract class Controller extends Object implements Renderable {
 			$this->__mergeParentProperty('forms');
 			$this->__mergeParentProperty('data');
 		}
-		// init components and helpers
-		$this->data = new Hash($this->data);
 		$this->beforeConstruct();
+		$this->data = new Hash($this->data);
 		$this->request = $request;
 		$this->response = new HTTPResponse();
 		$this->response->enableRenderHeaders = false;
@@ -132,6 +131,7 @@ abstract class Controller extends Object implements Renderable {
 		}
 		// set controller name in the view
 		$this->set('controller', $this->name);
+		// init components and helpers
 		$this->initComponents();
 		$this->initModels();
 		$this->startUpComponents();
@@ -546,6 +546,9 @@ abstract class Controller extends Object implements Renderable {
 				$this->name = 'error';
 				$this->action('404', array());
 			}
+			foreach($this->components as $componentName) {
+				$this->{$componentName}->afterAction($action);
+			}
 		}
 		return true;
 	}
@@ -595,6 +598,11 @@ abstract class Controller extends Object implements Renderable {
 			$content = $layoutView->render();
 		} else {
 			$content = $viewRendered;
+		}
+		// send content to each component
+		foreach($this->components as $componentName) {
+			$className = ClassPath::className($componentName);
+			$content = $this->{$className}->afterRender($content);
 		}
 		$this->response->body = $this->afterRender($content);
 		// @todo add this to request/response

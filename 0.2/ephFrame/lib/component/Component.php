@@ -139,11 +139,19 @@ abstract class Component extends Object implements ephFrameComponent {
 		return true;
 	}
 	
+	public function afterRender($rendered) {
+		return $rendered;
+	}
+	
 	/**
 	 *	Callback that is called right before controller calls his action
 	 * 	@return true
 	 */
 	public function beforeAction($actionName) {
+		return true;
+	}
+	
+	public function afterAction($actionName) {
 		return true;
 	}
 	

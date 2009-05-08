@@ -27,7 +27,11 @@ class ImageSharpenFilter extends Object implements ImageFilter {
 
 	public $cache = array();
 	
-	public $sharpness = 0;
+	public $sharpness = 16;
+	
+	public $divisor = 8;
+	
+	public $offset = 0;
 	
 	public function __construct($sharpness = null) {
 		if ($sharpness !== null) {
@@ -41,14 +45,13 @@ class ImageSharpenFilter extends Object implements ImageFilter {
 	 * 	@return Image the manipulated image
 	 */
 	public function apply(Image $image) {
+		$s = $this->sharpness;
 		$matrix = array(
-			array(-1, -2, -1),
-			array(-2, $this->sharpness + 12, -2),
-			array(-1, -2, -1)
+			array(-1, -1, -1),
+			array(-1, $s, -1),
+			array(-1, -1, -1)
 		);
-		$divisor	 = $this->sharpness;
-		$offset	= 0;
-		imageconvolution($image->handle(), $matrix, $divisor, $offset);
+		imageconvolution($image->handle(), $matrix, $this->divisor, $this->offset);
 		return $image;
 	}
 	

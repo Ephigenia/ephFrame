@@ -267,6 +267,24 @@ class Image extends File implements Renderable {
 	}
 	
 	/**
+	 * 	Draw a circle with diameter $d at the position $x,$y with border $color
+	 * 	and optional $backgroundColor
+	 * 	@param $x
+	 * 	@param $y
+	 * 	@param $d
+	 * 	@param $color
+	 * 	@param $backgroundColor
+	 * 	@return Image
+	 */
+	public function circle($x, $y, $d, $color, $backgroundColor = false) {
+		if ($backgroundColor) {
+			imagefilledellipse($this->handle(), $x, $y, $d, $d, $this->createColor($backgroundColor));
+		}
+		imageellipse($this->handle(), $x, $y, $d, $d, $this->createColor($color));
+		return $this;
+	}
+	
+	/**
 	 *	Sets a pixel of the image to the given color
 	 * 	@param integer $x
 	 * 	@param integer $y
