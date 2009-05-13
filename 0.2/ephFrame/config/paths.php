@@ -57,7 +57,7 @@ if (!defined('MODELCACHE_DIR')) define ('MODELCACHE_DIR', TMP_DIR.'model/');
  */
 if (!defined('WEBROOT')) {
 	if (isset($_SERVER['PHP_SELF'])) {
-		$__webroot = trim(dirname(dirname($_SERVER['PHP_SELF']).'../'), '/').'/';
+		$__webroot = rtrim(dirname(dirname($_SERVER['PHP_SELF']).'../'), '/').'/';
 	} else {
 		$__webroot = str_replace(realpath($_SERVER['DOCUMENT_ROOT']), '', APP_ROOT);
 	}

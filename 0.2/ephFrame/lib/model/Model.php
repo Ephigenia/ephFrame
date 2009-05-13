@@ -222,6 +222,7 @@ class Model extends Object {
 		if (empty($this->name)) {
 			$this->name = get_class($this);
 		}
+		
 		// set db source
 		$this->useDB($this->useDBConfig);
 		// generate tablename if empty
@@ -234,10 +235,29 @@ class Model extends Object {
 		}
 		$this->__mergeParentProperty('behaviors');
 		$this->__mergeParentProperty('uses');
-		// initialize model behavior callbacks
-		$this->behaviors = new ModelBehaviorHandler($this, $this->behaviors);
+		
 		// initialize model bindings
-		$this->initAssociations($id);
+		$this->behaviors = new ModelBehaviorHandler($this, $this->behaviors);
+//		if (!isset(self::$associationCache[$this->name])) {
+			$this->initAssociations($id);
+			self::$associationCache[$this->name] = $this;
+//		} else {
+//			$copy = self::$associationCache[$this->name];
+//			foreach(array('hasMany', 'belongsTo', 'hasOne', 'hasAndBelongsToMany') as $k) {
+//				$this->{$k} = $copy->{$k};
+//			}
+//			foreach($this->hasMany + $this->hasAndBelongsToMany as $k => $v) {
+//				$plural = Inflector::plural($k);
+//				$this->{$k} = clone($copy->{$k});
+//				$this->{$k}->{$this->name} = $this;
+//				$this->{$plural} = $copy->{$plural};
+//			}
+//			foreach($this->hasOne + $this->belongsTo as $k => $v) {
+//				$this->$k = $copy->$k;
+//				$this->$k->name = $k;
+//			}
+//		}
+		
 		// load inital data from array data or primary id
 		if (is_array($id)) {
 			$this->fromArray($id, $fieldNames);
@@ -248,8 +268,11 @@ class Model extends Object {
 		}
 		$this->afterConstruct();
 		$this->behaviors->call('afterConstruct');
+		
 		return $this;
 	}
+	
+	public static $associationCache = array();
 	
 	public function afterConstruct() {
 		return true;
@@ -354,11 +377,10 @@ class Model extends Object {
 			switch ($associationType) {
 				//$config['foreignKey'] = ucFirst($modelVars['name']).'.'.Inflector::delimeterSeperate($this->name.'_id');
 				case 'belongsTo':
-					$config['foreignKey'] = ucFirst($this->{$modelname}->name).'.'.$this->$modelname->primaryKeyName;
+					$config['foreignKey'] = ucFirst($this->$modelname->name).'.'.$this->$modelname->primaryKeyName;
 					break;
 				case 'hasOne':
-					$config['foreignKey'] = ucFirst($this->{$modelname}->name).'.'.Inflector::delimeterSeperate($this->name.'_id', '_');
-					//$config['foreignKey'] = ucFirst($modelVars['name']).'.'.$modelVars['primaryKeyName'];
+					$config['foreignKey'] = ucFirst($this->$modelname->name).'.'.Inflector::delimeterSeperate($this->name.'_id', '_');
 					break;
 				case 'hasMany':
 					$config['foreignKey'] = ucFirst($this->name).'.'.$this->primaryKeyName;
@@ -374,7 +396,6 @@ class Model extends Object {
 		// my side of the join
 		if (!isset($config['associationKey'])) {
 			switch ($associationType) {
-				//$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
 				case 'belongsTo':
 					$config['associationKey'] = $this->name.'.'.Inflector::underscore($modelname.'_'.$this->$modelname->primaryKeyName);
 					break;
@@ -510,14 +531,15 @@ class Model extends Object {
 	
 	/**
 	 * 	Fills Model data by searching the database table for a matching primaryKey
-	 * 	value
+	 * 	value.
+	 * 	@param integer $id
 	 * 	@return boolean
 	 */
 	public function fromId($id) {
-		$this->set($this->primaryKeyName, (int) $id);
 		if (!$model = $this->findBy($this->primaryKeyName, $id)) {
 			return false;
 		}
+		$this->set($this->primaryKeyName, (int) $id);
 		$this->data = $model->toArray();
 		foreach($this->belongsTo + $this->hasOne as $modelName => $config) {
 			$this->$modelName = $model->$modelName;
@@ -525,6 +547,7 @@ class Model extends Object {
 		foreach($this->hasMany as $modelName => $config) {
 			$modelPlural = Inflector::plural($modelName);
 			$this->{$modelPlural} = $model->$modelPlural;
+			$this->{$modelName} = $model->$modelName;
 		}
 		return true;
 	}
@@ -923,7 +946,6 @@ class Model extends Object {
 					$orderRule = $this->name.'.'.$orderRule;
 				}
 				$query->orderBy($orderRule);
-				
 			}
 			
 		}
@@ -939,7 +961,7 @@ class Model extends Object {
 			$joinStuff = $this->hasOne + $this->belongsTo;
 			foreach($joinStuff as $modelName => $config) {
 				foreach($this->{$modelName}->structure as $fieldInfo) {
-					$query->select($this->{$modelName}->name.'.'.$fieldInfo->name, $this->{$modelName}->name.'.'.$fieldInfo->name);
+					$query->select($modelName.'.'.$fieldInfo->name, $modelName.'.'.$fieldInfo->name);
 				}
 				$joinConditions = $config['conditions'];
 				$joinConditions[$config['associationKey']] = $config['foreignKey'];
@@ -964,7 +986,6 @@ class Model extends Object {
 		if ($result->numRows() == 0) {
 			return false;
 		}
-		$belongsToAndHasOne = $this->belongsTo + $this->hasOne;
 		$return = new Set();
 		$classname = get_class($this);
 		while($modelData = $result->fetchAssoc()) {
@@ -981,20 +1002,20 @@ class Model extends Object {
 			$model = new $modelClassName($modelData);
 			$model->findConditions = $this->findConditions;
 			$model->{$this->name} = $this;
+			// hasOne, belongsTo data
+			foreach($this->belongsTo + $this->hasOne as $modelName => $config) {
+				if (isset($config['class'])) {
+					$modelClassname2 = $config['class']; 
+				} else {
+					$modelClassname2 = $modelName;
+				}
+				$model->$modelName = new $modelClassname2();
+				$model->$modelName->name = $modelName;
+				$model->$modelName->fromArray($modelData);
+				$model->$modelName->depth = $depth - 1;
+			}
 			// fetch associated data if detph is larger than one
 			if ($depth >= 1) {
-				// hasOne, belongsTo data
-				foreach($belongsToAndHasOne as $modelName => $config) {
-					if (isset($config['class'])) {
-						$modelClassname2 = $config['class']; 
-					} else {
-						$modelClassname2 = $modelName;
-					}
-					$model->$modelName = new $modelClassname2();
-					$model->$modelName->name = $modelName;
-					$model->$modelName->fromArray($modelData);
-					$model->$modelName->depth = $depth-1;
-				}
 				// fetch hasMany associated Models
 				foreach($this->hasMany as $modelName => $config) {
 					$primaryKeyValue = $model->get($model->primaryKeyName);
@@ -1136,6 +1157,47 @@ class Model extends Object {
 			$value = DBQuery::quote($value);
 		}
 		return $this->find(array($fieldname => $value), null, $depth);
+	}
+	
+	/**
+	 *	Returns an array of $id => $fieldname values from this model, you can
+	 *	use this method for creating simple dropdown lists.
+	 *	<code>
+	 *	// fill a dropdown with all users found
+	 *	$dropDown = new FormField('user_id');
+	 *	$dropDown->addOptions($User->listAll('User.name', null, array('name DESC'));
+	 *	</code>
+	 *	
+	 *	You can also use 'templates' for the list like this:
+	 *	<code>
+	 *	// fill a dropdown with all users found
+	 *	$dropDown = new FormField('user_id');
+	 *	$dropDown->addOptions($User->listAll('%User.name% (%User.email%)', null, array('name DESC'));
+	 *	</code>
+	 *
+	 *	@param $conditions
+	 *	@return array(string)
+	 */
+	public function listAll($fieldname, $conditions = array(), $order = array(), $offset = 0, $count = null, $depth = null) {
+		$list = array();
+		$query = $this->createSelectQuery($conditions, $order, $offset, $count, $depth);
+		if (!strpos($fieldname, '.')) {
+			$fieldname = $this->name.'.'.$fieldname;
+		}
+		if (!$r = $this->DB->query($query)) {
+			return $list;
+		}
+		while($arr = $r->fetchAssoc()) {
+			if (strpos($fieldname, '%') !== false) {
+				$list[$arr[$this->name.'.'.$this->primaryKeyName]] = String::substitute($fieldname, $arr);
+			} else {
+				if (!isset($arr[$fieldname])) {
+					break;
+				}
+				$list[$arr[$this->name.'.'.$this->primaryKeyName]] = $arr[$fieldname];
+			}
+		}
+		return $list;
 	}
 	
 	/**
@@ -1431,7 +1493,6 @@ class Model extends Object {
 					$this->data[$fieldname] = (string) $value;
 					break;
 			}
-//			echo get_class($this).' '.$modelname.'.'.$fieldname.' = '.$value.'<br />';
 		} elseif (is_object($value)) {
 			$this->$fieldname = $value;
 		} else {

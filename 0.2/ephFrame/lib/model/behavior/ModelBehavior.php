@@ -66,12 +66,11 @@ class ModelBehavior extends Object {
 	 * 	@return boolean
 	 */
 	public function beforeInsert() {
-		if (isset($this->model->structure['created']) && $this->model->created <= 0) {
-			if ($this->model->structure['created']->quoting == ModelFieldInfo::QUOTE_STRING) {
-				$this->model->created = time();
-			} elseif($this->model->structure['created']->quoting == ModelFieldInfo::QUOTE_INTEGER) {
-				$this->model->created = time();
-			}
+		if ($this->model->hasField('created')
+			&& $this->model->created <= 0
+			&& in_array($this->model->structure['created']->quoting, array(ModelFieldInfo::QUOTE_STRING, ModelFieldInfo::QUOTE_INTEGER))
+			) {
+			$this->model->set('created', time());
 		}
 		return true;
 	}
@@ -82,12 +81,10 @@ class ModelBehavior extends Object {
 	 * 	@return boolean
 	 */
 	public function beforeUpdate() {
-		if (isset($this->model->structure['updated'])) {
-			if ($this->model->structure['updated']->quoting == ModelFieldInfo::QUOTE_STRING) {
-				$this->model->updated = time();
-			} elseif($this->model->structure['updated']->quoting == ModelFieldInfo::QUOTE_INTEGER) {
-				$this->model->updated = time();
-			}
+		if ($this->model->hasField('updated')
+			&& in_array($this->model->structure['updated']->quoting, array(ModelFieldInfo::QUOTE_STRING, ModelFieldInfo::QUOTE_INTEGER))
+			) {
+			$this->model->set('updated', time());
 		}
 		return true;
 	}

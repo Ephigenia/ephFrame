@@ -213,7 +213,7 @@ class String extends Helper {
 	 * 	@return string
 	 */
 	public static function substitute($template, $arr = array()) {
-		if (!preg_match_all('/%([\p{L}0-9]+)%/', $template, $found)) {
+		if (!preg_match_all('/%([\p{L}0-9\.\-_]+)%/', $template, $found)) {
 			return $template;
 		}
 		if (func_num_args() > 2) {

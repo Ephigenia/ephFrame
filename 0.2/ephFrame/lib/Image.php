@@ -203,7 +203,10 @@ class Image extends File implements Renderable {
 	 *  @param string $backgroundColor
 	 * 	@return Image
 	 */
-	public function rectangle($x1, $y1, $x2, $y2, $borderColor = null, $backgroundColor = null, $antialias = false) {
+	public function rectangle($x1, $y1, $x2, $y2, $borderColor = null, $backgroundColor = null, $antialias = false, $lineWidth = 1) {
+		if ($lineWidth > 1) {
+			imagesetthickness($this->handle(), $lineWidth);
+		}
 		if ($antialias) {
 			imageantialias($this->handle(), $antialias);
 		}
@@ -227,6 +230,21 @@ class Image extends File implements Renderable {
 	}
 	
 	/**
+	 *	Draws a border of $width on the image with additional $padding
+	 *	
+	 * 	@param integer|string $color
+	 * 	@param integer $width
+	 * 	@param integer $padding
+	 * 	@return Image
+	 */
+	public function border($color, $width = 1, $padding = 0) {
+		for($i = 0; $i < $width; $i++) {
+			$this->rect($i + $padding, $i + $padding, $this->width - $i - 1 - $padding, $this->height - $i - 1 - $padding, $color);
+		}
+		return $this;
+	}
+	
+	/**
 	 *	Draws a line
 	 * 	@param integer $x1
 	 * 	@param integer $y1
@@ -243,6 +261,27 @@ class Image extends File implements Renderable {
 		}
 		imageline($this->handle(), $x1, $y1, $x2, $y2, $color);
 		$this->resetThickness();
+		return $this;
+	}
+	
+	protected $x = 0;
+	
+	protected $y = 0;
+	
+	public function moveTo($x, $y) {
+		$this->x = $x;
+		$this->y = $y;
+		return $this;
+	}
+	
+	public function lineTo($x, $y, $color, $width = 1, $antialias = false) {
+		if ($width > 1) imagesetthickness($this->h(), $width);
+		if ($antialias) imageantialias($this->h(), true);
+		imageline($this->h(), $this->x, $this->y, $x, $y, $this->color($color));
+		if ($antialias) imageantialias($this->h(), false);
+		if ($width > 1) imagesetthickness($this->h(), 1);
+		$this->x = $x;
+		$this->y = $y;
 		return $this;
 	}
 	
@@ -904,6 +943,21 @@ class Image extends File implements Renderable {
 		}
 		return (int) $imgInfo['bits'];
 	}
+	
+	/**
+	 *	This method will calculate the memory usage in bytes that an image
+	 *	with $width, $height, $Bits and $channels would use in memory and return
+	 *	the result.
+	 * 
+	 * 	@param $width
+	 * 	@param $height
+	 * 	@param $bits
+	 * 	@param $channels
+	 * 	@return integer
+	 */
+	public static function calculateMemoryUsage($width, $height, $bits, $channels = 3) {
+		return $width * $height * $bits * $channels / 8;
+	}
 
 	/**
 	 *	Creates an Image Ressource Handle.
@@ -922,8 +976,12 @@ class Image extends File implements Renderable {
 		if ($this->exists() && func_num_args() == 0) {
 			// check if enough memory available
 			$imgInfo = $this->getImageInfo();
-			if ($imgInfo[0] * $imgInfo[1] * $imgInfo['bits'] * $imgInfo['channels'] / 8 > ini_get('memory_limit') * MEGABYTE - memory_get_usage()) {
-				throw new ImageToLargeToLoadException($this);
+			// calculate memory usage by the current image + some space for other
+			// php related stuff
+			$availableSize = ini_get('memory_limit') * MEGABYTE - memory_get_usage();
+			$neededSize = Image::calculateMemoryUsage($imgInfo[0], $imgInfo[1], $imgInfo['bits'], $imgInfo['channels']) + (MEGABYTE * 2);
+			if ($neededSize > $availableSize) {
+				throw new ImageToLargeToLoadException($this, $availableSize, $neededSize);
 			}
 			// create image handle
 			switch ($this->type()) {
@@ -1290,7 +1348,7 @@ class ImageInvalidTypeException extends ImageException {
  * 	used by php be to large
  */
 class ImageToLargeToLoadException extends ImageException {
-	public function __construct(Image $image) {
+	public function __construct(Image $image, $availableSize, $neededSize) {
 		parent::__construct('Unable to create image handle because image is to large.');
 	}
 }
