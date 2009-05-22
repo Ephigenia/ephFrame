@@ -41,7 +41,6 @@ if (!defined('APP_ROOT')) {
 		define('APP_ROOT', realpath(getcwd().'/').'/');
 	}
 }
-
 if (!defined('CONFIG_DIR')) define('CONFIG_DIR', APP_ROOT.'config/');
 if (!defined('VIEW_DIR')) define ('VIEW_DIR', APP_ROOT.'view/');
 if (!defined('ELEMENTS_DIR')) define ('ELEMENTS_DIR', VIEW_DIR.'element/');

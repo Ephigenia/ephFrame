@@ -12,6 +12,8 @@
  * 	@filesource
  */
 
+class_exists('String') or require dirname(__FILE__).'/../helper/String.php';
+
 /**
  * 	The Javascript component used for {@link HTMLView} class
  * 
@@ -51,19 +53,22 @@ class JavaScript extends Component implements Renderable {
 	 */
 	public $plain = array();
 	public $jQuery = array();
+	
 	public $dir = './';
 	
 	public $compress = false;
+	
 	public $pack = false;
 
 	public function clear() {
-		$this->files = array();
+		$this->files = new Collection();
 		$this->plain = array();
 		$this->jquery = array();
 		return $this;
 	}
 	
 	public function startup() {
+		$this->clear();
 		$this->dir = STATIC_DIR.'js'.DS;
 		$this->controller->set('JavaScript', $this);
 		return parent::startup();	
@@ -83,52 +88,68 @@ class JavaScript extends Component implements Renderable {
 		return $this;
 	}
 	
-	public function link($filename) {
-		return $this->addFile($filename);
-	}
-
+	/**
+	 * 	Add a single or multiple files to javascript
+	 * 
+	 * 	<code>
+	 * 	$JavaScript->addFile('test.js');
+	 * 	$JavaScript->addFile(array('test.js'));
+	 * 	</code>
+	 * 
+	 * 	@param string $filename
+	 * 	@return JavaScript
+	 */
 	public function addFile($filename) {
-		if (func_num_args() > 1) {
-			$args = func_get_args();
-			return $this->addFiles($args);
+		$args = func_get_args();
+		if (count($args[0]) > 1) {
+			return $this->addFile($args[0]);
 		}
-		$filename = basename($filename);
-		if (strcasecmp(substr($filename, -3), '.js') !== 0) {
-			$filename .= '.js';
-		}
-		if (!in_array($filename, $this->files)) {
-			$this->files[] = $filename;
+		foreach($args as $filename) {
+			$filename = trim((string) $filename);
+			$filename = String::append($filename, '.js', true);
+			if (substr($filename, 0, 7) != 'http://') {
+				$filename = WEBROOT.$this->dir.$filename;
+			}
+			$this->files->add($filename);
 		}
 		return $this;
 	}
 	
+	/**
+	 * 	Alias for {@link link}
+	 * 	@param $files
+	 * 	@return JavaScript
+	 */
 	public function addFiles($files) {
-		if (func_num_args() == 1) {
-			if (!is_array($files)) {
-				$fiels = array($files);
-			}
-		} elseif (func_num_args() > 1) {
-			$files = func_get_args();
-		}
-		foreach($files as $filename) {
-			$this->addFile($filename);
-		}
-		return $this;
+		$args = func_get_args();
+		return $this->callMethod('addFile', $args);
+	}
+	
+	/**
+	 * 	Alias for {@link link}
+	 * 	@param $files
+	 * 	@return JavaScript
+	 */
+	public function link($filename) {
+		$args = func_get_args();
+		return $this->callMethod('addFile', $args);
 	}
 	
 	public function render() {
 		if (!$this->beforeRender()) return '';
 		$rendered = '';
 		foreach($this->files as $filename) {
-			$cssIncludeTag = new HTMLTag('script', array(
+			$tag = new HTMLTag('script', array(
 				'type' => 'text/javascript',
-				'src' => str_replace('//','', WEBROOT.$this->dir.$filename)
+				'src' => $filename
 			));
-			$rendered .= $cssIncludeTag->render();
+			$rendered .= $tag->render();
 		}
+		
 		if (!empty($this->plain) || !empty($this->jQuery)) {
 			$plain = implode(LF, $this->plain);
 			$jQuery = implode(LF, $this->jQuery);
+			// compress plain javascript
 			if ($this->compress) {
 				loadComponent('JSCompressor');
 				$compressor = new JSCompressor();
@@ -150,28 +171,23 @@ class JavaScript extends Component implements Renderable {
 	public function beforeRender() {
 		// pack files, if {@link pack} is on and everything is smooothy
 		if ($this->pack && count($this->files) > 0) {
-			$dir = ltrim($this->dir, '/');
-			// prepend dir to all files
 			$files = array();
 			foreach($this->files as $filename) {
-				$fileFullName = $dir.$filename;
-				if (!is_file($fileFullName) || !is_readable($fileFullName)) {
-					continue;
+				if (file_exists($filename)) {
+					$this->files->removeAll($filename);
+					$files[] = $filename;
 				}
-				$files[] = $fileFullName;
 			}
-			// do the packing stuff
-			loadComponent('JSPacker');
-			$packer = new JSPacker();
-			$packer->compress = $this->compress;
-			$compressedFilename = $packer->packAndStore($files, $dir);
-			$this->files = array($compressedFilename);
+			if (count($files) > 0) {
+				// do the packing stuff
+				loadComponent('JSPacker');
+				$packer = new JSPacker();
+				$packer->compress = $this->compress;
+				$compressedFilename = WEBROOT.$this->dir.$packer->packAndStore($files, $this->dir);
+				$this->files = array($compressedFilename);
+			}
 		}
 		return true;
-	}
-	
-	public function afterRender($rendered) {
-		return $rendered;
 	}
 		
 }

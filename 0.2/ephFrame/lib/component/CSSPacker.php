@@ -18,6 +18,8 @@ class_exists('File') or require dirname(__FILE__).'/../File.php';
  * 	CSS Packer, packs CSS Files into single files
  * 
  * 	A Packer packs files into one single file. That reduces HTTP-Requests.
+ * 	The Packer will not compress files from remote servers or files that can
+ * 	not be found or read.
  * 
  * 	Pack css files and echo result:
  * 	<code>
@@ -139,15 +141,12 @@ class CSSPacker extends Component {
 	}
 	
 	/**
-	 * 	Fielname is a combination out of prefix, md5 hash of all filenames and
-	 * 	a timestamp of the last modified file.
+	 * 	Creates a filename for all packed files
 	 *
 	 * 	@param array(string) $files
 	 * 	@return string
 	 */
-	public function packedFilename(Array $files) {
-		// determine newest file timestamp
-//		$lastModified = max(array_map('filemtime', $files));
+	public function packedFilename(Array $files = array()) {
 		$md5Filenames = md5(implode('', array_map('basename', $files)));
 		$compressedFileName = $this->packedPrefix.$md5Filenames.'.'.$this->packedExtension;
 		$compressedFileName = str_replace('/[^-_A-Za-z0-9\./', '', $compressedFileName);

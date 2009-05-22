@@ -46,7 +46,7 @@ define('CLI_MODE', !isset($_SERVER['SERVER_PORT']));
 define('TAB', chr(9));
 define('LF', chr(10));
 define('RT', chr(13));
-define('LFRT', LF.RT);
+define('RTLF', RT.LF);
 define('ESC', chr(27));
 define('BELL', chr(7));
 

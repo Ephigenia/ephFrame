@@ -539,12 +539,15 @@ abstract class Controller extends Object implements Renderable {
 			foreach($this->forms as $FormName) {
 				$this->{$FormName}->beforeAction($action);
 			}
-			$this->beforeAction($action);
-			$arguments = array_diff_key($params, array('controller' => 0, 'action' => 0, 'path' => 0));
-			$return = $this->callMethod($action, $arguments);
-			if ($return === false) {
+			if ($this->beforeAction($action) === false) {
 				$this->name = 'error';
 				$this->action('404', array());
+			} else {
+				$arguments = array_diff_key($params, array('controller' => 0, 'action' => 0, 'path' => 0));
+				if ($this->callMethod($action, $arguments) === false) {
+					$this->name = 'error';
+					$this->action('404', array());
+				}
 			}
 			foreach($this->components as $componentName) {
 				$this->{$componentName}->afterAction($action);

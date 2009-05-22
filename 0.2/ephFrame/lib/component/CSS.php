@@ -14,6 +14,7 @@
 
 class_exists('File') or require dirname(__FILE__).'/../File.php';
 class_exists('Collection') or require dirname(__FILE__).'/../Collection.php';
+class_exists('String') or require dirname(__FILE__).'/../helper/String.php';
 
 /**
  * 	Class Collecting CSS definitions and files for the view
@@ -84,11 +85,6 @@ class CSS extends Component implements Renderable {
 	 */
 	public $dir;
 	
-	public function __construct() {
-		$this->clear();
-		return parent::__construct();
-	}
-	
 	public function clear() {
 		$this->files = new Collection();
 		$this->plain = array();
@@ -96,6 +92,7 @@ class CSS extends Component implements Renderable {
 	}
 	
 	public function startup() {
+		$this->clear();
 		$this->dir = STATIC_DIR.'css'.DS;
 		$this->controller->set('CSS', $this);
 		return parent::startup();
@@ -116,44 +113,51 @@ class CSS extends Component implements Renderable {
 		return $this;
 	}
 	
-	public function link($filename) {
-		return $this->addFile($filename);
+	/**
+	 * 	Add a single or multiple files to javascript
+	 * 
+	 * 	<code>
+	 * 	$JavaScript->addFile('test.js');
+	 * 	$JavaScript->addFile(array('test.js'));
+	 * 	</code>
+	 * 
+	 * 	@param string $filename
+	 * 	@return JavaScript
+	 */
+	public function addFile($filename) {
+		$args = func_get_args();
+		if (count($args[0]) > 1) {
+			return $this->addFile($args[0]);
+		}
+		foreach($args as $filename) {
+			$filename = trim((string) $filename);
+			$filename = String::append($filename, '.css', true);
+			if (substr($filename, 0, 7) != 'http://') {
+				$filename = $this->dir.$filename;
+			}
+			$this->files[] = $filename;
+		}
+		return $this;
 	}
 	
 	/**
-	 * 	Add one file to the list of css files that are used in the view. Missing
-	 * 	File extensions are automaticly added.
-	 * 	@param string $file
-	 * 	@return CSS
+	 * 	Alias for {@link link}
+	 * 	@param $files
+	 * 	@return JavaScript
 	 */
-	public function addFile($file) {
-		if (func_num_args() > 1) {
-			foreach(func_get_args() as $file) {
-				$this->addFile($file);
-			}
-		} else {
-//			$file = basename($file);
-			// add file extension if missing
-			if (strcasecmp(File::ext($file), 'css') !== 0) {
-				$file .= '.css';
-			}
-			$this->files->add($file);
-		}
-		return $this;
+	public function addFiles($files) {
+		$args = func_get_args();
+		return $this->callMethod('addFile', $args);
 	}
 	
-	public function addFiles($cssFiles) {
-		if (func_num_args() == 1) {
-			if (!is_array($cssFiles)) {
-				$cssFiles = array($cssFiles);
-			}
-		} elseif (func_num_args() > 1) {
-			$cssFiles = func_get_args();
-		}
-		foreach($cssFiles as $filename) {
-			$this->addFile($filename);
-		}
-		return $this;
+	/**
+	 * 	Alias for {@link link}
+	 * 	@param $files
+	 * 	@return JavaScript
+	 */
+	public function link($filename) {
+		$args = func_get_args();
+		return $this->callMethod('addFile', $args);
 	}
 	
 	public function render() {
@@ -161,11 +165,11 @@ class CSS extends Component implements Renderable {
 		$rendered = '';
 		// render include tags for css files
 		foreach($this->files as $filename) {
-			$cssIncludeTag = new HTMLTag('link', array(
+			$tag = new HTMLTag('link', array(
 				'rel' => 'stylesheet', 'type' => 'text/css',
-				'href' => str_replace('//', '/', WEBROOT.$this->dir.$filename)
+				'href' => $filename
 			));
-			$rendered .= $cssIncludeTag->render().LF;
+			$rendered .= $tag->render().LF;
 		}
 		// render plain css definitions
 		if (count($this->plain) > 0) {
@@ -185,22 +189,19 @@ class CSS extends Component implements Renderable {
 	public function beforeRender() {
 		// pack files, if {@link pack} is on and everything is smooothy
 		if ($this->pack && count($this->files) > 0) {
-			$dir = ltrim($this->dir, '/');
-			// prepend dir to all files
 			$files = array();
 			foreach($this->files as $filename) {
-				$fileFullName = $dir.$filename;
-				if (!is_file($fileFullName) || !is_readable($fileFullName)) {
-					continue;
+				if (file_exists($filename)) {
+					$this->files->removeAll($filename);
+					$files[] = $filename;
 				}
-				$files[] = $fileFullName;
 			}
-			// do the packing stuff
-			loadComponent('CSSPacker');
-			$packer = new CSSPacker();
-			$compressedFilename = $packer->packAndStore($files, $dir);
-			$this->files = new Collection();
-			$this->files->add($compressedFilename);
+			if (!empty($files)) {
+				loadComponent('CSSPacker');
+				$packer = new CSSPacker();	
+				$compressedFilename = WEBROOT.$this->dir.$packer->packAndStore($files, $this->dir);
+				$this->files[] = $compressedFilename;
+			}
 		}
 		return true;
 	}

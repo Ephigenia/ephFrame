@@ -38,7 +38,7 @@ class I18n extends Component {
 	 * 	Location of locale files
 	 * 	@var string
 	 */
-	public $domainLocation = '../locale/';
+	public $domainLocation = 'locale/';
 	
 	/**
 	 * 	Default encoding
@@ -55,7 +55,7 @@ class I18n extends Component {
 		if (!preg_match('@\w{2}@', self::$locale) && defined('DEFAULT_LANGUAGE')) {
 			self::$locale = DEFAULT_LANGUAGE;
 		}
-		
+		$this->domainLocation = APP_ROOT.'/locale/';
 		$this->controller->data->set(get_class($this), $this);
 		self::locale(self::$locale);
 		$this->domain($this->domainLocation, $this->domainName, $this->domainEncoding);

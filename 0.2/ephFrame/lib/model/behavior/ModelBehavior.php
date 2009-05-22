@@ -57,6 +57,14 @@ class ModelBehavior extends Object {
 		return true;
 	}
 	
+	public function beforeDelete() {
+		return true;
+	}
+	
+	public function afterDelete() {
+		return true;
+	}
+	
 	/**
 	 *	Default beforeInsert callback
 	 *
@@ -75,6 +83,18 @@ class ModelBehavior extends Object {
 		return true;
 	}
 	
+	public function afterInsert() {
+		return true;
+	}
+	
+	public function beforeSave() {
+		return true;
+	}
+	
+	public function afterSave() {
+		return true;
+	}
+	
 	/**
 	 *	Default beforeUpdate callback
 	 *	
@@ -86,6 +106,10 @@ class ModelBehavior extends Object {
 			) {
 			$this->model->set('updated', time());
 		}
+		return true;
+	}
+	
+	public function afterUpdate() {
 		return true;
 	}
 	

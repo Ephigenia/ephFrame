@@ -58,14 +58,26 @@ class String extends Helper {
 	}
 	
 	/**
-	 * 	Appends a string to an other
+	 * 	Appends a string to an other.
+	 * 	
+	 * 	Pass optional $condString that will checked before Adding, if $condString
+	 * 	is allready appended to the string nothing will change.
 	 *
 	 * 	@param string $string
 	 * 	@param string $append
-	 * 	@return string
+	 * 	@param string $condString
+	 * 	@param boolean $caseSensitive
 	 */
-	public static function append($string, $append) {
+	public static function append($string, $append, $condString = null, $caseSensitive = false) {
 		assert(is_scalar($string) && is_scalar($append));
+		if ($condString !== null) {
+			if ($condString == true) $condString = $append;
+			if (($caseSensitive && substr($string, -strlen($condString)) == $condString) || 
+			   (!$caseSensitive && String::lower(substr($string, -strlen($condString))) == String::lower($condString))
+				) {
+				return $string;
+			}
+		}
 		return $string.$append;
 	}
 	
@@ -74,10 +86,20 @@ class String extends Helper {
 	 * 	
 	 * 	@param string $string
 	 * 	@param string $prepend
+	 * 	@param string $condString
+	 * 	@param boolean $caseSensitive
 	 * 	@return string
 	 */
-	public static function prepend($string, $prepend) {
-		assert(is_scalar($string) && is_scalar($prepend));
+	public static function prepend($string, $prepend, $condString = null, $caseSensitive = false) {
+		assert(is_scalar($string) && is_scalar($append));
+		if ($condString !== null) {
+			if ($condString == true) $condString = $append;
+			if (($caseSensitive && substr($string, 0, -strlen($condString)) == $condString) || 
+			   (!$caseSensitive && String::lower(substr($string, 0, -strlen($condString))) == String::lower($condString))
+				) {
+				return $string;
+			}
+		}
 		return $prepend.$string;
 	}
 	
@@ -547,10 +569,10 @@ class String extends Helper {
 	 * 	@return string
 	 */
 	public static function generatePassword($length, $salt = null) {
-		if ($salt == 'human' || $salt = 'humanreadable' || $salt == 'readable') {
-			return self::randomString($length, $salt);
-		} else {
+		if (in_array($salt, array('human', 'humanreadable', 'readable'))) {
 			return self::generateHumanReadablePassword();
+		} else {
+			return self::randomString($length, $salt);
 		}
 	}
 	

@@ -127,22 +127,17 @@ class Time extends Helper {
 			return 'gestern';
 		} else {
 			$tmp = self::diff(time(), $timestamp);
-			$daysDifference = $tmp['days'];
-			if ($daysDifference < 7) {
-				$weekday = gmstrftime('%w', $timestamp);
-				$days = 0;
-				if ($weekday == 0) {
-					$days = gmstrftime('%w', time());
-				} else {
-					$days = $weekday - gmstrftime("%w", time());
-				}
-				if (abs($days) == 1) {
-					return 'vor 1 Tag';
-				} else {
-					return 'vor '.abs($days).' Tagen';
-				}
+			$daysDifference = abs($tmp['days']);
+			if ($daysDifference == 1) {
+				return 'gestern';
+			} elseif($daysDifference <= 2) {
+				return 'vorgestern';
+			} elseif ($daysDifference <= 7) {
+				return 'vor '.$daysDifference.' Tagen';
 			} else if ($daysDifference == 7) {
 				return 'vor einer Woche';
+			} else if ($daysDifference <= 14) {
+				return 'vor zwei wochen';
 			} else {
 				return gmstrftime("am %d.%m.%Y", $timestamp);
 			}
