@@ -859,7 +859,7 @@ class Set extends Component implements Countable, Renderable, Iterator, ArrayAcc
 	 */
 	public function delAll($value) {
 		$index = $this->indexOf($value);
-		while($index !== false) {
+		if ($index !== false) {
 			$this->del($index);
 			$index = $this->indexOf($value);
 		}

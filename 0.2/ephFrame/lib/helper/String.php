@@ -91,9 +91,9 @@ class String extends Helper {
 	 * 	@return string
 	 */
 	public static function prepend($string, $prepend, $condString = null, $caseSensitive = false) {
-		assert(is_scalar($string) && is_scalar($append));
+		assert(is_scalar($string) && is_scalar($prepend));
 		if ($condString !== null) {
-			if ($condString == true) $condString = $append;
+			if ($condString == true) $condString = $prepend;
 			if (($caseSensitive && substr($string, 0, -strlen($condString)) == $condString) || 
 			   (!$caseSensitive && String::lower(substr($string, 0, -strlen($condString))) == String::lower($condString))
 				) {
@@ -263,13 +263,14 @@ class String extends Helper {
 	 * 	@param string $in String that should be intended
 	 * 	@param integer $n	Steps to intend
 	 * 	@param string $char	Character to use to intend, multibytes accepted
+	 * 	@param integer $skiplines Optional number of lines that should be skipped
 	 * 	@return string	the indented string result
 	 */
-	public static function indent($in, $n = 1, $char = TAB) {
+	public static function indent($in, $n = 1, $char = TAB, $skipLines = 0) {
 		$lines = preg_split('/\n{1}/', $in);
 		$numberOfLines = self::numberOfLines($in);
 		foreach ($lines as $index => $line) {
-			$lines[$index] = str_repeat($char, $n).$line;
+			if ($index >= $skipLines) $lines[$index] = str_repeat($char, $n).$line;
 		}
 		return implode(LF, $lines);
 	}

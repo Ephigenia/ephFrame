@@ -13,14 +13,10 @@
  */
 
 /**
- * 	Application-wide paths
+ * 	Overwrite default ephFrame paths in this file if you want to.
+ * 	This file is included shortly before ephFrames paths are defined.
  * 	@package app
  * 	@subpackage app.config
  */
-
-if (!defined('STATIC_DIR')) define ('STATIC_DIR', 'static'.DS);
-if (!defined('APP_LIB_DIR')) define ('APP_LIB_DIR', APP_ROOT.'lib/');
-if (!defined('APP_CONTROLLER_DIR')) define('APP_CONTROLLER_DIR', APP_LIB_DIR.'controller/');
-if (!defined('APP_MODEL_DIR')) define('APP_MODEL_DIR', APP_LIB_DIR.'model/');
 
 ?>

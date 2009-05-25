@@ -54,7 +54,7 @@ class JavaScript extends Component implements Renderable {
 	public $plain = array();
 	public $jQuery = array();
 	
-	public $dir = './';
+	public $dir = 'static/js/';
 	
 	public $compress = false;
 	
@@ -69,7 +69,6 @@ class JavaScript extends Component implements Renderable {
 	
 	public function startup() {
 		$this->clear();
-		$this->dir = STATIC_DIR.'js'.DS;
 		$this->controller->set('JavaScript', $this);
 		return parent::startup();	
 	}
@@ -105,12 +104,7 @@ class JavaScript extends Component implements Renderable {
 			return $this->addFile($args[0]);
 		}
 		foreach($args as $filename) {
-			$filename = trim((string) $filename);
-			$filename = String::append($filename, '.js', true);
-			if (substr($filename, 0, 7) != 'http://') {
-				$filename = WEBROOT.$this->dir.$filename;
-			}
-			$this->files->add($filename);
+			$this->files[] = String::append(trim((string)$filename), '.js', true);
 		}
 		return $this;
 	}
@@ -139,13 +133,15 @@ class JavaScript extends Component implements Renderable {
 		if (!$this->beforeRender()) return '';
 		$rendered = '';
 		foreach($this->files as $filename) {
+			if (substr($filename, 0, 7) != 'http://') {
+				$filename = WEBROOT.$this->dir.$filename;
+			}
 			$tag = new HTMLTag('script', array(
 				'type' => 'text/javascript',
 				'src' => $filename
 			));
-			$rendered .= $tag->render();
+			$rendered .= $tag->render().LF;
 		}
-		
 		if (!empty($this->plain) || !empty($this->jQuery)) {
 			$plain = implode(LF, $this->plain);
 			$jQuery = implode(LF, $this->jQuery);
@@ -171,19 +167,22 @@ class JavaScript extends Component implements Renderable {
 	public function beforeRender() {
 		// pack files, if {@link pack} is on and everything is smooothy
 		if ($this->pack && count($this->files) > 0) {
+			$filesToCompress = array();
 			$files = array();
-			foreach($this->files as $filename) {
-				if (file_exists($filename)) {
-					$this->files->removeAll($filename);
+			foreach($this->files as $index => $filename) {
+				if (file_exists($this->dir.$filename)) {
+					$filesToCompress[] = $this->dir.$filename;
+				} else {
 					$files[] = $filename;
 				}
 			}
-			if (count($files) > 0) {
+			$this->files = new Collection($files);
+			if (count($filesToCompress) > 0) {
 				// do the packing stuff
 				loadComponent('JSPacker');
 				$packer = new JSPacker();
 				$packer->compress = $this->compress;
-				$compressedFilename = WEBROOT.$this->dir.$packer->packAndStore($files, $this->dir);
+				$compressedFilename = WEBROOT.$this->dir.$packer->packAndStore($filesToCompress, $this->dir);
 				$this->files = array($compressedFilename);
 			}
 		}

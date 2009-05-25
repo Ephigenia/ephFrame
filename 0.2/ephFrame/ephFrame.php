@@ -60,7 +60,6 @@ final class ephFrame {
 			require (FRAME_LIB_DIR.'component/Log.php');
 			// project include stuff (some config variables can be overwritten there)
 			include (APP_ROOT.'config/config.php');
-			include (APP_ROOT.'config/paths.php');
 			include (APP_ROOT.'config/db.php');
 			class_exists('AppController') or require APP_LIB_DIR.'AppController.php';
 			class_exists('AppModel') or require APP_LIB_DIR.'model/AppModel.php';

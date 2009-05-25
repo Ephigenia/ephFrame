@@ -137,19 +137,21 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 	}
 	
 	public function call($methodName, Array $args = array()) {
-		$r = true;
 		foreach($this->behaviors as $behavior) {
-			if (!method_exists($behavior, $methodName)) {
-				continue;
-			}
-			if (!$r = $behavior->callMethod($methodName, $args)) {
-				return $r;
-			}
+			if (!method_exists($behavior, $methodName)) continue;
+			if ($r = $behavior->callMethod($methodName, $args)) break;
 		}
-		return $r;
+		if (isset($r)) {
+			return $r;
+		} else {
+			throw new ModelBehaviorHandlerMethodNotFoundException($this->model, $methodName);
+		}
 	}
 	
 	public function __call($methodName, Array $args = array()) {
+		if (method_exists($this, $methodName)) {
+			return $this->callMethod($methodName, $args);
+		}
 		return $this->call($methodName, $args);
 	}
 	
@@ -211,6 +213,16 @@ class ModelBehaviorHandlerException extends ObjectException {}
 class ModelEmptyBehaviorNameException extends ModelBehaviorHandlerException {
 	public function __construct(Model $model) {
 		parent::__construct('Empty model behavior name detected when trying to add a new behavior.');
+	}
+}
+
+/**
+ *	@package ephFrame
+ *	@subpackage ephFrame.exception
+ */
+class ModelBehaviorHandlerMethodNotFoundException extends ModelBehaviorHandlerException {
+	public function __construct(Model $model, $method) {
+		parent::__construct('The model \''.get_class($model).'\' does not implement the behavior method "'.$method.'".');
 	}
 }
 

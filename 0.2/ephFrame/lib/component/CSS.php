@@ -83,7 +83,7 @@ class CSS extends Component implements Renderable {
 	 * 	Directory where CSS Files are located
 	 * 	@var string
 	 */
-	public $dir;
+	public $dir = 'static/css/';
 	
 	public function clear() {
 		$this->files = new Collection();
@@ -93,7 +93,6 @@ class CSS extends Component implements Renderable {
 	
 	public function startup() {
 		$this->clear();
-		$this->dir = STATIC_DIR.'css'.DS;
 		$this->controller->set('CSS', $this);
 		return parent::startup();
 	}
@@ -130,12 +129,7 @@ class CSS extends Component implements Renderable {
 			return $this->addFile($args[0]);
 		}
 		foreach($args as $filename) {
-			$filename = trim((string) $filename);
-			$filename = String::append($filename, '.css', true);
-			if (substr($filename, 0, 7) != 'http://') {
-				$filename = $this->dir.$filename;
-			}
-			$this->files[] = $filename;
+			$this->files[] = String::append(trim((string)$filename), '.css', true);
 		}
 		return $this;
 	}
@@ -165,12 +159,16 @@ class CSS extends Component implements Renderable {
 		$rendered = '';
 		// render include tags for css files
 		foreach($this->files as $filename) {
+			if (substr($filename, 0, 7) !== 'http://') {
+				$filename = WEBROOT.$filename;
+			}
 			$tag = new HTMLTag('link', array(
 				'rel' => 'stylesheet', 'type' => 'text/css',
 				'href' => $filename
 			));
 			$rendered .= $tag->render().LF;
 		}
+		
 		// render plain css definitions
 		if (count($this->plain) > 0) {
 			$styleTag = new HTMLTag('style', array('type' => 'text/css'));
@@ -188,18 +186,21 @@ class CSS extends Component implements Renderable {
 	
 	public function beforeRender() {
 		// pack files, if {@link pack} is on and everything is smooothy
-		if ($this->pack && count($this->files) > 0) {
+		if ($this->pack) {
+			$filesToCompress = array();
 			$files = array();
-			foreach($this->files as $filename) {
-				if (file_exists($filename)) {
-					$this->files->removeAll($filename);
+			foreach($this->files as $index => $filename) {
+				if (file_exists($this->dir.$filename)) {
+					$filesToCompress[] = $this->dir.$filename;
+				} else {
 					$files[] = $filename;
 				}
 			}
-			if (!empty($files)) {
+			$this->files = new Collection($files);
+			if (!empty($filesToCompress)) {
 				loadComponent('CSSPacker');
 				$packer = new CSSPacker();	
-				$compressedFilename = WEBROOT.$this->dir.$packer->packAndStore($files, $this->dir);
+				$compressedFilename = $this->dir.$packer->packAndStore($filesToCompress, $this->dir);
 				$this->files[] = $compressedFilename;
 			}
 		}

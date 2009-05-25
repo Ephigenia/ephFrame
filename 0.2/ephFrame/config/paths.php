@@ -32,16 +32,21 @@ define ('FRAME_HELPERS_DIR', FRAME_LIB_DIR.'helper/');
 define ('VENDOR_ROOT', FRAME_ROOT.'../vendor/');
 
 /**
- * 	Absolute Path to application root, always one up before webroot/ or html!
+ * 	Try to determine application root directory from current working
+ * 	directory. Usually 'html'.
  */
 if (!defined('APP_ROOT')) {
-	if (!CLI_MODE) {
+	if (!CLI_MODE && basename(getcwd()) == 'html') {
 		define('APP_ROOT', realpath(getcwd().'/../').'/');
 	} else {
 		define('APP_ROOT', realpath(getcwd().'/').'/');
 	}
 }
+
 if (!defined('CONFIG_DIR')) define('CONFIG_DIR', APP_ROOT.'config/');
+if (file_exists(CONFIG_DIR.'paths.php')) require_once CONFIG_DIR.'paths.php';
+
+if (!defined('APP_LIB_DIR')) define('APP_LIB_DIR', APP_ROOT.'lib/');
 if (!defined('VIEW_DIR')) define ('VIEW_DIR', APP_ROOT.'view/');
 if (!defined('ELEMENTS_DIR')) define ('ELEMENTS_DIR', VIEW_DIR.'element/');
 if (!defined('LAYOUT_DIR')) define ('LAYOUT_DIR', VIEW_DIR.'layout/');
@@ -66,5 +71,7 @@ if (!defined('WEBROOT')) {
 	define ('WEBROOT', $__webroot); // relative path to webroot (from the clients perspective)
 	unset($__webroot);
 }
+
+if (!defined('STATIC_DIR')) define('STATIC_DIR', 'static/');
 
 ?>
