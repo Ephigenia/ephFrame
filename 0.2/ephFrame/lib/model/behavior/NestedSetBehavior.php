@@ -198,7 +198,10 @@ class NestedSetBehavior extends ModelBehavior {
 		if (empty($this->model->Parent)) {
 			$this->model->Parent = $this->model->findById($this->model->parent_id, $modelDepth);
 		}
-		return $this->model->Parent;
+		if ($this->model->Parent) {
+			return $this->model->Parent;
+		}
+		return false;
 	}
 	
 	/**
@@ -229,7 +232,7 @@ class NestedSetBehavior extends ModelBehavior {
 		if (!$includeCurrent) {
 			$q->where($this->model->name.'.'.$this->model->primaryKeyName.' <> '.$this->model->get($this->model->primaryKeyName));
 		}
-		$q->orderBy($this->model->name.'.lft');
+		$q->orderBy->prepend($this->model->name.'.lft');
 		$path = array();
 		if ($r = $this->model->query($q, $modelDepth)) {
 			$path = $r;
