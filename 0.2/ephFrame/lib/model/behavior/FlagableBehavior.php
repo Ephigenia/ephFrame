@@ -16,8 +16,8 @@
  * 	Behavior that supports "flagging"-methods for a model field
  * 	http://en.wikipedia.org/wiki/Flag_(computing)
  * 	
- *	@package nms.update
- *	@subpackage nms.update.model.behavior
+ *	@package ephFrame
+ *	@subpackage ephFrame.lib.models.behaviors
  *	@author Ephigenia // Marcel Eichner <love@ephigenia.de>
  *	@since 29.01.2009
  */

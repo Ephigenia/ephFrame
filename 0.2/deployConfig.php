@@ -3,7 +3,7 @@
 $deployDir = '../deploy/';
 $exclude = array('*.project/*', '*.cache/*', '*.settings/*', '.DS_Store', '*.svn/*', '*.structure.json');
 $version = trim(file_get_contents(dirname(__FILE__).'/ephFrame/VERSION.txt'));
-$codeMoreSleepTarget = '/Users/Ephigenia/Sites/ephFrameNew/code.ephigenia.de/app/webroot/static/download/ephFrame/';
+$codeMoreSleepTarget = '/Users/Ephigenia/Sites/ephFrameNew/code.ephigenia.de/html/projects/ephFrame/';
 
 /**
  *	This is the deploy configuration for ephFrame framwork using ephDeploy
@@ -28,20 +28,20 @@ $config = array(
 				// create zip for code.moresleep.net
 				array('Zip', array(
 					'src'			=> './',
-					'target'		=> $codeMoreSleepTarget.'ephFrame_%date%.zip',
+					'target'		=> $codeMoreSleepTarget.'download/ephFrame_%date%.zip',
 					'silent'		=> true,
 					'exclude'		=> $exclude
 				)),
 				array('Copy', array(
 					'src' => 'changelog.txt',
-					'target' => '/Users/Ephigenia/Sites/ephFrameNew/code.ephigenia.de/app/webroot/static/download/ephFrame/changelog.txt'
+					'target' => $codeMoreSleepTarget.'download/changelog.txt'
 				)),
 				array('CreateDir', array(
-					'dir' => $codeMoreSleepTarget.'doc/'
+					'dir' => $codeMoreSleepTarget.'doc/phpdoc/'
 				)),
 				array('PHPDocumentor', array(
 					'src' => './',
-					'target' => $codeMoreSleepTarget.'/doc/',
+					'target' => $codeMoreSleepTarget.'/doc/phpdoc/',
 					'template' => 'HTML:frames:DOM/nms',
 					'title' => 'ephFrame Documentation',
 					'defaultPackage' => 'ephFrame'

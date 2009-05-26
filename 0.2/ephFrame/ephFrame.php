@@ -46,6 +46,7 @@ final class ephFrame {
 			require (FRAME_ROOT.'config/paths.php');
 			require (FRAME_ROOT.'Object.php');
 			require (FRAME_ROOT.'core.php');
+			require (FRAME_LIB_DIR.'PHPINI.php');
 			require (FRAME_LIB_DIR.'component/Component.php');
 			require (FRAME_LIB_DIR.'ClassPath.php');
 			require (FRAME_HELPERS_DIR.'Helper.php');
@@ -77,8 +78,8 @@ final class ephFrame {
 	 * 	if this is on the app will grump you for that :D
 	 */
 	public static function checkRegisterGlobals() {
-		if (ini_get('register_globals') === 0) {
-			die ('ephFrame will not work when register globals is set to on. Please set it off!');
+		if (ini_get('register_globals') === true) {
+			die ('ephFrame will not work when register globals is enabled in php.ini.');
 		}
 	}
 	
@@ -95,8 +96,8 @@ final class ephFrame {
 		} elseif (Registry::defined('DEBUG')) {
 			if (Registry::get('DEBUG') > DEBUG_PRODUCTION) {
 				error_reporting(E_ALL + E_STRICT);
-				ini_set('display_errors', 'yes');
-				ini_set('display_startup_errors', 'yes');
+				PHPINI::set('display_errors', 'yes');
+				PHPINI::set('display_startup_errors', 'yes');
 			} else if (Registry::get('DEBUG') == DEBUG_PRODUCTION) {
 				error_reporting(0);
 			}

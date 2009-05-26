@@ -14,6 +14,7 @@
 
 class_exists('FormField') or require(dirname(__FILE__).'/FormField.php');
 class_exists('File') or require(dirname(__FILE__).'/../../../File.php');
+class_exists('PHPINI') or require(dirname(__FILE__).'/../../../PHPINI.php');
 
 /**
  * 	Simple Form File Upload Field
@@ -43,11 +44,43 @@ class FormFieldFile extends FormField {
 	 * 	@return File.
 	 */
 	public function value($value = null) {
-		if (func_num_args() == 0) {
-			if (!$this->isUploaded()) return false;
+		if (func_num_args() == 0 && $this->isUploaded()) {
 			$file = new $this->fileClassName($_FILES[$this->attributes->name]['tmp_name']);
 			return $file;
 		}
+		return false;
+	}
+	
+	public function validate($value = null) {
+		// check for uploading errors
+		if (func_num_args() == 0) {
+			switch(@$_FILES[$this->attributes->name]['error']) {
+				case UPLOAD_ERR_OK:
+					break;
+				case UPLOAD_ERR_INI_SIZE:
+            		$this->error = sprintf('The uploaded file is to large. Maximum file size is %s', File::sizeHumanized(PHPINI::get('upload_max_filesize')));
+        			break;
+        		case UPLOAD_ERR_FORM_SIZE:
+            		$this->error = 'File size exeeds form size defined in form.';
+        			 break;
+		        case UPLOAD_ERR_PARTIAL:
+		        	$this->error = 'File Upload incomplete';
+		            break;
+		        case UPLOAD_ERR_NO_FILE:
+		            $this->error = 'No File Uploaded';
+					break;
+		        case UPLOAD_ERR_NO_TMP_DIR:
+		            $this->error = 'Temporary upload directory missing.';
+		        	break;
+		        case UPLOAD_ERR_CANT_WRITE:
+		            $this->error = 'Error while writing uploaded file to disk.';
+		        	break;
+        		default:
+        			$this->error = sprintf('An unknown error occured during or after the upload. Error code is: %s', @$_FILES[$this->attributes['name']]['error']);
+            		break;
+			}
+		}
+		return parent::validate($value);
 	}
 	
 	/**
@@ -72,6 +105,15 @@ class FormFieldFile extends FormField {
 		if (!$this->isUploaded()) return false;
 		return $_FILES[$this->attributes->name]['name'];
 	}
+	
+}
+
+/**
+ * 	File form field exception
+ *	@author Ephigenia // Marcel Eichner <love@ephigenia.de>
+ *	@since 26.05.2009
+ */
+class FormFieldFileException extends FormFieldException {
 	
 }
 

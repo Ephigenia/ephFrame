@@ -176,20 +176,21 @@ abstract class FormField extends HTMLTag {
 		if (func_num_args() == 0) {
 			$value = $this->value();
 		}
-		if (!$this->mandatory && empty($value)) {
-			return true;
+		if (empty($this->error)) {
+			if (!$this->mandatory && empty($value)) {
+				return true;
+			}
+			if ($this->mandatory && empty($value)) {
+				$this->error = 'The form field '.$this->attributes->name.' is not optional.';
+				return false;
+			}
+			$validator = new Validator($this->validate, $this);
+			$result = $validator->validate($value);
+			if ($result !== true) {
+				$this->error = $result;
+			}
 		}
-		if ($this->mandatory && empty($value)) {
-			$this->error = 'The form field '.$this->attributes->name.' is not optional.';
-			return false;
-		}
-		$validator = new Validator($this->validate, $this);
-		$result = $validator->validate($value);
-		if ($result !== true) {
-			$this->error = $result;
-			return false;
-		}
-		return true;
+		return empty($this->error);
 	}
 	
 	public function beforeRender() {
@@ -237,5 +238,13 @@ abstract class FormField extends HTMLTag {
 	}
 	
 }
+
+/**
+ * 	@package ephFrame
+ * 	@subpackage ephFrame.lib.exception
+ *	@author Ephigenia // Marcel Eichner <love@ephigenia.de>
+ *	@since 26.05.2009
+ */
+class FormFieldException extends BasicException {} 
 
 ?>

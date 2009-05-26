@@ -363,7 +363,7 @@ class String extends Helper {
 	 */
 	public static function countParagraphs($string) {
 		if (!is_string($string)) return null;
-		return substr_count($string, NL);
+		return substr_count($string, LF);
 	}
 	
 	/**

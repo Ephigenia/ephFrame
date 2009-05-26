@@ -470,9 +470,9 @@ class Set extends Component implements Countable, Renderable, Iterator, ArrayAcc
 			$array = $array->toArray();
 		}
 		if ($overwrite) {
-			$this->data = array_merge($this->data, $array);
-		} else {
 			$this->data = array_merge($array, $this->data);
+		} else {
+			$this->data = array_merge($this->data, $array);
 		}
 		return $this;
 	}

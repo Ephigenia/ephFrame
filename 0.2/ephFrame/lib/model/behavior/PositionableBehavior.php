@@ -23,8 +23,8 @@
  * 		
  * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * 	@since 03.12.2008
- * 	@package nms.folio
- * 	@subpackage nms.folio.lib.model.behavior
+ * 	@package ephFrame
+ *	@subpackage ephFrame.lib.models.behaviors
  */
 class PositionableBehavior extends ModelBehavior {
 	

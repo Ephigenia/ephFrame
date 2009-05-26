@@ -1,6 +1,24 @@
 changelog for ephFrame
 ----------------------
 
+2009-05-25
++ added model behaviors callable from every model
++ controller actions can return false to render 404 page
++ added NestedSetBehavior, FlagableBehavior and PositionableBehavior
++ added Form Field Classes and Form with configure
++ Log Levels now used correctly
++ Model can return random sets
++ Model can return simple list of fields from table
++ Model->findBy supports depth parameter
++ Model query class caches query and results
++ Model can now unbind and bind other models on the fly
++ Image->stretchResizeTo fixed
++ javascript and css component can include files from http://...
++ optimized model - bind, create methods
++ added CURL and Scraper Class
++ app/config/paths.php included before frameworks paths.php
++ Routes reusable with their names and parameters
+
 2008-10-26
 + changed the controller order actions to create components again
 + created ModelStructureCache to handle the save and load stuff of a model (refactoring)

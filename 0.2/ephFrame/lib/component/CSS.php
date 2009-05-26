@@ -128,8 +128,12 @@ class CSS extends Component implements Renderable {
 		if (count($args[0]) > 1) {
 			return $this->addFile($args[0]);
 		}
+		array_map('strval', array_map('trim', $args));
 		foreach($args as $filename) {
-			$this->files[] = String::append(trim((string)$filename), '.css', true);
+			if (strpos($filename, '?') === false) {
+				$filename = String::append($filename, '.css', true);
+			}
+			$this->files[] = $filename;
 		}
 		return $this;
 	}
