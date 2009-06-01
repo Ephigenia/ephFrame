@@ -53,12 +53,13 @@ class FormFieldFile extends FormField {
 	
 	public function validate($value = null) {
 		// check for uploading errors
-		if (func_num_args() == 0) {
+		if (func_num_args() == 0 && empty($this->error)) {
 			switch(@$_FILES[$this->attributes->name]['error']) {
 				case UPLOAD_ERR_OK:
+					return true;
 					break;
 				case UPLOAD_ERR_INI_SIZE:
-            		$this->error = sprintf('The uploaded file is to large. Maximum file size is %s', File::sizeHumanized(PHPINI::get('upload_max_filesize')));
+            		$this->error = 'The uploaded file is to large. Maximum file size is '. File::sizeHumanized(PHPINI::get('upload_max_filesize').'.');
         			break;
         		case UPLOAD_ERR_FORM_SIZE:
             		$this->error = 'File size exeeds form size defined in form.';

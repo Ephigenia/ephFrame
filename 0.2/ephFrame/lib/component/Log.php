@@ -96,7 +96,7 @@ class Log extends Component {
 	
 	private static $instance;
 	
-	public static $level = self::INFO;
+	public static $level = self::ERROR;
 	
 	/**
 	 * 	@todo explain the different mechanics behind the levels

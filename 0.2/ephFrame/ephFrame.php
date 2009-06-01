@@ -91,17 +91,19 @@ final class ephFrame {
 	 * 	error will be ignored
 	 */
 	public static function setErrorReporting() {
-		if (Registry::defined('ERROR_REPORTING') && Registry::get('DEBUG') > DEBUG_PRODUCTION) {
-			error_reporting(Registry::get('ERROR_REPORTING'));
-		} elseif (Registry::defined('DEBUG')) {
-			if (Registry::get('DEBUG') > DEBUG_PRODUCTION) {
+		if (Registry::get('DEBUG') > DEBUG_PRODUCTION) {
+			if (!Log::$level) Log::$level = Log::VERBOSE;
+			if (Registry::defined('ERROR_REPORTING')) {
+				error_reporting(Registry::get('ERROR_REPORTING'));
+			} else {
 				error_reporting(E_ALL + E_STRICT);
-				PHPINI::set('display_errors', 'yes');
-				PHPINI::set('display_startup_errors', 'yes');
-			} else if (Registry::get('DEBUG') == DEBUG_PRODUCTION) {
-				error_reporting(0);
 			}
+			PHPINI::set('display_errors', 'yes');
+			PHPINI::set('display_startup_errors', 'yes');
+		} else {
+			error_reporting(0);
 		}
+		return true;
 	}
 	
 	/**

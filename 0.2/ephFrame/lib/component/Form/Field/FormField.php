@@ -90,15 +90,29 @@ abstract class FormField extends HTMLTag {
 		return $this;
 	}
 	
+	/**
+	 * 	Callback for custom logic
+	 * 	@return boolean
+	 */
 	public function afterConstruct() {
-		
+		return true;
 	}
 	
+	/**
+	 *	Set form field to be mandatory or not
+	 * 	@param boolean $value
+	 * 	@return FormField
+	 */
 	public function mandatory($value) {
-		$this->mandatory = $value;
+		$this->mandatory = (bool) $value;
 		return $this;
 	}
 	
+	/**
+	 *	Set description for form field
+	 * 	@param string $description
+	 * 	@return FormField
+	 */
 	public function description($description) {
 		$this->description = $description;
 		return $this;

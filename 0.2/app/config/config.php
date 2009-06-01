@@ -17,21 +17,16 @@
 Registry::set('DEBUG', DEBUG_DEBUG);
 
 /**
- * 	Session Name (also the name for the session cookie)
- */
-define('SESSION_NAME', 'app');
-
-/**
- *	Logging Level
- * 	This should normally set to a low level
- */
-Log::$level = Log::INFO;
-
-/**
- * 	Salt for use in password creation or anything else that need so be salted
  * 	!!CHANGE THIS AS SOON AS POSSIBLE!!
+ * 	Salt for use in password creation or anything else that need so be salted
  */
 define('SALT', 'priotaseloukeadotraeuocrailaejot');
+
+/**
+ * 	Session Name (also the name for the session cookie)
+ * 	change this if you want to
+ */
+define('SESSION_NAME', 'app');
 
 /**
  * 	TimeZone Setting
@@ -40,11 +35,21 @@ define('SALT', 'priotaseloukeadotraeuocrailaejot');
 date_default_timezone_set('Europe/Berlin');
 
 /**
+ *	Optional default logging level, this is also affected by setting DEBUG,
+ *	so you usually won’t need to set this yourself.
+ */
+// Log::$level = Log::INFO;
+
+/**
+ * 	Enable this to render the element names before element itsself,
+ * 	debug.css must be included as well DEBUG > DEBUG_PRODUCTION
+ */
+// Registry::set('debug.showElementName', true);
+
+/**
  *	Override DEBUGs level default error_reporting value by setting ERROR_REPORTING
  *	value to your specific value
  */
-// Registry::set('ERROR_REPORTING', E_ALL);
 // ?XDEBUG_PROFILE=1
-
 
 ?>

@@ -3,7 +3,7 @@
 $deployDir = '../deploy/';
 $exclude = array('*.project/*', '*.cache/*', '*.settings/*', '.DS_Store', '*.svn/*', '*.structure.json');
 $version = trim(file_get_contents(dirname(__FILE__).'/ephFrame/VERSION.txt'));
-$codeMoreSleepTarget = '/Users/Ephigenia/Sites/ephFrameNew/code.ephigenia.de/html/projects/ephFrame/';
+$codeMoreSleepTarget = '/Users/Ephigenia/Sites/code.moresleep.net/trunc/html/ephFrame/';
 
 /**
  *	This is the deploy configuration for ephFrame framwork using ephDeploy
@@ -45,7 +45,7 @@ $config = array(
 					'template' => 'HTML:frames:DOM/nms',
 					'title' => 'ephFrame Documentation',
 					'defaultPackage' => 'ephFrame'
-				)),
+				))
 			)
 		),
 		

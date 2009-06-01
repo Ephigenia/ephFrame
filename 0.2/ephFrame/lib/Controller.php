@@ -312,13 +312,16 @@ abstract class Controller extends Object implements Renderable {
 			$classPath = 'App.lib.model.'.$modelName;
 			$modelName = ClassPath::className($classPath);
 		}
+		
 		try {
 			if (!class_exists($modelName)) {
 				ephFrame::loadClass($classPath);
 			}
-			$this->{$modelName} = new $modelName();
-			$this->{$modelName}->init($this);
-			logg(Log::VERBOSE_SILENT, 'ephFrame: '.get_class($this).' loaded model \''.$modelName.'\'');
+			if (is_subclass_of($modelName, 'Model')) {
+				$this->{$modelName} = new $modelName();
+				$this->{$modelName}->init($this);
+				logg(Log::VERBOSE_SILENT, 'ephFrame: '.get_class($this).' loaded model \''.$modelName.'\'');
+			}
 		} catch (ephFrameClassFileNotFoundException $e) {
 			if ($modelName != $this->name) throw $e;
 		}

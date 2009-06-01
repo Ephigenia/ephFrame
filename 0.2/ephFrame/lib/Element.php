@@ -39,13 +39,11 @@
 class Element extends View {
 	
 	protected function createViewFilename () {
-		$this->viewFilename = VIEW_DIR.'element/'.$this->name.'.'.$this->templateExtension;
+		$this->viewFilename = ELEMENT_DIR.$this->name.'.'.$this->templateExtension;
+		$ephFrameViewFile = FRAME_ROOT.'view/element/'.$this->name.'.'.$this->templateExtension;
 		// if apps view does not exist, try to get view from ephFrame
-		if (!file_exists($this->viewFilename)) {
-			$ephFrameViewFile = FRAME_ROOT.'view/element/'.$this->name.'.'.$this->templateExtension;
-			if (file_exists($ephFrameViewFile)) {
-				$this->viewFilename = $ephFrameViewFile;
-			}
+		if (!file_exists($this->viewFilename) && file_exists($ephFrameViewFile)) {
+			$this->viewFilename = $ephFrameViewFile;
 		}
 		if (!file_exists($this->viewFilename)) throw new ElementFileNotFoundException($this);
 		return $this->viewFilename;
@@ -57,6 +55,11 @@ class Element extends View {
 	}
 	
 	public function afterRender($rendered) {
+		// show element names if registry var is turned to on, note that you
+		// must have DEBUG > 1
+		if (Registry::get('debug.showElementName') && Registry::get('DEBUG') > DEBUG_PRODUCTION) {
+			$rendered = '<div class="elementName">'.$this->name.'</div><div class="element">'.$rendered.'</div>';
+		}
 		return $rendered;
 	}
 	
@@ -68,6 +71,10 @@ class Element extends View {
  */
 class ElementException extends BasicException {}
 
+/**
+ * 	@package ephFrame
+ * 	@subpackage ephFrame.lib.exception
+ */
 class ElementFileNotFoundException extends BasicException {
 	public function __construct(View $view) {
 		$this->view = $view;

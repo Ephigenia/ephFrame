@@ -113,7 +113,7 @@ class Registry extends Object implements Countable {
 	 * 	@todo re-check the method, default value is always returned first :(
 	 */
 	public static function get($varname = '') {
-		if (!self::defined($varname)) throw new RegistryVarNotFoundException($varname);
+		if (!self::defined($varname)) return null;
 		if (isset($_SERVER['SERVER_NAME'])) {
 			$matchAgainst = $_SERVER['SERVER_NAME'];
 			foreach(self::$data[$varname] as $regexp => $returnValue) {

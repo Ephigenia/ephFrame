@@ -133,7 +133,7 @@ class CSS extends Component implements Renderable {
 			if (strpos($filename, '?') === false) {
 				$filename = String::append($filename, '.css', true);
 			}
-			$this->files[] = $filename;
+			$this->files->add($filename);
 		}
 		return $this;
 	}
@@ -194,7 +194,7 @@ class CSS extends Component implements Renderable {
 			$filesToCompress = array();
 			$files = array();
 			foreach($this->files as $index => $filename) {
-				if (file_exists($this->dir.$filename)) {
+				if (substr($filename, 0, 7) !== 'http://' && file_exists($this->dir.$filename)) {
 					$filesToCompress[] = $this->dir.$filename;
 				} else {
 					$files[] = $filename;

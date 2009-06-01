@@ -14,6 +14,33 @@ a:visited {
 	color: #263349;
 }
 
+/** quoting **/
+q, blockquote { quotes:"\201C" "\201D" "\2018" "\2019"; }
+:lang(de) q    { quotes:"\201E" "\201C" "\201A" "\2018"; }
+:lang(de-DE) { quotes:"\00BB" "\00AB" "\203A" "\2039"; }
+:lang(de-CH) { quotes:"\00AB" "\00BB" "\2039" "\203A"; }
+:lang(fr)    { quotes:"\00AB\00A0" "\00A0\00BB" "\2039\00A0" "\00A0\203A"; }
+blockquote p:before, q:before { content:open-quote; }
+blockquote p:after, q:after { content:close-quote; }
+blockquote p {
+	background-color: #f3f3f3;;
+	padding: 10px 8px 10px 8px;
+}
+blockquote cite {
+	text-align: right;
+	font-size: 0.8em;
+	display: block;
+	color: #656565;
+	content: close-quote " (zitat von " attr(cite) ")";
+	border-top: 1px solid #cbcbcb;
+	padding-top: 0.25em;
+}
+
+/** page structure styles **/
+#content {
+	padding: 20px;
+	line-height: 1.8em;	
+}
 #header {
 	background-color: #000000;
 	border-bottom: 2px solid rgb(220,220,220);
@@ -22,16 +49,11 @@ a:visited {
 	height: 40px;
 	padding: 19px 0px 0px 20px;
 }
-#header a {
-	color: #ffffff;
-}
-#content {
-	padding: 20px;
-	line-height: 1.8em;	
-}
 #footer {
 	padding: 20px;	
 }
+
+/** paragraph styles **/
 p {
 	width: 740px;	
 }
