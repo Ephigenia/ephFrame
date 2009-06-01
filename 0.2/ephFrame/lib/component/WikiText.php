@@ -117,8 +117,8 @@ class WikiText extends Component {
 				}
 			}
 		}
-		$translated = String::normalizeBrakes($translated);
-		$translated = preg_replace('@([^><])\n{2,}@', '$1<br /><br />'.LF, $translated);
+		//$translated = String::normalizeBrakes($translated);
+		//$translated = preg_replace('@([^><])\n{2,}@', '$1<br /><br />'.LF, $translated);
 		return $translated;
 	}
 	

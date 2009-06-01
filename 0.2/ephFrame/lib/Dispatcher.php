@@ -33,7 +33,6 @@ class Dispatcher extends Object {
 	 * 	@return Controller
 	 */
 	public function dispatch($requestObjectOrUrl = null, Array $params = array()) {
-		
 		// use original request
 		if (is_object($requestObjectOrUrl)) {
 			assert($requestObjectOrUrl instanceof HTTPRequest);

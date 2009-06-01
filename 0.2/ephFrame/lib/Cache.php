@@ -29,12 +29,16 @@ interface_exists('CacheEngine') or require dirname(__FILE__).'/CacheEngine.php';
  */
 class Cache extends Object {
 	
-	public $engine;
+	/**
+	 * 	Stores instance of cache writers
+	 * 	@var CacheEngine
+	 */
+	public $writer;
 	
 	public $defaultExpire = HOUR;
 	
 	/**
-	 *	Constructs a new cache that
+	 *	create a new cache
 	 * 	@return Cache
 	 */
 	public function __construct($enginename) {

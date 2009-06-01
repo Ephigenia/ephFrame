@@ -1,21 +1,27 @@
 <?php
 
 /**
+ * 	PHP 5
  * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright 2007+, Ephigenia M. Eichner, Kopernikusstr. 8, 10245 Berlin
+ * 	Copyright (c) 2007+, Ephigenia M. Eichner
+ * 						 Kopernikusstr. 8
+ * 						 10245 Berlin
  *
  * 	Licensed under The MIT License
  * 	Redistributions of files must retain the above copyright notice.
- * 	@license http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright Copyright 2007+, Ephigenia M. Eichner
- * 	@link http://code.ephigenia.de/projects/ephFrame/
- * 	@filesource
+ * 
+ * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
+ * 	@copyright		copyright 2007+, Ephigenia M. Eichner
+ * 	@link			http://code.ephigenia.de/projects/ephFrame/
+ * 	@version		$Revision$
+ * 	@modifiedby		$LastChangedBy$
+ * 	@lastmodified	$Date$
+ * 	@filesource		$HeadURL$
  */
 
 /**
- * 	ephFrame mother class
- * 
- * 	use this class for loading new classes
+ * 	ephFrame
+ * 	
  * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * 	@since 06.05.2007
  * 	@package ephFrame
@@ -26,7 +32,7 @@ final class ephFrame {
 	 *	Stores the ephFrame version
 	 * 	@var integer
 	 */
-	const VERSION = '0.2a';
+	const VERSION = '0.2a ($Revision$)';
 	
 	/**
 	 *	Stores the instance of {@link ephFrame} as soon
