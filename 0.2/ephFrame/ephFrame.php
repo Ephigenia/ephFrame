@@ -1,7 +1,6 @@
 <?php
 
 /**
- * 	PHP 5
  * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
  * 	Copyright (c) 2007+, Ephigenia M. Eichner
  * 						 Kopernikusstr. 8
