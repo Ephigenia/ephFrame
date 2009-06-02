@@ -538,6 +538,10 @@ abstract class Controller extends Object implements Renderable {
 			foreach($this->components as $componentName) {
 				$this->{$componentName}->beforeAction($action);
 			}
+			// call controller before[ActionName] if possible
+			if (method_exists($this,'before'.ucFirst($action))) {
+				$this->callMethod('before'.ucFirst($action));
+			}
 			// call beforeAction on every form
 			foreach($this->forms as $FormName) {
 				$this->{$FormName}->beforeAction($action);
@@ -552,6 +556,11 @@ abstract class Controller extends Object implements Renderable {
 					$this->action('404', array());
 				}
 			}
+			// call controller after[ActionName] if possible
+			if (method_exists($this,'after'.ucFirst($action))) {
+				$this->callMethod('after'.ucFirst($action));
+			}
+			// call afteraction on components
 			foreach($this->components as $componentName) {
 				$this->{$componentName}->afterAction($action);
 			}

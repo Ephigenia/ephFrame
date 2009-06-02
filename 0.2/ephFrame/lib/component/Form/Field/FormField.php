@@ -221,8 +221,8 @@ abstract class FormField extends HTMLTag {
 			$this->attributes['class'] .= ' '.$this->attributes->name;
 		}
 		// does not work because this method is called two times?, see the comment above
-		if (!$this->validate()) {
-			$this->attributes['class'] .= ' errousField';
+		if (!empty($this->error)) {
+			$this->attributes['class'] .= ' error';
 		}
 		if ($value = $this->value()) {
 			$this->value($value);

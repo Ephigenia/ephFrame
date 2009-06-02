@@ -1,6 +1,10 @@
 changelog for ephFrame
 ----------------------
 
+2009-06-02
++ added after[Action] and before[Action] callbacks in the controller
++ added subversion keywords and new formatted copyright message on every file
+
 2009-05-25
 + added model behaviors callable from every model
 + controller actions can return false to render 404 page

@@ -290,10 +290,13 @@ class Form extends HTMLTag {
 	 * 	@return boolean
 	 */
 	public function ok() {
-		return ($this->submitted() && $this->validate());
+		return $this->validate();
 	}
 	
 	public function validate(Array $fieldNames = array()) {
+		if (!$this->submitted()) {
+			return false;
+		}
 		$validationErrors = false;
 		foreach($this->fieldset->children() as $child) {
 			// skip form fields with the names from $fieldNames

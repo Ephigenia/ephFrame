@@ -241,6 +241,12 @@ function dump($var, $output = true) {
  */
 function predump($var) {
 	echo '<pre>'.LF.print_r($var, true).LF.'</pre>'.LF;
+	return true;
+}
+
+function preBackTrace() {
+	echo '<pre>';debug_print_backtrace();echo '</pre>'.LF;
+	return true;
 }
 
 /**

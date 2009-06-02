@@ -34,6 +34,7 @@ class FormFieldFile extends FormField {
 	
 	/**
 	 *	Name of the class that should be returned by {@link value}
+	 *	Usually this class is an extension of {@link File}
 	 * 	@var string
 	 */
 	public $fileClassName = 'File';
@@ -50,16 +51,15 @@ class FormFieldFile extends FormField {
 	 * 	@return File.
 	 */
 	public function value($value = null) {
-		if (func_num_args() == 0 && $this->isUploaded()) {
-			$file = new $this->fileClassName($_FILES[$this->attributes->name]['tmp_name']);
-			return $file;
+		if (func_num_args() == 0 && $this->isUploaded() && !empty($_FILES[$this->attributes->name]['tmp_name'])) {
+			return new $this->fileClassName($_FILES[$this->attributes->name]['tmp_name']);
 		}
 		return false;
 	}
 	
 	public function validate($value = null) {
 		// check for uploading errors
-		if (func_num_args() == 0 && empty($this->error)) {
+		if (func_num_args() == 0 && $this->isUploaded()) {
 			switch(@$_FILES[$this->attributes->name]['error']) {
 				case UPLOAD_ERR_OK:
 					return true;
@@ -74,7 +74,9 @@ class FormFieldFile extends FormField {
 		        	$this->error = 'File Upload incomplete';
 		            break;
 		        case UPLOAD_ERR_NO_FILE:
-		            $this->error = 'No File Uploaded';
+		        	if ($this->mandatory) {
+		            	$this->error = 'No File Uploaded';
+		        	}
 					break;
 		        case UPLOAD_ERR_NO_TMP_DIR:
 		            $this->error = 'Temporary upload directory missing.';
@@ -91,17 +93,15 @@ class FormFieldFile extends FormField {
 	}
 	
 	/**
-	 *	Checks if any upload has happened
+	 *	Checks if any file was uploaded with this field
 	 * 	@return boolean
 	 */
 	protected function isUploaded() {
+		// first check if form was submitted
 		if (!isset($this->form) || isset($this->form) && !$this->form->submitted()) {
 			return false;
 		}
-		if (empty($_FILES[$this->attributes->name]['tmp_name'])) {
-			return false;
-		}
-		return true;
+		return isset($_FILES[$this->attributes->name]);
 	}
 	
 	/**
