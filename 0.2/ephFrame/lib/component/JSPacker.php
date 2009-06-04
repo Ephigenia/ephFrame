@@ -49,6 +49,10 @@
  */
 class JSPacker extends Component {
 	
+	/**
+	 * 	Boolean value to enable JS Compression
+	 * @var unknown_type
+	 */
 	public $compress = false;
 	
 	/**
@@ -112,7 +116,7 @@ class JSPacker extends Component {
 		$packed = '';
 		foreach($files as $filename) {
 			if ($this->compress) {
-				$packed .= $this->compressor->compressFile($filename).LF;
+				$packed .= LF.$this->compressor->compressFile($filename).LF.LF;
 			} else {
 				$jsFile = new File($filename);
 				$packed .= $jsFile->slurp();

@@ -68,6 +68,12 @@ class CSS extends Component implements Renderable {
 	public $files = array();
 	
 	/**
+	 *	Collection that stores css files that are added by url
+	 * 	@var Collection
+	 */
+	public $urls = array();
+	
+	/**
 	 * 	Store plain text css definitions
 	 * 	@var array(string)
 	 */
@@ -86,13 +92,15 @@ class CSS extends Component implements Renderable {
 	public $pack = true;
 	
 	/**
-	 * 	Directory where CSS Files are located
+	 * 	Directories where css files can exist, add multiple paths
+	 * 	that CSS should search in
 	 * 	@var string
 	 */
-	public $dir = 'static/css/';
+	public $dirs = array('static/css/');
 	
 	public function clear() {
 		$this->files = new Collection();
+		$this->urls = new Collection();
 		$this->plain = array();
 		return $this;
 	}
@@ -136,10 +144,14 @@ class CSS extends Component implements Renderable {
 		}
 		array_map('strval', array_map('trim', $args));
 		foreach($args as $filename) {
-			if (strpos($filename, '?') === false) {
-				$filename = String::append($filename, '.css', true);
+			if (Validator::URL($filename)) {
+				$this->urls->add($filename);
+			} else {
+				if (strpos($filename, '?') === false) {
+					$filename = String::append($filename, '.css', true);
+				}
+				$this->files->add($filename);
 			}
-			$this->files->add($filename);
 		}
 		return $this;
 	}
@@ -165,10 +177,10 @@ class CSS extends Component implements Renderable {
 	}
 	
 	public function render() {
-		if (!$this->beforeRender()) return '';
+		if (!$this->beforeRender()) return false;
 		$rendered = '';
 		// render include tags for css files
-		foreach($this->files as $filename) {
+		foreach($this->files->toArray() + $this->urls->toArray() as $filename) {
 			if (substr($filename, 0, 7) !== 'http://') {
 				$filename = WEBROOT.$filename;
 			}
@@ -178,7 +190,6 @@ class CSS extends Component implements Renderable {
 			));
 			$rendered .= $tag->render().LF;
 		}
-		
 		// render plain css definitions
 		if (count($this->plain) > 0) {
 			$styleTag = new HTMLTag('style', array('type' => 'text/css'));
@@ -194,31 +205,29 @@ class CSS extends Component implements Renderable {
 		return $this->afterRender($rendered);
 	}
 	
-	public function beforeRender() {
-		// pack files, if {@link pack} is on and everything is smooothy
-		if ($this->pack) {
-			$filesToCompress = array();
-			$files = array();
-			foreach($this->files as $index => $filename) {
-				if (substr($filename, 0, 7) !== 'http://' && file_exists($this->dir.$filename)) {
-					$filesToCompress[] = $this->dir.$filename;
-				} else {
-					$files[] = $filename;
-				}
-			}
-			$this->files = new Collection($files);
-			if (!empty($filesToCompress)) {
-				loadComponent('CSSPacker');
-				$packer = new CSSPacker();	
-				$compressedFilename = $this->dir.$packer->packAndStore($filesToCompress, $this->dir);
-				$this->files[] = $compressedFilename;
+	public function beforeRender(Controller $controller = null) {
+		if ($controller instanceof Controller) return true;
+		// add themed dir if theme is set in controller
+		if (!empty($this->controller->theme)) {
+			array_unshift($this->dirs, 'static/theme/'.$this->controller->theme.'/css/');
+		}
+		// filter files that don't exist
+		foreach($this->files as $filename) {
+			foreach($this->dirs as $dirname) {
+				if (!file_exists($dirname.$filename)) continue;
+				$existingFiles[] = $dirname.$filename;
+				break 1;
 			}
 		}
+		$this->files = new Collection(@$existingFiles);
+		// pack files, if {@link pack} is on and everything is smooothy
+		if ($this->pack) {
+			loadComponent('CSSPacker');
+			$packer = new CSSPacker();
+			$compressedFilename = $this->dirs[0].$packer->packAndStore($this->files->toArray(), $this->dirs[0]);
+			$this->files = new Collection($compressedFilename);
+		}
 		return true;
-	}
-	
-	public function afterRender($rendered) {
-		return $rendered;
 	}
 
 }

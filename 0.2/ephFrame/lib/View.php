@@ -72,13 +72,21 @@ abstract class View extends Hash implements Renderable {
 	 * 	Filename for this view, created in the __constructor
 	 * 	@var string
 	 */
-	public $viewFilename;
+	public $filename;
+	
+	/**
+	 * 	Optional name for a theme to use in the path
+	 * 	@var string
+	 */
+	public $theme = '';
 	
 	/**
 	 *	Content type for this view that can be send to the client
 	 * 	@var string
 	 */
 	public $contentType = 'text/plain';
+	
+	public $dir = VIEW_DIR;
 	
 	/**
 	 *	View constructor
@@ -90,12 +98,14 @@ abstract class View extends Hash implements Renderable {
 		} else {
 			$this->data = new Hash($data);
 		}
+		if ($this->data->get('theme', false)) {
+			$this->theme = (string) $this->data->get('theme');
+		}
 		// sanitize name
-		$this->name = preg_replace('/[^-_\/a-zA-Z0-9]*/', '', $name);
+		$this->name = preg_replace('/([^-_\/a-z0-9]*)/i', '', preg_replace('@\.php$@i', '', $name));
 		// sanitize action name
 		$this->action = Sanitizer::panic($action);
-		// viewfilename
-		$this->createViewFilename();
+		
 		return parent::__construct();
 	}
 	
@@ -104,26 +114,29 @@ abstract class View extends Hash implements Renderable {
 	 * 	@return string
 	 */
 	protected function createViewFilename () {
-		if ($this->name == 'Layout') {
-			$this->viewFilename = LAYOUT_DIR.$this->action.'.'.$this->templateExtension;
-		} else {
-			$this->viewFilename = VIEW_DIR.lcfirst($this->name).'/'.lcfirst($this->action).'.'.$this->templateExtension;
-			// if apps view does not exist, try to get view from ephFrame
-			if (!file_exists($this->viewFilename)) {
-				$ephFrameViewFile = FRAME_ROOT.'view/'.lcfirst($this->name).'/'.lcfirst($this->action).'.'.$this->templateExtension;
-				if (file_exists($ephFrameViewFile)) {
-					$this->viewFilename = $ephFrameViewFile;
-				}
+		$knownPart = lcfirst($this->name).DS.lcfirst($this->action).'.'.$this->templateExtension;
+		// add theme
+		if (!empty($this->theme)) {
+			if (!is_dir($this->dir.'theme'.DS.$this->theme)) {
+				throw new ThemeNotFoundException($this);
 			}
+			$filenames[] = $this->dir.'theme/'.$this->theme.DS.$knownPart;
 		}
-		if (!file_exists($this->viewFilename)) {
-			if ($this->name == 'Layout') {
+		$filenames[] = $this->dir.$knownPart;
+		$filenames[] = FRAME_ROOT.'view/'.$knownPart;
+		foreach($filenames as $this->filename) {
+			if (file_exists($this->filename)) { $found = true; break; }
+		}
+		// view file not found
+		if (empty($found)) {
+			$this->filename = $filenames[0];
+			if ($this->name == 'layout') {
 				throw new LayoutFileNotFoundException($this);
 			} else {
 				throw new ViewFileNotFoundException($this);
 			}
 		}
-		return $this->viewFilename;
+		return $this->filename;
 	}
 	
 	/**
@@ -134,6 +147,8 @@ abstract class View extends Hash implements Renderable {
 	 * 	@return string
 	 */
 	public function render() {
+		// viewfilename
+		$this->createViewFilename();
 		if (!$this->beforeRender()) return null;
 		ob_start();
 		foreach($this->data->toArray() as $___key => $___val) {
@@ -142,7 +157,7 @@ abstract class View extends Hash implements Renderable {
 		// prevent key and val from manipulation
 		unset($___key);
 		unset($___val);
-		require $this->viewFilename;
+		require $this->filename;
 		$content = ob_get_clean();
 		return $this->afterRender($content);
 	}
@@ -169,17 +184,22 @@ abstract class View extends Hash implements Renderable {
 	 * 	@return string
 	 */
 	public function renderElement($elementName, $data = array(), $output = true) {
+		// load Element class
 		class_exists('Element') or require dirname(__FILE__).'/Element.php';
+		// merge view data with element’s data
 		if ($this->data instanceof Hash) {
 			$data = array_merge($this->data->toArray(), $data);
 		} elseif (is_array($this->data)) {
 			$data = array_merge($this->data, $data);
 		}
-		$elementView = new Element($elementName, null, $data);
+		// create element
+		$element = new Element($elementName, $data);
+		$element->theme = $this->theme;
 		if ($output) {
-			echo $elementView->render();
+			echo $element->render();
+			unset($element);
 		} else {
-			return $elementView->render();
+			return $element->render();
 		}
 	}
 
@@ -189,7 +209,12 @@ abstract class View extends Hash implements Renderable {
  *	@package ephFrame
  * 	@subpackage ephFrame.lib.exception 
  */
-class ViewException extends BasicException {}
+class ViewException extends BasicException {
+	/**
+	 * 	@var View
+	 */
+	public $view;
+}
 
 /**
  *	@package ephFrame
@@ -198,7 +223,20 @@ class ViewException extends BasicException {}
 class ViewFileNotFoundException extends ViewException {
 	public function __construct(View $view) {
 		$this->view = $view;
-		$message = 'Unable to find view File \''.$this->view->viewFilename.'\'';
+		$message = sprintf('Unable to find view File \'%s\'', $this->view->filename);
+		parent::__construct($message);
+	}
+}
+
+/**	
+ * 	Thrown if a layout directory was not found
+ *	@package ephFrame
+ * 	@subpackage ephFrame.lib.exception 
+ */
+class ThemeNotFoundException extends ViewException {
+	public function __construct(View $view) {
+		$this->view = $view;
+		$message = sprintf('Unable to find layout directory: \'%s\'.', $this->view->dir.$this->view->theme);
 		parent::__construct($message);
 	}
 }
@@ -208,13 +246,9 @@ class ViewFileNotFoundException extends ViewException {
  * 	@subpackage ephFrame.lib.exception 
  */
 class LayoutFileNotFoundException extends ViewException {
-	/**
-	 * 	@var View
-	 */
-	public $view;
 	public function __construct(View $view) {
 		$this->view = $view;
-		$message = 'Unable to find layout File '.$view->viewFilename;
+		$message = sprintf('Unable to find layout file: \'%s\'.', $this->view->filename);
 		parent::__construct($message);
 	}
 }

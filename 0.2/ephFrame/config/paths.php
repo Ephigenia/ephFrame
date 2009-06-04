@@ -52,8 +52,6 @@ if (file_exists(CONFIG_DIR.'paths.php')) require_once CONFIG_DIR.'paths.php';
 
 if (!defined('APP_LIB_DIR')) define('APP_LIB_DIR', APP_ROOT.'lib/');
 if (!defined('VIEW_DIR')) define ('VIEW_DIR', APP_ROOT.'view/');
-if (!defined('ELEMENT_DIR')) define ('ELEMENT_DIR', VIEW_DIR.'element/');
-if (!defined('LAYOUT_DIR')) define ('LAYOUT_DIR', VIEW_DIR.'layout/');
 if (!defined('TMP_DIR')) define ('TMP_DIR', APP_ROOT.'tmp/');
 if (!defined('LOG_DIR')) define ('LOG_DIR', TMP_DIR.'log/');
 if (!defined('CACHE_DIR')) define ('CACHE_DIR', TMP_DIR.'cache/');

@@ -71,6 +71,12 @@ abstract class Controller extends Object implements Renderable {
 	public $layout = 'default';
 	
 	/**
+	 *	Optional Theme name that should be used
+	 *	@var string
+	 */
+	public $theme = false;
+	
+	/**
 	 *	Default view class for a controller, if you want to use views that are
 	 * 	stored in the app use paths like 'app.lib.MyCustomView'
 	 * 	@var string
@@ -595,7 +601,7 @@ abstract class Controller extends Object implements Renderable {
 		// send before Render to every component
 		foreach($this->components as $componentName) {
 			$className = ClassPath::className($componentName);
-			$this->{$className}->beforeRender();
+			$this->{$className}->beforeRender($this);
 		}
 		// load view class if available
 		if (!strpos($this->viewClassName, '.')) {
@@ -604,15 +610,15 @@ abstract class Controller extends Object implements Renderable {
 			ephFrame::loadClass($this->viewClassName);
 		}
 		// render the view part
+		$this->data->set('theme', $this->theme);
 		$view = new $this->viewClassName($this->name, $this->action, $this->data->toArray());
-		$viewRendered = $view->render();
+		$content = $view->render();
 		// wrap layout around view
 		if (!empty($this->layout)) {
-			$layoutViewVars = array('content' => $viewRendered);
-			$layoutView = new $this->viewClassName('Layout', $this->layout, array_merge($this->data->toArray(), $layoutViewVars));
-			$content = $layoutView->render();
-		} else {
-			$content = $viewRendered;
+			$this->data->set('content', $view->render());
+			$layout = new $this->viewClassName('layout', $this->layout, $this->data->toArray());
+			$layout->theme = $this->theme;
+			$content = $layout->render();
 		}
 		// send content to each component
 		foreach($this->components as $componentName) {

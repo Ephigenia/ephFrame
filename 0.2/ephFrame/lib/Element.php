@@ -44,15 +44,29 @@
  */
 class Element extends View {
 	
+	public function __construct($name, Array $data = array()) {
+		return parent::__construct($name, null, $data);
+	}
+	
 	protected function createViewFilename () {
-		$this->viewFilename = ELEMENT_DIR.$this->name.'.'.$this->templateExtension;
-		$ephFrameViewFile = FRAME_ROOT.'view/element/'.$this->name.'.'.$this->templateExtension;
-		// if apps view does not exist, try to get view from ephFrame
-		if (!file_exists($this->viewFilename) && file_exists($ephFrameViewFile)) {
-			$this->viewFilename = $ephFrameViewFile;
+		$knownPart = $this->name.'.'.$this->templateExtension;
+		if (!empty($this->theme)) {
+			if (!is_dir($this->dir.'theme'.DS.$this->theme.DS)) {
+				throw new ThemeNotFoundException($this);
+			}
+			$filenames[] = $this->dir.'theme'.DS.$this->theme.DS.'element'.DS.$knownPart;
 		}
-		if (!file_exists($this->viewFilename)) throw new ElementFileNotFoundException($this);
-		return $this->viewFilename;
+		$filenames[] = $this->dir.'element'.DS.$knownPart;
+		$filenames[] = FRAME_ROOT.'view/element/'.$this->name.'.'.$this->templateExtension;
+		foreach($filenames as $this->filename) {
+			if (file_exists($this->filename)) { $found = true; break; }
+		}
+		if (empty($found)) {
+			$this->filename = $filenames[0];
+			throw new ElementNotFoundException($this);
+		}
+		if (!file_exists($this->filename)) throw new ElementFileNotFoundException($this);
+		return $this->filename;
 	}
 	
 	public function beforeRender() {
@@ -84,7 +98,7 @@ class ElementException extends BasicException {}
 class ElementFileNotFoundException extends BasicException {
 	public function __construct(View $view) {
 		$this->view = $view;
-		$message = 'Unable to find view File \''.$this->view->viewFilename.'\'';
+		$message = 'Unable to find element File in \''.$this->view->filename.'\'.';
 		parent::__construct($message);
 	}
 }
