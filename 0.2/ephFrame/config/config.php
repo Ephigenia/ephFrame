@@ -34,7 +34,8 @@ Registry::set('DEBUG', DEBUG_PRODUCTION);
  * 	preferred url. This is only available if not in cli-php.
  */
 if (isset($_SERVER['HTTP_HOST'])) {
-	Registry::set('WEBROOT_ABS', ($_SERVER['SERVER_PORT'] == 80 ? 'http' : $_SERVER['SERVER_PORT']).'://'.$_SERVER['HTTP_HOST'].WEBROOT);
+	Registry::set('WEBROOT_URL', ($_SERVER['SERVER_PORT'] == 80 ? 'http' : $_SERVER['SERVER_PORT']).'://'.$_SERVER['HTTP_HOST'].'/');
 }
+
 
 ?>

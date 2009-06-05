@@ -222,7 +222,7 @@ class Router extends Hash {
 	 * 	@param boolean 		$includeWebroot
 	 * 	@return string|boolean 	false if route name could not be found, otherwise the resulting uri
 	 */
-	public static function getRoute($routeName, $params = array(), $includeWebroot = true) {
+	public static function getRoute($routeName, $params = array(), $url = false) {
 		$router = self::getInstance();
 		if (!$router->hasKey($routeName)) {
 			return false;
@@ -235,8 +235,8 @@ class Router extends Hash {
 		if (is_array($params)) {
 			$uri = self::insertParams($uri, $params);
 		}
-		if ($includeWebroot) {
-			$uri = WEBROOT.$uri;
+		if ($url) {
+			$uri = Registry::get('WEBROOT_URL').$uri;
 		}
 		return $uri;
 	}

@@ -453,11 +453,14 @@ class Model extends Object {
 	 */
 	public function detailPageUri() {
 		if (!$this->exists()) return false;
-		if ($uri = Router::getRoute($this->name.'Id', array('id' => $this->id))) {
-			return $uri;
+		if (!$uri = Router::getRoute($this->name.'Id', array('id' => $this->id))) {
+			$uri = WEBROOT.lcfirst($this->name).'/'.$this->id.'/';	
 		}
-		// try to generate detail from model information
-		return WEBROOT.lcfirst($this->name).'/'.$this->id.'/';
+		return $uri;
+	}
+	
+	public function detailPageURL() {
+		return Registry::get('WEBROOT_URL').$this->detailPageUri();
 	}
 	
 	/**
