@@ -240,9 +240,10 @@ abstract class Controller extends Object implements Renderable {
 	 */
 	public function rss() {
 		if (isset($this->{$this->name})) {
+			$entries = $this->{$this->name}->findAll(null, null, 0, 20);
 			$entries = $this->{$this->name}->findAll(null, null, null, $this->{$this->name}->perPage);
 			$this->set(Inflector::plural($this->name), $entries);
-			$this->set('RSSURL', Registry::get('WEBROOT_ABS').$this->request->get('__url'));
+			$this->set('RSSURL', Registry::get('WEBROOT_URL').$this->request->get('__url'));
 			$this->layout = 'rss';
 			$this->viewClassName = 'XMLView';
 			Registry::set('DEBUG', DEBUG_DEVELOPMENT);
