@@ -132,8 +132,7 @@ class Time extends Helper {
 		} elseif (self::isYesterday($timestamp)) {
 			return 'gestern';
 		} else {
-			$tmp = self::diff(time(), $timestamp);
-			$daysDifference = abs($tmp['days']);
+			$daysDifference = floor(abs(time() - $timestamp)) / DAY;
 			if ($daysDifference == 1) {
 				return 'gestern';
 			} elseif($daysDifference <= 2) {

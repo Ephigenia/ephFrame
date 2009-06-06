@@ -175,7 +175,7 @@ class JavaScript extends Component implements Renderable {
 		if (!$this->beforeRender()) return '';
 		$r = microtime(true);
 		$rendered = '';
-		foreach($this->files as $filename) {
+		foreach($this->files->toArray() + $this->urls->toArray() as $filename) {
 			if (substr($filename, 0, 7) != 'http://') {
 				$filename = WEBROOT.$filename;
 			}

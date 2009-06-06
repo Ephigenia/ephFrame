@@ -237,6 +237,8 @@ class Router extends Hash {
 		}
 		if ($url) {
 			$uri = Registry::get('WEBROOT_URL').$uri;
+		} else {
+			$uri = WEBROOT.$uri;
 		}
 		return $uri;
 	}
