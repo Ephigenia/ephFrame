@@ -116,10 +116,10 @@ class JSPacker extends Component {
 		$packed = '';
 		foreach($files as $filename) {
 			if ($this->compress) {
-				$packed .= LF.$this->compressor->compressFile($filename).LF.LF;
+				$packed .= LF.$this->compressor->compressFile($filename).LF;
 			} else {
 				$jsFile = new File($filename);
-				$packed .= $jsFile->slurp();
+				$packed .= $jsFile->slurp().LF;
 			}
 		}
 		return $packed;

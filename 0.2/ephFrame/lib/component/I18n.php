@@ -114,6 +114,31 @@ class I18n extends Component {
 		logg(Log::VERBOSE_SILENT, $logmessage);
 		return $this;
 	}
+	
+	public static $numberFormat = '%!.0n';
+	public static $moneyFormat = '%!.0n €';
+	
+	/**
+	 * 	Returns a string rendered in the current language and format
+	 * 	set {@link locale}
+	 * 	@param integer|float
+	 * 	@param string optinal format to use instead of default format
+	 * 	@return string
+	 */
+	public static function number($number, $format = null) {
+		return money_format(($format === null) ? self::$numberFormat : $format, $number);
+	}
+	
+	/**
+	 * 	Returns a formatted money value with currency as set in the
+	 * 	{@link moneyFormat}
+	 * 	@param integer|float
+	 * 	@param string optinal format to use instead of default format
+	 * 	@return string 
+	 */
+	public static function money($money, $format = null) {
+		return money_format(($format === null) ? self::$numberFormat : $format, $number);
+	}
 
 }
 
