@@ -609,7 +609,7 @@ class Model extends Object {
 //			if (!isset($this->structure[$fieldName]) || !isset($this->data[$fieldName])) continue;
 //			$data[$fieldName] = $this->data[$fieldName];
 //		}
-		if (!$this->beforeSave() || !$this->behaviors->call('beforeSave')) {
+		if (!($this->beforeSave() && $this->behaviors->call('beforeSave'))) {
 			return false;
 		}
 		// create save query for this model
@@ -676,7 +676,9 @@ class Model extends Object {
 	 * 	@return boolean
 	 */
 	protected function insert() {
-		if (!$this->beforeInsert() || !$this->behaviors->call('beforeInsert')) return false;
+		if (!($this->beforeInsert() && $r = $this->behaviors->call('beforeInsert'))) {
+			return false;
+		}
 		$quotedData = array();
 		foreach($this->structure as $key => $value) {
 			if (!isset($this->data[$key])) continue;
@@ -704,7 +706,7 @@ class Model extends Object {
 	 * 	@return unknown
 	 */
 	protected function update() {
-		if (!$this->beforeUpdate() || !$this->behaviors->call('beforeUpdate')) return false;
+		if (!($this->beforeUpdate() && $this->behaviors->call('beforeUpdate'))) return false;
 		$quotedData = array();
 		foreach($this->structure as $key => $value) {
 			if (!isset($this->data[$key])) continue;

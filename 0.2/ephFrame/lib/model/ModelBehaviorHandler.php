@@ -145,7 +145,7 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 	public function call($methodName, Array $args = array()) {
 		foreach($this->behaviors as $behavior) {
 			if (!method_exists($behavior, $methodName)) continue;
-			if ($r = $behavior->callMethod($methodName, $args)) break;
+			if ($r = $behavior->callMethod($methodName, $args));
 		}
 		if (isset($r)) {
 			return $r;
