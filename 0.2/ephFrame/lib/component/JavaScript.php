@@ -211,6 +211,7 @@ class JavaScript extends Component implements Renderable {
 		if ($controller instanceof Controller) return true;
 		// add themed dir if theme is set in controller
 		if (!empty($this->controller->theme)) {
+			$this->addFile($this->controller->theme);
 			array_unshift($this->dirs, 'static/theme/'.$this->controller->theme.'/js/');
 		}
 		// filter files that don't exist
