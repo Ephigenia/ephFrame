@@ -844,7 +844,7 @@ class String extends Helper {
 				# or	
 				|
 				# single line commments
-				\/\/([^\n]*)|^\s*\n?
+				(^|\s+)\/{2}(.*)
 				}ix', '', $string);
 	}
 	

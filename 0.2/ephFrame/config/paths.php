@@ -50,12 +50,13 @@ if (!defined('APP_ROOT')) {
 if (!defined('CONFIG_DIR')) define('CONFIG_DIR', APP_ROOT.'config/');
 if (file_exists(CONFIG_DIR.'paths.php')) require_once CONFIG_DIR.'paths.php';
 
-if (!defined('APP_LIB_DIR')) define('APP_LIB_DIR', APP_ROOT.'lib/');
-if (!defined('VIEW_DIR')) define ('VIEW_DIR', APP_ROOT.'view/');
-if (!defined('TMP_DIR')) define ('TMP_DIR', APP_ROOT.'tmp/');
-if (!defined('LOG_DIR')) define ('LOG_DIR', TMP_DIR.'log/');
-if (!defined('CACHE_DIR')) define ('CACHE_DIR', TMP_DIR.'cache/');
-if (!defined('MODELCACHE_DIR')) define ('MODELCACHE_DIR', TMP_DIR.'model/');
+if (!defined('APP_LIB_DIR')) define('APP_LIB_DIR', APP_ROOT.'lib'.DS);
+if (!defined('APP_VENDOR_DIR')) define('APP_VENDOR_DIR', APP_LIB_DIR.'vendor'.DS);
+if (!defined('VIEW_DIR')) define ('VIEW_DIR', APP_ROOT.'view'.DS);
+if (!defined('TMP_DIR')) define ('TMP_DIR', APP_ROOT.'tmp'.DS);
+if (!defined('LOG_DIR')) define ('LOG_DIR', TMP_DIR.'log'.DS);
+if (!defined('CACHE_DIR')) define ('CACHE_DIR', TMP_DIR.'cache'.DS);
+if (!defined('MODELCACHE_DIR')) define ('MODELCACHE_DIR', TMP_DIR.'model'.DS);
 
 /**
  *	Determine webroot, the directory that can be used for linking images
