@@ -236,7 +236,7 @@ class Router extends Hash {
 			$uri = self::insertParams($uri, $params);
 		}
 		if ($url) {
-			$uri = Registry::get('WEBROOT_URL').$uri;
+			$uri = rtrim(Registry::get('WEBROOT_URL'), '/').$uri;
 		} else {
 			$uri = WEBROOT.$uri;
 		}

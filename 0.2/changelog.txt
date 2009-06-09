@@ -1,7 +1,10 @@
 changelog for ephFrame
 ----------------------
 
-2009-06-02
+2009-06-08
++ fixed missing created update field when inserting new model entries with multiple behaviors
++ added theming, which includes js/css search in theme directory
++ fixed js packer to append line-feed at end of packed js files
 + added after[Action] and before[Action] callbacks in the controller
 + added subversion keywords and new formatted copyright message on every file
 
