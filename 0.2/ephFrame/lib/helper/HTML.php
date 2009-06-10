@@ -46,6 +46,17 @@ class HTML extends Helper {
 	}
 	
 	/**
+	 * 	
+	 * @param $tagName
+	 * @param $attributes
+	 * @return unknown_type
+	 */
+	public function openTag($tagName, Array $attributes = array()) {
+		$tag = new HTMLTag($tagName, $attributes);
+		return $tag->renderOpenTag();
+	}
+	
+	/**
 	 *	Creates a simple <p> element with $content and $attributes ans returns
 	 * 	it ready for rendering.
 	 * 	
@@ -108,6 +119,9 @@ class HTML extends Helper {
 	 * 	@return HTMLTag
 	 */
 	public function image($src, Array $attributes = array()) {
+		if (strpos($src, '/') !== 0 && substr($src, 0, 7) !== 'http://') {
+			$src = WEBROOT.STATIC_DIR.'img/'.$src;
+		}
 		$attributes['src'] = $src;
 		if (empty($attributes['alt']) && @$attributes['alt'] !== false) {
 			$attributes['alt'] = '';

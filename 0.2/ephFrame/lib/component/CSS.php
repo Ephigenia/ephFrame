@@ -206,7 +206,7 @@ class CSS extends Component implements Renderable {
 	}
 	
 	public function beforeRender(Controller $controller = null) {
-		if ($controller instanceof Controller) return true;
+		if ($controller instanceof Controller) return parent::beforeRender($controller);
 		// add themed dir if theme is set in controller
 		if (!empty($this->controller->theme)) {
 			$this->addFile($this->controller->theme);
@@ -228,7 +228,7 @@ class CSS extends Component implements Renderable {
 			$compressedFilename = $this->dirs[0].$packer->packAndStore($this->files->toArray(), $this->dirs[0]);
 			$this->files = new Collection($compressedFilename);
 		}
-		return true;
+		return parent::beforeRender($controller);
 	}
 
 }

@@ -114,7 +114,10 @@ class SGMLAttributes extends Hash {
 		if (!$this->beforeRender()) return $rendered;
 		foreach ($this->toArray() as $attributeName => $attributeValue) {
 			if (!is_array($attributeValue) && strlen($attributeValue) === 0 && !in_array($attributeName, array('title', 'alt'))) continue;
-			$rendered .= $this->renderAttributeName($attributeName).'="'.$this->renderAttributeValue($attributeValue).'" ';
+			$attributeValue = $this->renderAttributeValue($attributeValue);
+			if (strlen($attributeValue)) {
+				$rendered .= $this->renderAttributeName($attributeName).'="'.$attributeValue.'" ';
+			}
 		}
 		$rendered = trim($rendered);
 		return $this->afterRender($rendered);
