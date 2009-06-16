@@ -52,7 +52,7 @@ class HTML extends Helper {
 	 * @return unknown_type
 	 */
 	public function openTag($tagName, Array $attributes = array()) {
-		$tag = new HTMLTag($tagName, $attributes);
+		$tag = new HTMLTag($tagName, $attributes, '&nbsp;');
 		return $tag->renderOpenTag();
 	}
 	
