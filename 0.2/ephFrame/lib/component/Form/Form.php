@@ -144,9 +144,9 @@ class Form extends HTMLTag {
 		// add error and success messages at the top of the form
 		if ($this->submitted()) {
 			// error messages
-			if (!$this->validate() || count($this->errors) > 0) {
-				if (!is_array($this->errors)) $this->errors = array($this->errors);
+			if (!$this->validate() && !isset($this->errorsDone)) {
 				$this->prepend(new HTMLTag('p', array('class' => 'error'), nl2br(implode(LF, $this->errors))));
+				$this->errorsDone = true;
 			// success messages
 			} elseif (!empty($this->successMessages)) {
 				if (!is_array($this->successMessages)) $this->successMessages = array($this->successMessages);
@@ -290,31 +290,29 @@ class Form extends HTMLTag {
 	 * 	@return boolean
 	 */
 	public function ok() {
-		return $this->validate();
+		return $this->submitted() && $this->validate();
 	}
 	
+	/**
+	 *	Validates all fields of this form or the fields you passed as array
+	 * 	@param $fieldNames
+	 * 	@return boolean
+	 */
 	public function validate(Array $fieldNames = array()) {
-		if (!$this->submitted()) {
-			return false;
+		if (!is_array($this->errors)) {
+			$this->errors = array($this->errors);
 		}
-		$validationErrors = false;
-		foreach($this->fieldset->children() as $child) {
+		if ($this->fieldset->hasChildren()) foreach($this->fieldset->children() as $child) {
 			// skip form fields with the names from $fieldNames
 			if (!empty($fieldNames) && !in_array($child->attributes->name, $fieldNames)) continue;
 			// skip non-form-fields
 			if (!($child instanceof FormField)) continue;
 			// validate form field and save errors in return array
-			if ($child->validate() !== true) {
-				$validationErrors[$child->attributes->name] = $child->error;
+			if (!$child->validate()) {
+				$this->errors[$child->attributes->name] = $child->error;
 			}
 		}
-		// finally return the resulting errors
-		if (!$validationErrors) {
-			return true;
-		} else {
-			$this->errors = $validationErrors;
-			return false;
-		}
+		return empty($this->errors);
 	}
 		
 	/**

@@ -1,5 +1,7 @@
 <IfModule mod_rewrite.c>
 	RewriteEngine On
+	# Sometimes RewriteBase is needed to set correct document root
+	# RewriteBase /
 	RewriteRule ^$		html/	[L]
 	RewriteRule (.*)	html/$1	[L]
 </IfModule>

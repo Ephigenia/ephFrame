@@ -164,7 +164,11 @@ class Set extends Component implements Countable, Renderable, Iterator, ArrayAcc
 	 */
 	public function appendTo($key, $value) {
 		if ($this->hasKey($key)) {
-			$this->data[$key] .= $value;
+			if (is_array($this->data[$key])) {
+				$this->data[$key][] = $value;	
+			} else {
+				$this->data[$key] .= $value;
+			}
 		} else {
 			$this->set($key, $value);
 		}

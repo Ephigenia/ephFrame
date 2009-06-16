@@ -15,8 +15,6 @@ AddType image/x-icon .ico
 # default charset for responses
 AddDefaultCharset utf-8
 
-
-
 # Y-Slow/HTTP Request optimasion
 # ----------------------------------------------------------------------------
 

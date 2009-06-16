@@ -196,33 +196,24 @@ abstract class FormField extends HTMLTag {
 		if (func_num_args() == 0) {
 			$value = $this->value();
 		}
-		if (empty($this->error)) {
-			if (!$this->mandatory && empty($value)) {
-				return true;
-			}
-			if ($this->mandatory && empty($value)) {
+		if (empty($value)) {
+			if ($this->mandatory) {
 				$this->error = 'The form field '.$this->attributes->name.' is not optional.';
-				return false;
 			}
+		} else {
 			$validator = new Validator($this->validate, $this);
 			$result = $validator->validate($value);
 			if ($result !== true) {
 				$this->error = $result;
 			}
 		}
-		return empty($this->error);
+		return (empty($this->error) && $this->error !== true);
 	}
 	
 	public function beforeRender() {
-		// add style class to form element
-		if ($this->attributes->isEmpty('class')) {
-			$this->attributes->set('class', $this->attributes->name);
-		} elseif ($this->attributes->get('class') != $this->attributes->name) {
-			$this->attributes['class'] .= ' '.$this->attributes->name;
-		}
-		// does not work because this method is called two times?, see the comment above
-		if (!empty($this->error)) {
-			$this->attributes['class'] .= ' error';
+		$this->attributes->appendTo('class', ' '.$this->attributes->name);
+		if (!$this->validate()) {
+			$this->attributes->appendTo('class', ' error');
 		}
 		if ($value = $this->value()) {
 			$this->value($value);
