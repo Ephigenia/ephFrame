@@ -54,9 +54,18 @@ class DBDSN extends URL {
 	 * 	@return DBDSN
 	 */
 	public function __construct($url = null) {
-		parent::__construct($url);
-		$this->parsedUrl['db'] = null;
-		$this->parsedUrl['type'] = null;
+		if (is_string($url)) {
+			parent::__construct($url);
+			$this->parsedUrl['db'] = null;
+			$this->parsedUrl['type'] = null;
+		} else {
+			foreach(array('charset' => 'fragment', 'db' => 'path', 'socket' => 'host') as $old => $new) {
+				if (isset($url[$old])) {
+					$url[$new] = $url[$old];
+				}
+			}
+			$this->parsedUrl = $url;
+		}
 		return $this;
 	}
 	

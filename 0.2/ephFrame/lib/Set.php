@@ -351,6 +351,10 @@ class Set extends Component implements Countable, Renderable, Iterator, ArrayAcc
 		}
 	}
 	
+	public function read($index, $default = null) {
+		return $this->get($index, $default);
+	}
+	
 	/**
 	 * 	Alias for {@link get}
 	 *
