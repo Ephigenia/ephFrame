@@ -290,7 +290,7 @@ class Form extends HTMLTag {
 	 * 	@return boolean
 	 */
 	public function ok() {
-		return $this->submitted() && $this->validate();
+		return ($this->submitted() && $this->validate());
 	}
 	
 	/**

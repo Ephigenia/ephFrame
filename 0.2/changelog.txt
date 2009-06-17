@@ -8,6 +8,7 @@ changelog for ephFrame
 + added after[Action] and before[Action] callbacks in the controller
 + added subversion keywords and new formatted copyright message on every file
 + SGMLAttributes don’t render attributes with empty values anymore
++ DBDSN in db.php can be an array, enabling socket connections with it
 
 2009-05-25
 + added model behaviors callable from every model
