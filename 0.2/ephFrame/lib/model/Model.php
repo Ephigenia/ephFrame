@@ -600,17 +600,14 @@ class Model extends Object {
 	 * 	@return boolean
 	 */
 	public function save($validate = true, Array $fieldNames = array()) {
-		// use fieldnames to create data array that should be saved or inserted
-//		$data = array();
-//		if (empty($fieldNames)) {
-//			$fieldNames = array_keys($this->structure);
-//		}
-//		foreach($fieldNames as $fieldName) {
-//			if (!isset($this->structure[$fieldName]) || !isset($this->data[$fieldName])) continue;
-//			$data[$fieldName] = $this->data[$fieldName];
-//		}
 		if (!($this->beforeSave() && $this->behaviors->call('beforeSave'))) {
 			return false;
+		}
+		// validate model data first
+		if ($validate) {
+			if (!$this->validate($this->data)) {
+				return false;
+			}
 		}
 		// create save query for this model
 		if (!$this->exists()) {
@@ -637,10 +634,6 @@ class Model extends Object {
 			if ($model instanceof Model && !$this->{$modelName}->isEmpty($this->{$modelName}->primaryKeyName)) {
 				$this->set(Inflector::delimeterSeperate($modelName.'_'.$this->{$modelName}->primaryKeyName, '_', true), $this->{$modelName}->get($this->{$modelName}->primaryKeyName));
 			}
-		}
-		// validate model data first
-		if (!$this->validate($this->data)) {
-			return false;
 		}
 		return true;
 	}

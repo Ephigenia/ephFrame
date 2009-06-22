@@ -63,7 +63,7 @@ class Element extends View {
 		}
 		if (empty($found)) {
 			$this->filename = $filenames[0];
-			throw new ElementNotFoundException($this);
+			throw new ElementFileNotFoundException($this);
 		}
 		if (!file_exists($this->filename)) throw new ElementFileNotFoundException($this);
 		return $this->filename;

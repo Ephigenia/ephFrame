@@ -40,7 +40,7 @@ define ('VENDOR_ROOT', FRAME_ROOT.'../vendor/');
  * 	directory. Usually 'html'.
  */
 if (!defined('APP_ROOT')) {
-	if (!CLI_MODE && basename(getcwd()) == 'html') {
+	if (!CLI_MODE) { // && basename(getcwd()) == 'html') {
 		define('APP_ROOT', realpath(getcwd().'/../').'/');
 	} else {
 		define('APP_ROOT', realpath(getcwd().'/').'/');
@@ -64,7 +64,7 @@ if (!defined('MODELCACHE_DIR')) define ('MODELCACHE_DIR', TMP_DIR.'model'.DS);
  */
 if (!defined('WEBROOT')) {
 	if (isset($_SERVER['PHP_SELF'])) {
-		$__webroot = rtrim(dirname(dirname($_SERVER['PHP_SELF']).'../'), '/').'/';
+		$__webroot = rtrim(dirname($_SERVER['PHP_SELF']), '/').'/';
 	} else {
 		$__webroot = str_replace(realpath($_SERVER['DOCUMENT_ROOT']), '', APP_ROOT);
 	}

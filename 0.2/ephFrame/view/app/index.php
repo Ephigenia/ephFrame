@@ -1,9 +1,10 @@
-<h1>Congratulations!</h1>
+<h2>Congratulations!</h2>
 <p>
-	You’ve made it! You successfully installed and configured ephFrame on this server!<br />
+	You’ve made it! It seemes like you successfully installed and configured ephFrame on this server!<br />
 	<br />
-	If you need some help: <a href="http://code.moresleep.net/project/ephFrame/" title="visit project page of ephFrame">code.moresleep.net/project/ephFrame/</a><br />
+	If you need some help: <a href="http://code.moresleep.net/project/ephFrame" title="visit project page of ephFrame">code.moresleep.net/project/ephFrame/</a><br />
 </p>
+
 <?php
 // check for writable log directory
 if (!is_dir(LOG_DIR)) {
@@ -27,6 +28,7 @@ if (defined('SALT') && SALT === 'priotaseloukeadotraeuocrailaejot') {
 	echo $this->renderElement('errorMessage', array('message' => 'You haven\'t change the SALT value in <q>/app/config.php</q>. Please change the value!'));
 }
 ?>
+
 <p class="hint">
 	You can modify this view by changing the layout '/app/view/layout/default.php' template file
 	or create your own content file by creating the file '/app/view/app/index.php' which is always

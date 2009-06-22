@@ -1,17 +1,14 @@
 @CHARSET "UTF-8";
 
 body {
-	font-family: Book Antiqua, Palatino, Garamond, Times, Georgia, Serif;
+	font-family: Georgia, Book Antiqua, Palatino, Garamond, Times, Georgia, Serif;
 	margin: 0px;
 	font-size: 100.01%;
-	line-height: 100.01%;
+	line-height: 1.5em;
 }
 
-a {
-	color: #2C66C9;	
-}
-a:visited {
-	color: #263349;
+a, a:visited {
+	color: #21759B;
 }
 
 /** quoting **/
@@ -38,25 +35,32 @@ blockquote cite {
 
 /** page structure styles **/
 #content {
+	width: 640px;
 	padding: 20px;
 	line-height: 1.8em;	
+}
+h1 {
+	font-size: 2em;
+}
+h2 {
+	font-size: 1.5em;
+}
+#header a, #header {
+	color: #ffffff;
+	text-decoration: none;
 }
 #header {
 	background-color: #000000;
 	border-bottom: 2px solid rgb(220,220,220);
-	color: #ffffff;
-	font-size: 24px;
 	height: 40px;
 	padding: 19px 0px 0px 20px;
 }
+
 #footer {
 	padding: 20px;	
 }
 
 /** paragraph styles **/
-p {
-	width: 740px;	
-}
 p.error, p.hint {
 	padding: 8px 10px 8px 10px;
 }

@@ -672,10 +672,10 @@ abstract class Controller extends Object implements Renderable {
 	 * 	This method should always return a string, the string that is finally
 	 * 	send to the client.
 	 * 	
-	 * 	@param string $rendered
+	 * 	@param string $content
 	 * 	@return string
 	 */
-	public function afterRender($rendered) {
+	public function afterRender($content) {
 		// if we're in debugging mode we add the sql history dump to the view
 		// content (this can be overwritten in the AppController.
 		if (Registry::get('DEBUG') >= DEBUG_DEBUG && $this->viewClassName == 'HTMLView') {
@@ -691,12 +691,12 @@ abstract class Controller extends Object implements Renderable {
 				$debugOutput .= '<div class="queryHistory">'.QueryHistory::getInstance()->render().'</div>';
 			}
 			if ($this->viewClassName == 'HTMLView') {
-				$rendered .= '<pre class="debugOutput">'.nl2br($debugOutput).'</pre>';	
+				$content .= '<pre class="debugOutput">'.nl2br($debugOutput).'</pre>';	
 			} else {
-				$rendered .= $debugOutput;
+				$content .= $debugOutput;
 			}
 		}
-		return $rendered;
+		return $content;
 	}
 	
 	/**
