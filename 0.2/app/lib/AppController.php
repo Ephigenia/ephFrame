@@ -41,7 +41,11 @@ class AppController extends Controller {
 	);
 	
 	public function beforeRender() {
-		$this->CSS->addFile('reset', 'core', 'app');
+		$this->CSS->addFile(
+			 'reset'
+			,'app'
+			,'form'
+		);
 		if (Registry::get('DEBUG') > DEBUG_PRODUCTION) {
 			$this->CSS->addFile('debug');
 		}

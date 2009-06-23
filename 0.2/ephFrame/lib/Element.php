@@ -71,6 +71,7 @@ class Element extends View {
 	
 	public function beforeRender() {
 		$this->data['elementName'] = str_replace('/', '_', $this->name);
+		$this->data['elementBaseName'] = basename($this->name);
 		return true;
 	}
 	

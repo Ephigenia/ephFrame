@@ -84,7 +84,7 @@ class HTML extends Helper {
 		if ($label == null) {
 			$label = $emailEncoded;
 		}
-		return $this->link('mailto:'.$emailEncoded, $label);
+		return $this->link('mailto:'.$emailEncoded, $emailEncoded);
 	}
 	
 	/**

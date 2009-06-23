@@ -102,7 +102,7 @@ abstract class DBQuery extends Object implements Renderable {
 	public $flags;
 	
 	/**
-	 * 	Some flags that are good for every Query
+	 * 	Some flags that can be turned of using {@link addFlag}
 	 * 	@var boolean
 	 */
 	public $highPriority = false;
@@ -568,7 +568,7 @@ abstract class DBQuery extends Object implements Renderable {
 		$from = '';
 		foreach ($tables as $fromArr) {
 			if (!empty($fromArr[1])) {
-				$from .= $fromArr[0].' '.$fromArr[1].', ';
+				$from .= $fromArr[0].' `'.$fromArr[1].'`, ';
 			} else {
 				$from .= $fromArr[0].', ';
 			}
@@ -608,6 +608,9 @@ abstract class DBQuery extends Object implements Renderable {
 		foreach($conditions as $left => $right) {
 			$connector = ' = ';
 			// skip connector if allready there (bad workaround)
+			if (preg_match('@^\s*(<|>|=|LIKE)@i', $right)) {
+				$connector = ' ';
+			}
 			// todo create cool condition array that can map all conditions possible
 			if (is_int($left)) {
 				$rendered .= $right.' ';
@@ -639,7 +642,7 @@ abstract class DBQuery extends Object implements Renderable {
 		$rendered = '';
 		foreach($join as $joinData) {
 			list($tablename, $alias, $joinType, $conditions) = $joinData;
-			$rendered .= $joinType.' '.$tablename;
+			$rendered .= $joinType.' `'.$tablename.'`';
 			if (!empty($alias)) {
 				$rendered .= ' '.$alias;
 			}
