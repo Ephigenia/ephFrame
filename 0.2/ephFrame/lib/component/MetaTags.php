@@ -32,7 +32,7 @@ class_exists('HTMLTag') or require dirname(__FILE__).'/../HTMLTag.php';
 class MetaTags extends Hash implements Renderable {
 	
 	public $data = array(
-		'keywords' => null,
+		'keywords' => array(''),
 		'description' => '',
 		'robots' => array('index', 'follow'),
 		'imagetoolbar' => 'no',

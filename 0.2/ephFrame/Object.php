@@ -133,8 +133,10 @@ abstract class Object {
 					if (in_array($var, $this->$varname)) continue;
 					if (is_int($index)) {
 						array_unshift($this->$varname, $var);
-					} elseif (!isset($this->$varname[$index])) {
-						$this->$varname[$index] = $var;
+					} elseif (!isset($this->{$varname}[$index])) {
+						$this->{$varname}[$index] = $var;
+					} elseif (is_array($this->{$varname}[$index]) && is_array($var)) {
+						$this->{$varname}[$index] = array_merge($this->{$varname}[$index], $var);
 					}
 				} // foreach
 			} // foreach

@@ -567,6 +567,8 @@ abstract class Controller extends Object implements Renderable {
 			if (method_exists($this,'after'.ucFirst($action))) {
 				$this->callMethod('after'.ucFirst($action));
 			}
+			// call genereal afterAction
+			$this->afterAction($action);
 			// call afteraction on components
 			foreach($this->components as $componentName) {
 				$this->{$componentName}->afterAction($action);
@@ -657,9 +659,19 @@ abstract class Controller extends Object implements Renderable {
 	/**
 	 * 	Called everytime a controller gets a new action. called before the action
 	 * 	is called and after all component are called.
+	 *	@param string $action action that is to be called
 	 * 	@return boolean
 	 */
-	public function beforeAction($actionName) {
+	public function beforeAction($action) {
+		return true;
+	}
+	
+	/**
+	 *	Called after action is done
+	 *	@param string $action action that is done
+	 *	@return boolean
+	 */
+	public function afterAction($action) {
 		return true;
 	}
 	

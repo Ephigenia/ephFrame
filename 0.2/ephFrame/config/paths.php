@@ -60,11 +60,29 @@ if (!defined('MODELCACHE_DIR')) define ('MODELCACHE_DIR', TMP_DIR.'model'.DS);
 
 /**
  *	Determine webroot, the directory that can be used for linking images
- * 	files relative on the server
+ * 	files relative on the server.
+ * 	This is rather difficult, so please set your webroot in your paths file
+ * 	if possible.
  */
 if (!defined('WEBROOT')) {
 	if (isset($_SERVER['PHP_SELF'])) {
-		$__webroot = rtrim(dirname($_SERVER['PHP_SELF']), '/').'/';
+		$dirname = dirname($_SERVER['PHP_SELF']);
+		$relPath = split('/', trim($dirname, '/'));
+		$absPath = split('/', trim(APP_ROOT, '/'));
+		if (isset($_GET['debug'])) {
+			var_dump($relPath);
+			var_dump($absPath);
+			die(var_dump($__webroot));
+		}
+		if (count($relPath) == 1) {
+			$__webroot = rtrim(dirname(dirname($_SERVER['PHP_SELF']).'../'), '/').'/';
+		} elseif ($absPath[count($absPath)-1] == $relPath[count($relPath)-2]) {
+			$__webroot = '/'.trim(implode('/', array_slice($relPath, 0, count($relPath)-1)),'/').'/';
+		} else {
+			$__webroot = rtrim(dirname($_SERVER['PHP_SELF']), '/').'/';
+		}
+		unset($relPath, $absPath, $dirname);
+		//$__webroot = rtrim(dirname(dirname($_SERVER['PHP_SELF']).'../'), '/').'/';
 	} else {
 		$__webroot = str_replace(realpath($_SERVER['DOCUMENT_ROOT']), '', APP_ROOT);
 	}

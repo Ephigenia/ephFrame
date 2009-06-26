@@ -223,7 +223,7 @@ class Cookie extends Component {
 	 */
 	public function read($varname) {
 		if ($this->defined($varname)) {
-			if (strlen($this->data[$varname])) return false;
+			if (!strlen($this->data[$varname])) return false;
 			return $this->data[$varname];
 		}
 		return false;
