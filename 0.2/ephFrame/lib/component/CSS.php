@@ -180,7 +180,7 @@ class CSS extends Component implements Renderable {
 		if (!$this->beforeRender()) return false;
 		$rendered = '';
 		// render include tags for css files
-		foreach($this->files->toArray() + $this->urls->toArray() as $filename) {
+		foreach(array_merge($this->files->toArray(), $this->urls->toArray()) as $filename) {
 			if (substr($filename, 0, 7) !== 'http://') {
 				$filename = WEBROOT.$filename;
 			}

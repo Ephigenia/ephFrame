@@ -50,7 +50,7 @@ class Dir extends FileSystemNode {
 	public $listHiddenDirectories = false;
 	
 	/**
-	 * 	Directory Constructor
+	 * 	Directory Constructo$newFilename = $realFile->basename(false).'.'.$realFile->extension();r
 	 * 	missing trailing / are added
 	 * 	@param string $path
 	 * 	@return Directory
@@ -66,7 +66,23 @@ class Dir extends FileSystemNode {
 		parent::__construct($path);
 		if (empty($path)) throw new StringExpectedException();
 		$this->path = $path;
-		if (!$this->exists()) throw new DirNotFoundException();
+		if (!$this->exists()) throw new DirNotFoundException($this);
+	}
+	
+	/**
+	 *	Tries to create a new file with $filename and $content.
+	 *	@param string $filename
+	 * 	@param string $content
+	 *	@param string $class
+	 *	@return File
+	 */
+	public function newFile($filename, $content = null, $class = 'File') {
+		$newFilename = $this->nodeName.$filename;
+		if (!$this->writable()) {
+			throw new DirNotWritableException($this);
+		}
+		file_put_contents($newFilename, $content);
+		return new $class($newFilename);
 	}
 	
 	/**
@@ -278,9 +294,27 @@ class DirNotFoundException extends DirException {
 		$this->message = 'Directory not found.';
 		if ($directory !== null) {
 			if (is_object($directory)) {
-				$this->message = 'Unable to find directory \''.$directory->nodeName.'\'.';
+				$this->message = 'Directory not found: \''.$directory->nodeName.'\'.';
 			} else {
-				$this->message = 'Unable to find directory \''.$directory.'\'.';
+				$this->message = 'Directory not found: \''.$directory.'\'.';
+			}
+		}
+		parent::__construct();
+	}
+}
+
+/**
+ * 	Thrown as soon a directory is needed but not existant.
+ * 	@package ephFrame
+ * 	@subpackage ephFrame.lib.exception
+ */
+class DirNotWritableException extends DirException {
+	public function __construct($directory) {
+		if ($directory !== null) {
+			if (is_object($directory)) {
+				$this->message = sprintf('The directory \'%s\' is not writable.', $directory->nodeName);
+			} else {
+				$this->message = sprintf('The directory \'%s\' is not writable.', $directory);
 			}
 		}
 		parent::__construct();

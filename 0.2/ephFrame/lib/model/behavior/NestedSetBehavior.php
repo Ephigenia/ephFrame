@@ -99,10 +99,12 @@ class NestedSetBehavior extends ModelBehavior {
 	}
 	
 	public function beforeInsert() {
-		$this->model->query('UPDATE '.$this->model->tablename.' SET rgt = rgt + 2 WHERE rgt >= '.$this->model->Parent->rgt);
-		$this->model->query('UPDATE '.$this->model->tablename.' SET lft = lft + 2 WHERE lft > '.$this->model->Parent->rgt);
-		$this->model->lft = (int) $this->model->Parent->rgt;
-		$this->model->rgt = (int) $this->model->Parent->rgt + 1;
+		if (isset($this->model->Parent)) {
+			$this->model->query('UPDATE '.$this->model->tablename.' SET rgt = rgt + 2 WHERE rgt >= '.$this->model->Parent->rgt);
+			$this->model->query('UPDATE '.$this->model->tablename.' SET lft = lft + 2 WHERE lft > '.$this->model->Parent->rgt);
+			$this->model->lft = (int) $this->model->Parent->rgt;
+			$this->model->rgt = (int) $this->model->Parent->rgt + 1;
+		}
 		return true;
 	}
 	

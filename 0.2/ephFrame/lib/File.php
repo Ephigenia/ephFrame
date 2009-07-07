@@ -101,14 +101,14 @@ class File extends FileSystemNode {
 	 * 	<code>
 	 * 	$file = new File('app/webroot/img/test.jpg');
 	 * 	// will echo 'test'
-	 * 	echo $file->basename(true);
+	 * 	echo $file->basename(false);
 	 * 	// will echo 'test.jpg';
 	 * 	echo $file->basename();
 	 * 	</code>
 	 * 	@return string
 	 */
-	public function basename($cutExtension = false) {
-		if ($cutExtension) {
+	public function basename($includeExtension = true) {
+		if (!$includeExtension) {
 			return substr(basename($this->filename()), 0, -strlen($this->extension())-1);	
 		} else {
 			return basename($this->filename());
@@ -137,7 +137,10 @@ class File extends FileSystemNode {
 	
 	/**
 	 * 	Creates an array of header messages for a download link for the file
-	 * 	
+	 *	You can send these headers by using array_map on the method’s result:
+	 *	<code>
+	 *	array_map('header', $file->createDownloadHeader());
+	 *	</code>
 	 * 	@param string $filename
 	 * 	@return array
 	 */
@@ -165,22 +168,43 @@ class File extends FileSystemNode {
 	}
 	
 	/**
-	 * 	Moves the file to an other location
-	 * 	@param string $newName
+	 * 	Moves/renames the file to $filename an other location
+	 *
+	 *	Move a file into an new directory
+	 *	<code>
+	 *	$file->move(new Dir('../img/userimages/', $User->id.'.'.$file->extension()));
+	 *	</code>
+	 * 	@param string|Directory $newName
+	 *	@param string
 	 * 	@return File
 	 */
-	public function move($newName) {
+	public function move($filename, $newFilename = null) {
 		$this->checkExistence();
+		// directory class passed as param
+		if ($filename instanceof Dir) {
+			$dir = $filename;
+			$filename = $dir->nodeName.$newFilename;
+		} else {
+			$dir = new Dir(dirname($filename));
+		}
 		// check directory existence
-		$dir = new Dir(dirname($newName));
 		$dir->checkExistence();
 		if ($this->isUploaded()) {
-			move_uploaded_file($this->nodeName, $newName);	
+			move_uploaded_file($this->nodeName, $filename);	
 		} else {
-			rename($this->nodeName, $newName);
+			rename($this->nodeName, $filename);
 		}
 		$className = get_class($this);
-		return new $className($newName);
+		return new $className($filename);
+	}
+	
+	/**
+	 *	Renames the file to the new $filename passed, alias for {@link move}
+	 * 	@param string $filename
+	 * 	@return File
+	 */
+	public function rename($filename, $newFilename = null) {
+		return $this->move($filename, $newFilename);
 	}
 	
 	/**
@@ -210,9 +234,14 @@ class File extends FileSystemNode {
 	
 	/**
 	 * 	Returns the file extension of the File if there's any
+	 * 	@param string $new new extension to use (renames the file)
 	 * 	@return string
 	 */
-	public function extension() {
+	public function extension($new = null) {
+		// change file extension
+		if ($new !== null) {
+			return $this->rename($this->basename(false).'.'.$new);
+		}
 		return File::ext($this->nodeName);
 	}
 	
@@ -241,7 +270,16 @@ class File extends FileSystemNode {
 	 * 	@return string
 	 */
 	public function mimeType() {
-		if (!($extension = $this->extension())) return false;
+		// try to guess mime type on image type
+		$imgInfo = getimagesize($this->nodeName);
+		$mimeTypes = array(1 => 'image/gif', 2 => 'image/jpg', 3 => 'image/png', 4 => 'image/swf');
+		if (isset($imgInfo[2]) && isset($mimeTypes[$imgInfo[2]])) {
+			return $mimeTypes[$imgInfo[2]];
+		}
+		// try to guess mime type on file extension
+		if (!($extension = $this->extension())) {
+			return false;
+		}
 		loadClass('ephFrame.lib.helper.MimeTypes');
 		return MimeTypes::mimeType($this->nodeName);
 	}

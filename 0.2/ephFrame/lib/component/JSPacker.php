@@ -98,10 +98,10 @@ class JSPacker extends Component {
 	 * 	@param string $targetDir
 	 */
 	public function packAndStore(Array $files, $targetDir) {
-		$packedFilename = $this->packedFilename($files);
-		$compressed = $this->pack($files);
-		file_put_contents($targetDir.$packedFilename, $compressed);
-		return $packedFilename;
+		assert(!empty($targetDir));
+		$dir = new Dir($targetDir);
+		$packedFile = $dir->newFile($this->packedFilename($files), $this->pack($files));
+		return $packedFile->basename();
 	}
 	
 	/**
@@ -132,7 +132,7 @@ class JSPacker extends Component {
 	 * 	@return string
 	 */
 	public function packedFilename(Array $files) {
-		$md5Filenames = md5(implode('', array_map('basename', $files)));
+		$md5Filenames = substr(md5(implode('', array_map('basename', $files))), 0, 8);
 		$compressedFileName = $this->packedPrefix.$md5Filenames.'.'.$this->packedExtension;
 		$compressedFileName = str_replace('/[^-_A-Za-z0-9\./', '', $compressedFileName);
 		return $compressedFileName;

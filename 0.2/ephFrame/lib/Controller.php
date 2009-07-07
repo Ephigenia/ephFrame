@@ -129,10 +129,8 @@ abstract class Controller extends Object implements Renderable {
 		$this->response = new HTTPResponse();
 		$this->response->enableRenderHeaders = false;
 		if (empty($this->name)) {
-			if (!preg_match('/(.*)Controller/i', get_class($this), $found)) {
+			if (!($this->name = preg_match_first(get_class($this), '@(.*)Controller@i'))) {
 				$this->name = get_class($this);
-			} else {
-				$this->name = $found[1];
 			}
 		}
 		// set controller name in the view
@@ -600,8 +598,8 @@ abstract class Controller extends Object implements Renderable {
 	 *	@return string
 	 */
 	public function render() {
+		// call beforeRender on Controller and Components
 		if (!$this->beforeRender()) return false;
-		// send before Render to every component
 		foreach($this->components as $componentName) {
 			$className = ClassPath::className($componentName);
 			$this->{$className}->beforeRender($this);
@@ -690,7 +688,7 @@ abstract class Controller extends Object implements Renderable {
 	public function afterRender($content) {
 		// if we're in debugging mode we add the sql history dump to the view
 		// content (this can be overwritten in the AppController.
-		if (Registry::get('DEBUG') >= DEBUG_DEBUG && $this->viewClassName == 'HTMLView') {
+		if (Registry::get('DEBUG') >= DEBUG_VERBOSE && $this->viewClassName == 'HTMLView') {
 			$compileTime = ephFrame::compileTime(6);
 			$debugOutput = 'Compile Time: '.$compileTime.'s ';
 			if (class_exists('QueryHistory')) {

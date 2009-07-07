@@ -41,7 +41,14 @@ ephFrame::loadClass('ephFrame.lib.helper.Charset');
 class String extends Helper {
 	
 	/**
-	 *	convert string to url
+	 *	Convert a $string to an url conform string by replacing space with
+	 *	$spaceReplace Character.
+	 *
+	 *	<code>
+	 *	$test = 'This will be an uri soon';
+	 *	echo String::toURL($text, '_');
+	 *	</code>
+	 *
 	 * 	@param string
 	 * 	@param string
 	 * 	@return string
@@ -241,7 +248,7 @@ class String extends Helper {
 	 * 	@return string
 	 */
 	public static function substitute($template, $arr = array()) {
-		if (!preg_match_all('/%([\p{L}0-9\.\-_]+)%/', $template, $found)) {
+		if (!preg_match_all('/%([\p{L}0-9\.\-_]+)%?/', $template, $found)) {
 			return $template;
 		}
 		if (func_num_args() > 2) {

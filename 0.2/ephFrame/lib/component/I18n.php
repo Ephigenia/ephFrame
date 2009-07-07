@@ -153,15 +153,9 @@ function __($string) {
 	if (empty($translated)) {
 		return $translated;
 	}
-	if (func_num_args() == 2) {
-		$arg = func_get_arg(1);
-		return String::substitute(_($string, $arg));
-	} elseif (func_num_args() > 2) {
-		$args = array($string);
-		for ($i = 1; $i < func_num_args(); $i++) {
-			$args[] = func_get_arg($i);
-		}
-		$res = call_user_func_array('sprinf', $args);
+	if (func_num_args() > 1) {
+		$args = func_get_args(1);
+		return String::substitute($translated, $args);
 	}
 	return $translated;
 }

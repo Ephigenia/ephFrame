@@ -105,7 +105,6 @@ abstract class View extends Hash implements Renderable {
 		$this->name = preg_replace('/([^-_\/a-z0-9]*)/i', '', preg_replace('@\.php$@i', '', $name));
 		// sanitize action name
 		$this->action = Sanitizer::panic($action);
-		
 		return parent::__construct();
 	}
 	

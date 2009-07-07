@@ -54,8 +54,8 @@ class ErrorController extends AppController {
 	}
 	
 	public function missingView() {
-		$this->set('missingController', $this->params['controller']);
-		$this->set('missingAction', $this->params['action']);
+		$this->set('missingController', $this->params['missingController']);
+		$this->set('missingAction', $this->params['missingAction']);
 	}
 	
 	public function missingTable() {

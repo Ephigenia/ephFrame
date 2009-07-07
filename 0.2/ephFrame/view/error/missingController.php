@@ -1,4 +1,5 @@
 <?php if (empty($controllerName)) $controllerName = '[noname]'; ?>
+<!-- this is an example view for the missing controller error message -->
 <h1>Missing Controller <q><?= $controllerName ?></q></h1>
 <p class="error">
 	Please create the controller class in

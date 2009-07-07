@@ -460,7 +460,7 @@ class Model extends Object {
 	}
 	
 	public function detailPageURL() {
-		return Registry::get('WEBROOT_URL').$this->detailPageUri();
+		return trim(Registry::get('WEBROOT_URL'), '/').$this->detailPageUri();
 	}
 	
 	/**
@@ -710,6 +710,17 @@ class Model extends Object {
 		$this->afterUpdate();
 		$this->behaviors->call('afterUpdate');
 		return true;
+	}
+	
+	/**
+	 *	Deletes model entries matching the $conditions
+	 * 	@param $conditions
+	 * 	@return Model|boolean
+	 */
+	public function updateWhere($conditions = array(), $values = array()) {
+		$updateQuery = new UpdateQuery($this->tablename(), $values, $conditions);
+		$this->query($updateQuery);
+		return $this;
 	}
 	
 	public function beforeUpdate() {

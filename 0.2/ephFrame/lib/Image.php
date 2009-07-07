@@ -907,7 +907,10 @@ class Image extends File implements Renderable {
 	 *	@return string
 	 *	@see getImageType
 	 */
-	public function extension() {
+	public function extension($new = null) {
+		if ($new !== null) {
+			return parent::extension($new);
+		}
 		return $this->imageTypes[$this->type()];
 	}
 

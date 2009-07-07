@@ -127,7 +127,7 @@ class Form extends HTMLTag {
 	 */
 	public function init(Controller $controller) {
 		$this->controller = $controller;
-		return true;
+		return $this;
 	}
 	
 	public function beforeRender() {
@@ -435,6 +435,9 @@ class Form extends HTMLTag {
 				switch($modelFieldInfo->type) {
 					case 'varchar': case 'int': case 'float':
 						$fieldInfo['type'] = 'text';
+						if ($modelFieldInfo->type == 'varchar') {
+							$fieldInfo['maxLength'] = $modelFieldInfo->length;
+						}
 						break;
 					case 'blob': case 'text': case 'mediumtext': case 'mediumblob':
 					case 'tinyblob': case 'tinytext': case 'longblob': case 'longtext':
@@ -467,6 +470,9 @@ class Form extends HTMLTag {
 				}
 				if (isset($fieldInfo['mandatory'])) {
 					$field->mandatory = $fieldInfo['mandatory'];
+				}
+				if (isset($fieldInfo['maxLength'])) {
+					$field->attributes->set('maxLength', (int) $fieldInfo['maxLength']);
 				}
 				if (isset($model->validate[$fieldInfo['name']])) {
 					$field->addValidationRule($model->validate[$fieldInfo['name']]);
