@@ -231,7 +231,7 @@ class String extends Helper {
 	 * 	@param string $charset optional charset encoding string
 	 * 	@return string
 	 */
-	public static function lcFirst($string, $length = 1, $charset = 'UTF-8') {
+	public static function lcFirst($string, $length = 1) {
 		return self::lower($string, 0, $length);
 	}
 	
@@ -328,14 +328,27 @@ class String extends Helper {
 	 * 	@param integer $start
 	 * 	@param integer $length
 	 */
-	public static function substr($string, $start = null, $length = PHP_INT_MAX) {
+	public static function substr($string, $start = null, $length = null) {
 		$string = (string) $string;
-		if ($length == 0) {
+		if ($length === 0) {
 			return '';
 		}
 		if (Charset::isUTF8($string)) {
+			if ($length == null) {
+				if ($start < 0) {
+					$length = abs($start);					
+					$start = self::length($string) - $length;
+				} elseif ($start > 0) {
+					$length = self::length($string) - $start;
+				} elseif ($start == 0) {
+					$length = self::length($string);
+				}
+			}
 			return mb_substr($string, $start, $length, 'UTF-8');
 		} else {
+			if ($length == null) {
+				return substr($string, $start);
+			}
 			return substr($string, $start, $length);
 		}
 	}
