@@ -163,13 +163,21 @@ class String extends Helper {
 	 * 	
 	 * 	@param string $string
 	 * 	@param string $charset
+	 *	@param integer $start optional index of character to start uppercase conversion
+	 *	@param integer $end
 	 * 	@return string
 	 */
-	public static function upper($string = null, $charset = Charset::UTF_8) {
-		assert(is_scalar($string));
+	public static function upper($string = null, $start = 0, $end = null, $charset = Charset::UTF_8) {
+		$string = (string) $string;
 		if (Charset::isUTF8($string)) {
+			if ($end !== null) {
+				return self::substr($string, 0, $start).mb_strtoupper(self::substr($string, $start, $end), $charset).self::substr($string, $end);
+			}
 			return mb_strtoupper($string, Charset::UTF_8);
 		} else {
+			if ($end !== null) {
+				return self::substr($string, 0, $start).strtoupper(self::substr($string, $start, $end)).self::substr($string, $end);
+			}
 			return strtoupper($string);
 		}
 	}
@@ -188,25 +196,29 @@ class String extends Helper {
 	 * 	@return string
 	 * 	@static
 	 */
-	public static function ucFirst($string = null) {
-		assert(is_scalar($string));
-		return self::upper(self::substr($string, 0, 1)).self::substr($string, 1);
+	public static function ucFirst($string = null, $length = 1) {
+		return self::upper($string, 0, $length);
 	}
 	
 	/**
 	 * 	Lowers all characters in a string, this method should be multibyte save. 
 	 * 	@param string $string
+	 *	@param integer $start
+	 *	@param integer $end
 	 * 	@param string $charset
 	 * 	@return string
 	 */
-	public static function lower($string = null, $charset = 'UTF-8') {
-		if(!is_scalar($string)) {
-			return false;
-		}
+	public static function lower($string = null, $start = 0, $end = null, $charset = Charset::UTF_8) {
 		$string = (string) $string;
 		if (Charset::isUTF8($string)) {
+			if ($end !== null) {
+				return self::substr($string, 0, $start).mb_strtolower(self::substr($string, $start, $end), $charset).self::substr($string, $end);
+			}
 			return mb_strtolower($string, $charset);
 		} else {
+			if ($end !== null) {
+				return self::substr($string, 0, $start).strtolower(self::substr($string, $start, $end)).self::substr($string, $end);
+			}
 			return strtolower($string);
 		}
 	}
@@ -215,12 +227,12 @@ class String extends Helper {
 	 * 	Uppers the first character of a string and returns it
 	 *
 	 * 	@param string $string
+	 * 	@param integer $length
 	 * 	@param string $charset optional charset encoding string
 	 * 	@return string
 	 */
-	public static function lcFirst($string, $charset = 'UTF-8') {
-		assert(is_scalar($string));
-		return self::lower(self::substr($string, 0, 1)).self::substr($string, 1);
+	public static function lcFirst($string, $length = 1, $charset = 'UTF-8') {
+		return self::lower($string, 0, $length);
 	}
 	
 	/**
@@ -317,7 +329,7 @@ class String extends Helper {
 	 * 	@param integer $length
 	 */
 	public static function substr($string, $start = null, $length = PHP_INT_MAX) {
-		assert(is_scalar($string));
+		$string = (string) $string;
 		if ($length == 0) {
 			return '';
 		}
