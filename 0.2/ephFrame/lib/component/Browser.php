@@ -1,46 +1,46 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 loadHelper('Sanitize');
 
 /**
- *	Browser detection class
+ * Browser detection class
  * 
- * 	originally taken frome a side project<br />
- * 	<br />
- * 	check wikipedia entry for more information:
- * 	{@link http://en.wikipedia.org/wiki/User_agent}
+ * originally taken frome a side project<br />
+ * <br />
+ * check wikipedia entry for more information:
+ * {@link http://en.wikipedia.org/wiki/User_agent}
  * 
- * 	Usage in controller:
- * 	<code>
- * 		$this->set('Browser', $this->Browser->render());
- * 	</code>
+ * Usage in controller:
+ * <code>
+ * 	$this->set('Browser', $this->Browser->render());
+ * </code>
  * 
- *	@TODO add newsreaders
- * 	@TODO add spiders and bots
- * 	@TODO add mobile devices like smartphones, mobiles
+ * @TODO add newsreaders
+ * @TODO add spiders and bots
+ * @TODO add mobile devices like smartphones, mobiles
  * 
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de
- * 	@since 22.02.2007
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.component
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de
+ * @since 22.02.2007
+ * @package ephFrame
+ * @subpackage ephFrame.lib.component
  */
 class Browser extends Component implements Renderable {
 	
@@ -49,8 +49,8 @@ class Browser extends Component implements Renderable {
 	public $id = 0;
 
 	/**
-	 * 	Browsers supported during Detection
-	 * 	@var array(string)
+	 * Browsers supported during Detection
+	 * @var array(string)
 	 */
 	private $Browsers = array(
 		1	=> 'Konqueror',
@@ -83,8 +83,8 @@ class Browser extends Component implements Renderable {
 	);
 	
 	/**
-	 * 	Enter description here...
-	 * 	@return Browser
+	 * Enter description here...
+	 * @return Browser
 	 */
 	public function startup() {
 		if (isset($_SERVER['HTTP_USER_AGENT'])) {
@@ -113,8 +113,8 @@ class Browser extends Component implements Renderable {
 	}
 	
 	/**
-	 *	Returns Browser Name and version if found
-	 * 	@return string
+	 * Returns Browser Name and version if found
+	 * @return string
 	 */
 	public function __toString() {
 		return $this->render();
@@ -184,8 +184,8 @@ class Browser extends Component implements Renderable {
 			$this->id(9);
 		}
 		/**
-		 * 	Parse Version Number
-		 * 	is either [BrowserName] [version] or [BrowserName]/[Version]
+		 * Parse Version Number
+		 * is either [BrowserName] [version] or [BrowserName]/[Version]
 		 */ 
 		if (!empty($this->id)) {
 			$browser = $this->name;
@@ -194,8 +194,8 @@ class Browser extends Component implements Renderable {
 			if (preg_match($regexp, $userAgentString, $found)) {
 				$version = $found[1];
 				/**
-				 *	Parse Safari version numbers, depending on webkit version documented
-				 * 	here: http://developer.apple.com/internet/safari/uamatrix.html
+				 * Parse Safari version numbers, depending on webkit version documented
+				 * here: http://developer.apple.com/internet/safari/uamatrix.html
 				 */
 				if ($this->id == 2) {
 					$version = (float) $version;
@@ -248,19 +248,17 @@ class Browser extends Component implements Renderable {
 }
 
 /**
- * 	@package ephFrame
- *	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class BrowserException extends BasicException {}
 
 /**
- * 	@package ephFrame
- *	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class BrowserNotFoundException extends BrowserException {
 	public function __construct($id) {
 		parent::__construct('No Browser found with the given id');	
 	}
 }
-
-?>

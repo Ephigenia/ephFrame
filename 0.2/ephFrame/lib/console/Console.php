@@ -1,40 +1,40 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 class_exists('Object') or require dirname(__FILE__).'/../../Object.phpFormFieldText.php';
 
 /**
- *	Terminal Class
+ * Terminal Class
  * 
- * 	Helpfull class for cli/command line- oriented applications
+ * Helpfull class for cli/command line- oriented applications
  * 
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 17.04.2008
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 17.04.2008
+ * @package ephFrame
+ * @subpackage ephFrame.lib
  */
 class Console extends Object {
 
 	/**
-	 * 	Stores the current text format
-	 * 	@var array(string)
+	 * Stores the current text format
+	 * @var array(string)
 	 */
 	public $textFormat = array(
 		 'color' => self::COL_DEFAULT
@@ -57,11 +57,11 @@ class Console extends Object {
 	const COL_DEFAULT = 39;
 	
 	/**
-	 * 	Creats a new Instance of console
-	 * 	Pass optional default text and background color that should be used
-	 * 	@param integer $textColor
-	 * 	@param integer $backgroundColor
-	 * 	@return boolean
+	 * Creats a new Instance of console
+	 * Pass optional default text and background color that should be used
+	 * @param integer $textColor
+	 * @param integer $backgroundColor
+	 * @return boolean
 	 */
 	public function __construct($textColor = null, $backgroundColor = null) {
 		$this->textFormat['color'] = $textColor == null ? self::COL_DEFAULT : $textColor;
@@ -71,8 +71,8 @@ class Console extends Object {
 	}
 	
 	/**
-	 *	Tries to detect the current operating system and returns it.
-	 * 	@return string
+	 * Tries to detect the current operating system and returns it.
+	 * @return string
 	 */
 	public function os() {
 		if (empty($this->os)) {
@@ -108,9 +108,9 @@ class Console extends Object {
 	}
 	
 	/**
-	 * 	Clears the screen in the console
-	 * 	@param boolean $out
-	 * 	@return string|boolean
+	 * Clears the screen in the console
+	 * @param boolean $out
+	 * @return string|boolean
 	 */
 	public static function clearScreen($out = true) {
 		$command = chr(27).'c';
@@ -122,8 +122,8 @@ class Console extends Object {
 	}
 	
 	/**
-	 *	Prints a message to STDOUT with the given font format
-	 * 	@param string $text
+	 * Prints a message to STDOUT with the given font format
+	 * @param string $text
 	 */
 	public function write($text, $color = null, $background = null, $bold = null, $underlined = null, $blinking = null) {
 		$colorCode = $this->colorCode($color, $background, $bold, $underlined, $blinking);
@@ -146,9 +146,9 @@ class Console extends Object {
 	}
 	
 	/**
-	 * 	Write the passed $message to the standard error output
-	 * 	@param string $str
-	 * 	@return Console
+	 * Write the passed $message to the standard error output
+	 * @param string $str
+	 * @return Console
 	 */
 	public function error($str) {
 		if (!empty($str)) {
@@ -158,9 +158,9 @@ class Console extends Object {
 	}
 	
 	/**
-	 *	Write $string to standard output
-	 * 	@param string $str
-	 * 	@return Console
+	 * Write $string to standard output
+	 * @param string $str
+	 * @return Console
 	 */
 	public function out($str) {
 		fputs(STDOUT, $str);
@@ -168,25 +168,25 @@ class Console extends Object {
 	}
 	
 	/**
-	 * 	Draws a vertical line into the output
-	 *	@param integer $color
-	 *	@param integer $backgroundColor
-	 *	@param integer $length Length of the line
-	 * 	@param string $character
+	 * Draws a vertical line into the output
+	 * @param integer $color
+	 * @param integer $backgroundColor
+	 * @param integer $length Length of the line
+	 * @param string $character
 	 */
 	public function line($color = null, $backgroundColor = null, $length = 80, $character = '-') {
 		return $this->write(str_repeat($character, $length), $color, $backgroundColor);
 	}
 	
 	/**
-	 *	Calculates the color code string for setting a new color in a tty console
-	 * 	will return an empty string on windows like computers
-	 * 	@param integer $textColor
-	 * 	@param integer $backgroundColor
-	 * 	@param boolean $bold
-	 * 	@param boolean $underlined
-	 * 	@param boolean $blinking
-	 * 	@return string
+	 * Calculates the color code string for setting a new color in a tty console
+	 * will return an empty string on windows like computers
+	 * @param integer $textColor
+	 * @param integer $backgroundColor
+	 * @param boolean $bold
+	 * @param boolean $underlined
+	 * @param boolean $blinking
+	 * @return string
 	 */
 	public function colorCode($textColor = null, $backgroundColor = null, $bold = null, $underlined = null, $blinking = null) {
 		if ($this->os() == 'windows') {
@@ -201,8 +201,8 @@ class Console extends Object {
 	}
 	
 	/**
-	 *	Sets the color to default
-	 * 	@return boolean
+	 * Sets the color to default
+	 * @return boolean
 	 */
 	public function resetColor() {
 		$this->out($this->colorCode(self::COL_DEFAULT, self::COL_DEFAULT, false, false));
@@ -210,10 +210,10 @@ class Console extends Object {
 	}
 	
 	/**
-	 *	Halts PHP waiting for Enter to be pressed and returns the characters
-	 * 	@param string $message
-	 * 	@param integer $bufferSize Size of the read buffer
-	 * 	@return string
+	 * Halts PHP waiting for Enter to be pressed and returns the characters
+	 * @param string $message
+	 * @param integer $bufferSize Size of the read buffer
+	 * @return string
 	 */
 	public function read($message = null, $bufferSize = 2048) {
 		if ($message !== null) {
@@ -227,15 +227,15 @@ class Console extends Object {
 	}
 
 	/**
-	 *	Pauses execution until enter is pressed
-	 * 	@return string String entered till Enter was pressed
+	 * Pauses execution until enter is pressed
+	 * @return string String entered till Enter was pressed
 	 */
 	public function pause() {
 		return $this->read();
 	}
 	
 	/**
-	 * 	On destruct, reconstruct default colors in console
+	 * On destruct, reconstruct default colors in console
 	 */
 	public function __destruct() {
 		$this->resetColor();
@@ -245,9 +245,7 @@ class Console extends Object {
 }
 
 /**
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class ConsoleException extends Exception {}
-
-?>

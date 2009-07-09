@@ -1,45 +1,45 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
-class_exists('Set') or require dirname(__FILE__).'/Set.php';
+class_exists('IndexedArray') or require dirname(__FILE__).'/IndexedArray.php';
 
 /**
- * 	Collection Class
+ * Collection Class
  * 
- * 	A collection is an indexed array with unique entries. No double values
- * 	allowed.
+ * A collection is an indexed array with unique entries. No double values
+ * allowed.
  * 
- * 	As a child class of {@link Set} this class also supports chaining.
+ * As a child class of {@link IndexedArray} this class also supports chaining.
  * 
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 16.07.2008
+ * @package ephFrame
+ * @subpackage ephFrame.lib
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 16.07.2008
  */
-class Collection extends Set {
+class Collection extends IndexedArray {
 	
 	/**
-	 * 	Adds one new Item to the beginning of the collection
+	 * Adds one new Item to the beginning of the collection
 	 *
-	 * 	@param mixed $v
-	 * 	@return unknown
+	 * @param mixed $v
+	 * @return unknown
 	 */
 	public function prepend($v) {
 		parent::prepend($v);
@@ -48,17 +48,17 @@ class Collection extends Set {
 	}
 	
 	/**
-	 * 	Adds one or more $value to the collection.
+	 * Adds one or more $value to the collection.
 	 * 
-	 *	<code>
-	 * 	$c = new Collection();
-	 * 	$c->add('A', 'B', 'C');
-	 * 	// should echo ABC
-	 * 	echo $c;
-	 * 	</code>
+	 * <code>
+	 * $c = new Collection();
+	 * $c->add('A', 'B', 'C');
+	 * // should echo ABC
+	 * echo $c;
+	 * </code>
 	 *
-	 * 	@param mixed $v
-	 * 	@return Collection
+	 * @param mixed $v
+	 * @return Collection
 	 */
 	public function add($value) {
 		if (func_num_args() > 1) {
@@ -74,10 +74,10 @@ class Collection extends Set {
 	}
 	
 	/**
-	 * 	Fills the Collection from the passed $array.
+	 * Fills the Collection from the passed $array.
 	 *
-	 * 	@param array(mixed) $array
-	 * 	@return Collection
+	 * @param array(mixed) $array
+	 * @return Collection
 	 */
 	public function fromArray(Array $data) {
 		parent::fromArray($data);
@@ -86,11 +86,11 @@ class Collection extends Set {
 	}
 	
 	/**
-	 * 	Fills the collection with characters from the passed string.
+	 * Fills the collection with characters from the passed string.
 	 *
-	 * 	@param string $string
-	 * 	@param string $devider
-	 * 	@return Collection
+	 * @param string $string
+	 * @param string $devider
+	 * @return Collection
 	 */
 	public function fromString($string, $devider = null) {
 		parent::fromString($string, $devider);
@@ -113,9 +113,7 @@ class Collection extends Set {
 }
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
-class CollectionException extends BasicException {}
-
-?>
+class CollectionException extends IndexedArrayException {}

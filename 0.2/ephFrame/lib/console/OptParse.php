@@ -1,45 +1,45 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- * 	Optparse
+ * Optparse
  * 
- * 	Optparser for PHP
+ * Optparser for PHP
  * 
- * 	This class should or maybe is the optparse conversion of the well known
- * 	Optparser from the other famous programming languages such as python.
- * 	
- * 	[here comes more docu soon, as for now, check the test.php file for an
- * 	exmple]
+ * This class should or maybe is the optparse conversion of the well known
+ * Optparser from the other famous programming languages such as python.
  * 
- * 	// todo split the parser from the options
- * 	// todo implement simple error checking on arguments
- * 	// todo implement custom error checking on arguments (or in ConsoleApp?)
- * 	
- *	@package ephFrame
- * 	@subpackage ephFrame.lib
- *	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 19.07.2008
+ * [here comes more docu soon, as for now, check the test.php file for an
+ * exmple]
+ * 
+ * // todo split the parser from the options
+ * // todo implement simple error checking on arguments
+ * // todo implement custom error checking on arguments (or in ConsoleApp?)
+ * 
+ * @package ephFrame
+ * @subpackage ephFrame.lib
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 19.07.2008
  */
-class OptParse extends Object {
-	
+class OptParse extends Object
+{	
 	const TYPE_CALLBACK = 'callback';
 	const TYPE_ARRAY 	= 'array';
 	const TYPE_BOOL 	= 'boolean';
@@ -57,25 +57,25 @@ class OptParse extends Object {
 	);
 	
 	/**
-	 * 	@var string
+	 * @var string
 	 */
 	protected $longArgRegExp = '/^-{1,2}([a-zA-z0-9]+)=?(.+)?$/';
 	
 	/**
-	 * 	@var string
+	 * @var string
 	 */
 	protected $shortArgRegExp = '/^[-\/]([a-zA-z0-9]+)$/';
 	
 	/**
-	 * 	Stores the raw arguments
-	 * 	@var array(string)
+	 * Stores the raw arguments
+	 * @var array(string)
 	 */
 	protected $rawArgs;
 	
 	/**
-	 *	Configuration for possible arguments and parameters this OptParse knows
-	 * 	and can parse.
-	 * 	@var array(string)
+	 * Configuration for possible arguments and parameters this OptParse knows
+	 * and can parse.
+	 * @var array(string)
 	 */
 	public $config = array(
 		// the help option should always be there
@@ -90,28 +90,28 @@ class OptParse extends Object {
 	);
 	
 	/**
-	 *	Stores the string that is printed after 'Usage: '... so this might be
-     *	something like: '[options] [path] [url]
-	 * 	@var string
+	 * Stores the string that is printed after 'Usage: '... so this might be
+     * something like: '[options] [path] [url]
+	 * @var string
 	 */
 	public $usage = '[options]';
 	
 	/**
-	 *	Stores the parsed options
-	 * 	@var array(string)
+	 * Stores the parsed options
+	 * @var array(string)
 	 */
 	public $options = array();
 	
 	/**
-	 * 	Stores the parsed arguments (everything that did not match in the options)
-	 * 	@var array(string)
+	 * Stores the parsed arguments (everything that did not match in the options)
+	 * @var array(string)
 	 */
 	public $arguments = array();
 	
 	/**
-	 *	OptParse constructor
-	 * 	@param array(string)
-	 * 	@return OptParse
+	 * OptParse constructor
+	 * @param array(string)
+	 * @return OptParse
 	 */
 	public function __construct(Array $args = array()) {
 		if (func_num_args() == 1) {
@@ -127,10 +127,10 @@ class OptParse extends Object {
 	}
 	
 	/**
-	 *	Adds an other option info config array to the {@link config}.
-	 * 	The type of the option is validated against {@link validTypes} array.
-	 * 	@var array(string)
-	 * 	@return OptParse
+	 * Adds an other option info config array to the {@link config}.
+	 * The type of the option is validated against {@link validTypes} array.
+	 * @var array(string)
+	 * @return OptParse
 	 */
 	public function addOption(Array $optionInfo) {
 		if (isset($optionInfo) && !in_array($optionInfo['type'], $this->validTypes)) {
@@ -181,8 +181,8 @@ class OptParse extends Object {
 	}
 	
 	/**
-	 * 	Returns a usage Message for this ArgParser Options
-	 * 	@param integer $width
+	 * Returns a usage Message for this ArgParser Options
+	 * @param integer $width
 	 */
 	public function usage($width = 80) {
 		$r = 'Usage: '.basename($_SERVER['PHP_SELF']);
@@ -200,8 +200,8 @@ class OptParse extends Object {
 	}
 	
 	/**
-	 *	Parses the arguments and returns an array of options and arguments
-	 * 	@return array(mixed)
+	 * Parses the arguments and returns an array of options and arguments
+	 * @return array(mixed)
 	 */
 	public function parse() {
 		// parse all arguments from the rawArguments array
@@ -348,8 +348,8 @@ class OptParse extends Object {
 	}
 	
 	/**
-	 *	Flushes the info stored in the ArgParser
-	 * 	@return ArgParser
+	 * Flushes the info stored in the ArgParser
+	 * @return ArgParser
 	 */
 	public function flush() {
 		$this->arguments = array();
@@ -360,14 +360,14 @@ class OptParse extends Object {
 }
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class OptParseException extends Exception {}
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class OptParseInvalidTypeException extends OptParseException {
 	public function __construct(OptParse $optParse, $optionType) {
@@ -375,5 +375,3 @@ class OptParseInvalidTypeException extends OptParseException {
 		parent::__construct($message);
 	}
 }
-
-?>

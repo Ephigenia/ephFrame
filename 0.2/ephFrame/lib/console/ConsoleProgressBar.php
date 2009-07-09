@@ -2,41 +2,41 @@
 
 class_exists('ConsoleDrawing') or require dirname(__FILE__).'/ConsoleDrawing.php';
 class_exists('ConsoleWindow') or require dirname(__FILE__).'/ConsoleWindow.php';
-class_exists('Set') or require dirname(__FILE__).'/../Set.php';
+class_exists('IndexedArray') or require dirname(__FILE__).'/../IndexedArray.php';
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
-/**	
- * 	Draws a Progress-Bar into the Console
- * 	
- * 	Example Output, 40/60 Done, the current location indicator rotates:
- * 	<code>
- * 	40/60 [============================/--------------------]
- * 	</code>
+/** 
+ * Draws a Progress-Bar into the Console
  * 
- * 	@since 19.04.2008
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.console
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * Example Output, 40/60 Done, the current location indicator rotates:
+ * <code>
+ * 40/60 [============================/--------------------]
+ * </code>
+ * 
+ * @since 19.04.2008
+ * @package ephFrame
+ * @subpackage ephFrame.lib.console
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  */
-class ConsoleProgressBar extends ConsoleWindow {
-	
+class ConsoleProgressBar extends ConsoleWindow
+{	
 	protected $width = 30;
 	protected $height = 1;
 	public $max = 1.;
@@ -62,7 +62,7 @@ class ConsoleProgressBar extends ConsoleWindow {
 		$this->y = $y;
 		$this->width = $width;
 		$this->max = $max;
-		$this->drawChars[4] = new Set('-', '\\', '|', '/');
+		$this->drawChars[4] = new IndexedArray('-', '\\', '|', '/');
 		$this->redraw();
 		return $this;
 	}
@@ -103,7 +103,7 @@ class ConsoleProgressBar extends ConsoleWindow {
 			$rendered .= str_repeat($this->drawChars[2], $progressBarOnWidth);
 		}
 		if ($percent != 1) {
-			if ($this->drawChars[4] instanceof Set) {
+			if ($this->drawChars[4] instanceof IndexedArray) {
 				$rendered .= $this->drawChars[4]->cycle();
 			} else {
 				$rendered .= $this->drawChars[4];
@@ -118,5 +118,3 @@ class ConsoleProgressBar extends ConsoleWindow {
 	}
 	
 }
-
-?>

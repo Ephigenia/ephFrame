@@ -3,33 +3,33 @@
 class_exists('ConsoleWindow') or require dirname(__FILE__).'/ConsoleWindow.php';
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- * 	Console Drawing rather large digits
+ * Console Drawing rather large digits
  * 
- * 	This class can draw you some 'large' digits.
+ * This class can draw you some 'large' digits.
  * 
- * 	@package ephFrame
- *	@subpackage ephFrame.lib.console
+ * @package ephFrame
+ * @subpackage ephFrame.lib.console
  */
-class ConsoleDigits extends ConsoleWindow {
-	
+class ConsoleDigits extends ConsoleWindow
+{	
 	protected $digits = array(
 		 0 	=> '#### ## ## ####' // 0
 		,1 	=> '  # ### #  #  #' // 1
@@ -85,8 +85,8 @@ class ConsoleDigits extends ConsoleWindow {
 }
 
 /**
- *	If you call this class directly by "php ConsoleDigits.php" you get a 
- * 	testing display of a countdown from 130 to 0
+ * If you call this class directly by "php ConsoleDigits.php" you get a 
+ * testing display of a countdown from 130 to 0
  */
 if (basename($_SERVER['PHP_SELF']) == basename(__FILE__)) {
 	$d = new ConsoleDigits(3,3,0);
@@ -97,5 +97,3 @@ if (basename($_SERVER['PHP_SELF']) == basename(__FILE__)) {
 	echo LF.LF.LF;
 	exit;
 }
-
-?>

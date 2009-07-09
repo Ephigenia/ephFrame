@@ -1,41 +1,41 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 // load parent class
 ephFrame::loadClass('ephFrame.lib.Image');
 
 /**
- *	Abstract Barcode Class
- *	<a href="http://de.wikipedia.org/wiki/Barcode">Barcode</a>
+ * Abstract Barcode Class
+ * <a href="http://de.wikipedia.org/wiki/Barcode">Barcode</a>
  *
- *	Easy to use Barcode Abstract Class.
- *	Integrations have been made for 
- *	- I25 aka ISO16390
- *	Integrations wich are not completed yet
- *  - EAN
- *  - Code128
- *	
- *	@author Marcel Eichner // Ephigenia <love at ephigenia dot de>
- *	@since 15.05.2006
- *	@package ephFrame
- *	@subpackage ephFrame.lib
+ * Easy to use Barcode Abstract Class.
+ * Integrations have been made for 
+ * - I25 aka ISO16390
+ * Integrations wich are not completed yet
+ * - EAN
+ * - Code128
+ * 
+ * @author Marcel Eichner // Ephigenia <love at ephigenia dot de>
+ * @since 15.05.2006
+ * @package ephFrame
+ * @subpackage ephFrame.lib
  */
 abstract class Barcode extends Image {
 
@@ -52,7 +52,7 @@ abstract class Barcode extends Image {
 	private $stretchText = true;
 
 	/**
-	 *	Abstract BarCode Constructor
+	 * Abstract BarCode Constructor
 	 */
     public function __construct($code, $width = 300, $height = 100) {
     	$this->type("gif");
@@ -67,9 +67,9 @@ abstract class Barcode extends Image {
     }
     
     /**
-     *	Sets the String to Barcode
-     *	@param string $code
-     *	@throws BarcodeEmptyCodeException
+     * Sets the String to Barcode
+     * @param string $code
+     * @throws BarcodeEmptyCodeException
      */
     public function code($code = -1) {
     	if ($code != -1) {
@@ -80,8 +80,8 @@ abstract class Barcode extends Image {
     }
     
     /**
-     *	Draws the text under the barcode
-     *	@param boolean $bool
+     * Draws the text under the barcode
+     * @param boolean $bool
      */
     final public function drawText($bool = -1) {
     	if ($bool != -1) {
@@ -105,8 +105,8 @@ abstract class Barcode extends Image {
     }
     
     /**
-     *	Define if the text should be stretched along the hole barcode
-     *	@param boolean $bool
+     * Define if the text should be stretched along the hole barcode
+     * @param boolean $bool
      */
     final public function stretchText($bool = -1) {
     	if ($bool != -1) $this->stretchText = (bool) $bool;
@@ -114,8 +114,8 @@ abstract class Barcode extends Image {
     }
     
     /**
-     *	Define if the border should be drawn or draw the border if no parameter is passed
-     *	@param boolean $bool
+     * Define if the border should be drawn or draw the border if no parameter is passed
+     * @param boolean $bool
      */
     final public function drawBorder ($bool = -1) {
     	if ($bool != -1) {
@@ -133,32 +133,32 @@ abstract class Barcode extends Image {
 	}
 	
 	/**
-	 *	Define the Backgroundcolor
-	 *	@param string|array(integer)|Color	$backgroundColor
+	 * Define the Backgroundcolor
+	 * @param string|array(integer)|Color	$backgroundColor
 	 */
 	final public function backgroundColor($backgroundColor = -1) {
 		return $this->_newColor("backgroundColor",$backgroundColor);
 	}
 	
 	/**
-	 *	Define the Color of the Border, useless if drawBorder is set to false
-	 *	@param string|array(integer)|Color	$borderColor
+	 * Define the Color of the Border, useless if drawBorder is set to false
+	 * @param string|array(integer)|Color	$borderColor
 	 */
     final public function borderColor($borderColor = -1) {
     	return $this->_newColor("borderColor", $borderColor);
     }
     
     /**
-	 *	Define the Color for the barcode Bars
-	 *	@param string|array(integer)|Color	$barColor
+	 * Define the Color for the barcode Bars
+	 * @param string|array(integer)|Color	$barColor
 	 */
     final public function barColor($barColor = -1) {
     	return $this->_newColor("barColor", $barColor);
     }
     
     /**
-	 *	Define the Color of the Text, useless if drawText is set to false
-	 *	@param string|array(integer)|Color	$textColor
+	 * Define the Color of the Text, useless if drawText is set to false
+	 * @param string|array(integer)|Color	$textColor
 	 */
     final public function textColor($textColor = -1) {
     	return $this->_newColor("textColor", $textColor);
@@ -183,8 +183,8 @@ abstract class Barcode extends Image {
     }
     
     /**
-     *	Returns the content of the image
-     *	@return string
+     * Returns the content of the image
+     * @return string
      */
     public function getImage($quality = 60) {
     	if ($this->drawText) $this->drawText();
@@ -200,14 +200,14 @@ abstract class Barcode extends Image {
 }
 
 /**
- *	@package ephFrame
- *	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class BarcodeException extends BasicException {}
 
 /**
- *	@package ephFrame
- *	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class BarcodeEmptyCodeException extends BarcodeException {
 	public function __construct() {
@@ -215,5 +215,3 @@ class BarcodeEmptyCodeException extends BarcodeException {
 		parent::__construct();
 	}
 }
-
-?>

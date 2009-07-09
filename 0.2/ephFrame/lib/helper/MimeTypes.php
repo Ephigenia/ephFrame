@@ -1,43 +1,43 @@
 <?php
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- * 	MIME Types
+ * MIME Types
  * 
- *	This Class is a collection of mime types you can use this class to get mime
- * 	type for filename or get extension of a file based on the given mime type.
- * 	The class is _not_ analyzing the file. It's using the file extension and
- * 	then searching the lib for the fitting mime type.
+ * This Class is a collection of mime types you can use this class to get mime
+ * type for filename or get extension of a file based on the given mime type.
+ * The class is _not_ analyzing the file. It's using the file extension and
+ * then searching the lib for the fitting mime type.
  *
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 02.05.2007
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.helper
- * 	@version 0.1
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 02.05.2007
+ * @package ephFrame
+ * @subpackage ephFrame.lib.helper
+ * @version 0.1
  */
 class MimeTypes extends Helper {
 
 	/**
-	 * 	Returns the MIME-Type for the given $filename or file extension.
-	 * 	If no MIME-Type was found false is returned.
-	 * 	@param string $filenameOrExtension Filename or Extension
-	 * 	@return string|boolean
+	 * Returns the MIME-Type for the given $filename or file extension.
+	 * If no MIME-Type was found false is returned.
+	 * @param string $filenameOrExtension Filename or Extension
+	 * @return string|boolean
 	 */
 	public static function mimeType($filenameOrExtension) {
 		if (strpos($filenameOrExtension, '.') !== false) {
@@ -52,17 +52,17 @@ class MimeTypes extends Helper {
 	}
 
 	/**
-	 * 	Alias Function for {@link mimeType}
-	 * 	@param string $filenameOrExtension
-	 * 	@return string|boolean
+	 * Alias Function for {@link mimeType}
+	 * @param string $filenameOrExtension
+	 * @return string|boolean
 	 */
 	public static function type($filenameOrExtension) {
 		return self::mimeType($filenameOrExtension);
 	}
 
 	/**
-	 * 	Collection of mime types and their file extensions
-	 * 	@var array(string)
+	 * Collection of mime types and their file extensions
+	 * @var array(string)
 	 */
 	public static $mimeTypes = array(
 	
@@ -206,5 +206,3 @@ class MimeTypes extends Helper {
 	);	
 
 }
-
-?>

@@ -1,33 +1,33 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- * 	Exception for MySqlQuery
+ * Exception for MySqlQuery
  * 
- * 	MySQL Exception Factory Class, call {@link evoke} for throwing a MySQL
- * 	Exception depending on the current MySQL Error.
+ * MySQL Exception Factory Class, call {@link evoke} for throwing a MySQL
+ * Exception depending on the current MySQL Error.
  * 
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 06.07.2007
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.model.DB.MySQL
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 06.07.2007
+ * @package ephFrame
+ * @subpackage ephFrame.lib.model.DB.MySQL
  */
 class MySQLException extends DBException {
 	
@@ -48,16 +48,16 @@ class MySQLException extends DBException {
 	const ERRNO_LOST_CONNECTION_QUERY 		= 2013;
 	
 	/**
-	 *	Stores the Current MySQL Error Number
-	 * 	List of Error Codes:
-	 * 	{@link http://www.mysql.org/doc/refman/5.0/en/error-messages-server.html}
-	 * 	@var integer
+	 * Stores the Current MySQL Error Number
+	 * List of Error Codes:
+	 * {@link http://www.mysql.org/doc/refman/5.0/en/error-messages-server.html}
+	 * @var integer
 	 */
 	public $errorNumber;
 	
 	/**
-	 *	Stores the current MySQL Error String
-	 * 	@var string
+	 * Stores the current MySQL Error String
+	 * @var string
 	 */
 	public $errorMessage;
 	
@@ -84,9 +84,9 @@ class MySQLException extends DBException {
 	}
 	
 	/**
-	 *	Determines the exception name that fits to the
-	 * 	current mysql error
-	 * 	@return string
+	 * Determines the exception name that fits to the
+	 * current mysql error
+	 * @return string
 	 */
 	public static function exceptionName() {
 		$errorNo = mysql_errno();
@@ -142,9 +142,9 @@ class MySQLException extends DBException {
 
 
 /**
- *	Thrown if php has no mysql module
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception 
+ * Thrown if php has no mysql module
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception 
  */
 class MySQLNotInstalledException extends MySQLException {
 	public function __construct(MySQL $dao, $query) {
@@ -154,9 +154,9 @@ class MySQLNotInstalledException extends MySQLException {
 }
 
 /**
- *	Thrown if a query returns with a errous result
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib 
+ * Thrown if a query returns with a errous result
+ * @package ephFrame
+ * @subpackage ephFrame.lib 
  */
 class MySQLQueryException extends MySQLException {
 	public function __construct(MySQL $dao, $query = null) {
@@ -166,9 +166,9 @@ class MySQLQueryException extends MySQLException {
 }
 
 /**
- *	Thrown if a query is empty
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib 
+ * Thrown if a query is empty
+ * @package ephFrame
+ * @subpackage ephFrame.lib 
  */
 class MySQLQueryEmptyException extends MySQLQueryException {
 	public function __construct(MySQL $dao) {
@@ -178,9 +178,9 @@ class MySQLQueryEmptyException extends MySQLQueryException {
 }
 
 /**
- * 	Thrown when a mysql connection could not be established
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
+ * Thrown when a mysql connection could not be established
+ * @package ephFrame
+ * @subpackage ephFrame.lib
  */
 class MySQLConnectionErrorException extends MySQLException {
 	public function __construct(MySQL $dao) {
@@ -190,9 +190,9 @@ class MySQLConnectionErrorException extends MySQLException {
 }
 
 /**
- * 	Thrown if no connection could be established through local socket
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
+ * Thrown if no connection could be established through local socket
+ * @package ephFrame
+ * @subpackage ephFrame.lib
  */
 class MySQLSocketConnectionError extends MySQLConnectionErrorException {
 	public function __construct(MySQL $dao) {
@@ -202,9 +202,9 @@ class MySQLSocketConnectionError extends MySQLConnectionErrorException {
 }
 
 /**
- *	Thrown if a empty database name was detected
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
+ * Thrown if a empty database name was detected
+ * @package ephFrame
+ * @subpackage ephFrame.lib
  */
 class MySQLDBNameEmptyException extends MySQLException {
 	public function __construct(MySQL $dao) {
@@ -214,31 +214,31 @@ class MySQLDBNameEmptyException extends MySQLException {
 }
 
 /**
- *	Thrown the connection to MySQL Server was lost during a query
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
+ * Thrown the connection to MySQL Server was lost during a query
+ * @package ephFrame
+ * @subpackage ephFrame.lib
  */
 class MySQLQueryLostConnectionException extends MySQLQueryException{}
 
 /**
- *	Thrown if a MySQL Error occured during a query
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
+ * Thrown if a MySQL Error occured during a query
+ * @package ephFrame
+ * @subpackage ephFrame.lib
  */
 class MySQLQueryDuplicateEntryException extends MySQLQueryException{}
 
 
 /**
- *	Thrown upon a MySQL Connection Error
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
+ * Thrown upon a MySQL Connection Error
+ * @package ephFrame
+ * @subpackage ephFrame.lib
  */
 class MySQLConnectionException extends MySQLException {}
 
 /**
- *	Thrown if PHP was unable to connect with the given user/password combination 
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
+ * Thrown if PHP was unable to connect with the given user/password combination 
+ * @package ephFrame
+ * @subpackage ephFrame.lib
  */
 class MySQLConnectionAccessDeniedException extends MySQLConnectionException {
 	public function __construct(MySQL $MySQL) {
@@ -248,8 +248,8 @@ class MySQLConnectionAccessDeniedException extends MySQLConnectionException {
 }
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib
+ * @package ephFrame
+ * @subpackage ephFrame.lib
  */
 class MySQLConnectionUnknownHostException extends MySQLConnectionException {
 	public function __construct(MySQL $MySQL) {
@@ -259,31 +259,31 @@ class MySQLConnectionUnknownHostException extends MySQLConnectionException {
 }
 
 /**
- * 	Thrown if the MySQL Server gone away (probably crashed)
- *	@package ephFrame
- * 	@subpackage ephFrame.lib
+ * Thrown if the MySQL Server gone away (probably crashed)
+ * @package ephFrame
+ * @subpackage ephFrame.lib
  */
 class MySQLServerGoneAwayException extends MySQLConnectionException {}
 
 /**
- *	Thrown possibly if MySQL Server went away (probably crashed)
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
+ * Thrown possibly if MySQL Server went away (probably crashed)
+ * @package ephFrame
+ * @subpackage ephFrame.lib
  */
 class MySQLServerShutdownInProgressException extends MySQLConnectionException {}
 
 
 /**
- * 	Thrown if a MySQL Error occured that has something to do with a database
- *	@package ephFrame
- * 	@subpackage ephFrame.lib
+ * Thrown if a MySQL Error occured that has something to do with a database
+ * @package ephFrame
+ * @subpackage ephFrame.lib
  */
 class MySQLDBException extends MySQLException {}
 
 /**
- *	Thrown if no table was selected somewhere
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
+ * Thrown if no table was selected somewhere
+ * @package ephFrame
+ * @subpackage ephFrame.lib
  */
 class MySQLNoDBSelectedException extends MySQLDBException {
 	public function __construct(MySQL $dao) {
@@ -293,9 +293,9 @@ class MySQLNoDBSelectedException extends MySQLDBException {
 }
 
 /**
- * 	Thrown if a database was not found
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
+ * Thrown if a database was not found
+ * @package ephFrame
+ * @subpackage ephFrame.lib
  */
 class MySQLDBNotFoundException extends MySQLDBException {
 	public function __construct(MySQL $dao) {
@@ -306,16 +306,16 @@ class MySQLDBNotFoundException extends MySQLDBException {
 }
 
 /**
- * 	Thrown if a MySQL Error occured that has something to do with a database table
- *	@package ephFrame
- * 	@subpackage ephFrame.lib
+ * Thrown if a MySQL Error occured that has something to do with a database table
+ * @package ephFrame
+ * @subpackage ephFrame.lib
  */
 class MySQLTableException extends MySQLException {}
 
 /**
- *	Thrown if a table was found that is marked as chrashed
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
+ * Thrown if a table was found that is marked as chrashed
+ * @package ephFrame
+ * @subpackage ephFrame.lib
  */
 class MySQLTableCrashedException extends MySQLTableException {
 	public function __construct(MySQL $dao) {
@@ -326,9 +326,9 @@ class MySQLTableCrashedException extends MySQLTableException {
 }
 
 /**
- *	Thrown if a table was not accessible
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
+ * Thrown if a table was not accessible
+ * @package ephFrame
+ * @subpackage ephFrame.lib
  */
 class MySQLTableNotAccessibleException extends MySQLTableException {
 	public function __construct(MySQL $dao) {
@@ -339,14 +339,14 @@ class MySQLTableNotAccessibleException extends MySQLTableException {
 }
 
 /**
- * 	Thrown if a table was not found
- * 	// FINISH
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
+ * Thrown if a table was not found
+ * // FINISH
+ * @package ephFrame
+ * @subpackage ephFrame.lib
  */
 class MySQLTableNotFoundException extends MySQLTableException {
 	/**
-	 * 	@var string
+	 * @var string
 	 */
 	public $tablename = '';
 	public function __construct(MySQL $dao) {
@@ -355,5 +355,3 @@ class MySQLTableNotFoundException extends MySQLTableException {
 		parent::__construct($dao);
 	}
 }
- 
-?>

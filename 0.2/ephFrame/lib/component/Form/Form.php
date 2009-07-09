@@ -1,84 +1,84 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 class_exists('HTMLTag') or require dirname(__FILE__).'/../../HTMLTag.php';
 
 /**
- * 	Form Class
- * 	
- * 	@todo add validation rules here or make validation rules easily editable by sub classes
- * 	@version 0.3
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.component.Form
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 04.11.2008
+ * Form Class
+ * 
+ * @todo add validation rules here or make validation rules easily editable by sub classes
+ * @version 0.3
+ * @package ephFrame
+ * @subpackage ephFrame.lib.component.Form
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 04.11.2008
  */
 class Form extends HTMLTag {
 	
 	/**
-	 *	Instance of Controller if Form is used as component
-	 * 	@var Controller
+	 * Instance of Controller if Form is used as component
+	 * @var Controller
 	 */
 	protected $controller;
 	
 	/**
-	 * 	Stores the submit action target
-	 * 	@var string
+	 * Stores the submit action target
+	 * @var string
 	 */
 	protected $action = './';
 	
 	/**
-	 * 	@var HTTPRequest
+	 * @var HTTPRequest
 	 */
 	protected $request;
 	
 	/**
-	 * 	@var HTMLTag
+	 * @var HTMLTag
 	 */
 	protected $fieldset;
 	
 	/**
-	 *	Stores tha errors from a validation process
-	 * 	@var array(string)
+	 * Stores tha errors from a validation process
+	 * @var array(string)
 	 */
 	public $errors = array();
 	
 	/**
-	 *	Store success messages
-	 *	@var array(string)
+	 * Store success messages
+	 * @var array(string)
 	 */
 	public $successMessages = array();
 	
 	/**
-	 *	Name of Models from the controller that should autamticly used in this
-	 * 	form and more configuration stuff.
-	 * 	Set this to false if you don’t want the form to be auto generate
-	 * 	@param array(string)
+	 * Name of Models from the controller that should autamticly used in this
+	 * form and more configuration stuff.
+	 * Set this to false if you don’t want the form to be auto generate
+	 * @param array(string)
 	 */
 	public $configureModel = array();
 	
 	/**
-	 * 	Creates a new Form Instance
-	 * 	
-	 * 	@param string $action
-	 * 	@return Form
+	 * Creates a new Form Instance
+	 * 
+	 * @param string $action
+	 * @return Form
 	 */
 	public function __construct($action = null, Array $attributes = array()) {
 		$this->request = new HTTPRequest(true);
@@ -99,9 +99,9 @@ class Form extends HTMLTag {
 	}
 	
 	/**
-	 *	Manual inherit Component startup method to use in sub classes, see docu
-	 * 	in {@link Component}.
-	 * 	@return boolean
+	 * Manual inherit Component startup method to use in sub classes, see docu
+	 * in {@link Component}.
+	 * @return boolean
 	 */
 	public function startup() {
 		// set form variable for view
@@ -114,16 +114,16 @@ class Form extends HTMLTag {
 	}
 	
 	/**
-	 *	Callback that is called right before controller calls his action
-	 * 	@return true
+	 * Callback that is called right before controller calls his action
+	 * @return true
 	 */
 	public function beforeAction($actionName = null) {
 		return true;
 	}
 	
 	/**
-	 *	Manual inherit Component init method, see docu in {@link Component}.
-	 * 	@return boolean
+	 * Manual inherit Component init method, see docu in {@link Component}.
+	 * @return boolean
 	 */
 	public function init(Controller $controller) {
 		$this->controller = $controller;
@@ -164,10 +164,10 @@ class Form extends HTMLTag {
 	}
 	
 	/**
-	 *	Delete the field named $fieldname
+	 * Delete the field named $fieldname
 	 * 
-	 * 	@param $fieldname
-	 * 	@return boolean
+	 * @param $fieldname
+	 * @return boolean
 	 */
 	public function delete($fieldname = null) {
 		if ($field = $this->fieldset->childWithAttribute('name', $fieldname)) {
@@ -178,15 +178,15 @@ class Form extends HTMLTag {
 	}
 	
 	/**
-	 * 	Add one or more new {@link FormField} to this form
+	 * Add one or more new {@link FormField} to this form
 	 * 
-	 * 	You can also add multiple form elements by passing arguments:
-	 * 	<code>
-	 * 	$form->add($emailField, $passwordField);
-	 * 	</code>
+	 * You can also add multiple form elements by passing arguments:
+	 * <code>
+	 * $form->add($emailField, $passwordField);
+	 * </code>
 	 * 
-	 * 	@param FormField $field
-	 * 	@return Form
+	 * @param FormField $field
+	 * @return Form
 	 */
 	public function add(FormField $field) {
 		if (func_num_args() > 1) {
@@ -199,37 +199,37 @@ class Form extends HTMLTag {
 	}
 	
 	/**
-	 *	Alias for {@link add}
-	 *	@param FormField $field
-	 *	@return Form
+	 * Alias for {@link add}
+	 * @param FormField $field
+	 * @return Form
 	 */
 	public function addField(FormField $field) {
 		return $this->add($field);
 	}
 	
 	/**
-	 *	Checks if this form has a field with the name $name
-	 *	
-	 *	<code>
-	 *	if ($userForm->hasField('username')) {
-	 *		$userForm->username->value('Your Username');
-	 *	}
-	 *	</code>
-	 *	
-	 * 	@param string $name name of userfield to search for
-	 * 	@return boolean
+	 * Checks if this form has a field with the name $name
+	 * 
+	 * <code>
+	 * if ($userForm->hasField('username')) {
+	 * $userForm->username->value('Your Username');
+	 * }
+	 * </code>
+	 * 
+	 * @param string $name name of userfield to search for
+	 * @return boolean
 	 */
 	public function hasField($name) {
 		return $this->fieldset->childWithAttribute('name', $name);
 	}
 	
 	/**
-	 *	Create a new Form Field and return it
-	 * 	@param string $type
-	 * 	@param string $name
-	 * 	@param mixed $value
-	 * 	@param array(string) $attributes
-	 * 	@return FormField
+	 * Create a new Form Field and return it
+	 * @param string $type
+	 * @param string $name
+	 * @param mixed $value
+	 * @param array(string) $attributes
+	 * @return FormField
 	 */
 	public function newField($type, $name, $value = null, Array $attributes = array()) {
 		if (strpos($type, '.') == false) {
@@ -246,11 +246,11 @@ class Form extends HTMLTag {
 	}
 	
 	/**
-	 *	Checks if the form is submitted.
+	 * Checks if the form is submitted.
 	 * 
-	 * 	This will be true if the form has more than one elements and any of it
-	 * 	filled or the single element of a form is filled and submitted.
-	 * 	@return boolean
+	 * This will be true if the form has more than one elements and any of it
+	 * filled or the single element of a form is filled and submitted.
+	 * @return boolean
 	 */
 	public function submitted() {
 		// test if a form was submitted by checking every field of the form
@@ -284,19 +284,19 @@ class Form extends HTMLTag {
 	}
 	
 	/**
-	 *	This is a shortcut method combining {@link submitted} and {@link validate}
-	 * 	so it returns true if the form is submitted and no errors and false if
-	 * 	not submitted or errors
-	 * 	@return boolean
+	 * This is a shortcut method combining {@link submitted} and {@link validate}
+	 * so it returns true if the form is submitted and no errors and false if
+	 * not submitted or errors
+	 * @return boolean
 	 */
 	public function ok() {
 		return ($this->submitted() && $this->validate());
 	}
 	
 	/**
-	 *	Validates all fields of this form or the fields you passed as array
-	 * 	@param $fieldNames
-	 * 	@return boolean
+	 * Validates all fields of this form or the fields you passed as array
+	 * @param $fieldNames
+	 * @return boolean
 	 */
 	public function validate(Array $fieldNames = array()) {
 		if (!is_array($this->errors)) {
@@ -316,26 +316,26 @@ class Form extends HTMLTag {
 	}
 		
 	/**
-	 * 	Define additional form elements in you application forms.
-	 * 	You can automaticly fill you application models using model structure:
+	 * Define additional form elements in you application forms.
+	 * You can automaticly fill you application models using model structure:
 	 * 
-	 * 	If youre form is named CommentForm and you have a model Comment then
-	 * 	the form will try to get the form field structure from the Model
-	 * 	structure.
+	 * If youre form is named CommentForm and you have a model Comment then
+	 * the form will try to get the form field structure from the Model
+	 * structure.
 	 * 
-	 * 	You also cann exclude structure field names when importing model
-	 * 	structure:
-	 * 	<code>
-	 * 	public $configureModel = array('User' => array('id', 'email'));
-	 * 	</code>
-	 * 	
-	 * 	But you also can use this callback to  create your own forms:
-	 * 	<code>
-	 * 	// be sure to call parent::configure();
-	 * 	$this->add($this->newField('text', 'username'));
-	 * 	</code>
-	 * 	
-	 * 	@return true
+	 * You also cann exclude structure field names when importing model
+	 * structure:
+	 * <code>
+	 * public $configureModel = array('User' => array('id', 'email'));
+	 * </code>
+	 * 
+	 * But you also can use this callback to  create your own forms:
+	 * <code>
+	 * // be sure to call parent::configure();
+	 * $this->add($this->newField('text', 'username'));
+	 * </code>
+	 * 
+	 * @return true
 	 */
 	public function configure() {
 		if (empty($this->configureModel) && $this->configureModel !== false) {
@@ -374,8 +374,8 @@ class Form extends HTMLTag {
 	}
 	
 	/**
-	 *	FieldName type depending on field names mapping
-	 * 	@var array(string)
+	 * FieldName type depending on field names mapping
+	 * @var array(string)
 	 */
 	public $fieldNameFormTypeMapping = array(
 		'email' 	=> 'email',
@@ -387,11 +387,11 @@ class Form extends HTMLTag {
 	);
 	
 	/**
-	 *	Create form fields based on model structure
-	 * 	
-	 * 	@param Model $model
-	 * 	@param array(string) $ignore
-	 * 	@return Form
+	 * Create form fields based on model structure
+	 * 
+	 * @param Model $model
+	 * @param array(string) $ignore
+	 * @return Form
 	 */
 	public function configureModel(Model $model, Array $ignore = array(), Array $fields = array()) {
 		if (empty($ignore)) {
@@ -489,8 +489,8 @@ class Form extends HTMLTag {
 	} 
 	
 	/**
-	 *	Fills the form fields with data from a model
-	 * 	@return Form
+	 * Fills the form fields with data from a model
+	 * @return Form
 	 */
 	public function fillModel(Model $model) {
 		if (!$this->submitted()) {
@@ -514,7 +514,7 @@ class Form extends HTMLTag {
 	}
 	
 	/**
-	 * 	Alias according to {@link toModel} for {@link fillModel}
+	 * Alias according to {@link toModel} for {@link fillModel}
 	 * @param $model
 	 * @return unknown_type
 	 */
@@ -523,17 +523,17 @@ class Form extends HTMLTag {
 	}
 	
 	/**
-	 *	Assign submitted values to a model
+	 * Assign submitted values to a model
 	 *
-	 *	<code>
-	 *	// in a controller action
-	 *	$this->UserForm->toModel($this->User);
-	 *	</code>
-	 *	
-	 * 	@param Model $model
-	 * 	@param array(string) $fields name of fields used, if empty all fields are used
-	 * 	@param array(string) $ignore name of form fields to ignore
-	 * 	@return Model
+	 * <code>
+	 * // in a controller action
+	 * $this->UserForm->toModel($this->User);
+	 * </code>
+	 * 
+	 * @param Model $model
+	 * @param array(string) $fields name of fields used, if empty all fields are used
+	 * @param array(string) $ignore name of form fields to ignore
+	 * @return Model
 	 */
 	public function toModel(Model $model, $fields = array(), $ignore = array()) {
 		foreach($this->fieldset->children() as $formField) {
@@ -561,8 +561,8 @@ class Form extends HTMLTag {
 	}
 	
 	/**
-	 * 	Returns all names of all form fields in the form
-	 * 	@return array(string)
+	 * Returns all names of all form fields in the form
+	 * @return array(string)
 	 */
 	public function fieldNames() {
 		$fieldNames = array();
@@ -576,9 +576,7 @@ class Form extends HTMLTag {
 }
 
 /**
- * 	@package ephFrame
- *	@subpackage ephFrame.exceptions
+ * @package ephFrame
+ * @subpackage ephFrame.exceptions
  */
 class FormException extends ObjectException {}
-
-?>

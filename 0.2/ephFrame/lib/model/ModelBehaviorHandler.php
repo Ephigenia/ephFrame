@@ -1,42 +1,42 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- * 	Class for Handling Model Behaviors
+ * Class for Handling Model Behaviors
  * 
- * 	This class handles the model behaviors for the model class.
- * 	
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.model
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 16.10.2008
+ * This class handles the model behaviors for the model class.
+ * 
+ * @package ephFrame
+ * @subpackage ephFrame.lib.model
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 16.10.2008
  */
 class ModelBehaviorHandler extends Object implements Iterator, Countable {
 
 	/**
-	 * 	@var array(ModelBehavior)
+	 * @var array(ModelBehavior)
 	 */
 	public $behaviors = array();
 	
 	/**
-	 * 	@var Model
+	 * @var Model
 	 */
 	public $model;
 	
@@ -64,17 +64,17 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 	public static $cache = array();
 	
 	/**
-	 * 	Dynamicly adds a new Behavior to this model. Behaviors should have NO
-	 * 	'Behavior' at the end of their name (it's automatically added)
+	 * Dynamicly adds a new Behavior to this model. Behaviors should have NO
+	 * 'Behavior' at the end of their name (it's automatically added)
 	 * 
-	 * 	<code>
-	 * 	$this->User->behavior->add('app.lib.model.behavior.CustomTaggable');
-	 * 	</code>
+	 * <code>
+	 * $this->User->behavior->add('app.lib.model.behavior.CustomTaggable');
+	 * </code>
 	 *
-	 * 	@todo maybe create extra class handling the behaviors
-	 * 	@param string $behaviorName
-	 * 	@param array(string) $config
-	 * 	@return ModelBehaviorHandler
+	 * @todo maybe create extra class handling the behaviors
+	 * @param string $behaviorName
+	 * @param array(string) $config
+	 * @return ModelBehaviorHandler
 	 */
 	public function addBehavior($behaviorName, Array $config = array()) {
 		$behaviorName = trim($behaviorName);
@@ -111,27 +111,27 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 	}
 	
 	/**
-	 *	Test if the handler has a behavior named $behaviorName added
-	 * 	@return boolean
-	 * 	@param string
+	 * Test if the handler has a behavior named $behaviorName added
+	 * @return boolean
+	 * @param string
 	 */
 	public function hasBehavior($behaviorName) {
 		return isset($this->behaviors[$behaviorName]);
 	}
 	
 	/**
-	 * 	Same as {@link hasBehavior}
-	 * 	@param string	$name
-	 * 	@return boolean
+	 * Same as {@link hasBehavior}
+	 * @param string	$name
+	 * @return boolean
 	 */
 	public function implement($name) {
 		return $this->hasBehavior($name);
 	}
 	
 	/**
-	 * 	Removes a behavior from this model by $behaviorName
-	 * 	@param string $behaviorName
-	 * 	@return boolean
+	 * Removes a behavior from this model by $behaviorName
+	 * @param string $behaviorName
+	 * @return boolean
 	 */
 	public function removeBehavior($behaviorName) {
 		if (isset($this->behaviors[$behaviorName])) {
@@ -162,12 +162,12 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 	}
 	
 	/**
-	 *	Magic Method call for retreiving a single model behavior by name
-	 *	<code>
+	 * Magic Method call for retreiving a single model behavior by name
+	 * <code>
 	 *
-	 *	</code>
-	 * 	@param string	$behaviorName
-	 * 	@return ModelBehavior Model behavior class if found
+	 * </code>
+	 * @param string	$behaviorName
+	 * @return ModelBehavior Model behavior class if found
 	 */
 	public function __get($behaviorName) {
 		if ($this->hasBehavior($behaviorName)) {
@@ -177,8 +177,8 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 	}
 	
 	/**
-	 * 	Returns the number of behaviors
-	 * 	@return integer
+	 * Returns the number of behaviors
+	 * @return integer
 	 */
 	public function count() {
 		return count($this->behaviors);
@@ -207,14 +207,14 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 }
 
 /**
- *	@package ephFrame
- *	@subpackage ephFrame.exception
+ * @package ephFrame
+ * @subpackage ephFrame.exception
  */
 class ModelBehaviorHandlerException extends ObjectException {}
 
 /**
- *	@package ephFrame
- *	@subpackage ephFrame.exception
+ * @package ephFrame
+ * @subpackage ephFrame.exception
  */
 class ModelEmptyBehaviorNameException extends ModelBehaviorHandlerException {
 	public function __construct(Model $model) {
@@ -223,8 +223,8 @@ class ModelEmptyBehaviorNameException extends ModelBehaviorHandlerException {
 }
 
 /**
- *	@package ephFrame
- *	@subpackage ephFrame.exception
+ * @package ephFrame
+ * @subpackage ephFrame.exception
  */
 class ModelBehaviorHandlerMethodNotFoundException extends ModelBehaviorHandlerException {
 	public function __construct(Model $model, $method) {
@@ -233,13 +233,11 @@ class ModelBehaviorHandlerMethodNotFoundException extends ModelBehaviorHandlerEx
 }
 
 /**
- *	@package ephFrame
- *	@subpackage ephFrame.exception
+ * @package ephFrame
+ * @subpackage ephFrame.exception
  */
 class ModelBehaviorNotFoundException extends ModelBehaviorHandlerException {
 	public function __construct(Model $model, $behaviorName) {
 		parent::__construct('Unable to find model behavior: \''.$behaviorName.'\'');
 	}
 }
-
-?>

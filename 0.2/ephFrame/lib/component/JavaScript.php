@@ -1,91 +1,91 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 class_exists('String') or require dirname(__FILE__).'/../helper/String.php';
 
 /**
- * 	The Javascript component used for {@link HTMLView} class
+ * The Javascript component used for {@link HTMLView} class
  * 
- * 	This class can be used as a component in a controller and the views to add
- * 	js-code for jquery-document-ready, plain javascript and even js-files.<br />
- * 	The cool thing about this component is that it can be used in view {@link Element},
- * 	so you don’t have to devide the elements js code from the element anymore
- * 	they are both in the same file.
+ * This class can be used as a component in a controller and the views to add
+ * js-code for jquery-document-ready, plain javascript and even js-files.<br />
+ * The cool thing about this component is that it can be used in view {@link Element},
+ * so you don’t have to devide the elements js code from the element anymore
+ * they are both in the same file.
  * 
- * 	<code>
- * 	// add a simple hello world to the javascript
- * 	$JavaScript->addScript('alert("Hello World!")');
- * 	// add a hello world to jQuery Document Ready
- * 	$JavaScript->jQuery('alert("Hello World!")');
- * 	// add js file
- * 	$JavaScript->link('jquery.js');
- * 	</code>
+ * <code>
+ * // add a simple hello world to the javascript
+ * $JavaScript->addScript('alert("Hello World!")');
+ * // add a hello world to jQuery Document Ready
+ * $JavaScript->jQuery('alert("Hello World!")');
+ * // add js file
+ * $JavaScript->link('jquery.js');
+ * </code>
  * 
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de
- * 	@since 16.03.2008
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.component
- * 	@uses JSCompressor
- * 	@uses JSPacker
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de
+ * @since 16.03.2008
+ * @package ephFrame
+ * @subpackage ephFrame.lib.component
+ * @uses JSCompressor
+ * @uses JSPacker
  */
 class JavaScript extends Component implements Renderable {
 	
 	/**
-	 * 	Collection that stores the name of js files added
-	 * 	@var Collection
+	 * Collection that stores the name of js files added
+	 * @var Collection
 	 */
 	public $files = array();
 	
 	/**
-	 *	Collection that stores js files that are added by url
-	 * 	@var Collection
+	 * Collection that stores js files that are added by url
+	 * @var Collection
 	 */
 	public $urls = array();
 	
 	/**
-	 * 	Storage for plain javascript definitions
-	 * 	@var array(string)
+	 * Storage for plain javascript definitions
+	 * @var array(string)
 	 */
 	public $plain = array();
 	
 	/**
-	 * 	Stores plain scripts for jQuery document ready block
+	 * Stores plain scripts for jQuery document ready block
 	 * @var unknown_type
 	 */
 	public $jQuery = array();
 	
 	/**
-	 * 	Will compress external files as well
-	 * 	@var boolean
+	 * Will compress external files as well
+	 * @var boolean
 	 */
 	public $compress = true;
 	
 	/**
-	 * 	Turns automatic js file packaging on
-	 * 	@var boolean
+	 * Turns automatic js file packaging on
+	 * @var boolean
 	 */
 	public $pack = true;
 	
 	/**
-	 * 	Directories where js files can exist, add multiple paths
-	 * 	@var string
+	 * Directories where js files can exist, add multiple paths
+	 * @var string
 	 */
 	public $dirs = array('static/js/');
 
@@ -122,15 +122,15 @@ class JavaScript extends Component implements Renderable {
 	}
 	
 	/**
-	 * 	Add a single or multiple files to javascript
+	 * Add a single or multiple files to javascript
 	 * 
-	 * 	<code>
-	 * 	$JavaScript->addFile('test.js');
-	 * 	$JavaScript->addFile(array('test.js'));
-	 * 	</code>
+	 * <code>
+	 * $JavaScript->addFile('test.js');
+	 * $JavaScript->addFile(array('test.js'));
+	 * </code>
 	 * 
-	 * 	@param string $filename
-	 * 	@return JavaScript
+	 * @param string $filename
+	 * @return JavaScript
 	 */
 	public function addFile($filename) {
 		$args = func_get_args();
@@ -152,9 +152,9 @@ class JavaScript extends Component implements Renderable {
 	}
 	
 	/**
-	 * 	Alias for {@link link}
-	 * 	@param $files
-	 * 	@return JavaScript
+	 * Alias for {@link link}
+	 * @param $files
+	 * @return JavaScript
 	 */
 	public function addFiles($files) {
 		$args = func_get_args();
@@ -162,9 +162,9 @@ class JavaScript extends Component implements Renderable {
 	}
 	
 	/**
-	 * 	Alias for {@link link}
-	 * 	@param $files
-	 * 	@return JavaScript
+	 * Alias for {@link link}
+	 * @param $files
+	 * @return JavaScript
 	 */
 	public function link($filename) {
 		$args = func_get_args();
@@ -235,10 +235,7 @@ class JavaScript extends Component implements Renderable {
 }
 
 /**
- *	@package ephFrame
- *	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class JavaScriptException extends ComponentException {}
-
-
-?>

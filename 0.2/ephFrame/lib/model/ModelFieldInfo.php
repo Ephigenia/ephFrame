@@ -1,33 +1,33 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- * 	Model Field (DB Table column) Information Storage
+ * Model Field (DB Table column) Information Storage
  * 
- * 	Stores information about database table column information used in {@link 
- * 	Model}
+ * Stores information about database table column information used in {@link 
+ * Model}
  * 
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 07.10.2008
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.model
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 07.10.2008
+ * @package ephFrame
+ * @subpackage ephFrame.lib.model
  */
 class ModelFieldInfo extends Object {
 	
@@ -43,35 +43,35 @@ class ModelFieldInfo extends Object {
 	public $length;
 	
 	/**
-	 *	Stores the default value for this field if ther’s any
-	 * 	@var mixed
+	 * Stores the default value for this field if ther’s any
+	 * @var mixed
 	 */
 	public $default;
 	
 	/**
-	 *	Stores true if the field is any signed integer or float
-	 * 	@var boolean
+	 * Stores true if the field is any signed integer or float
+	 * @var boolean
 	 */
 	public $signed = true;
 	
 	/**
-	 *	Stores a constant starting with QUOTE_ that indicates the quoting
-	 *	type for the values of this field
-	 * 	@var string
+	 * Stores a constant starting with QUOTE_ that indicates the quoting
+	 * type for the values of this field
+	 * @var string
 	 */
 	public $quoting = self::QUOTE_STRING;
 	
 	public $extra;
 	
 	/**
-	 *	Stores all options in an array for the ENUM type
-	 * 	@var array(string)
+	 * Stores all options in an array for the ENUM type
+	 * @var array(string)
 	 */
 	public $enumOptions = array();
 	
 	/**
-	 * 	Stores a map for different field types and their quoting
-	 * 	@var array(string)
+	 * Stores a map for different field types and their quoting
+	 * @var array(string)
 	 */
 	protected $quoteMap = array(
 		self::QUOTE_STRING 	=> array('char', 'varchar', 'blob', 'tinyblob', 'mediumblob', 'text', 'mediumtext', 'tinytext', 'date', 'date', 'time', 'datetime'),
@@ -172,9 +172,7 @@ class ModelFieldInfo extends Object {
 }
 
 /**
- * 	@package ephFrame
- *	@subpackage ephFrame.exception
+ * @package ephFrame
+ * @subpackage ephFrame.exception
  */
 class ModelFieldInfoException extends ObjectException {}
-
-?>

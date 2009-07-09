@@ -1,6 +1,6 @@
 #
-#	Main webroot htaccess file for ephFrame applications
-#	if you experience problems successive delete some of the parts
+# Main webroot htaccess file for ephFrame applications
+# if you experience problems successive delete some of the parts
 # ----------------------------------------------------------------------------
 
 # common filetypes for download headers, missing on some servers
@@ -411,6 +411,7 @@ RewriteRule ^.*$ - [F]
 # ----------------------------------------------------------------------------
 <IfModule mod_rewrite.c>
 	RewriteEngine On
+	# RewriteBase / 
 	RewriteCond %{REQUEST_FILENAME} !-d
 	RewriteCond %{REQUEST_FILENAME} !-f
     # normal rewrite for all files

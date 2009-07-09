@@ -1,105 +1,105 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- * 	Basic Socket Connection
+ * Basic Socket Connection
  * 
- * 	This Class acts as a simple socket. Connecting like telnet. It does know
- * 	nothing about anything about protocols or commands - that's on you to
- * 	implement.
+ * This Class acts as a simple socket. Connecting like telnet. It does know
+ * nothing about anything about protocols or commands - that's on you to
+ * implement.
  * 
- * 	<code>
- * 	$socket = new Socket('www.spiegel.de', 80);
- * 	$socket->connect();
- * 	$socket->write('GET /'."\n\n");
- * 	echo $socket->write();
- * 	</code>
+ * <code>
+ * $socket = new Socket('www.spiegel.de', 80);
+ * $socket->connect();
+ * $socket->write('GET /'."\n\n");
+ * echo $socket->write();
+ * </code>
  * 
- * 	@author Marcel Eichner // Ephiagenia <love@ephigenia.de>
- * 	@since 15.06.2008
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
+ * @author Marcel Eichner // Ephiagenia <love@ephigenia.de>
+ * @since 15.06.2008
+ * @package ephFrame
+ * @subpackage ephFrame.lib
  */
 class Socket extends Object {
 	
 	/**
-	 *	Host to connect to
-	 * 	@var string
+	 * Host to connect to
+	 * @var string
 	 */
 	protected $host;
 	
 	/**
-	 *	port to use when connecting
-	 * 	@var integer
+	 * port to use when connecting
+	 * @var integer
 	 */
 	protected $port = 80;
 	
 	/**
-	 *	Timeout in seconds when connecting
-	 * 	@var integer
+	 * Timeout in seconds when connecting
+	 * @var integer
 	 */
 	protected $timeout = 5;
 	
 	/**
-	 *	Buffersize in bytes when reading from open socket with {@link read}
-	 * 	reduce this if you want to save up memory on reading action
-	 * 	@var integer
+	 * Buffersize in bytes when reading from open socket with {@link read}
+	 * reduce this if you want to save up memory on reading action
+	 * @var integer
 	 */
 	protected $bufferSize = 4096;
 	
 	/**
-	 * 	Stores the increasing number of bytes send to the open socket
-	 * 	@var integer
+	 * Stores the increasing number of bytes send to the open socket
+	 * @var integer
 	 */
 	public $bytesSend = 0;
 	
 	/**
-	 * 	Stores the increase number of bytes read from an open socket
-	 *	@var integer
+	 * Stores the increase number of bytes read from an open socket
+	 * @var integer
 	 */
 	public $bytesRead = 0;
 	
 	/**
-	 * 	Stores a timestamp of the time the connection was established
-	 * 	@var integer
+	 * Stores a timestamp of the time the connection was established
+	 * @var integer
 	 */
 	public $opened = 0;
 	
 	/**
-	 *	Stores the last command successfully send to the sockets stream
-	 * 	@var string
+	 * Stores the last command successfully send to the sockets stream
+	 * @var string
 	 */
 	public $lastCommand;
 	
 	/**
-	 *	Current Socket Stream when connection is established
-	 * 	@var ressource
+	 * Current Socket Stream when connection is established
+	 * @var ressource
 	 */
 	protected $stream = false;
 	
 	/**
-	 *	Stream Constructor
-	 * 	@var string $host
-	 * 	@var integer $port
-	 * 	@var integer $timeout
-	 * 	@return Socket
+	 * Stream Constructor
+	 * @var string $host
+	 * @var integer $port
+	 * @var integer $timeout
+	 * @return Socket
 	 */
 	public function __construct($host = null, $port = null, $timeout = null) {
 		if ($host) $this->host = $host;
@@ -109,23 +109,23 @@ class Socket extends Object {
 	}
 	
 	/**
-	 *	Write a string to the stream that’s connected.
-	 * 	
-	 * 	Example, how to send a GET index page (on most servers) command to a
-	 * 	socket (allready connected)
-	 * 	<code>
-	 * 	$socket->send('GET /'."\n\n");
-	 * 	</code>
+	 * Write a string to the stream that’s connected.
 	 * 
-	 * 	This will also store the last command successfully send in
-	 * 	{@link lastCommand}. Year and it also keeps tracks about the stuff you
-	 * 	send to trough the socket by increasing {@link bytesSend} everytime
-	 * 	a command get through.
-	 * 	
-	 * 	@param string $string
-	 * 	@throws SocketInvalidCommandException
-	 * 	@throws SocketNotConnectedException
-	 * 	@return Socket
+	 * Example, how to send a GET index page (on most servers) command to a
+	 * socket (allready connected)
+	 * <code>
+	 * $socket->send('GET /'."\n\n");
+	 * </code>
+	 * 
+	 * This will also store the last command successfully send in
+	 * {@link lastCommand}. Year and it also keeps tracks about the stuff you
+	 * send to trough the socket by increasing {@link bytesSend} everytime
+	 * a command get through.
+	 * 
+	 * @param string $string
+	 * @throws SocketInvalidCommandException
+	 * @throws SocketNotConnectedException
+	 * @return Socket
 	 */
 	public function write($string) {
 		$this->checkConnection();
@@ -141,20 +141,20 @@ class Socket extends Object {
 	}
 	
 	/**
-	 *	Read data from the stream
-	 * 	
-	 * 	You can do very cool stuff with $return as true, like this
-	 * 	<code>
-	 * 	$response = '';
-	 * 	while($chunk = $socket->read(true)) {
-	 * 		echo 'bytes read: '.$socket->bytesRead;
-	 * 		$response .= $chunk;
-	 * 	}
-	 * 	echo $response;
-	 * 	</code>
-	 * 	
-	 * 	@param boolean $return set this to true to return after every read cycle
-	 * 	@return string
+	 * Read data from the stream
+	 * 
+	 * You can do very cool stuff with $return as true, like this
+	 * <code>
+	 * $response = '';
+	 * while($chunk = $socket->read(true)) {
+	 * 	echo 'bytes read: '.$socket->bytesRead;
+	 * 	$response .= $chunk;
+	 * }
+	 * echo $response;
+	 * </code>
+	 * 
+	 * @param boolean $return set this to true to return after every read cycle
+	 * @return string
 	 */
 	public function read($bufferSize = null, $return = false) {
 		$this->checkConnection();
@@ -171,8 +171,8 @@ class Socket extends Object {
 	}
 	
 	/**
-	 *	Test if a connection is establised, you can also check {@link connected}
-	 * 	@return boolean
+	 * Test if a connection is establised, you can also check {@link connected}
+	 * @return boolean
 	 */
 	public function connected() {
 		return !empty($this->stream);
@@ -185,9 +185,9 @@ class Socket extends Object {
 	}
 	
 	/**
-	 *	Open Socket connection to a $host, on $port and skip connection if
-	 * 	$timeout seconds passed without success
-	 * 	@return Socket
+	 * Open Socket connection to a $host, on $port and skip connection if
+	 * $timeout seconds passed without success
+	 * @return Socket
 	 */
 	public function connect() {
 		if (empty($this->host)) {
@@ -211,15 +211,15 @@ class Socket extends Object {
 	}
 	
 	/**
-	 *	Callback that can do stuff after a successfull connect.
-	 * 	@return mixed
+	 * Callback that can do stuff after a successfull connect.
+	 * @return mixed
 	 */
 	public function afterConnect() {
 	}
 	
 	/**
-	 *	Close the currently opend stream if Socket is opened
-	 * 	@return Socket
+	 * Close the currently opend stream if Socket is opened
+	 * @return Socket
 	 */
 	public function disconnect() {
 		if ($this->connected()) {
@@ -230,14 +230,14 @@ class Socket extends Object {
 	}
 	
 	/**
-	 * 	Disconnect on object instance destruction
+	 * Disconnect on object instance destruction
 	 */
 	public function __destruct() {
 		$this->disconnect();
 	}
 	
 	/**
-	 *	Disable cloning of Socket instances
+	 * Disable cloning of Socket instances
 	 */
 	final public function __clone() {
 		throw new SocketNotClonableException($this);
@@ -246,8 +246,8 @@ class Socket extends Object {
 }
 
 /**
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class SocketException extends Exception {
 	public function __construct(Socket $socket) {
@@ -258,8 +258,8 @@ class SocketException extends Exception {
 }
 
 /**
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class SocketNotClonableException extends SocketException {
 	public function __construct($socket) {
@@ -269,9 +269,9 @@ class SocketNotClonableException extends SocketException {
 }
 
 /**
- * 	Thrown if a Socket connection should be established on an empty host
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * Thrown if a Socket connection should be established on an empty host
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class SocketEmptyHostException extends SocketException {
 	public function __construct($socket) {
@@ -281,9 +281,9 @@ class SocketEmptyHostException extends SocketException {
 }
 
 /**
- * 	Thrown if a Socket connection should be established on an empty port
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * Thrown if a Socket connection should be established on an empty port
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class SocketEmptyPortException extends SocketException {
 	public function __construct($socket) {
@@ -293,9 +293,9 @@ class SocketEmptyPortException extends SocketException {
 }
 
 /**
- * 	Thrown if a Socket connection should be established on an empty port
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * Thrown if a Socket connection should be established on an empty port
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class SocketNotConnectedException extends SocketException {
 	public function __construct($socket) {
@@ -305,9 +305,9 @@ class SocketNotConnectedException extends SocketException {
 }
 
 /**
- * 	Thrown if an invalid command is tried to send to the connection of a Socket
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * Thrown if an invalid command is tried to send to the connection of a Socket
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class SocketInvalidCommandException extends SocketException {
 	public function __construct($socket, $command) {
@@ -317,8 +317,8 @@ class SocketInvalidCommandException extends SocketException {
 }
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class SocketConnectErrorException extends SocketException {
 	public function __construct($socket, $errno, $errstr) {
@@ -328,5 +328,3 @@ class SocketConnectErrorException extends SocketException {
 		parent::__construct($socket);
 	}
 }
-
-?>

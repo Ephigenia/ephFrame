@@ -1,39 +1,39 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 class_exists('Tree') or require dirname(__FILE__).'/Tree.php';
 class_exists('SGMLAttributes') or require dirname(__FILE__).'/SGMLAttributes.php';
 
 /**
- *	SGML Class
+ * SGML Class
  * 
- * 	base for every {@link http://de.wikipedia.org/wiki/SGML SGML}
- * 	class such as {@link XML}, {@link HTMLTag}, XHTML
+ * base for every {@link http://de.wikipedia.org/wiki/SGML SGML}
+ * class such as {@link XML}, {@link HTMLTag}, XHTML
  * 
- * 	@todo add xpath functions
+ * @todo add xpath functions
  * 
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 21.06.2007
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
- * 	@abstract 
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 21.06.2007
+ * @package ephFrame
+ * @subpackage ephFrame.lib
+ * @abstract 
  */
 abstract class SGMLTag extends Tree implements Traversable {
 	
@@ -41,35 +41,35 @@ abstract class SGMLTag extends Tree implements Traversable {
 	const CLOSE = '>';
 	
 	/**
-	 * 	Stores the tag’s Name
-	 * 	@var string
+	 * Stores the tag’s Name
+	 * @var string
 	 */
 	public $tagName;
 	
 	/**
-	 *	Stores the value of this tag
-	 * 	@var string|integer|float
+	 * Stores the value of this tag
+	 * @var string|integer|float
 	 */
 	public $tagValue;
 	
 	/**
-	 * 	Stores the attributes for this tag
-	 * 	@var SGMLAttributes
+	 * Stores the attributes for this tag
+	 * @var SGMLAttributes
 	 */
 	public $attributes;
 	
 	/**
-	 *	SGML Tag Constructor
+	 * SGML Tag Constructor
 	 * 
-	 * 	Create a new SGML Tag, using the $attributes and set the tag value to
-	 * 	$tagValue.
-	 * 	<code>
-	 * 	$tag = new SGMLTag('img', array('src' => '../img/test.jpg');
-	 * 	</code>
+	 * Create a new SGML Tag, using the $attributes and set the tag value to
+	 * $tagValue.
+	 * <code>
+	 * $tag = new SGMLTag('img', array('src' => '../img/test.jpg');
+	 * </code>
 	 * 
-	 * 	@param string $tagName
-	 * 	@param array(string) $attributes
-	 * 	@param mixed $tagValue
+	 * @param string $tagName
+	 * @param array(string) $attributes
+	 * @param mixed $tagValue
 	 */
 	public function __construct($tagName = null, $attributes = array(), $tagValue = null) {
 		parent::__construct();
@@ -83,9 +83,9 @@ abstract class SGMLTag extends Tree implements Traversable {
 	}
 	
 	/**
-	 * 	Sets or returns the name of this SGML Node
-	 * 	@param	string $name
-	 * 	@return string|SGMLTag
+	 * Sets or returns the name of this SGML Node
+	 * @param	string $name
+	 * @return string|SGMLTag
 	 */
 	public function tagName($name = null) {
 		if (!$this->validTagName($name)) throw new SGMLTagInvalidTagNameException();
@@ -93,25 +93,25 @@ abstract class SGMLTag extends Tree implements Traversable {
 	}
 	
 	/**
-	 *	Checks if the passed $name is a valid SGML tag name
-	 *  - first character needs to be integer or character
-	 *  - no open or close tags allowed
-	 * 	@param string
-	 * 	@return boolean
+	 * Checks if the passed $name is a valid SGML tag name
+	 * - first character needs to be integer or character
+	 * - no open or close tags allowed
+	 * @param string
+	 * @return boolean
 	 */
 	protected function validTagName($name) {
 		return (!preg_match('/^[^a-z]{1}.*$/', $name));
 	}
 	
 	/**
-	 *	Sets or returns the value of this SGML Tag, value
-	 * 	represents the stuff that is between the tag delimeters. Just
-	 * 	like 'Hello' here:
-	 * 	<code>
-	 * 		<tagName>hello</tagName>
-	 * 	</code>
-	 * 	@param string
-	 * 	@return SGMLTag
+	 * Sets or returns the value of this SGML Tag, value
+	 * represents the stuff that is between the tag delimeters. Just
+	 * like 'Hello' here:
+	 * <code>
+	 * 	<tagName>hello</tagName>
+	 * </code>
+	 * @param string
+	 * @return SGMLTag
 	 */
 	public function tagValue($value = null) {
 		if (func_num_args() == 0) return $this->tagValue;
@@ -120,9 +120,9 @@ abstract class SGMLTag extends Tree implements Traversable {
 	}
 	
 	/**
-	 *	Sets or returns an attribute's value
-	 * 	@param string $attributeName
-	 * 	@return string|integer|array $attributeValue
+	 * Sets or returns an attribute's value
+	 * @param string $attributeName
+	 * @return string|integer|array $attributeValue
 	 */
 	public function attribute($attributeName, $attributeValue = null) {
 		if ($attributeValue === null) {
@@ -132,11 +132,11 @@ abstract class SGMLTag extends Tree implements Traversable {
 	}
 	
 	/**
-	 *	Wrapper function for the {@link SGMLAttributes} Class for this Tag
-	 * 	that sets an attribute
-	 * 	@param string $attributeName
-	 * 	@param string|integer $value
-	 * 	@return SGMLTag
+	 * Wrapper function for the {@link SGMLAttributes} Class for this Tag
+	 * that sets an attribute
+	 * @param string $attributeName
+	 * @param string|integer $value
+	 * @return SGMLTag
 	 */
 	public function setAttribute($attributeName, $value) {
 		$this->attributes->set($attributeName, $value);
@@ -144,20 +144,20 @@ abstract class SGMLTag extends Tree implements Traversable {
 	}
 	
 	/**
-	 *	Returns the value of an attribute ... this is an wrapper function
-	 * 	for the {@link SGMLAttributes} class that represents the attributes
-	 * 	of this tag
-	 * 	@param string $attributeName
-	 * 	@return string|integer
+	 * Returns the value of an attribute ... this is an wrapper function
+	 * for the {@link SGMLAttributes} class that represents the attributes
+	 * of this tag
+	 * @param string $attributeName
+	 * @return string|integer
 	 */
 	public function getAttribute($attributeName) {
 		return $this->attributes->get($attributeName);
 	}
 	
 	/**
-	 * 	Removes an attribute
-	 * 	@param string $attributeName
-	 * 	@return SGMLTag
+	 * Removes an attribute
+	 * @param string $attributeName
+	 * @return SGMLTag
 	 */
 	public function removeAttribute($attributeName) {
 		$this->attributes->remove($attributeName);
@@ -165,17 +165,17 @@ abstract class SGMLTag extends Tree implements Traversable {
 	}
 	
 	/**
-	 *	Iterate of the children and return the first child with the passed 
-	 * 	$attributeValue. If no match found false is returned.
+	 * Iterate of the children and return the first child with the passed 
+	 * $attributeValue. If no match found false is returned.
 	 * 
-	 * 	Return the field with 'username' as 'name' attribute:
-	 * 	<code>
-	 * 	$field = $form->childWithAttribute('name', 'username');
-	 * 	</code>
-	 * 	
-	 * 	@param string $name
-	 * 	@param string $value
-	 * 	@return SGMLTag|boolean
+	 * Return the field with 'username' as 'name' attribute:
+	 * <code>
+	 * $field = $form->childWithAttribute('name', 'username');
+	 * </code>
+	 * 
+	 * @param string $name
+	 * @param string $value
+	 * @return SGMLTag|boolean
 	 */
 	public function childWithAttribute($name, $value = null) {
 		foreach ($this->children() as $child) {
@@ -191,8 +191,8 @@ abstract class SGMLTag extends Tree implements Traversable {
 	}
 	
 	/**
-	 * 	Renders the SGML Tag
-	 * 	@return string
+	 * Renders the SGML Tag
+	 * @return string
 	 */
 	public function render($escaped = false) {
 		if (!$this->beforeRender()) return false;
@@ -221,9 +221,9 @@ abstract class SGMLTag extends Tree implements Traversable {
 	}
 	
 	/**
-	 * 	Render SGML Tag value, automatically escapes the value
-	 * 	@param boolean $escaped
-	 * 	@return string
+	 * Render SGML Tag value, automatically escapes the value
+	 * @param boolean $escaped
+	 * @return string
 	 */
 	public function renderValue($escaped) {
 		if ($escaped) {
@@ -238,8 +238,8 @@ abstract class SGMLTag extends Tree implements Traversable {
 	}
 	
 	/**
-	 *	Renders the closing tag for this tag
-	 * 	@return string
+	 * Renders the closing tag for this tag
+	 * @return string
 	 */
 	public function renderOpenTag() {
 		if (empty($this->tagName)) return '';
@@ -251,8 +251,8 @@ abstract class SGMLTag extends Tree implements Traversable {
 	}
 	
 	/**
-	 *	Renders the closing tag. If this SGML Tag has no value an empty string
-	 * 	is returned because SGML Tags with empty values don't need a closing tag
+	 * Renders the closing tag. If this SGML Tag has no value an empty string
+	 * is returned because SGML Tags with empty values don't need a closing tag
 	 */
 	public function renderCloseTag() {
 		return $this->tagIndent().self::OPEN.'/'.$this->tagName.self::CLOSE.LF;
@@ -261,15 +261,13 @@ abstract class SGMLTag extends Tree implements Traversable {
 }
 
 /**
- * 	@package ephFrame
- *	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class SGMLTagException extends ObjectException { }
 
 /**
- * 	@package ephFrame
- *	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class SGMLTagInvalidTagNameException extends SGMLTagException {}
-
-?>

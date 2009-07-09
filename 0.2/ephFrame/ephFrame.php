@@ -1,48 +1,48 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- * 	ephFrame
- * 	
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 06.05.2007
- * 	@package ephFrame
+ * ephFrame
+ * 
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 06.05.2007
+ * @package ephFrame
  */
 final class ephFrame {
 	
 	/**
-	 *	Stores the ephFrame version
-	 * 	@var integer
+	 * Stores the ephFrame version
+	 * @var integer
 	 */
 	const VERSION = '0.2a ($Revision$)';
 	
 	/**
-	 *	Stores the instance of {@link ephFrame} as soon
-	 * 	singleton is called
-	 * 	@var ephFrame
+	 * Stores the instance of {@link ephFrame} as soon
+	 * singleton is called
+	 * @var ephFrame
 	 */
 	public static $instance;
 	
 	/**
-	 *	This is the first object method ever called in the framework
-	 * 	initiates all important stuff and so on - ne wa!
+	 * This is the first object method ever called in the framework
+	 * initiates all important stuff and so on - ne wa!
 	 */
 	public static function singleton() {
 		if (empty(self::$instance)) {
@@ -79,8 +79,8 @@ final class ephFrame {
 	}
 	
 	/**
-	 *	Checks for register global initate set in the php config
-	 * 	if this is on the app will grump you for that :D
+	 * Checks for register global initate set in the php config
+	 * if this is on the app will grump you for that :D
 	 */
 	public static function checkRegisterGlobals() {
 		if (ini_get('register_globals') === true) {
@@ -89,11 +89,11 @@ final class ephFrame {
 	}
 	
 	/**
-	 *	Set error reporting depending on DEBUG
-	 * 	you can orverwrite current ERROR_REPORTING by setting a new
-	 * 	ERROR_REPORTING in the applications config, but you can't do
-	 * 	that if the DEBUG level is set to Production, then every
-	 * 	error will be ignored
+	 * Set error reporting depending on DEBUG
+	 * you can orverwrite current ERROR_REPORTING by setting a new
+	 * ERROR_REPORTING in the applications config, but you can't do
+	 * that if the DEBUG level is set to Production, then every
+	 * error will be ignored
 	 */
 	public static function setErrorReporting() {
 		if (Registry::get('DEBUG') > DEBUG_PRODUCTION) {
@@ -112,9 +112,9 @@ final class ephFrame {
 	}
 	
 	/**
-	 *	Loads a component from ephFrame or the application
-	 * 	@param string $componentName
-	 * 	@return boolean
+	 * Loads a component from ephFrame or the application
+	 * @param string $componentName
+	 * @return boolean
 	 */
 	public static function loadComponent($componentName) {
 		$className = ucFirst($componentName);
@@ -130,9 +130,9 @@ final class ephFrame {
 	}
 	
 	/**
-	 *	Loads a helper class from ephFrame lib or application lib
-	 * 	@param string $helperName
-	 * 	@return boolean
+	 * Loads a helper class from ephFrame lib or application lib
+	 * @param string $helperName
+	 * @return boolean
 	 */
 	public static function loadHelper($helperName) {
 		$className = ucFirst($helperName);
@@ -149,20 +149,20 @@ final class ephFrame {
 	
 	
 	/**
-	 * 	Loads a class, syntax is like in flash or javascript applications:
-	 * 	<code>
-	 * 		// load XML Component Class
-	 * 		ephFrame::loadClass("ephFrame.lib.component.XML");
-	 * 		// load a class within the application
-	 * 		ephFrame::loadClass("app.lib.ownClass");
-	 * 	</code>
+	 * Loads a class, syntax is like in flash or javascript applications:
+	 * <code>
+	 * 	// load XML Component Class
+	 * 	ephFrame::loadClass("ephFrame.lib.component.XML");
+	 * 	// load a class within the application
+	 * 	ephFrame::loadClass("app.lib.ownClass");
+	 * </code>
 	 * 
-	 * 	It't not possible to load classes that are out of the document root by
-	 * 	checking for ../ oder / or all / characters
-	 *	
-	 * 	@throws ephFrameMalFormedClassPathException if classPath is malformed
-	 * 	@param string $classPath
-	 * 	@return true
+	 * It't not possible to load classes that are out of the document root by
+	 * checking for ../ oder / or all / characters
+	 * 
+	 * @throws ephFrameMalFormedClassPathException if classPath is malformed
+	 * @param string $classPath
+	 * @return true
 	 */
 	public static function loadClass($classPath) {
 		if (empty($classPath)) throw new StringExpectedException();
@@ -174,11 +174,11 @@ final class ephFrame {
 	}
 	
 	/**
-	 *	Loads a interface. This is just like {@link loadClass}
-	 * 	but testing if the interface really was loaded afterwards
-	 * 	
-	 * 	@return boolean
-	 * 	@throws ephFrameInterfaceFileFoundButNotLoadedException
+	 * Loads a interface. This is just like {@link loadClass}
+	 * but testing if the interface really was loaded afterwards
+	 * 
+	 * @return boolean
+	 * @throws ephFrameInterfaceFileFoundButNotLoadedException
 	 */
 	public static function loadInterface($interfacePath) {
 		if (empty($interfacePath)) throw new StringExpectedException();
@@ -190,10 +190,10 @@ final class ephFrame {
 	}
 	
 	/**
-	 * 	Loads a FrameWorkFile
-	 * 	@param string $path
-	 * 	@throws ephFrameClassFileNotFoundException
-	 * 	@return string	loaded filename class or interface name
+	 * Loads a FrameWorkFile
+	 * @param string $path
+	 * @throws ephFrameClassFileNotFoundException
+	 * @return string	loaded filename class or interface name
 	 */
 	public static function loadFrameWorkFile($path) {
 		$translatedPath = ClassPath::translatePath($path);
@@ -203,18 +203,18 @@ final class ephFrame {
 	}
 	
 	/**
-	 *	Returns the compile time from starting php compilation to the time you call this function
-	 *	@param	integer	$precision
-	 *	@return float
+	 * Returns the compile time from starting php compilation to the time you call this function
+	 * @param	integer	$precision
+	 * @return float
 	 */
 	public static function compileTime($precision = 4) {
 		return round(microtime(true) - COMPILE_START, $precision);
 	}
 	
 	/**
-	 * 	Tries to determine the current memory usage by PHP in bytes
-	 * 	@param boolean $humanized
-	 * 	@return integer
+	 * Tries to determine the current memory usage by PHP in bytes
+	 * @param boolean $humanized
+	 * @return integer
 	 */
 	public static function memoryUsage($humanized = false) {
 		$usage = 0;
@@ -242,24 +242,24 @@ final class ephFrame {
 }
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class ephFrameException extends BasicException {
 	public $level = BasicException::FATAL;
 }
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class ephFrameLoadError extends ephFrameException {
 	
 }
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class ephFrameClassFileNotFoundException extends ephFrameLoadError {
 	public function __construct($classPath) {
@@ -277,13 +277,11 @@ class ephFrameClassFileNotFoundException extends ephFrameLoadError {
 }
 
 /**
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class ephFrameInterfaceFileFoundButNotLoadedException extends ephFrameException {
 	public function __construct($interfaceName, $path) {
 		$this->message = 'Sorry, after loading Interface File \''.$path.'\' interface named \''.$interfaceName.'\' was not found.';
 	}
 }
-
-?>

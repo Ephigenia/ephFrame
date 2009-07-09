@@ -1,47 +1,47 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- * 	Static DBQuery/Result Storage
+ * Static DBQuery/Result Storage
  * 
- * 	This class can store DB Queries, their result ids and a {@link Timer} Object
- * 	that stores the response time the query took.
+ * This class can store DB Queries, their result ids and a {@link Timer} Object
+ * that stores the response time the query took.
  * 
- * 	@package ephFrame
- * 	@version 0.1
- * 	@subpackage ephFrame.lib.model.DB
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 23.07.2007
+ * @package ephFrame
+ * @version 0.1
+ * @subpackage ephFrame.lib.model.DB
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 23.07.2007
  */
 class QueryHistory extends Object implements Countable, Renderable {
 	
 	/**
-	 *	Stores all the queries in an array
-	 * 	@var array(array)
+	 * Stores all the queries in an array
+	 * @var array(array)
 	 */
 	public $data = array();
 	
 	/**
-	 *  Stores the single instance of QueryHistory
+	 * Stores the single instance of QueryHistory
 	 *
-	 * 	@var QueryHistory
+	 * @var QueryHistory
 	 */
 	public static $instance;
 	
@@ -54,10 +54,10 @@ class QueryHistory extends Object implements Countable, Renderable {
   	}
 	
 	/**
-	 *	Adds a query to the history
-	 * 	@param DBQuery $query
-	 * 	@param QueryResult $result
-	 * 	@param Timer $timer
+	 * Adds a query to the history
+	 * @param DBQuery $query
+	 * @param QueryResult $result
+	 * @param Timer $timer
 	 */
 	public static function add($query, $result, Timer $timer) {
 		$history = self::getInstance();
@@ -70,8 +70,8 @@ class QueryHistory extends Object implements Countable, Renderable {
 	}
 	
 	/**
-	 *	Returns the number of queries in the history
-	 * 	@return integer
+	 * Returns the number of queries in the history
+	 * @return integer
 	 */
 	public function count() {
 		$history = self::getInstance();
@@ -79,8 +79,8 @@ class QueryHistory extends Object implements Countable, Renderable {
 	}
 	
 	/**
-	 *	Returns the last query from the query history
-	 * 	@return DBQuery
+	 * Returns the last query from the query history
+	 * @return DBQuery
 	 */
 	public function last() {
 		$history = self::getInstance();
@@ -89,9 +89,9 @@ class QueryHistory extends Object implements Countable, Renderable {
 	}
 	
 	/**
-	 *	Returns a query from the history
-	 * 	@param integer $queryIndex
-	 * 	@return DBQuery
+	 * Returns a query from the history
+	 * @param integer $queryIndex
+	 * @return DBQuery
 	 */
 	public function query($queryIndex) {
 		if ($this->defined($queryIndex)) throw new QueryHistoryIndexNotFoundException();
@@ -99,8 +99,8 @@ class QueryHistory extends Object implements Countable, Renderable {
 	}
 	
 	/**
-	 *	Return the time in seconds the queries took all in all
-	 * 	@return float
+	 * Return the time in seconds the queries took all in all
+	 * @return float
 	 */
 	public function timeTotal($precision = 6) {
 		$sum = 0.0;
@@ -151,15 +151,13 @@ class QueryHistory extends Object implements Countable, Renderable {
 }
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class QueryHistoryException extends BasicException {}
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class QueryHistoryIndexNotFoundException extends BasicException {}
-
-?>

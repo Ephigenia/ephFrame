@@ -1,42 +1,42 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 class_exists('Router') or require dirname(__FILE__).'/Router.php';
 class_exists('HTTPRequest') or require dirname(__FILE__).'/HTTPRequest.php';
 
 /**
- * 	Application Router / Controller / action dispatcher
+ * Application Router / Controller / action dispatcher
  * 
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de
- * 	@since 02.12.2007
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de
+ * @since 02.12.2007
+ * @package ephFrame
+ * @subpackage ephFrame.lib
  */
 class Dispatcher extends Object {
 	
 	/**
-	 *	Dispatches a controller class, depending on the passed {@link HTTPRequest}
-	 * 	Object or given url
+	 * Dispatches a controller class, depending on the passed {@link HTTPRequest}
+	 * Object or given url
 	 * 
-	 * 	@param string|HTTPRequest $requestObjectOrUrl
-	 * 	@return Controller
+	 * @param string|HTTPRequest $requestObjectOrUrl
+	 * @return Controller
 	 */
 	public function dispatch($requestObjectOrUrl = null, Array $params = array()) {
 		// use original request
@@ -96,17 +96,15 @@ class Dispatcher extends Object {
 }
 
 /**
- *  Basic Dispatcher Exception
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * Basic Dispatcher Exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class DispatcherException extends BasicException {}
 
 /**
- *	Exception that is thrown on invalid dispatching parameters
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * Exception that is thrown on invalid dispatching parameters
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class DispatcherInvalidParamsException extends DispatcherException {}
-
-?>

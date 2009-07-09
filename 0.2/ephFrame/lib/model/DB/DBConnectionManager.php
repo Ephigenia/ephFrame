@@ -1,51 +1,51 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- * 	DB Connection Manager Class
+ * DB Connection Manager Class
  * 
- * 	The DB Connection Manager establishes and stores database connections and
- * 	their handles.
+ * The DB Connection Manager establishes and stores database connections and
+ * their handles.
  * 
- * 	This is used in all {@link Models}.
- * 	
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 04.09.2008
- * 	@package ephFrame
- * 	@subpackage ephFrame.model.DB
+ * This is used in all {@link Models}.
+ * 
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 04.09.2008
+ * @package ephFrame
+ * @subpackage ephFrame.model.DB
  */
 class DBConnectionManager extends Object {
 	
 	/**
-	 *	@var DBConnectionManager
+	 * @var DBConnectionManager
 	 */
 	public static $instance;
 	
 	/**
-	 * 	@var DBFactory
+	 * @var DBFactory
 	 */
 	protected $factory;
 	
 	/**
-	 * 	Staticly stores all established connections
-	 * 	@var array(DB)
+	 * Staticly stores all established connections
+	 * @var array(DB)
 	 */
 	public $connections = array();
 	
@@ -56,7 +56,7 @@ class DBConnectionManager extends Object {
 	}
 	
 	/**
-	 * 	@return DBConnectionManager
+	 * @return DBConnectionManager
 	 */
 	public static function getInstance() {
 		if (empty(self::$instance)) {
@@ -66,10 +66,10 @@ class DBConnectionManager extends Object {
 	}
 	
 	/**
-	 * 	Tries to establish a database connection using the $DBConfigName from
-	 * 	{@link DBConfig} class if this connection was not established before.
+	 * Tries to establish a database connection using the $DBConfigName from
+	 * {@link DBConfig} class if this connection was not established before.
 	 * 
-	 * 	@param string $DBConfigName
+	 * @param string $DBConfigName
 	 */
 	public function get($DBConfigName) {
 		$instance = self::getInstance();
@@ -91,14 +91,14 @@ class DBConnectionManager extends Object {
 }
 
 /**
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class DBConnectionManagerException extends BasicException {}
 
 /**
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class DBConnectionManagerDBConfigNotFoundException extends DBConnectionManagerException {
 	public function __construct($DBConfigName) {
@@ -106,5 +106,3 @@ class DBConnectionManagerDBConfigNotFoundException extends DBConnectionManagerEx
 		parent::__construct($this->message);
 	}
 }
-
-?>

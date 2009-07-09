@@ -1,55 +1,55 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 class_exists('HTTPRequest') or require dirname(__FILE__).'/../HTTPRequest.php';
 
 /**
- *	A Class for retreiving information from the google maps api
- * 	http://code.google.com/apis/maps/documentation/
+ * A Class for retreiving information from the google maps api
+ * http://code.google.com/apis/maps/documentation/
  * 
- * 	A simple example:
- * 	<code>
- * 	$search = new GoogleMapsCoordinatesSearch();
- * 	$result = $search->getLngLat('Kopernikusstr. 8', 'Berlin', '10245);
- * 	var_dump($result)
- * 	</code>
+ * A simple example:
+ * <code>
+ * $search = new GoogleMapsCoordinatesSearch();
+ * $result = $search->getLngLat('Kopernikusstr. 8', 'Berlin', '10245);
+ * var_dump($result)
+ * </code>
  * 
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de
- * 	@since 14.02.2008
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.component
- * 	@uses HTTPRequest
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de
+ * @since 14.02.2008
+ * @package ephFrame
+ * @subpackage ephFrame.lib.component
+ * @uses HTTPRequest
  */
 class GoogleMapsCoordinatesSearch extends Component {
 
 	/**
-	 * 	default api code for localhost
-	 *	this can be overwritten with the apps component extended
-	 * 	@var string
+	 * default api code for localhost
+	 * this can be overwritten with the apps component extended
+	 * @var string
 	 */ 
 	public $apiCode = 'ABQIAAAAaNrWTb-P8LseAxAETioNsxT2yXp_ZAY8_ufC3CFXhHIE1NvwkxQ-SGBYJDWJx7xTqkKjF-xgveMI9A';
 	
 	public $apiURL = 'http://maps.google.com/maps/geo';
 	
 	/**
-	 * 	Set or return the google maps api code
+	 * Set or return the google maps api code
 	 *
 	 * @param unknown_type $apiCode
 	 * @return unknown
@@ -65,13 +65,13 @@ class GoogleMapsCoordinatesSearch extends Component {
 	}
 	
 	/**
-	 * 	Uses the google api to retreive the longitude & latitude of an address
-	 * 	and returns them as array.
-	 * 	
-	 * 	@param string $street
-	 * 	@param string $city
-	 * 	@param string $zip
-	 * 	@return array(string) set of n arrays holding lat and lng values
+	 * Uses the google api to retreive the longitude & latitude of an address
+	 * and returns them as array.
+	 * 
+	 * @param string $street
+	 * @param string $city
+	 * @param string $zip
+	 * @return array(string) set of n arrays holding lat and lng values
 	 */
 	public function getLngLat($street, $city, $zip = null) {
 		// build the search string
@@ -96,9 +96,7 @@ class GoogleMapsCoordinatesSearch extends Component {
 }
 
 /**
- *	@package ephFrame
- *	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class GoogleMapsCoordinatesException extends ComponentException {}
-
-?>

@@ -1,50 +1,50 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- *	A Class for stopping time or benchmarking. Helps you to determine
- * 	time intervals.
+ * A Class for stopping time or benchmarking. Helps you to determine
+ * time intervals.
  * 
- * 	Usage as object:
- * 	<code>
- * 	$timer = new Timer();
- * 	for ($i = 0; $i < 10000; $i++) { }
- *  echo 'for took '.$timer.'ms';
- *  </code>
+ * Usage as object:
+ * <code>
+ * $timer = new Timer();
+ * for ($i = 0; $i < 10000; $i++) { }
+ * echo 'for took '.$timer.'ms';
+ * </code>
  * 
- * 	Usage as static:
- * 	<code>
- *  Timer::set('firstloop');
- *  for ($i = 0; $i < 10000; $i++) { }
- *  Timer::stop('firstloop');
- * 	Timer::set('secondloop');
- *  for ($i = 0; $i < 10000; $i++) { }
- *  Timer::stop('secondloop');
- * 	echo Timer::dump();
- * 	</code>
+ * Usage as static:
+ * <code>
+ * Timer::set('firstloop');
+ * for ($i = 0; $i < 10000; $i++) { }
+ * Timer::stop('firstloop');
+ * Timer::set('secondloop');
+ * for ($i = 0; $i < 10000; $i++) { }
+ * Timer::stop('secondloop');
+ * echo Timer::dump();
+ * </code>
  * 
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 22.07.2007
- * 	@package ephFrame
- * 	@version 0.1
- * 	@subpackage ephFrame.lib.helper
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 22.07.2007
+ * @package ephFrame
+ * @version 0.1
+ * @subpackage ephFrame.lib.helper
  */
 class Timer extends Helper {
 	
@@ -120,14 +120,14 @@ class Timer extends Helper {
 }
 
 /**
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class TimerException extends BasicException {}
 
 /**
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class TimerNotFoundException extends TimerException {
 	public function __construct($timerName) {
@@ -135,4 +135,3 @@ class TimerNotFoundException extends TimerException {
 		parent::__construct();
 	}
 }
-?>

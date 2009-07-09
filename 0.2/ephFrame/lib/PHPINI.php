@@ -1,17 +1,17 @@
 <?php 
 
 /**
- * 	Static class to read constants from php ini
- * 	
- *	@author Ephigenia // Marcel Eichner <love@ephigenia.de>
- *	@since 26.05.2009
+ * Static class to read constants from php ini
+ * 
+ * @author Ephigenia // Marcel Eichner <love@ephigenia.de>
+ * @since 26.05.2009
  */
 class PHPINI {
 
 	/**
-	 * 	
-	 * 	@param string $varname
-	 * 	@return mixed
+	 * 
+	 * @param string $varname
+	 * @return mixed
 	 */
 	public static function get($varname) {
 		$value = ini_get('upload_max_filesize');
@@ -45,5 +45,3 @@ class PHPINI {
 	}
 	
 }
-
-?>

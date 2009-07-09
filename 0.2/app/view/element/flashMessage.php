@@ -7,5 +7,3 @@ $JavaScript->jQuery("
 	$('#flashMessage').hide().fadeIn('slow');	
 	window.setTimeout(\"$(\'#flashMessage\').fadeOut('slow');\", 5000);
 ");
-
-?>

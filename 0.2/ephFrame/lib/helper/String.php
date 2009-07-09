@@ -1,92 +1,99 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 // load classed needed
 ephFrame::loadClass('ephFrame.lib.helper.Charset');
 
 /**
- *	Manipulating / Analyzing Strings
+ * Manipulating / Analyzing Strings
  * 
- * 	I tried to implement all kinds of methods that you might need for 
- * 	sanitizing, analyzing, counting, creating or just manipulating strings.
- *  I also tried to keep an eye on multi-byte strings. Some methods are not
- * 	multibyte aware but the most are.
+ * I tried to implement all kinds of methods that you might need for 
+ * sanitizing, analyzing, counting, creating or just manipulating strings.
+ * I also tried to keep an eye on multi-byte strings. Some methods are not
+ * multibyte aware but the most are.
  * 
- * 	This class is tested by {@link TestString}
- * 	
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 02.05.2007
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.helper
- * 	@version 0.2.1
- * 	@uses Charset
+ * This class is tested by {@link TestString}
+ * 
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 02.05.2007
+ * @package ephFrame
+ * @subpackage ephFrame.lib.helper
+ * @version 0.2.1
+ * @uses Charset
  */
 class String extends Helper {
 	
 	/**
-	 *	Convert a $string to an url conform string by replacing space with
-	 *	$spaceReplace Character.
+	 * Convert a $string to an url conform string by replacing space with
+	 * $spaceReplace Character and lowercase the string.
+	 * Returns false if the resulting string is empty.
 	 *
-	 *	<code>
-	 *	$test = 'This will be an uri soon';
-	 *	echo String::toURL($text, '_');
-	 *	</code>
+	 * <code>
+	 * $test = 'This will be an uri soon';
+	 * echo String::toURL($text, '_');
+	 * </code>
 	 *
-	 * 	@param string
-	 * 	@param string
-	 * 	@return string
+	 * @param string $string
+	 * @param string $spaceReplace string that should replace multiple/single space characters
+	 * @param boolean $noCase transform string to lowercase
+	 * @return string
 	 */
-	public static function toURL($string, $spaceReplace = '-') {
+	public static function toURL($string, $spaceReplace = '-', $noCase = true) {
 		$string = trim($string);
 		$string = strip_tags($string);
 		$string = Charset::toASCII($string);
 		$string = preg_replace('@\s+@', $spaceReplace, $string);
-		$string = preg_replace('@([^a-zA-Z0-9_.-])@', '', $string);
+		$string = preg_replace('@([^a-zA-Z0-9_,.+-])@', '', $string);
 		$string = trim($string, $spaceReplace);
+		// replace single & multiple spaces
 		if (strlen($spaceReplace) > 0) {
 			$string = preg_replace('@'.preg_quote($spaceReplace, '@').'{2,}@', $spaceReplace, $string);
 		}
-		$string = strtolower($string);
+		// return false if string result is empty
 		if (strlen($string) == 0) {
 			return false;
+		}
+		// lowercase string, no need for String helper cause it's only ascii
+		if ($noCase) {
+			$string = strtolower($string);
 		}
 		return $string;
 	}
 	
 	/**
-	 * 	Appends a string to an other.
-	 * 	
-	 * 	Pass optional $condString that will checked before Adding, if $condString
-	 * 	is allready appended to the string nothing will change.
+	 * Appends a string to an other.
+	 * 
+	 * Pass optional $condString that will checked before Adding, if $condString
+	 * is allready appended to the string nothing will change.
 	 *
-	 * 	@param string $string
-	 * 	@param string $append
-	 * 	@param string $condString
-	 * 	@param boolean $caseSensitive
+	 * @param string $string
+	 * @param string $append
+	 * @param string $condString
+	 * @param boolean $caseSensitive
 	 */
 	public static function append($string, $append, $condString = null, $caseSensitive = false) {
 		assert(is_scalar($string) && is_scalar($append));
 		if ($condString !== null) {
 			if ($condString == true) $condString = $append;
 			if (($caseSensitive && substr($string, -strlen($condString)) == $condString) || 
-			   (!$caseSensitive && String::lower(substr($string, -strlen($condString))) == String::lower($condString))
+			   (!$caseSensitive && self::lower(substr($string, -strlen($condString))) == String::lower($condString))
 				) {
 				return $string;
 			}
@@ -95,20 +102,20 @@ class String extends Helper {
 	}
 	
 	/**
-	 *	Prepends a string to an other
-	 * 	
-	 * 	@param string $string
-	 * 	@param string $prepend
-	 * 	@param string $condString
-	 * 	@param boolean $caseSensitive
-	 * 	@return string
+	 * Prepends a string to an other
+	 * 
+	 * @param string $string
+	 * @param string $prepend
+	 * @param string $condString
+	 * @param boolean $caseSensitive
+	 * @return string
 	 */
 	public static function prepend($string, $prepend, $condString = null, $caseSensitive = false) {
 		assert(is_scalar($string) && is_scalar($prepend));
 		if ($condString !== null) {
 			if ($condString == true) $condString = $prepend;
 			if (($caseSensitive && substr($string, 0, -strlen($condString)) == $condString) || 
-			   (!$caseSensitive && String::lower(substr($string, 0, -strlen($condString))) == String::lower($condString))
+			   (!$caseSensitive && self::lower(substr($string, 0, -strlen($condString))) == String::lower($condString))
 				) {
 				return $string;
 			}
@@ -117,32 +124,32 @@ class String extends Helper {
 	}
 	
 	/**
-	 *	Returns $i characters from the left of $string and returns it.
-	 *  
-	 * 	<code>
-	 * 	// should echo 'Mähdrescher'
-	 * 	echo String::left('Mähdrescher', 3);
-	 * 	</code>
+	 * Returns $i characters from the left of $string and returns it.
 	 * 
-	 * 	@param string $string
-	 * 	@param integer $i number of characters to return
-	 * 	@return string
+	 * <code>
+	 * // should echo 'Mähdrescher'
+	 * echo String::left('Mähdrescher', 3);
+	 * </code>
+	 * 
+	 * @param string $string
+	 * @param integer $i number of characters to return
+	 * @return string
 	 */
 	public static function left($string, $i = 0) {
 		return self::substr($string, 0, $i);
 	}
 	
 	/**
-	 * 	Returns $i characters from the right of a/the string.
-	 * 	
-	 * 	<code>
-	 * 	// should echo 'drescher'
-	 * 	echo String::right('Mähdrescher', 7);
-	 * 	</code>
+	 * Returns $i characters from the right of a/the string.
 	 * 
-	 * 	@param string $string
-	 * 	@param integer $i number of characters to return
-	 * 	@return string
+	 * <code>
+	 * // should echo 'drescher'
+	 * echo String::right('Mähdrescher', 7);
+	 * </code>
+	 * 
+	 * @param string $string
+	 * @param integer $i number of characters to return
+	 * @return string
 	 */
 	public static function right($string, $i = 0) {
 		if ($i == 0) {
@@ -152,20 +159,20 @@ class String extends Helper {
 	}
 	
 	/**
-	 * 	Lowers a string, utf8-save
-	 * 	If you're not sure about the encoding of a string, try that one and
-	 * 	you'll get a lowered string.
+	 * Lowers a string, utf8-save
+	 * If you're not sure about the encoding of a string, try that one and
+	 * you'll get a lowered string.
 	 * 
-	 * 	<code>
-	 * 	// should echo 'MÄHDRESCHER'
-	 * 	echo String::upper('Mähdrescher');
-	 * 	</code>
-	 * 	
-	 * 	@param string $string
-	 * 	@param string $charset
-	 *	@param integer $start optional index of character to start uppercase conversion
-	 *	@param integer $end
-	 * 	@return string
+	 * <code>
+	 * // should echo 'MÄHDRESCHER'
+	 * echo String::upper('Mähdrescher');
+	 * </code>
+	 * 
+	 * @param string $string
+	 * @param string $charset
+	 * @param integer $start optional index of character to start uppercase conversion
+	 * @param integer $end
+	 * @return string
 	 */
 	public static function upper($string = null, $start = 0, $end = null, $charset = Charset::UTF_8) {
 		$string = (string) $string;
@@ -183,30 +190,30 @@ class String extends Helper {
 	}
 	
 	/**
-	 * 	Uppers the first character of a string, multibyte safe, and returns it.
-	 * 	
-	 * 	<code>
-	 * 	$s = 'östlich';
-	 * 	// returns 'Östlich'
-	 * 	echo String::ucFirst($s);
-	 * 	echo $s->ucFirst();
-	 * 	</code>
+	 * Uppers the first character of a string, multibyte safe, and returns it.
+	 * 
+	 * <code>
+	 * $s = 'östlich';
+	 * // returns 'Östlich'
+	 * echo String::ucFirst($s);
+	 * echo $s->ucFirst();
+	 * </code>
 	 *
-	 * 	@param string $string
-	 * 	@return string
-	 * 	@static
+	 * @param string $string
+	 * @return string
+	 * @static
 	 */
 	public static function ucFirst($string = null, $length = 1) {
 		return self::upper($string, 0, $length);
 	}
 	
 	/**
-	 * 	Lowers all characters in a string, this method should be multibyte save. 
-	 * 	@param string $string
-	 *	@param integer $start
-	 *	@param integer $end
-	 * 	@param string $charset
-	 * 	@return string
+	 * Lowers all characters in a string, this method should be multibyte save. 
+	 * @param string $string
+	 * @param integer $start
+	 * @param integer $end
+	 * @param string $charset
+	 * @return string
 	 */
 	public static function lower($string = null, $start = 0, $end = null, $charset = Charset::UTF_8) {
 		$string = (string) $string;
@@ -224,50 +231,60 @@ class String extends Helper {
 	}
 
 	/**
-	 * 	Uppers the first character of a string and returns it
+	 * Uppers the first character of a string and returns it
 	 *
-	 * 	@param string $string
-	 * 	@param integer $length
-	 * 	@param string $charset optional charset encoding string
-	 * 	@return string
+	 * @param string $string
+	 * @param integer $length
+	 * @param string $charset optional charset encoding string
+	 * @return string
 	 */
 	public static function lcFirst($string, $length = 1) {
 		return self::lower($string, 0, $length);
 	}
 	
 	/**
-	 *	Substitutes placeholders in a string with the values from the passed 
-	 * 	array. You can use word-like placeholders and numbers for the arrays
-	 * 	with numeric indexes or other calls.
+	 * Substitutes placeholders in a string with the values from the passed 
+	 * array. You can use word-like placeholders and numbers for the arrays
+	 * with numeric indexes or other calls.
 	 * 
-	 * 	See the examples that explain that much better: 
-	 * 	<code>
-	 * 	// should echo 'You see 1 from 100 results'
-	 * 	echo String::substitute('You\'re seeing %page% of %total% pages.', array(
-	 *		'total' => 100,
-	 *		'page' => 1
-	 *	));
-	 * 	</code>
+	 * See the examples that explain that much better: 
+	 * <code>
+	 * // should echo 'You see 1 from 100 results'
+	 * echo String::substitute('You\'re seeing :page of :total pages.', array(
+	 * 'total' => 100,
+	 * 'page' => 1
+	 * ));
+	 * </code>
 	 * 
-	 * 	Skip the array parameter, and pass everything as arguments:
-	 * 	<code>
-	 * 	// should echo 'You see fred before charlene'
-	 * 	echo String::substitute('You see %2% before %1%', 'fred', 'charlene');
-	 * 	</code>
-	 * 	
-	 * 	@param string	$template Template with placeholders
-	 * 	@param array(string)	$arr
-	 * 	@return string
+	 * Skip the array parameter, and pass everything as arguments:
+	 * <code>
+	 * // should echo 'You see fred before charlene'
+	 * echo String::substitute('You see :2 before :1', 'fred', 'charlene');
+	 * </code>
+	 * 
+	 * This can also be called by passing just one argument that should be replaced:
+	 * <code>
+	 * echo String::substitute('Hello :1!', $username);
+	 * </code>
+	 * 
+	 * @param string	$template Template with placeholders
+	 * @param array(string)	$arr
+	 * @return string
 	 */
 	public static function substitute($template, $arr = array()) {
-		if (!preg_match_all('/%([\p{L}0-9\.\-_]+)%?/', $template, $found)) {
+		$template = (string) $template;
+		// if empty template or no marks found
+		if (empty($template) || !preg_match_all('/:([\p{L}0-9\.\-_]+)?/', $template, $found)) {
 			return $template;
 		}
+		// multiple arguments caled
 		if (func_num_args() > 2) {
 			$args = func_get_args();
 			$arr = array_slice($args, 1, count($args)-1, true);
 		}
-		if (!is_array($arr)) return $template;
+		if (!is_array($arr)) {
+			$arr = array($arr);
+		}
 		$result = $template;
 		foreach($found[0] as $index => $foundKey) {
 			if (array_key_exists($found[1][$index], $arr)) {
@@ -278,18 +295,32 @@ class String extends Helper {
 	}
 	
 	/**
-	 *	Indent a string
+	 * alias for {@link substitute}
+	 * @param strign $template
+	 * @param array(string) $arr
+	 * @return string
+	 */
+	public static function replace($template, $arr = array()) {
+		if (func_num_args() > 2) {
+			$arr = func_get_args();
+			$arr = array_slice($arr, 1, count($arr)-1, true);
+		}
+		return self::substitute($template, $arr);
+	}
+	
+	/**
+	 * Indent a string
 	 * 
-	 * 	Just like every advanced text editor this method indents every line of
-	 * 	a string a bit. The main effort of this method is that i can indent
-	 * 	multiline strings. PHP's native method str_pad can only work with one
-	 * 	line strings.
+	 * Just like every advanced text editor this method indents every line of
+	 * a string a bit. The main effort of this method is that i can indent
+	 * multiline strings. PHP's native method str_pad can only work with one
+	 * line strings.
 	 * 
-	 * 	@param string $in String that should be intended
-	 * 	@param integer $n	Steps to intend
-	 * 	@param string $char	Character to use to intend, multibytes accepted
-	 * 	@param integer $skiplines Optional number of lines that should be skipped
-	 * 	@return string	the indented string result
+	 * @param string $in String that should be intended
+	 * @param integer $n	Steps to intend
+	 * @param string $char	Character to use to intend, multibytes accepted
+	 * @param integer $skiplines Optional number of lines that should be skipped
+	 * @return string	the indented string result
 	 */
 	public static function indent($in, $n = 1, $char = TAB, $skipLines = 0) {
 		$lines = preg_split('/\n{1}/', $in);
@@ -301,12 +332,12 @@ class String extends Helper {
 	}
 	
 	/**
-	 *	Wrapper and route for counting the characters in a string the 
-	 * 	multibyte way, this should be extended any time the php internal
-	 * 	stuff changes
-	 * 	@param string $string
-	 * 	@return integer
-	 * 	@static
+	 * Wrapper and route for counting the characters in a string the 
+	 * multibyte way, this should be extended any time the php internal
+	 * stuff changes
+	 * @param string $string
+	 * @return integer
+	 * @static
 	 */
 	public static function length($string) {
 		if (Charset::isUTF8($string)) {
@@ -317,16 +348,16 @@ class String extends Helper {
 	}
 	
 	/**
-	 * 	Extracts a part of a string and returns it.
-	 * 	
-	 * 	<code>
-	 * 	// should echo 'Mäh'
-	 * 	echo String::substr('Mähdrescher', 0, 3);
-	 * 	</code>
+	 * Extracts a part of a string and returns it.
 	 * 
-	 * 	@param string $string
-	 * 	@param integer $start
-	 * 	@param integer $length
+	 * <code>
+	 * // should echo 'Mäh'
+	 * echo String::substr('Mähdrescher', 0, 3);
+	 * </code>
+	 * 
+	 * @param string $string
+	 * @param integer $start
+	 * @param integer $length
 	 */
 	public static function substr($string, $start = null, $length = null) {
 		$string = (string) $string;
@@ -354,17 +385,17 @@ class String extends Helper {
 	}
 	
 	/**
-	 *	Counts all words in a text and returns the words and their count
-	 * 	as indexed array. This will cut every html code and ignores it.
-	 * 	<code>
-	 * 	$text = 'I\'m a text that has some words!';
-	 * 	var_dump(String::countWords($text, 3));
-	 * 	// ['I\'m'] = 1, ['text'] = 1, ['that'] = 1 ... 
-	 * 	</code>
-	 * 	// todo this does not seem to work like the docu sais!? wtf?
-	 * 	@param string $input
-	 * 	@param integer $minLenght Minimum length of words to be counted
-	 * 	@return array(mixed)
+	 * Counts all words in a text and returns the words and their count
+	 * as indexed array. This will cut every html code and ignores it.
+	 * <code>
+	 * $text = 'I\'m a text that has some words!';
+	 * var_dump(String::countWords($text, 3));
+	 * // ['I\'m'] = 1, ['text'] = 1, ['that'] = 1 ... 
+	 * </code>
+	 * // todo this does not seem to work like the docu sais!? wtf?
+	 * @param string $input
+	 * @param integer $minLenght Minimum length of words to be counted
+	 * @return array(mixed)
 	 */
 	public static function countWords($input, $minLength = null) {
 		if (!is_string($input)) throw new StringExpectedException();
@@ -383,21 +414,21 @@ class String extends Helper {
 	}
 	
 	/**
-	 * 	Counts the sentences in a string counting the european language sentence
-	 * 	endings like ?.! ...
-	 * 	// todo finish this
-	 * 	@param string $string
-	 * 	@return integer
+	 * Counts the sentences in a string counting the european language sentence
+	 * endings like ?.! ...
+	 * // todo finish this
+	 * @param string $string
+	 * @return integer
 	 */
 	public static function countSentences($string) {
 		
 	}
 	
 	/**
-	 * 	Counts the number of paragraphs in a text, just counting line breaks
-	 * 	is the simpler explaination
-	 * 	@param string $string
-	 * 	@return integer Number of paragraphs found
+	 * Counts the number of paragraphs in a text, just counting line breaks
+	 * is the simpler explaination
+	 * @param string $string
+	 * @return integer Number of paragraphs found
 	 */
 	public static function countParagraphs($string) {
 		if (!is_string($string)) return null;
@@ -405,22 +436,22 @@ class String extends Helper {
 	}
 	
 	/**
-	 *	Truncates a string if it's to long and optionally adds something 
-	 * 	ad the end.
+	 * Truncates a string if it's to long and optionally adds something 
+	 * ad the end.
 	 * 
-	 * 	<code>
-	 * 	// shows 'hello my name...'
-	 * 	echo String::truncate('hello my name is oscar wilde', 14, '…');
-	 * 	// if you have the probabily of a string with no space in it
-	 * 	// you can use the force parameter
-	 * 	echo String::truncate('LongUsernameIsHard', 10, '…');
-	 * 	// prints 'LongUse...' 
-	 * 	</code>
-	 * 	
-	 * 	@param string	$string
-	 * 	@param integer	$length
-	 * 	@param string	$end
-	 * 	@param boolean	$force
+	 * <code>
+	 * // shows 'hello my name...'
+	 * echo String::truncate('hello my name is oscar wilde', 14, '…');
+	 * // if you have the probabily of a string with no space in it
+	 * // you can use the force parameter
+	 * echo String::truncate('LongUsernameIsHard', 10, '…');
+	 * // prints 'LongUse...' 
+	 * </code>
+	 * 
+	 * @param string	$string
+	 * @param integer	$length
+	 * @param string	$end
+	 * @param boolean	$force
 	 */
 	public static function truncate($string, $length, $end = '', $force = false, $calculateWidths = true) {
 		$strLength = self::length($string);
@@ -454,23 +485,23 @@ class String extends Helper {
 	}
 	
 	/**
-	 *	Adds line brakes to strings that have very long words in it. This
-	 * 	will add line brakes to very long words or phrases with no spaces
-	 * 	between that are longer than $maxLineLength.
+	 * Adds line brakes to strings that have very long words in it. This
+	 * will add line brakes to very long words or phrases with no spaces
+	 * between that are longer than $maxLineLength.
 	 * 
-	 * 	This is very helpfull to prefent the page layout from exctracting
-	 * 	by very long links. Just think about the 100px column that should
-	 * 	hold a user-edited text!
+	 * This is very helpfull to prefent the page layout from exctracting
+	 * by very long links. Just think about the 100px column that should
+	 * hold a user-edited text!
 	 * 
-	 * 	<code>
-	 * 	$example = 'Some user-strings have very long woooooooooooooooooooords in it and will the layer they're in.';
-	 * 	echo String::wrap($example, 20);
-	 * 	</code>
+	 * <code>
+	 * $example = 'Some user-strings have very long woooooooooooooooooooords in it and will the layer they're in.';
+	 * echo String::wrap($example, 20);
+	 * </code>
 	 * 
-	 * 	@param string $string	
-	 * 	@param integer $length maximum length of not-line-braked strings
-	 * 	@param boolean $calculateWidths dynamic calculate character widths
-	 * 	@return string
+	 * @param string $string	
+	 * @param integer $length maximum length of not-line-braked strings
+	 * @param boolean $calculateWidths dynamic calculate character widths
+	 * @return string
 	 */
 	public static function wrap($string, $maxLineLength, $calculateWidths = true) {
 		$strLength = self::length($string); 
@@ -505,10 +536,10 @@ class String extends Helper {
 	}
 	
 	/**
-	 *	Characters have different width. some are very broad, some a thin.
-	 * 	This method tries to return an aproximate with value for a character.
-	 * 	@param string $char
-	 * 	@return integer
+	 * Characters have different width. some are very broad, some a thin.
+	 * This method tries to return an aproximate with value for a character.
+	 * @param string $char
+	 * @return integer
 	 */
 	public static function charWidth($char) {
 		// super wide characters
@@ -527,23 +558,23 @@ class String extends Helper {
 	}
 	
 	/**
-	 *	Salts a string.
-	 * 	This is very usefull for md5 hashed password strings (rainbow table
-	 * 	protection.)
-	 * 	<code>
-	 * 	$in = 'Ephigenia';
-	 * 	$salt = 'abcdefghij';
-	 * 	// result is: Eßpähyiäg.e,n^i#a
-	 * 	echo String::salt($in, $salt);
-	 * 	// result is: Eßäpyähigenia
-	 * 	echo String::salt($in, $salt, 2);
-	 * 	</code>
-	 * 	
-	 * 	@param string $string
-	 * 	@param string $string
-	 * 	@param integer $width with of salt characters inserted
-	 * 	@return string
-	 * 	// todo this method also needs to have a checkup
+	 * Salts a string.
+	 * This is very usefull for md5 hashed password strings (rainbow table
+	 * protection.)
+	 * <code>
+	 * $in = 'Ephigenia';
+	 * $salt = 'abcdefghij';
+	 * // result is: Eßpähyiäg.e,n^i#a
+	 * echo String::salt($in, $salt);
+	 * // result is: Eßäpyähigenia
+	 * echo String::salt($in, $salt, 2);
+	 * </code>
+	 * 
+	 * @param string $string
+	 * @param string $string
+	 * @param integer $width with of salt characters inserted
+	 * @return string
+	 * // todo this method also needs to have a checkup
 	 */
 	public static function salt($string, $salt, $width = 1) {
 		$stringLength = self::length($string);
@@ -566,17 +597,17 @@ class String extends Helper {
 	}
 	
 	/**
-	 *	generates a random string of $length length
-	 *	<code>
-	 * 		// create random password
-	 *   	$str_passwort = String::createRandomString(6);
-	 * 		// create password just with letter and some special chars
-	 * 		$str_password = String::createRandomString(8, 'A-Z');
-	 *	</code>
+	 * generates a random string of $length length
+	 * <code>
+	 * 	// create random password
+	 * $str_passwort = String::createRandomString(6);
+	 * 	// create password just with letter and some special chars
+	 * 	$str_password = String::createRandomString(8, 'A-Z');
+	 * </code>
 	 *
-	 *	@param	integer	$length length of the string
-	 *  @param 	string	$string Salt, Characters the password is created from
-	 *	@return	string	generated string
+	 * @param	integer	$length length of the string
+	 * @param 	string	$string Salt, Characters the password is created from
+	 * @return	string	generated string
 	 **/
 	public static function randomString($length = 8, $salt = null) {
 		if (!is_int($length) || empty($length)) throw new IntegerExpectedException();
@@ -600,12 +631,12 @@ class String extends Helper {
 	}
 	
 	/**
-	 *	Creates a Password using {@link randomString} or you
-	 * 	pass 'human' or 'humanreadable' as $salt and then {@link $genereateHumanReadablePassword} is used
+	 * Creates a Password using {@link randomString} or you
+	 * pass 'human' or 'humanreadable' as $salt and then {@link $genereateHumanReadablePassword} is used
 	 * 
-	 * 	@param integer	$length length of password
-	 *  @param string	$salt	Salt String, linke {@link randomString} or 'human'
-	 * 	@return string
+	 * @param integer	$length length of password
+	 * @param string	$salt	Salt String, linke {@link randomString} or 'human'
+	 * @return string
 	 */
 	public static function generatePassword($length, $salt = null) {
 		if (in_array($salt, array('human', 'humanreadable', 'readable'))) {
@@ -616,14 +647,14 @@ class String extends Helper {
 	}
 	
 	/**
-	 *	Generates a password that is readable by humans due to vocal
-	 * 	consonant patterns. Please consider that these passwords are not
-	 * 	very save and can be cracked easily by brute fore attacks
+	 * Generates a password that is readable by humans due to vocal
+	 * consonant patterns. Please consider that these passwords are not
+	 * very save and can be cracked easily by brute fore attacks
 	 * 
-	 * 	This method is from the 'PHP Sicherheit' Book, published by dpunkt
-	 *	
-	 * 	@param integer	$length
-	 * 	@return string
+	 * This method is from the 'PHP Sicherheit' Book, published by dpunkt
+	 * 
+	 * @param integer	$length
+	 * @return string
 	 */
 	public static function generateHumanReadablePassword($length = 8) {
 		assert(is_int($length) && !empty($length));
@@ -641,18 +672,18 @@ class String extends Helper {
 	}
 	
 	/**
-	 * 	Returns the number of lines in a string (indicated by LF) as integer
-	 * 	@param string $string
-	 * 	@return integer
+	 * Returns the number of lines in a string (indicated by LF) as integer
+	 * @param string $string
+	 * @return integer
 	 */
 	public static function countLines($string) {
 		return substr_count($string, LF);
 	}
 	
 	/**
-	 *	Returns the number of lines (indicated by \n) in a string
-	 * 	@param string $string
-	 * 	@return integer
+	 * Returns the number of lines (indicated by \n) in a string
+	 * @param string $string
+	 * @return integer
 	 */
 	public static function numberOfLines($string) {
 		assert(is_string($string));
@@ -662,10 +693,10 @@ class String extends Helper {
 	}
 	
 	/**
-	 *	Returns an array out of string by splitting it into every line found.
-	 * 	@param string $string
-	 * 	@param boolean $ignoreEmpty ignore empty lines, 2 strips also totally empty lines
-	 * 	@return array(string)
+	 * Returns an array out of string by splitting it into every line found.
+	 * @param string $string
+	 * @param boolean $ignoreEmpty ignore empty lines, 2 strips also totally empty lines
+	 * @return array(string)
 	 */
 	public static function eachLine($string, $ignoreEmpty = false) {
 		assert(is_scalar($string));
@@ -686,11 +717,11 @@ class String extends Helper {
 	}
 	
 	/**
-	 *	Adds Line Numbers to a string
-	 * 	@param string $in
-	 * 	@param integer $start Starting line number
-	 * 	@param string $padString optional string that is added in front of lower numbers for spacing
-	 * 	@return string
+	 * Adds Line Numbers to a string
+	 * @param string $in
+	 * @param integer $start Starting line number
+	 * @param string $padString optional string that is added in front of lower numbers for spacing
+	 * @return string
 	 */
 	public static function addLineNumbers($in, $start = 1, $padString = '0') {
 		$lines = preg_split('/\n{1}/', $in);
@@ -703,13 +734,13 @@ class String extends Helper {
 	}
 	
 	/**
-	 *	Converts all bytes in a string to their hex value and returns
-	 * 	the string. You can add a spacer to add some kind of column 
-	 * 	structure to the returned string
-	 * 	@param string	$string	String to be as hex
-	 * 	@param string	$spacer spacer string
-	 * 	@param integer	$breakAfterBytes number of bytes when a breaks comes
-	 * 	@return string
+	 * Converts all bytes in a string to their hex value and returns
+	 * the string. You can add a spacer to add some kind of column 
+	 * structure to the returned string
+	 * @param string	$string	String to be as hex
+	 * @param string	$spacer spacer string
+	 * @param integer	$breakAfterBytes number of bytes when a breaks comes
+	 * @return string
 	 */
 	public static function hex($string, $spacer = '', $breakAfterBytes = 0) {
 		$strlen = self::length($string);
@@ -730,30 +761,30 @@ class String extends Helper {
 	}
 	
 	/**
-	 *	Convert a string to base36
-	 *	{@link http://en.wikipedia.org/wiki/Base_36}
-	 *	@param string
-	 *	@return string
+	 * Convert a string to base36
+	 * {@link http://en.wikipedia.org/wiki/Base_36}
+	 * @param string
+	 * @return string
 	 */
 	public static function toBase36($string) {
 		return base_convert($string, 10, 36);
 	}
 	
 	/**
-	 * 	Convert a string back form base36
-	 * 	@param $string
-	 * 	@return string
+	 * Convert a string back form base36
+	 * @param $string
+	 * @return string
 	 */
 	public static function fromBase36($string) {
 		return base_convert($string, 36, 10);
 	}
 	
 	/**
-	 * 	Encodes every character in the string to HTML Encoded characters,
-	 *	this is multibyte save
-	 * 	@param string $string String to encode
-	 *	@see htmlOrdDecode
-	 *	@return string
+	 * Encodes every character in the string to HTML Encoded characters,
+	 * this is multibyte save
+	 * @param string $string String to encode
+	 * @see htmlOrdDecode
+	 * @return string
 	 */
 	public static function htmlOrdEncode($string) {
 		$encodedString = '';
@@ -774,20 +805,20 @@ class String extends Helper {
 	}
 	
 	/**
-	 * 	Returns the character code of a character just like the php native
-	 * 	method ord, but this method can handle unicode characters
+	 * Returns the character code of a character just like the php native
+	 * method ord, but this method can handle unicode characters
 	 * 
-	 * 	This litte exmple shows you what makes this method usefull:
-	 * 	<code>
-	 * 	$char = 'é';
-	 * 	// will echo just the first byte ord: 195
-	 * 	echo ord($char)
-	 * 	// but we'll need the correct unicode ord which is 233
-	 * 	echo String::ord($char);
-	 * 	</code>
+	 * This litte exmple shows you what makes this method usefull:
+	 * <code>
+	 * $char = 'é';
+	 * // will echo just the first byte ord: 195
+	 * echo ord($char)
+	 * // but we'll need the correct unicode ord which is 233
+	 * echo String::ord($char);
+	 * </code>
 	 *
-	 * 	@param string $c
-	 * 	@return integer
+	 * @param string $c
+	 * @return integer
 	 */
 	public static function ord($c) {
 		$h = ord($c{0});
@@ -810,10 +841,10 @@ class String extends Helper {
 	}
 	
 	/**
-	 *	Returns string crypted like the passwords in .htpasswd files
-	 * 	(not multibyte aware and not well tested on different apache versions!)
-	 *	@param string	$string
-	 *	@return string
+	 * Returns string crypted like the passwords in .htpasswd files
+	 * (not multibyte aware and not well tested on different apache versions!)
+	 * @param string	$string
+	 * @return string
 	 */
 	public static function htpasswdencode($string) {
 		return crypt($string, substr($string, 0, 2));
@@ -823,19 +854,19 @@ class String extends Helper {
 	const REGEXP_CONTROL_CHARS_WITH_BRAKES = '![\p{C}][\x0A\x0D]!u';
 	
 	/**
-	 *	Checks string for ascii control characters, such as
-	 * 	device 1, 0 string ...
-	 * 	@param string $input
-	 * 	@return boolean
+	 * Checks string for ascii control characters, such as
+	 * device 1, 0 string ...
+	 * @param string $input
+	 * @return boolean
 	 */
 	public static function hasControlChars($input) {
 		return preg_match(self::REGEXP_CONTROL_CHARS, $input);		
 	}
 	
 	/**
-	 *	Strips any control charactes from a string
-	 * 	@param string	$input
-	 * 	@return string
+	 * Strips any control charactes from a string
+	 * @param string	$input
+	 * @return string
 	 */
 	public static function stripControlChars($input) {
 		return preg_replace(self::REGEXP_CONTROL_CHARS, '', $input);
@@ -844,29 +875,29 @@ class String extends Helper {
 	const REGEXP_HTML_TAGS = '/(<|%3C|&lt;?|&gt;?&#0*60;?|&#0*62;?|&#x0*3c;?|&#x0*3e;?|\\\x3c|\\\x3e|\\\u003c|\\\u003e)*/i';
 	
 	/**
-	 *	Checks the strings for any tags
-	 * 	@param string $string
-	 * 	@return boolean
+	 * Checks the strings for any tags
+	 * @param string $string
+	 * @return boolean
 	 */
 	public static function hasTags($string) {
 		$return = preg_match(self::REGEXP_HTML_TAGS, $return);
 	}
 	
 	/**
-	 *	Strips every kind of opening or closing html tag from the given
-	 * 	string. Also strippes the possible encodings of < and >
-	 * 	@param string $string
-	 * 	@return string
+	 * Strips every kind of opening or closing html tag from the given
+	 * string. Also strippes the possible encodings of < and >
+	 * @param string $string
+	 * @return string
 	 */
 	public static function stripTags($string) {
 		return preg_replace(self::REGEXP_HTML_TAGS, '', $string);
 	}
 	
 	/**
-	 * 	Removes all PHP/Javascript style comments from a string
-	 *  comments with #, *, /*
-	 * 	@param string	$string
-	 * 	@return string
+	 * Removes all PHP/Javascript style comments from a string
+	 * comments with #, *, /*
+	 * @param string	$string
+	 * @return string
 	 */
 	public static function stripComments($string) {
 		return preg_replace('{
@@ -881,45 +912,45 @@ class String extends Helper {
 	}
 	
 	/**
-	 * 	Strips all breaks (html and ascii ones) from a string
-	 * 	@param string	$string
-	 * 	@param string	$replace	Replace with this string
+	 * Strips all breaks (html and ascii ones) from a string
+	 * @param string	$string
+	 * @param string	$replace	Replace with this string
 	 */
 	public static function stripBrakes($string, $replace = '') {
 		return preg_replace('/([\\r|\\n|\0|\x0B]|\\<br\\>|\\<br \\/\\>|\\<p\\>|\\<p \\/\\>)/', $replace, $string);
 	}
 	
 	/**
-	 * 	Tests wheter string has any line breaks in it
-	 * 	@param string	$string
-	 * 	@return boolean
+	 * Tests wheter string has any line breaks in it
+	 * @param string	$string
+	 * @return boolean
 	 */
 	public static function hasBrakes($string) {
 		return (preg_match('@(\r|\n)+@', $string));
 	}
 	
 	/**
-	 *	Stripping multiple white space characters, to prevent inputs like this:
-	 * 	<code>
-	 * 	$name = 'Hanz         Meiser';
-	 * 	// will print 'Hans Meiser'
-	 * 	</code>
-	 * 	@param string $string
-	 * 	@return string
+	 * Stripping multiple white space characters, to prevent inputs like this:
+	 * <code>
+	 * $name = 'Hanz         Meiser';
+	 * // will print 'Hans Meiser'
+	 * </code>
+	 * @param string $string
+	 * @return string
 	 */
 	public static function stripMultipleWhiteSpace($target) {
 		return preg_replace('/([\s]+){1,}/', '$1', $target);
 	}
 	
 	/**
-	 *	Strip space from every line in a string
-	 * 	<code>
-	 * 	$test = "     Foobar is funny\n but tralala     \n sing along"
-	 * 	// will echo "Foobar is funny\nbut tralala\nsing along"
-	 * 	echo String::
-	 * 	</code>
-	 * 	@param string $string
-	 * 	@return string
+	 * Strip space from every line in a string
+	 * <code>
+	 * $test = "     Foobar is funny\n but tralala     \n sing along"
+	 * // will echo "Foobar is funny\nbut tralala\nsing along"
+	 * echo String::
+	 * </code>
+	 * @param string $string
+	 * @return string
 	 */
 	public static function trimEveryLine($string) {
 		$tmp = explode(LF, $string);
@@ -929,83 +960,83 @@ class String extends Helper {
 	}
 	
 	/**
-	 *	Normalizing the brakes in a string to UNIX Brakes
-	 * 	they are displayable on Mac, Linux and PC. All Line Brakes are
-	 * 	converted to UNIX line brakes - \n
-	 * 	@param string	$string
-	 * 	@return string
+	 * Normalizing the brakes in a string to UNIX Brakes
+	 * they are displayable on Mac, Linux and PC. All Line Brakes are
+	 * converted to UNIX line brakes - \n
+	 * @param string	$string
+	 * @return string
 	 */
 	public static function normalizeBrakes($string) {
 		return preg_replace('!(\r\n|\r)!', LF, $string);
 	}
 	
 	/**
-	 *	Removes all non-alpha numerical charachters (not unicode aware)
-	 * 	@param string	$string
-	 * 	@return string
+	 * Removes all non-alpha numerical charachters (not unicode aware)
+	 * @param string	$string
+	 * @return string
 	 */
 	public static function stripNonAlphaNumerical($string) {
 		return preg_replace('/[^\w]/', '', $string);
 	}
 	
 	/**
-	 *	Removes all alpha numerical charachters (not unicode aware)
-	 * 	@param string	$string
-	 * 	@return string
+	 * Removes all alpha numerical charachters (not unicode aware)
+	 * @param string	$string
+	 * @return string
 	 */
 	public static function stripAlphaNumerical($string) {
 		return preg_replace('/([^\d)/', '', $string);
 	}
 	
 	/**
-	 *	Removes the repition of the same characters in a string just like
-	 * 	the ruby method would do.
-	 * 	@param string
-	 * 	@return string
+	 * Removes the repition of the same characters in a string just like
+	 * the ruby method would do.
+	 * @param string
+	 * @return string
 	 */
 	public static function squeeze($string) {
 		return preg_replace('/(\p{L}|\s){1}(\1{1,})/i', '$1', $string);	
 	}
 	
 	/**
-	 * 	Returns an array of lines in the string
-	 * 	@return array(string)
-	 * 	@param string
+	 * Returns an array of lines in the string
+	 * @return array(string)
+	 * @param string
 	 */
 	public static function splitLines($string) {
 		return preg_split('/[\r\n]+/', $string);
 	}
 	
 	/**
-	 *	Swaps the case of letters in a string from low to high and high to low
-	 * 	//TODO finish swapCase method
-	 * 	@param string $string
-	 * 	@return string
+	 * Swaps the case of letters in a string from low to high and high to low
+	 * //TODO finish swapCase method
+	 * @param string $string
+	 * @return string
 	 */
 	public static function swapCase($string) {
 		return 'String::swapCase not finished yet.';
 	}
 	
 	/**
-	 * 	Capitalizes every word in a string
-	 * 	@param string $string
-	 * 	@return string
+	 * Capitalizes every word in a string
+	 * @param string $string
+	 * @return string
 	 */
 	public static function capitalize($string) {
 		return ucwords($string);
 	}
 	
 	/**
-	 * 	Returns an array of characters in a string. This method is utf8 save
-	 * 	and won't split the entities into seperate array elements.
-	 * 	
-	 * 	<code>
-	 * 	// split string into array, should echo 'Ä,B,Ö'
-	 * 	echo implode(',',String::each('ÄBÖ')); 
-	 * 	</code>
+	 * Returns an array of characters in a string. This method is utf8 save
+	 * and won't split the entities into seperate array elements.
 	 * 
-	 * 	@param string
-	 * 	@return array(string)
+	 * <code>
+	 * // split string into array, should echo 'Ä,B,Ö'
+	 * echo implode(',',String::each('ÄBÖ')); 
+	 * </code>
+	 * 
+	 * @param string
+	 * @return array(string)
 	 */
 	public static function each($string) {
 		assert(is_scalar($string));
@@ -1032,16 +1063,16 @@ class String extends Helper {
 	}
 	
 	/**
-	 *	Insert $replaceWith into $string at $position:
-	 * 	<code>
-	 * 	// should echo 'ABCDEFG'
-	 * 	echo String::insert('ADEFG', -4, 'BC');
-	 * 	</code>
+	 * Insert $replaceWith into $string at $position:
+	 * <code>
+	 * // should echo 'ABCDEFG'
+	 * echo String::insert('ADEFG', -4, 'BC');
+	 * </code>
 	 * 
-	 * 	@param string $string
-	 * 	@param integer $position
-	 * 	@param string $replaceWith
-	 * 	@return string
+	 * @param string $string
+	 * @param integer $position
+	 * @param string $replaceWith
+	 * @return string
 	 */
 	public static function insert($string, $position, $replaceWith = '') {
 		assert(is_scalar($string) && is_scalar($position) && is_scalar($replaceWith));
@@ -1049,4 +1080,3 @@ class String extends Helper {
 	}
 	
 }
-?>

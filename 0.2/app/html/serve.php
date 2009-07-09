@@ -1,14 +1,14 @@
 <?php
 /**
- * 	This some kind of media serving proxy, you request a file and i'll check
- * 	if the file is there and not an attack and serve the file with expire headers
- * 	and gzip compression if available.
- * 	The aim of this file is to decrease the http/yslow score.
+ * This some kind of media serving proxy, you request a file and i'll check
+ * if the file is there and not an attack and serve the file with expire headers
+ * and gzip compression if available.
+ * The aim of this file is to decrease the http/yslow score.
  */
 
 /**
- * 	Configuration
- * 	expiration times in seconds per filename regular expression
+ * Configuration
+ * expiration times in seconds per filename regular expression
  */
 $conf = array(
 	'\.(ico|gif|jpg|jpeg|png|swf|pdf|mov|mpg|mp3|wmv|ppt|csv|flv)$' => array(
@@ -22,7 +22,7 @@ $conf = array(
 );
 
 /**
- * 	Main Script
+ * Main Script
  */
 if (!(isset($_GET['url']) && $fileToServe = preg_replace('/[^-\/_ ~+\.A-Za-z0-9]/', '', trim(rawurldecode($_GET['url']))))) {
 	exit;
@@ -70,5 +70,3 @@ foreach($conf as $fileRegexp => $data) {
 	}
 }
 readfile($fileToServe);
-
-?>

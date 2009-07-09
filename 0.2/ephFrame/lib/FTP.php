@@ -1,108 +1,108 @@
 <?php
 
 /**
- * 	ephFTPSync: <http://code.ephpigenia.de/projects/ephFTPSync/>
- * 	Copyright 2007+, Ephigenia M. Eichner, Kopernikusstr. 8, 10245 Berlin
+ * ephFTPSync: <http://code.ephpigenia.de/projects/ephFTPSync/>
+ * Copyright 2007+, Ephigenia M. Eichner, Kopernikusstr. 8, 10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
- * 	@license http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright Copyright 2007+, Ephigenia M. Eichner
- * 	@link http://code.ephigenia.de/projects/ephFTPSync/
- * 	@filesource
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ * @license http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright Copyright 2007+, Ephigenia M. Eichner
+ * @link http://code.ephigenia.de/projects/ephFTPSync/
+ * @filesource
  */
 
 /**
- * 	FTP Class
+ * FTP Class
  * 
- * 	A class that can handle ftp connections, uploads, downloads ...
- * 	Check the doc strings for different methods for more information
- * 	
- * 	Example that connects to a ftp host and lists all files found
- * 	<code>
- * 	$ftp = new FTP('192.168.0.1', 'user', 'pass');
- * 	$ftp->connect();
- * 	echo 'Files found in '.$ftp->pwd()."\n";
- * 	foreach($ftp->ls() as $filename) {
- * 		echo $filename."\n";
- * 	}
- * 	</code>
+ * A class that can handle ftp connections, uploads, downloads ...
+ * Check the doc strings for different methods for more information
  * 
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 22.09.2008
+ * Example that connects to a ftp host and lists all files found
+ * <code>
+ * $ftp = new FTP('192.168.0.1', 'user', 'pass');
+ * $ftp->connect();
+ * echo 'Files found in '.$ftp->pwd()."\n";
+ * foreach($ftp->ls() as $filename) {
+ * 	echo $filename."\n";
+ * }
+ * </code>
+ * 
+ * @package ephFrame
+ * @subpackage ephFrame.lib
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 22.09.2008
  */
 class FTP {
 	
 	/**
-	 *	Default transfer mode used when uploading or downloading files
-	 * 	@var integer
+	 * Default transfer mode used when uploading or downloading files
+	 * @var integer
 	 */
 	protected $transfermode = FTP_BINARY;
 	
 	/**
-	 *	Default timeout in seconds
-	 * 	@var integer
+	 * Default timeout in seconds
+	 * @var integer
 	 */
 	protected $timeout = 30;
 	
 	/**
-	 *	Default port which is used while connecting
-	 * 	@var integer
+	 * Default port which is used while connecting
+	 * @var integer
 	 */
 	protected $port = 21;
 	
 	/**
-	 *	Username	
-	 * 	@var string
+	 * Username	
+	 * @var string
 	 */
 	protected $user;
 	
 	/**
-	 *	Password
-	 * 	@var string
+	 * Password
+	 * @var string
 	 */
 	protected $pass;
 	
 	/**
-	 * 	Host, IP or hostname
-	 * 	@var string
+	 * Host, IP or hostname
+	 * @var string
 	 */
 	protected $host;
 	
 	/**
-	 *	Stores the current directory
-	 * 	@var string
+	 * Stores the current directory
+	 * @var string
 	 */
 	public $curDir;
 	
 	/**
-	 *	Stores the number of bytes uploaded (files), reset on reconnect
-	 * 	@var integer
+	 * Stores the number of bytes uploaded (files), reset on reconnect
+	 * @var integer
 	 */
 	public $bytesUploaded = 0;
 	
 	/**
-	 *	Stores number of bytes downloaded (files), reset on reconnect
-	 * 	@var integer
+	 * Stores number of bytes downloaded (files), reset on reconnect
+	 * @var integer
 	 */
 	public $bytesDownloaded = 0;
 	
 	/**
-	 *	Stores the stream ressource when connected
-	 * 	@var ressource
+	 * Stores the stream ressource when connected
+	 * @var ressource
 	 */
 	protected $stream;
 	
 	/**
-	 *	Creates a new FTP Instance
+	 * Creates a new FTP Instance
 	 * 
-	 * 	@param string $host Hostname or ip to connect to
-	 * 	@param string $user	Username
-	 * 	@param string $pass Password
-	 * 	@param integer $port optional alternate post (default: 21)
-	 * 	@param integer $timeout optional timout in seconds
+	 * @param string $host Hostname or ip to connect to
+	 * @param string $user	Username
+	 * @param string $pass Password
+	 * @param integer $port optional alternate post (default: 21)
+	 * @param integer $timeout optional timout in seconds
 	 */
 	public function __construct($host, $user = null, $pass = null, $port = null, $timeout = null) {
 		foreach(array('host', 'user', 'pass', 'port', 'timeout') as $key) {
@@ -112,17 +112,17 @@ class FTP {
 	}
 	
 	/**
-	 * 	Checks if a connection is established and returns the result true/false
-	 * 	@return boolean
+	 * Checks if a connection is established and returns the result true/false
+	 * @return boolean
 	 */
 	public function connected() {
 		return !empty($this->stream);
 	}
 	
 	/**
-	 * 	Checks for a connection, if no connection established throws a
-	 * 	{@link FTPNotConnectedException}
-	 * 	@return boolean
+	 * Checks for a connection, if no connection established throws a
+	 * {@link FTPNotConnectedException}
+	 * @return boolean
 	 */
 	public function checkConnection() {
 		if (!$this->connected()) throw new FTPNotConnectedException($this);
@@ -130,13 +130,13 @@ class FTP {
 	}
 	
 	/**
-	 *	Tries to establish a ftp connection to the host.
-	 * 	Host is validated so only found ips for hostnames and ips with hostnames
-	 * 	are valid. {@link afterConnect} is called after a connection was
-	 * 	successfully set up.
-	 * 	@throws FTPInvalidHostException if host is invalid
-	 * 	@throws FTPInvalidHostException
-	 * 	@return FTPConnectionErrorException thrown if connection could not be established
+	 * Tries to establish a ftp connection to the host.
+	 * Host is validated so only found ips for hostnames and ips with hostnames
+	 * are valid. {@link afterConnect} is called after a connection was
+	 * successfully set up.
+	 * @throws FTPInvalidHostException if host is invalid
+	 * @throws FTPInvalidHostException
+	 * @return FTPConnectionErrorException thrown if connection could not be established
 	 */
 	public function connect() {
 		$this->disconnect();
@@ -164,8 +164,8 @@ class FTP {
 	}
 	
 	/**
-	 *	Callback after successfull {@link connect}
-	 * 	@return FTP
+	 * Callback after successfull {@link connect}
+	 * @return FTP
 	 */
 	public function afterConnect() {
 		ftp_set_option($this->stream, FTP_TIMEOUT_SEC, $this->timeout);
@@ -175,8 +175,8 @@ class FTP {
 	}
 	
 	/**
-	 *	Close the current ftp connection
-	 * 	@return FTP
+	 * Close the current ftp connection
+	 * @return FTP
 	 */
 	public function disconnect() {
 		$this->bytesDownloaded = $this->bytesUploaded = 0;
@@ -188,9 +188,9 @@ class FTP {
 	}
 	
 	/**
-	 *	Logs into the ftp server
-	 * 	@throws FTPLoginException if the login failed
-	 * 	@return boolean
+	 * Logs into the ftp server
+	 * @throws FTPLoginException if the login failed
+	 * @return boolean
 	 */
 	public function login() {
 		$this->checkConnection();
@@ -201,10 +201,10 @@ class FTP {
 	}
 	
 	/**
-	 *	Try to determine the time differnce between the local and remote system
-	 * 	by uploading a file and compare the modified time values. The file that
-	 * 	is uploaded is _this_ file, after time difference the file is deleted.
-	 * 	@return integer
+	 * Try to determine the time differnce between the local and remote system
+	 * by uploading a file and compare the modified time values. The file that
+	 * is uploaded is _this_ file, after time difference the file is deleted.
+	 * @return integer
 	 */
 	public function detectTimeDifference() {
 		$remoteName = $this->curDir.'.ftpTimdifferenceTestFile';
@@ -222,14 +222,14 @@ class FTP {
 	}
 	
 	/**
-	 *	Returns a simple list of files and directories in the current directory.
-	 * 	If you want a more precise list use {@link rawList}
-	 * 	
-	 * 	Note: This won't show you hidden files on -nix systems (the files with
-	 * 	the dot at the beginning!)
+	 * Returns a simple list of files and directories in the current directory.
+	 * If you want a more precise list use {@link rawList}
 	 * 
-	 * 	@param string $filename name of directory to list files from
-	 * 	@return array(string)
+	 * Note: This won't show you hidden files on -nix systems (the files with
+	 * the dot at the beginning!)
+	 * 
+	 * @param string $filename name of directory to list files from
+	 * @return array(string)
 	 */
 	public function ls($filename = null) {
 		$this->checkConnection();
@@ -245,9 +245,9 @@ class FTP {
 	}
 	
 	/**
-	 *	Set the passive mode to true or false
-	 * 	@param boolean $value
-	 * 	@return boolean
+	 * Set the passive mode to true or false
+	 * @param boolean $value
+	 * @return boolean
 	 */
 	public function pasv($value) {
 		$this->checkConnection();
@@ -256,20 +256,20 @@ class FTP {
 	}
 	
 	/**
-	 *	Returns a more precise list of files and directories than {@link ls}.
-	 * 	
-	 * 	<code>
-	 * 	$exampleReturn = array(
-	 * 		'file1.txt' => array('isDirectory' => false, 'flags' => '-rw-rw-rw', 'filename' => 'file1.txt'),
-	 * 		'directory' => array('isDirectory' => true, 'flags' => 'drw-rw-rw', 'filename' => 'directory/')
-	 * 	);
-	 * 	</code>
+	 * Returns a more precise list of files and directories than {@link ls}.
 	 * 
-	 * 	Note that this method also returns hidden files.
+	 * <code>
+	 * $exampleReturn = array(
+	 * 	'file1.txt' => array('isDirectory' => false, 'flags' => '-rw-rw-rw', 'filename' => 'file1.txt'),
+	 * 	'directory' => array('isDirectory' => true, 'flags' => 'drw-rw-rw', 'filename' => 'directory/')
+	 * );
+	 * </code>
 	 * 
-	 * 	@param string $filename
-	 * 	@param boolean $hiddenFiles	List hidden files
-	 * 	@return array(string)
+	 * Note that this method also returns hidden files.
+	 * 
+	 * @param string $filename
+	 * @param boolean $hiddenFiles	List hidden files
+	 * @return array(string)
 	 */
 	public function rawList($filename = null, $hiddenFiles = true) {
 		$this->checkConnection();
@@ -330,13 +330,13 @@ class FTP {
 	}
 	
 	/**
-	 *	Uploads a local file to the remote server and returns the transferrate
-	 * 	in bytes per second
-	 * 	@param string $filename
-	 * 	@param string $remoteFilename
-	 * 	@param boolean $overwrite
-	 * 	@param integer $mode
-	 * 	@return integer	Number of bytes per second transferred
+	 * Uploads a local file to the remote server and returns the transferrate
+	 * in bytes per second
+	 * @param string $filename
+	 * @param string $remoteFilename
+	 * @param boolean $overwrite
+	 * @param integer $mode
+	 * @return integer	Number of bytes per second transferred
 	 */
 	public function upload($filename, $remoteFilename = null, $overwrite = false, $mode = null) {
 		$this->checkConnection();
@@ -383,12 +383,12 @@ class FTP {
 	}
 	
 	/**
-	 * 	Downloads a remote file to local directory
-	 * 	@param string $remoteFilename
-	 * 	@param string $localFilename
-	 * 	@param boolean $overwrite
-	 * 	@param integer $mode
-	 * 	@return FTP
+	 * Downloads a remote file to local directory
+	 * @param string $remoteFilename
+	 * @param string $localFilename
+	 * @param boolean $overwrite
+	 * @param integer $mode
+	 * @return FTP
 	 */
 	public function download($remoteFilename, $localFilename, $overwrite = false, $mode = null) {
 		$this->checkConnection();
@@ -402,8 +402,8 @@ class FTP {
 	}
 	
 	/**
-	 *	Returns the current directory
-	 * 	@return string
+	 * Returns the current directory
+	 * @return string
 	 */
 	public function pwd() {
 		$this->checkConnection();
@@ -411,10 +411,10 @@ class FTP {
 	}
 	
 	/**
-	 *	Changes directory to $path
-	 * 	@throws FTPDirNotFoundException if directory was not found
-	 * 	@param string $path
-	 * 	@return boolean
+	 * Changes directory to $path
+	 * @throws FTPDirNotFoundException if directory was not found
+	 * @param string $path
+	 * @return boolean
 	 */
 	public function cd($path) {
 		$this->checkConnection();
@@ -429,13 +429,13 @@ class FTP {
 	}
 	
 	/**
-	 * 	Create a directory $path
-	 * 	<code>
-	 * 	if(!$ftp->mkdir('test')) {
-	 * 		die('failed to create directory');
-	 * 	}
-	 * 	</code>
-	 * 	@return boolean
+	 * Create a directory $path
+	 * <code>
+	 * if(!$ftp->mkdir('test')) {
+	 * 	die('failed to create directory');
+	 * }
+	 * </code>
+	 * @return boolean
 	 */
 	public function mkdir($path) {
 		$this->checkConnection();
@@ -444,8 +444,8 @@ class FTP {
 	}
 	
 	/**
-	 *	Delete a file or directory $path
-	 * 	@return boolean
+	 * Delete a file or directory $path
+	 * @return boolean
 	 */
 	public function delete($path) {
 		$this->checkConnection();
@@ -456,9 +456,9 @@ class FTP {
 	}
 	
 	/**
-	 *	Tests if a file or directory $filename exists on the remote system
-	 * 	@param string $filename
-	 * 	@return boolean
+	 * Tests if a file or directory $filename exists on the remote system
+	 * @param string $filename
+	 * @return boolean
 	 */
 	public function exists($filename) {
 		if (empty($filename)) {
@@ -480,15 +480,15 @@ class FTP {
 	}
 	
 	/**
-	 *	Returns the size of a file in bytes, if file was not found it returns
-	 * 	false, so check it with ===:
-	 * 	<code>
-	 * 	if ($ftp->size('notexistentfile') === false) {
-	 * 		die('file not found');
-	 * 	}
-	 * 	</code>
-	 * 	@param string $filename
-	 * 	@return integer|boolean
+	 * Returns the size of a file in bytes, if file was not found it returns
+	 * false, so check it with ===:
+	 * <code>
+	 * if ($ftp->size('notexistentfile') === false) {
+	 * 	die('file not found');
+	 * }
+	 * </code>
+	 * @param string $filename
+	 * @return integer|boolean
 	 */
 	public function size($filename) {
 		if (empty($filename)) {
@@ -503,19 +503,19 @@ class FTP {
 	}
 	
 	/**
-	 *	Alias for {@link size}
-	 * 	@param string $filename
-	 * 	@return integer|boolean
+	 * Alias for {@link size}
+	 * @param string $filename
+	 * @return integer|boolean
 	 */
 	public function filesize($filename) {
 		return $this->size($filename);
 	}
 	
 	/**
-	 * 	Returns timestamp of last modification of a file.
-	 * 	Note that the timestamp is the time on the server, not your local time.
-	 * 	@param string $filename
-	 * 	@return integer|boolean
+	 * Returns timestamp of last modification of a file.
+	 * Note that the timestamp is the time on the server, not your local time.
+	 * @param string $filename
+	 * @return integer|boolean
 	 */
 	public function lastModified($filename) {
 		if (empty($filename)) {
@@ -534,9 +534,9 @@ class FTP {
 	}
 	
 	/**
-	 *	Sends a raw command to the server and returns a response
-	 * 	@param string $command
-	 * 	@return array(string)
+	 * Sends a raw command to the server and returns a response
+	 * @param string $command
+	 * @return array(string)
 	 */
 	public function raw($command) {
 		$this->checkConnection();
@@ -545,8 +545,8 @@ class FTP {
 	}
 	
 	/**
-	 *	Returns a string that contains the answer to the SYS command
-	 * 	@return string
+	 * Returns a string that contains the answer to the SYS command
+	 * @return string
 	 */
 	public function systemType() {
 		$this->checkConnection();
@@ -564,16 +564,16 @@ class FTP {
 }
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class FTPException extends Exception {
 	
 }
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class FTPDirNotFoundException extends FTPException {
 	public function __construct(FTP $ftp, $dirname) {
@@ -582,8 +582,8 @@ class FTPDirNotFoundException extends FTPException {
 }
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class FTPInvalidHostException extends FTPException {
 	public function __construct(FTP $ftp, $host) {
@@ -596,8 +596,8 @@ class FTPInvalidHostException extends FTPException {
 }
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class FTPFileNotFoundException extends FTPException {
 	public function __construct(FTP $ftp, $filename) {
@@ -606,8 +606,8 @@ class FTPFileNotFoundException extends FTPException {
 }
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class FTPConnectionErrorException extends FTPException {
 	public function __construct(FTP $ftp, $reason = null) {
@@ -621,8 +621,8 @@ class FTPConnectionErrorException extends FTPException {
 }
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class FTPNotConnectedException extends FTPException {
 	public function __construct(FTP $ftp) {
@@ -631,8 +631,8 @@ class FTPNotConnectedException extends FTPException {
 }
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class FTPLoginException extends FTPException {
 	public function __construct(FTP $ftp, $user, $pass) {
@@ -653,13 +653,11 @@ class FTPLoginException extends FTPException {
 }
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class FTPNotClonableException extends FTPException {
 	public function __construct() {
 		parent::__construct('FTP not clonable.');
 	}
 }
-
-?>

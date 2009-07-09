@@ -1,6 +1,6 @@
 /**
- *	jQuery Extension/Plugins written by Ephigenia
- *	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * jQuery Extension/Plugins written by Ephigenia
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  */
 
 (function($) {
@@ -47,8 +47,8 @@
 
 
 /**
- *	Screen helper class
- *	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * Screen helper class
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  */
 var Screen = {
 	width: 0,

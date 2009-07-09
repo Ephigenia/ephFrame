@@ -1,7 +1,7 @@
 changelog for ephFrame
 ----------------------
 
-2009-07-08
+2009-07-09
 + fixed missing created update field when inserting new model entries with multiple behaviors
 + added theming, which includes js/css search in theme directory
 + fixed js packer to append line-feed at end of packed js files
@@ -21,6 +21,9 @@ changelog for ephFrame
 + fixed issue with String::substr() on php 5.2.6
 + imageconvolution added if missing in ImageSharpenFilter (needs high performance!)
 + image uses imageantialias only if function exists
++ replaced %1% placeholders to :[name] in string::substitute
++ added alias for string::substitute - string::insert
++ new formating for files skipping ?> in files and no tabs in PHPDocBlocks
 
 2009-05-25
 + added model behaviors callable from every model

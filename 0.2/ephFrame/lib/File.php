@@ -1,56 +1,56 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 class_exists('FileSystemNode') or require dirname(__FILE__).'/FileSystemNode.php';
 class_exists('Dir') or require dirname(__FILE__).'/Dir.php';
 
 /**
- *	File Class
+ * File Class
  * 
- * 	This class is partially tested by {@link TestFile}.
+ * This class is partially tested by {@link TestFile}.
  * 
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
- * 	@version 0.2
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 10.05.2007
- * 	@uses MimeTypes
+ * @package ephFrame
+ * @subpackage ephFrame.lib
+ * @version 0.2
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 10.05.2007
+ * @uses MimeTypes
  */
 class File extends FileSystemNode {
 	
 	/**
-	 *	Read Buffer size on {@link read}ing actions
-	 * 	@var integer
+	 * Read Buffer size on {@link read}ing actions
+	 * @var integer
 	 */
 	protected $readBufferSize = 1024;
 	
 	/**
-	 *	Opened stream of a file
-	 * 	@var ressource
+	 * Opened stream of a file
+	 * @var ressource
 	 */
 	protected $stream;
 	
 	/**
-	 * 	File Constructor
-	 * 	@param string $filename
-	 * 	@return File
+	 * File Constructor
+	 * @param string $filename
+	 * @return File
 	 */
 	public function __construct($filename = null) {
 		parent::__construct($filename);
@@ -58,9 +58,9 @@ class File extends FileSystemNode {
 	}
 	
 	/**
-	 * 	Returns if true if this object has a filename and the file exists,
-	 * 	otherwise always true
-	 * 	@return boolean
+	 * Returns if true if this object has a filename and the file exists,
+	 * otherwise always true
+	 * @return boolean
 	 */
 	public function isFile() {
 		if ($this->exists()) {
@@ -70,16 +70,16 @@ class File extends FileSystemNode {
 	}
 	
 	/**
-	 * 	Returns always false
-	 * 	@return boolean
+	 * Returns always false
+	 * @return boolean
 	 */
 	public function isDir() {
 		return false;
 	}
 	
 	/**
-	 *	Tests if the file is uploaded or not
-	 * 	@return boolean
+	 * Tests if the file is uploaded or not
+	 * @return boolean
 	 */
 	public function isUploaded() {
 		if (!$this->exists()) return false;
@@ -87,25 +87,25 @@ class File extends FileSystemNode {
 	}
 	
 	/**
-	 *	Returns the complete path to this file
-	 * 	@return string
+	 * Returns the complete path to this file
+	 * @return string
 	 */
 	public function filename() {
 		return $this->nodeName;
 	}
 
 	/**
-	 *	Returns just the basename for this file, this is like 
-	 * 	basname() in php. You can pass true as second argument for getting
-	 * 	the file's name without extension.
-	 * 	<code>
-	 * 	$file = new File('app/webroot/img/test.jpg');
-	 * 	// will echo 'test'
-	 * 	echo $file->basename(false);
-	 * 	// will echo 'test.jpg';
-	 * 	echo $file->basename();
-	 * 	</code>
-	 * 	@return string
+	 * Returns just the basename for this file, this is like 
+	 * basname() in php. You can pass true as second argument for getting
+	 * the file's name without extension.
+	 * <code>
+	 * $file = new File('app/webroot/img/test.jpg');
+	 * // will echo 'test'
+	 * echo $file->basename(false);
+	 * // will echo 'test.jpg';
+	 * echo $file->basename();
+	 * </code>
+	 * @return string
 	 */
 	public function basename($includeExtension = true) {
 		if (!$includeExtension) {
@@ -116,8 +116,8 @@ class File extends FileSystemNode {
 	}
 	
 	/**
-	 * 	Deletes this file if existent
-	 * 	@return boolean
+	 * Deletes this file if existent
+	 * @return boolean
 	 */
 	public function delete() {
 		if (!$this->exists()) return true;
@@ -128,21 +128,21 @@ class File extends FileSystemNode {
 	}
 	
 	/**
-	 *	Checks if the file exists in the filesystem and is really a file
-	 * 	@return boolean
+	 * Checks if the file exists in the filesystem and is really a file
+	 * @return boolean
 	 */
 	public function exists() {
 		return (parent::exists() && is_file($this->nodeName));
 	}
 	
 	/**
-	 * 	Creates an array of header messages for a download link for the file
-	 *	You can send these headers by using array_map on the method’s result:
-	 *	<code>
-	 *	array_map('header', $file->createDownloadHeader());
-	 *	</code>
-	 * 	@param string $filename
-	 * 	@return array
+	 * Creates an array of header messages for a download link for the file
+	 * You can send these headers by using array_map on the method’s result:
+	 * <code>
+	 * array_map('header', $file->createDownloadHeader());
+	 * </code>
+	 * @param string $filename
+	 * @return array
 	 */
 	public function createDownloadHeader($filename = null) {
 		return array('Content-type: application/octet-stream',
@@ -152,9 +152,9 @@ class File extends FileSystemNode {
 	}
 	
 	/**
-	 *	Checks if this file exists or not. If the file does not exist a
-	 * 	{@link FileNotFoundException} is thrown
-	 * 	@return boolean
+	 * Checks if this file exists or not. If the file does not exist a
+	 * {@link FileNotFoundException} is thrown
+	 * @return boolean
 	 */
 	public function checkExistence() {
 		if (empty($this->nodeName)) {
@@ -168,15 +168,18 @@ class File extends FileSystemNode {
 	}
 	
 	/**
-	 * 	Moves/renames the file to $filename an other location
+	 * Moves/renames the file to $filename an other location
 	 *
-	 *	Move a file into an new directory
-	 *	<code>
-	 *	$file->move(new Dir('../img/userimages/', $User->id.'.'.$file->extension()));
-	 *	</code>
-	 * 	@param string|Directory $newName
-	 *	@param string
-	 * 	@return File
+	 * Move a file into an new directory
+	 * <code>
+	 * // just plain
+	 * $file->move('newDir/filename.jpg');
+	 * // with directory instance:
+	 * $file->move(new Dir('../img/userimages/', $User->id.'.'.$file->extension()));
+	 * </code>
+	 * @param string|Directory $newName
+	 * @param string
+	 * @return File
 	 */
 	public function move($filename, $newFilename = null) {
 		$this->checkExistence();
@@ -199,19 +202,19 @@ class File extends FileSystemNode {
 	}
 	
 	/**
-	 *	Renames the file to the new $filename passed, alias for {@link move}
-	 * 	@param string $filename
-	 * 	@return File
+	 * Renames the file to the new $filename passed, alias for {@link move}
+	 * @param string $filename
+	 * @return File
 	 */
 	public function rename($filename, $newFilename = null) {
 		return $this->move($filename, $newFilename);
 	}
 	
 	/**
-	 *	Copies this file to an other location and returns a File Instance of
-	 * 	the new file if the copy action succeeds
-	 * 	@param string $newName
-	 * 	@return File
+	 * Copies this file to an other location and returns a File Instance of
+	 * the new file if the copy action succeeds
+	 * @param string $newName
+	 * @return File
 	 */
 	public function copy($newName) {
 		$this->checkExistence();
@@ -224,18 +227,18 @@ class File extends FileSystemNode {
 	}
 	
 	/**
-	 *	Alias method for {@link copy}
-	 * 	@param $newName
-	 * 	@return File
+	 * Alias method for {@link copy}
+	 * @param $newName
+	 * @return File
 	 */
 	public function copyTo($newName) {
 		return $this->copy($newName);
 	}
 	
 	/**
-	 * 	Returns the file extension of the File if there's any
-	 * 	@param string $new new extension to use (renames the file)
-	 * 	@return string
+	 * Returns the file extension of the File if there's any
+	 * @param string $new new extension to use (renames the file)
+	 * @return string
 	 */
 	public function extension($new = null) {
 		// change file extension
@@ -246,16 +249,16 @@ class File extends FileSystemNode {
 	}
 	
 	/**
-	 *	Returns the file extentions from a $filename.
+	 * Returns the file extentions from a $filename.
 	 * 
-	 * 	Empty extensions will result in a false as return value.
+	 * Empty extensions will result in a false as return value.
 	 * 
-	 * 	This method is multi-byte save beacuse the file/extension devider is a
-	 * 	single byte character.
+	 * This method is multi-byte save beacuse the file/extension devider is a
+	 * single byte character.
 	 * 
-	 * 	@param string $filename
-	 * 	@return string|boolean false if no extension is found
-	 * 	@static
+	 * @param string $filename
+	 * @return string|boolean false if no extension is found
+	 * @static
 	 */
 	public static function ext($filename) {
 		if (($pos = strrpos($filename, '.')) === false) {
@@ -266,8 +269,8 @@ class File extends FileSystemNode {
 	}
 	
 	/**
-	 *	Returns the mime type of this file if found in {@link MimeTypes}
-	 * 	@return string
+	 * Returns the mime type of this file if found in {@link MimeTypes}
+	 * @return string
 	 */
 	public function mimeType() {
 		// try to guess mime type on image type
@@ -285,19 +288,19 @@ class File extends FileSystemNode {
 	}
 	
 	/**
-	 *	Tests if this file has any extension (marked by the last .)
-	 * 	@return boolean
+	 * Tests if this file has any extension (marked by the last .)
+	 * @return boolean
 	 */
 	public function hasExtension() {
 		return strrpos(basename($this->nodeName), '.');
 	}
 	
 	/**
-	 * 	Returns the filesize in Bytes or a string of the filesize as in human
-	 * 	readable format using {@link sizeHumanized}
-	 * 	@param integer $precision
-	 * 	@param boolean $humanized
-	 * 	@return integer|string
+	 * Returns the filesize in Bytes or a string of the filesize as in human
+	 * readable format using {@link sizeHumanized}
+	 * @param integer $precision
+	 * @param boolean $humanized
+	 * @return integer|string
 	 */
 	public function size($precision = 2, $humanized = false) {
 		if (!$this->exists()) throw new FileNotFoundException($this);
@@ -309,20 +312,20 @@ class File extends FileSystemNode {
 	}
 	
 	/**
-	 * 	Alias for {@link size}
-	 *	@param integer $precision
-	 * 	@param boolean $humanized
-	 * 	@return integer|string
+	 * Alias for {@link size}
+	 * @param integer $precision
+	 * @param boolean $humanized
+	 * @return integer|string
 	 */
 	public function filesize() {
 		return $this->size($precision = 2, $humanized = false);
 	}
 	
 	/**
-	 * 	Returns the filesize in a human readable format
-	 * 	@param integer $size
-	 * 	@param integer $precision
-	 * 	@return string
+	 * Returns the filesize in a human readable format
+	 * @param integer $size
+	 * @param integer $precision
+	 * @return string
 	 */
 	public static function sizeHumanized($size, $precision = 2) {
 		if ($size <= 0) return '0 KB';
@@ -340,10 +343,10 @@ class File extends FileSystemNode {
 	}
 	
 	/**
-	 * 	Tries to translate 32M or 34KB or even 2324 TB into the equivalent
-	 * 	byte size and returns it.
-	 * 	@param string $size
-	 * 	@return integer
+	 * Tries to translate 32M or 34KB or even 2324 TB into the equivalent
+	 * byte size and returns it.
+	 * @param string $size
+	 * @return integer
 	 */
 	public static function deHumanizeFileSize($size) {
 		preg_match('/^([0-9]+)\s*(M|MB|KB|K|B|G|T)$/', $size, $found);
@@ -375,15 +378,15 @@ class File extends FileSystemNode {
 	}
 	
 	/**
-	 *	Appends $string to a file
+	 * Appends $string to a file
 	 * 
-	 * 	<code>
-	 * 	$log = new File('log.txt');
-	 * 	$log->append('someone logged something important');
-	 * 	</code>
-	 * 	
-	 * 	@param string
-	 * 	@return File
+	 * <code>
+	 * $log = new File('log.txt');
+	 * $log->append('someone logged something important');
+	 * </code>
+	 * 
+	 * @param string
+	 * @return File
 	 */
 	public function append($string, $glue = LF) {
 		if (!$this->exists()) $this->create();
@@ -398,9 +401,9 @@ class File extends FileSystemNode {
 	}
 	
 	/**
-	 *	Reads a single line from a file with optional skipping empty lines
-	 * 	@param boolean $notEmpty
-	 * 	@return string
+	 * Reads a single line from a file with optional skipping empty lines
+	 * @param boolean $notEmpty
+	 * @return string
 	 */
 	public function read() {
 		if (!is_resource($this->stream)) {
@@ -416,8 +419,8 @@ class File extends FileSystemNode {
 	}
 	
 	/**
-	 *	Returns the hole content of a file as string
-	 * 	@return string
+	 * Returns the hole content of a file as string
+	 * @return string
 	 */
 	public function slurp() {
 		$this->checkExistence();
@@ -425,8 +428,8 @@ class File extends FileSystemNode {
 	}
 	
 	/**
-	 *	Reads the hole file into an array and returns the array
-	 * 	@return array(string)
+	 * Reads the hole file into an array and returns the array
+	 * @return array(string)
 	 */
 	public function toArray() {
 		$this->checkExistence();
@@ -435,12 +438,12 @@ class File extends FileSystemNode {
 	}
 	
 	/**
-	 *	Write to a file
-	 * 	
-	 * 	Write $content to a file. If the file does not exists the class will
-	 * 	try to create it.
-	 * 	@param string
-	 * 	@return File
+	 * Write to a file
+	 * 
+	 * Write $content to a file. If the file does not exists the class will
+	 * try to create it.
+	 * @param string
+	 * @return File
 	 */
 	public function write($content) {
 		if (!$this->exists()) {
@@ -453,10 +456,10 @@ class File extends FileSystemNode {
 	}
 	
 	/**
-	 *	Creates a file with the given name or re-creates the current file
-	 * 	@param string $filename filename of a new file to create
-	 * 	@param integer $chmod chmod of the new file
-	 * 	@return boolean success
+	 * Creates a file with the given name or re-creates the current file
+	 * @param string $filename filename of a new file to create
+	 * @param integer $chmod chmod of the new file
+	 * @return boolean success
 	 */
 	public function create($filename = null, $chmod = 0644) {
 		if ($filename === null) {
@@ -479,10 +482,10 @@ class File extends FileSystemNode {
 	}
 	
 	/**
-	 *	Saves the file as $filename and returns a new File Instance of the 
-	 * 	new created file.
-	 * 	@param string $filename
-	 * 	@return File
+	 * Saves the file as $filename and returns a new File Instance of the 
+	 * new created file.
+	 * @param string $filename
+	 * @return File
 	 */
 	public function saveAs($filename) {
 		$this->checkExistence();
@@ -493,9 +496,9 @@ class File extends FileSystemNode {
 	}
 	
 	/**
-	 *	Checks a the file for possible php tags, this is used
-	 * 	by some site attacks, that upload images with php code
-	 * 	@throws FileWithPHPTagsException
+	 * Checks a the file for possible php tags, this is used
+	 * by some site attacks, that upload images with php code
+	 * @throws FileWithPHPTagsException
 	 */
 	public function checkForPHPTags() {
 		$this->checkExistence();
@@ -522,17 +525,17 @@ class File extends FileSystemNode {
 }
 
 /**
- * 	Basic File Exception
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * Basic File Exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class FileException extends FileSystemNodeException {
 	
 }
 
 /**
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class FileNotFoundException extends FileException {
 	public function __construct(File $file) {
@@ -541,8 +544,8 @@ class FileNotFoundException extends FileException {
 }
 
 /**
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class FileNotReadableException extends FileException {
 	public function __construct(File $file) {
@@ -551,9 +554,9 @@ class FileNotReadableException extends FileException {
 }
 
 /**
- *	Thrown if a file is not writable or can not be created
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * Thrown if a file is not writable or can not be created
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class FileNotWriteableException extends FileException {
 	public function __construct(File $file) {
@@ -562,12 +565,10 @@ class FileNotWriteableException extends FileException {
 }
 
 /**
- *	Basic File Intrusion Detection
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * Basic File Intrusion Detection
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 //class FileWithPHPTagsException extends IntrusionException  {
 //	
 //}
-
-?>

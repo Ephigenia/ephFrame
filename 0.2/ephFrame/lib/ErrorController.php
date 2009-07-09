@@ -1,36 +1,36 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 class_exists('AppController') or require APP_LIB_DIR.'AppController.php';
 
 /**
- * 	Error Controller
- * 	
- * 	This controller is automatically called on any exception that happens
- * 	in the application that is not catched. See the index.php file in the
- * 	webroot folder.
+ * Error Controller
  * 
- * 	@package app
- * 	@subpackage app.lib.controller
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 02.11.2007
+ * This controller is automatically called on any exception that happens
+ * in the application that is not catched. See the index.php file in the
+ * webroot folder.
+ * 
+ * @package app
+ * @subpackage app.lib.controller
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 02.11.2007
  */
 class ErrorController extends AppController {
 	
@@ -67,7 +67,7 @@ class ErrorController extends AppController {
 	}
 
 	/**
-	 *	
+	 * 
 	 */
 	public function index() {
 		/*
@@ -82,5 +82,3 @@ class ErrorController extends AppController {
 	}
 	
 }
-
-?>

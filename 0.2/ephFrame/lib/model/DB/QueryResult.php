@@ -1,32 +1,32 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- * 	// todo match this to {@link Set}
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.model.DB
- *	@version 0.1
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 30.08.2007
+ * // todo match this to {@link IndexedArray}
+ * @package ephFrame
+ * @subpackage ephFrame.lib.model.DB
+ * @version 0.1
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 30.08.2007
  */
-class QueryResult extends Set implements Iterator, Countable {
+class QueryResult extends IndexedArray implements Iterator, Countable {
 	
 	const FETCH_ASSOC = 'assoc';
 	const FETCH_OBJECT = 'object';
@@ -36,41 +36,41 @@ class QueryResult extends Set implements Iterator, Countable {
 	const SEEK_START = 'start';
 	
 	/**
-	 * 	Stores the sql result
-	 * 	@var ressource
+	 * Stores the sql result
+	 * @var ressource
 	 */
 	public $result;
 	
 	/**
-	 *	stores the current fetch method name
-	 * 	@var string
+	 * stores the current fetch method name
+	 * @var string
 	 */
 	public $fetchMethod = self::FETCH_ASSOC;
 	
 	/**
-	 * 	Stores the number of rows in this Query result
-	 * 	@var integer
+	 * Stores the number of rows in this Query result
+	 * @var integer
 	 */
 	public $numRows;
 	
 	/**
-	 *	stores the valid fetch method names that are
-	 * 	ok for this {@link DAO}
-	 * 	@var array(string)
+	 * stores the valid fetch method names that are
+	 * ok for this {@link DAO}
+	 * @var array(string)
 	 */
 	public $validFetchMethods = array(
 		self::FETCH_ASSOC, self::FETCH_INDEXED, self::FETCH_OBJECT
 	);
 	
 	/**
-	 *	@var integer
+	 * @var integer
 	 */
 	protected $iteratorPosition = 0;
 	
 	/**
-	 *	Query Result constructor excepts a mysql result ressource
-	 * 	@param ressource $result
-	 * 	@return DAOQueryResult
+	 * Query Result constructor excepts a mysql result ressource
+	 * @param ressource $result
+	 * @return DAOQueryResult
 	 */
 	public function __construct($result) {
 		parent::__construct();
@@ -79,11 +79,11 @@ class QueryResult extends Set implements Iterator, Countable {
 	}
 
 	/**
-	 *	Sets the fetch method that is used when you call {@link fetch} or
-	 * 	{@link next}. If the fetchmethodname is not in the list of valid
-	 * 	fetch methods a {@link DAOInvalidFetchMethod} Exception is thrown
-	 * 	@param string $fetchMethod
-	 * 	@return DAOQueryResult
+	 * Sets the fetch method that is used when you call {@link fetch} or
+	 * {@link next}. If the fetchmethodname is not in the list of valid
+	 * fetch methods a {@link DAOInvalidFetchMethod} Exception is thrown
+	 * @param string $fetchMethod
+	 * @return DAOQueryResult
 	 */
 	public function fetchMethod($fetchMethod = null) {
 		if (func_num_args() == 0 || $fetchMethod == null) return $this->fetchMethod();
@@ -126,8 +126,8 @@ class QueryResult extends Set implements Iterator, Countable {
 	public function numRows() {}
 	
 	/**
-	 * 	Alias for {@link numRows}
-	 *	@return integer
+	 * Alias for {@link numRows}
+	 * @return integer
 	 */
 	public function count() {
 		return $this->numRows();
@@ -143,14 +143,14 @@ class QueryResult extends Set implements Iterator, Countable {
 	}
 
 	/**
-	 *	@return integer|string
+	 * @return integer|string
 	 */
 	public function key() {
 		return key($this->set);
 	}
 
 	/**
-	 *	@return mixed
+	 * @return mixed
 	 */
 	public function current() {
 		return current($this->data);
@@ -161,8 +161,8 @@ class QueryResult extends Set implements Iterator, Countable {
 	}
 	
 	/**
-	 *	Returns the dumped contents of this Result
-	 * 	@return string
+	 * Returns the dumped contents of this Result
+	 * @return string
 	 */
 	public function dump() {
 		return $this->__toString();
@@ -184,18 +184,17 @@ class QueryResult extends Set implements Iterator, Countable {
 }
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class DBQueryResultException extends DBException {}
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class DBInvalidFetchMethod extends DBQueryResultException {
 	public function __construct($fetchMethod) {
 		parent::__construct('Invalid fetch method given \''.$fetchMethod.'\'.');
 	}
 }
-?>

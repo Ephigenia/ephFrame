@@ -1,55 +1,55 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- * 	Abstract Subject
+ * Abstract Subject
  * 
- * 	Subject is part of the <a href="http://en.wikipedia.org/wiki/Observer_pattern">Observer Design Pattern</a>
+ * Subject is part of the <a href="http://en.wikipedia.org/wiki/Observer_pattern">Observer Design Pattern</a>
  * 
- *	@package ephFrame
- * 	@subpackage ephFrame.lib
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 16.07.2007
- * 	@version 1.0
- * 	@abstract 
+ * @package ephFrame
+ * @subpackage ephFrame.lib
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 16.07.2007
+ * @version 1.0
+ * @abstract 
  */
 abstract class Subject extends Object implements SplSubject {
 	
 	/**
-	 * 	List of observers registered by this subject
-	 * 	@var unknown_type
+	 * List of observers registered by this subject
+	 * @var unknown_type
 	 */
 	protected $observers = array();
  
 	/**
-	 * 	Attaches a new Observer
-	 *	@param Observer $observer
+	 * Attaches a new Observer
+	 * @param Observer $observer
 	 */
 	public function attach(Observer $observer) {
 		$this->observers[] = $observer;
 	}
  
 	/**
-	 * 	Detaches an observer
-	 * 	@param Observer $observer
-	 * 	@return boolean 
+	 * Detaches an observer
+	 * @param Observer $observer
+	 * @return boolean 
 	 */
 	public function detach(Observer $observer) {
 		for ($i = 0; $i < sizeof($this->observers); $i++) {
@@ -62,8 +62,8 @@ abstract class Subject extends Object implements SplSubject {
 	}
  
 	/**
-	 * 	Sends a update method call to all observers
-	 * 	@return Subject
+	 * Sends a update method call to all observers
+	 * @return Subject
 	 */
 	protected function notify() {
 		for ($i = 0; $i < count($this->observers); $i++) {
@@ -79,5 +79,3 @@ abstract class Subject extends Object implements SplSubject {
 	}
 	
 }
-
-?>

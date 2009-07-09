@@ -1,44 +1,44 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 loadHelper('Sanitize');
 
 /**
- * 	OS Detecting Class
+ * OS Detecting Class
  * 
- * 	can parse Operating system out of an user agent string transfered by the
- * 	browser.
+ * can parse Operating system out of an user agent string transfered by the
+ * browser.
  * 
- * 	Usage:
- * 	<code>
- * 		echo OS($_SERVER["HTTP_USER_AGENT"]);
- * 	</code>
+ * Usage:
+ * <code>
+ * 	echo OS($_SERVER["HTTP_USER_AGENT"]);
+ * </code>
  * 
- * 	// TODO Find out windows vista os codes
- * 	// @todo add isMobile to this class ('(iPhone|MIDP|AvantGo|BlackBerry|J2ME|Opera Mini|DoCoMo|NetFront|Nokia|PalmOS|PalmSource|portalmmm|Plucker|ReqwirelessWeb|SonyEricsson|Symbian|UP\.Browser|Windows CE|Xiino)')
+ * // TODO Find out windows vista os codes
+ * // @todo add isMobile to this class ('(iPhone|MIDP|AvantGo|BlackBerry|J2ME|Opera Mini|DoCoMo|NetFront|Nokia|PalmOS|PalmSource|portalmmm|Plucker|ReqwirelessWeb|SonyEricsson|Symbian|UP\.Browser|Windows CE|Xiino)')
  * 
- * 	@author	Marcel Eichner // Ephigenia <love at ephigenia dot de>
- * 	@since 22.02.2007
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.component
- * 	@uses Sanitize
+ * @author	Marcel Eichner // Ephigenia <love at ephigenia dot de>
+ * @since 22.02.2007
+ * @package ephFrame
+ * @subpackage ephFrame.lib.component
+ * @uses Sanitize
  */
 class OS extends Component implements Renderable {
 	
@@ -46,8 +46,8 @@ class OS extends Component implements Renderable {
 	public $id	= 0;
 	
 	/**
-	 * 	OSes that can be detected by this class
-	 * 	@var array(string)
+	 * OSes that can be detected by this class
+	 * @var array(string)
 	 */
 	private $OSs = array(
 		1 => 'Sun OS',
@@ -112,10 +112,10 @@ class OS extends Component implements Renderable {
 	}
 	
 	/**
-	 * 	Get Information about the Operating System out of the User Agent String
-	 * 	this is normally send by the browser to the server as information
+	 * Get Information about the Operating System out of the User Agent String
+	 * this is normally send by the browser to the server as information
 	 *
-	 * 	@param string $userAgentString
+	 * @param string $userAgentString
 	 */
 	public function fromUserAgent($userAgentString) {
 		Sanitize::panic($userAgentString);
@@ -183,18 +183,17 @@ class OS extends Component implements Renderable {
 }
 
 /**
- * 	@package ephFrame
- *	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class OSException extends ComponentException{}
 
 /**
- * 	@package ephFrame
- *	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class OSNotFoundException extends OSException {
 	public function __construct($id) {
 		parent::__construct('No OS found with the id \''.$id.'\'');
 	}
 }
-?>

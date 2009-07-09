@@ -1,47 +1,47 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 interface_exists('StringFilter') or require dirname(__FILE__).'/StringFilter.php';
 
 /**
- * 	A Class for beautifying SGML strings
+ * A Class for beautifying SGML strings
  *
- * 	This is based on Slawomir Jasinski class http://www.jasinski.us
+ * This is based on Slawomir Jasinski class http://www.jasinski.us
  * 
- * 	THIS IS NOT FINISHED CLASS
+ * THIS IS NOT FINISHED CLASS
  *
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de
- * 	@since 18.03.2008
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de
+ * @since 18.03.2008
+ * @package ephFrame
+ * @subpackage ephFrame.lib
  */
 class SGMLBeautifierFilter extends Object implements StringFilter {
 
 	public $indentString = TAB;
 	
 	/**
-	 * 	This method can be somehow improved, splitting the string only one time
+	 * This method can be somehow improved, splitting the string only one time
 	 *
-	 * 	@param string $string input string (the sgml code)
-	 * 	@param integer $wrap wrap lines after $wrap characters
-	 * 	@return string
+	 * @param string $string input string (the sgml code)
+	 * @param integer $wrap wrap lines after $wrap characters
+	 * @return string
 	 */
 	function apply($string, $wrap = null) {
 		
@@ -91,5 +91,3 @@ class SGMLBeautifierFilter extends Object implements StringFilter {
 	}
 
 }
-
-?>

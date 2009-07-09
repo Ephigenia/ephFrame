@@ -1,49 +1,49 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
-class_exists('Set') or require dirname(__FILE__).'/Set.php';
+class_exists('IndexedArray') or require dirname(__FILE__).'/IndexedArray.php';
 
 /**
- *	Hash-Table Class
+ * Hash-Table Class
  * 
- * 	A Hash-Table is an associative array with possible double values but no
- * 	double keys.
+ * A Hash-Table is an associative array with possible double values but no
+ * double keys.
  * 
- * 	# {@link http://en.wikipedia.org/wiki/Lookup_table Lookup Table}
+ * # {@link http://en.wikipedia.org/wiki/Lookup_table Lookup Table}
  * 
- * 	This class is based on the indexed Array {@link Set} and so can do a lot
- * 	of stuff a {@ink Set} can do, also chaining.
+ * This class is based on the indexed Array {@link IndexedArray} and so can do a lot
+ * of stuff a {@link IndexedArray} can do, also chaining.
  * 
- * 	This is partially tested in {@link TestHash}
+ * This is partially tested in {@link TestHash}
  *
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 18.07.2008
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 18.07.2008
+ * @package ephFrame
+ * @subpackage ephFrame.lib
  */
-class Hash extends Set {
+class Hash extends IndexedArray {
 	
 	/**
-	 * 	Fills the Set with the passed $data
-	 * 	@param array(mixed) $data
-	 * 	@return Set
+	 * Fills the Hash with the passed $data
+	 * @param array(mixed) $data
+	 * @return Hash
 	 */
 	public function fromArray(Array $data) {
 		$this->data = $data;
@@ -51,12 +51,12 @@ class Hash extends Set {
 	}
 
 	/**
-	 * 	Add an other $key => $value pair to the hash or just an other value
-	 * 	without a key
-	 *	
-	 * 	@param string|integer $key
-	 * 	@param mixed $value
-	 * 	@return Hash
+	 * Add an other $key => $value pair to the hash or just an other value
+	 * without a key
+	 * 
+	 * @param string|integer $key
+	 * @param mixed $value
+	 * @return Hash
 	 */
 	public function add($key, $value = null) {
 		if (func_num_args() == 1) {
@@ -68,10 +68,10 @@ class Hash extends Set {
 	}
 	
 	/**
-	 * 	Alias for {@link push}
+	 * Alias for {@link push}
 	 *
-	 * 	@param mixed $val
-	 * 	@return Hash
+	 * @param mixed $val
+	 * @return Hash
 	 */
 	public function append($val) {
 		$args = func_get_args();
@@ -79,10 +79,10 @@ class Hash extends Set {
 	}
 	
 	/**
-	 * 	Appends $val to the hash using next higher index key as index.
+	 * Appends $val to the hash using next higher index key as index.
 	 *
-	 * 	@param mixed $val
-	 * 	@return Hash
+	 * @param mixed $val
+	 * @return Hash
 	 */
 	public function push($val) {
 		if (func_num_args() > 1) {
@@ -96,8 +96,8 @@ class Hash extends Set {
 	}
 	
 	/**
-	 * 	Sets an other $key => $value pair to the hash, existing values will be
-	 * 	overwritten.
+	 * Sets an other $key => $value pair to the hash, existing values will be
+	 * overwritten.
 	 *
 	 * @param string|integer $key
 	 * @param mixed $value
@@ -111,10 +111,8 @@ class Hash extends Set {
 }
 
 /**
- * 	@package ephFrame
- *	@subpackage ephFrame.lib.exception 
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception 
  */
 class HashException extends BasicException {
 }
-
-?>

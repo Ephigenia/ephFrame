@@ -1,36 +1,36 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- * 	String/Class Inflector class
+ * String/Class Inflector class
  * 
- * 	This class singularizes, pluralizes from Strings to Classnames and from
- * 	Classnames to strings. Used a lot in the model classes.
+ * This class singularizes, pluralizes from Strings to Classnames and from
+ * Classnames to strings. Used a lot in the model classes.
  * 
- * 	// @todo add external or app-wide custom inflections (for other languages)
- * 	// @todo add more rules for singularize and pluralize
- * 	
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
- *	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 06.10.2008
+ * // @todo add external or app-wide custom inflections (for other languages)
+ * // @todo add more rules for singularize and pluralize
+ * 
+ * @package ephFrame
+ * @subpackage ephFrame.lib
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 06.10.2008
  */
 class Inflector extends Object {
 	
@@ -44,11 +44,11 @@ class Inflector extends Object {
 	}
 	
 	/**
-	 * 	Some rules are created on base of the wiki entry
-	 * 	{@link http://en.wikipedia.org/wiki/English_plural}
+	 * Some rules are created on base of the wiki entry
+	 * {@link http://en.wikipedia.org/wiki/English_plural}
 	 *
-	 * 	@param string $string
-	 * 	@return string
+	 * @param string $string
+	 * @return string
 	 */
 	public static function pluralize($string) {
 		if (!is_string($string)) return $string;
@@ -75,19 +75,19 @@ class Inflector extends Object {
 	}
 	
 	/**
-	 *	Shortcut for {@link pluralize}
-	 * 	@param $string string
-	 * 	@return string
+	 * Shortcut for {@link pluralize}
+	 * @param $string string
+	 * @return string
 	 */
 	public static function plural($string) {
 		return self::pluralize($string);
 	}
 	
 	/**
-	 * 	Tries to return the singular word of the $string
+	 * Tries to return the singular word of the $string
 	 *
-	 * 	@param string $string
-	 * 	@return string
+	 * @param string $string
+	 * @return string
 	 */
 	public static function singularize($string) {
 		if (!is_string($string)) return $string;
@@ -109,14 +109,14 @@ class Inflector extends Object {
 	}
 	
 	/**
-	 *	camlize a string
-	 * 	
-	 * 	<a href="http://en.wikipedia.org/wiki/CamelCase">Camelcase</a> is a
-	 * 	very common format for variable names in programming languages.
+	 * camlize a string
 	 * 
-	 * 	@param string $string
-	 * 	@param boolean $upper uppercase the first character too?
-	 * 	@return string
+	 * <a href="http://en.wikipedia.org/wiki/CamelCase">Camelcase</a> is a
+	 * very common format for variable names in programming languages.
+	 * 
+	 * @param string $string
+	 * @param boolean $upper uppercase the first character too?
+	 * @return string
 	 */
 	public static function camellize($string, $upper = false) {
 		$result = preg_replace('@\s+@', '', ucwords(preg_replace('@(_|\s)+@', ' ', $string)));
@@ -127,15 +127,15 @@ class Inflector extends Object {
 	}
 	
 	/**
-	 *	Delimeter seperate words just_as_this_is.
-	 * 	<code>
-	 * 	$example = 'Hello my Name is karl';
-	 * 	// echoes 'Hello_my_Name_is_karl'
-	 * 	echo String::delimeterSeperate($example);
-	 * 	</code>
-	 * 	@param string $string
-	 * 	@param string $delimeter The delimeter ot use, usually its an underscore _
-	 * 	@return string converted string
+	 * Delimeter seperate words just_as_this_is.
+	 * <code>
+	 * $example = 'Hello my Name is karl';
+	 * // echoes 'Hello_my_Name_is_karl'
+	 * echo String::delimeterSeperate($example);
+	 * </code>
+	 * @param string $string
+	 * @param string $delimeter The delimeter ot use, usually its an underscore _
+	 * @return string converted string
 	 */
 	public static function delimeterSeperate($string, $delimeter = '_', $lowered = true) {
 		if ($delimeter == null) $delimeter = '_';
@@ -148,22 +148,22 @@ class Inflector extends Object {
 	}
 	
 	/**
-	 *	Alias for {@link delimeterSeperate}
-	 * 	@param string $string
-	 * 	@return string
+	 * Alias for {@link delimeterSeperate}
+	 * @param string $string
+	 * @return string
 	 */
 	public static function underscore($string) {
 		return self::delimeterSeperate($string, '_', true);
 	}
 	
 	/**
-	 *	Seperates string into modelname and fieldname and returns an array
-	 *	<code>
-	 *	// will return array('ModelName', 'fieldName');
-	 *	var_dump(Inflector::modelAndFieldName('ModelName.fieldName');
-	 *	</code>
-	 *	@param string $string
-	 *	@return array(string)
+	 * Seperates string into modelname and fieldname and returns an array
+	 * <code>
+	 * // will return array('ModelName', 'fieldName');
+	 * var_dump(Inflector::modelAndFieldName('ModelName.fieldName');
+	 * </code>
+	 * @param string $string
+	 * @return array(string)
 	 */
 	public static function splitModelAndFieldName($string) {
 		if (strpos($string, '.') !== false) {
@@ -173,5 +173,3 @@ class Inflector extends Object {
 	}
 	
 }
-
-?>

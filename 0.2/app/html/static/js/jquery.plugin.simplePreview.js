@@ -1,16 +1,16 @@
 /**
- *  Simple Preview
- *  
- *  SimplePreview automaticly creates a toolbar before or after input fields
- *	and creates a preview div before or after the input field so that you'll get
- *	a live preview of the content from the input field. This is cool for editing
- *	blog entries or longer texts that can have simple html-tags in it.
- *  
- *  Usage:
- *  	$('.textarea').simplePreview();
- *  
- *	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- *	@since 2008-11-11
+ * Simple Preview
+ * 
+ * SimplePreview automaticly creates a toolbar before or after input fields
+ * and creates a preview div before or after the input field so that you'll get
+ * a live preview of the content from the input field. This is cool for editing
+ * blog entries or longer texts that can have simple html-tags in it.
+ * 
+ * Usage:
+ * $('.textarea').simplePreview();
+ * 
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 2008-11-11
  */
 (function($) {
 

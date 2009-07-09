@@ -1,41 +1,41 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- * 	CURL Wrapper Class
+ * CURL Wrapper Class
  * 
- * 	This class will only work if you have PHP installed with the CURL extension
- * 	which is _not_ installed on Win32 system. Please check the PHP help page
- * 	for more information: {@link http://www.php.net/manual/en/curl.requirements.php}<br />
- * 	<br />
- * 	
- * 	Example Usage to Download an imag:
- * 	<code>
- * 	$curl = new CURL('http://www.ephigenia.de/favico.ico');
- * 	file_put_contents('downloaded.ico', $curl->exec());
- * 	</code>
- * 	
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 11.11.2008
+ * This class will only work if you have PHP installed with the CURL extension
+ * which is _not_ installed on Win32 system. Please check the PHP help page
+ * for more information: {@link http://www.php.net/manual/en/curl.requirements.php}<br />
+ * <br />
+ * 
+ * Example Usage to Download an imag:
+ * <code>
+ * $curl = new CURL('http://www.ephigenia.de/favico.ico');
+ * file_put_contents('downloaded.ico', $curl->exec());
+ * </code>
+ * 
+ * @package ephFrame
+ * @subpackage ephFrame.lib
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 11.11.2008
  */
 class CURL extends Object {
 	
@@ -45,77 +45,77 @@ class CURL extends Object {
 	const METHOD_GET = 1;
 	
 	/**
-	 *	Request sending method
-	 * 	@var integer
+	 * Request sending method
+	 * @var integer
 	 */
 	public $method = self::METHOD_POST;
 	
 	/**
-	 *	Array of key=>value pairs that should be send during the resut
-	 * 	@var array(string)
+	 * Array of key=>value pairs that should be send during the resut
+	 * @var array(string)
 	 */
 	public $data = array();
 	
 	/**
-	 *	Cookie data that should be send
-	 * 	@var array(string)
+	 * Cookie data that should be send
+	 * @var array(string)
 	 */
 	public $cookie = array();
 	
 	/**
-	 *	Port used during request
-	 * 	@var integer
+	 * Port used during request
+	 * @var integer
 	 */
 	public $port = 80;
 	
 	/**
-	 *	Referer that should be send 
-	 * 	@var string
+	 * Referer that should be send 
+	 * @var string
 	 */
 	public $referer;
 	
 	/**
-	 *	URL of the request
-	 * 	@var string
+	 * URL of the request
+	 * @var string
 	 */
 	public $url;
 	
 	/**
-	 *	Timeout for sended requests in seconds
-	 * 	@var integer
+	 * Timeout for sended requests in seconds
+	 * @var integer
 	 */
 	public $timeout = 10;
 	
 	/**
-	 * 	Follow redirect and forward responses automatically
-	 * 	@param boolean
+	 * Follow redirect and forward responses automatically
+	 * @param boolean
 	 */
 	public $followLocation = true;
 	
 	/**
-	 *	User-Agent String that should be send, leave blank for none
-	 * 	@var string
+	 * User-Agent String that should be send, leave blank for none
+	 * @var string
 	 */
 	public $userAgent = 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_5_5; de-de) AppleWebKit/525.18 (KHTML, like Gecko) Version/3.1.2 Safari/525.20.1';
 	
 	/**
-	 *	HTTP-AUTH informations like this:
-	 * 	<code>
-	 * 	$curl->auth = array('username' => 'password');
-	 * 	</code>
-	 * 	@var array(string)
+	 * HTTP-AUTH informations like this:
+	 * <code>
+	 * $curl->auth = array('username' => 'password');
+	 * </code>
+	 * @var array(string)
 	 */
 	public $auth = array();
 	
 	/**
-	 * 	Array of custom header data that should be send
-	 * 	@var array(string)
+	 * Array of custom header data that should be send
+	 * @var array(string)
 	 */
 	public $headers = array();
 	
 	/**
-	 *	Curl wrapper constructor
-	 * 	@
+	 * Curl wrapper constructor
+	 * @
 	 */
 	public function __construct($url = null, Array $options = array()) {
 		if ($url !== null) {
@@ -129,7 +129,7 @@ class CURL extends Object {
 	}
 	
 	/**
-	 *	@param array(string)
+	 * @param array(string)
 	 */
 	public function fromArray(Array $options = array()) {
 		foreach($options as $key => $value) {
@@ -139,19 +139,19 @@ class CURL extends Object {
 	}
 	
 	/**
-	 *	Tests if CURL is available in this php version
-	 * 	@return boolean
+	 * Tests if CURL is available in this php version
+	 * @return boolean
 	 */
 	public static function available() {
 		return function_exists('curl_init');
 	}
 	
 	/**
-	 *	Starts the HTTP Request and returns or prints the result
+	 * Starts the HTTP Request and returns or prints the result
 	 * 
-	 * 	@param boolean $buffered
-	 * 	@param boolean $header return/print response headers as well
-	 * 	@return boolean|string
+	 * @param boolean $buffered
+	 * @param boolean $header return/print response headers as well
+	 * @return boolean|string
 	 */
 	public function exec($buffered = true, $headers = false) {
 		if (!empty($this->data)) {
@@ -208,22 +208,20 @@ class CURL extends Object {
 }
 
 /**
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class CURLException extends BasicException {}
 
 /**
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class CURLEmptyURLException extends CURLException {}
 
 /**
- *	Thrown when CURL instance is created and no curl support
- * 	for this PHP installation
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * Thrown when CURL instance is created and no curl support
+ * for this PHP installation
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
-
-?>

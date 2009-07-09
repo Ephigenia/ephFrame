@@ -1,48 +1,48 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- *	Image Color Class
+ * Image Color Class
  *
- *	Calculate RGB Values from Hex and back:
- *	<code>
- *		$color = new Color(array(255,255,255));
- *		// is same as
- *		$color = new Color(255,255,255);
- *		// get hex value for that color
- *		$hex = $color->hex();
- *		// convert without object context
- *		$rgb = Color::HexToRGB("#FF00EB");
- *	</code>
- *	<br />
- *	Lighten or darken a color:
- *	<code>
- *		$color = new Color(array(255,0,0));
- *		$darkened = $color->shift(-20);
- *	</code>
- *	
- *	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 03.05.2007
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
- * 	@version 0.2
+ * Calculate RGB Values from Hex and back:
+ * <code>
+ * $color = new Color(array(255,255,255));
+ * // is same as
+ * $color = new Color(255,255,255);
+ * // get hex value for that color
+ * $hex = $color->hex();
+ * // convert without object context
+ * $rgb = Color::HexToRGB("#FF00EB");
+ * </code>
+ * <br />
+ * Lighten or darken a color:
+ * <code>
+ * $color = new Color(array(255,0,0));
+ * $darkened = $color->shift(-20);
+ * </code>
+ * 
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 03.05.2007
+ * @package ephFrame
+ * @subpackage ephFrame.lib
+ * @version 0.2
  */
 class Color extends Object {
 	
@@ -53,8 +53,8 @@ class Color extends Object {
 	public $image;
 
 	/**
-	 *	Color Constructor
-	 *	@param array(integer), integer, string
+	 * Color Constructor
+	 * @param array(integer), integer, string
 	 */
     public function __construct() {
     	// create color
@@ -100,8 +100,8 @@ class Color extends Object {
     }
     
     /**
-     *	Returns color handle used for painting in images
-     *	@return integer
+     * Returns color handle used for painting in images
+     * @return integer
      */
     public function handle() {
     	if (empty($this->handle)) {
@@ -111,8 +111,8 @@ class Color extends Object {
     }
     
     /**
-     *	Creates a Handle for this color and returns it
-     *	@return integer
+     * Creates a Handle for this color and returns it
+     * @return integer
      */
     public function handleCreate() {
     	$this->handle = imagecolorallocate($this->image->handle(), $this->r, $this->g, $this->b);
@@ -120,10 +120,10 @@ class Color extends Object {
     }
     
     /**
-     *	Shifts r,g,b values for a given factor, usefull for lighten or darken a color
-     *	pass positive factors for lighten and negative for darken the color
+     * Shifts r,g,b values for a given factor, usefull for lighten or darken a color
+     * pass positive factors for lighten and negative for darken the color
      *
-     *	@param	integer $factor
+     * @param	integer $factor
      */
     public function shift($factor) {
     	$this->r += $factor;
@@ -138,8 +138,8 @@ class Color extends Object {
     }
     
     /**
-     *	Returns Hex Value for this Color as String
-     *	@return string
+     * Returns Hex Value for this Color as String
+     * @return string
      */
     public function hex($value = null) {
     	if ($value !== null) {
@@ -152,34 +152,34 @@ class Color extends Object {
     }
     
     /**
-     *	Returns r,g,b array for this color
-     *	@return array(integer)
+     * Returns r,g,b array for this color
+     * @return array(integer)
      */
     public function rgb() {
     	return array($this->r, $this->g, $this->b);
     }
     
     /**
-     *	Returns r,g,b array as float values,
-     * 	0 = 0, 1 = 255, 0.5 = 128
-     * 	@return array(float)
+     * Returns r,g,b array as float values,
+     * 0 = 0, 1 = 255, 0.5 = 128
+     * @return array(float)
      */
    	public function rgbFloat() {
    		return array($this->r / 255, $this->g / 255, $this->b / 255);
    	}
    	
    	/**
-   	 * 	Returns the color value as float values
-   	 *	@return array(float)
+   	 * Returns the color value as float values
+   	 * @return array(float)
    	 */
    	public function toFloat() {
    		return Color::rgbFloat($this->r, $this->g, $this->b);
    	}
     
     /**
-     *	Converts a Hex Value to an array(R,G,B)
-     *	@param	string $hex
-     *	@return array(integer)
+     * Converts a Hex Value to an array(R,G,B)
+     * @param	string $hex
+     * @return array(integer)
      */
     public static function HexToRGB($hex) {
     	// cut #
@@ -193,11 +193,11 @@ class Color extends Object {
     }
     
     /**
-     *	Converts RGB to HEX
-     *	@param array(integer)|integer	RGB Array or Red Value
-     *	@param integer	Green
-     *	@param integer	Blue
-     *	@return string
+     * Converts RGB to HEX
+     * @param array(integer)|integer	RGB Array or Red Value
+     * @param integer	Green
+     * @param integer	Blue
+     * @return string
      */
     public static function RGBtoHex($red, $green = null, $blue = null) {
     	if (is_array($red)) {
@@ -207,17 +207,17 @@ class Color extends Object {
     }
     
     /**
-     * 	Returns the hex value for this color
-     * 	@return string
+     * Returns the hex value for this color
+     * @return string
      */
     public function toHex() {
     	return Color::RGBtoHex($this->r, $this->g, $this->b);
     }
     
     /**
-     *	Convert RGB Color to HSV Color Model
-     * 	http://en.wikipedia.org/wiki/HSL_color_space
-     * 	
+     * Convert RGB Color to HSV Color Model
+     * http://en.wikipedia.org/wiki/HSL_color_space
+     * 
      */
     public static function RGBtoHSL($r, $g = null, $b = null) {
     	if (is_array($r)) {
@@ -294,14 +294,14 @@ class Color extends Object {
     }
     
     /**
-     * 	Converts rgb values to YUV
-     * 	
-     * 	YUV colors are described here <a href="http://de.wikipedia.org/wiki/YUV">YUV</a>
+     * Converts rgb values to YUV
+     * 
+     * YUV colors are described here <a href="http://de.wikipedia.org/wiki/YUV">YUV</a>
      *
-     * 	@param integer|array(integer) $r
-     * 	@param integer $g
-     * 	@param integer $g
-     * 	@return array array containing Y, U and V value
+     * @param integer|array(integer) $r
+     * @param integer $g
+     * @param integer $g
+     * @return array array containing Y, U and V value
      */
     public static function RGBtoYUV($r, $g = null, $b = null) {
     	if (is_array($r)) {
@@ -314,8 +314,8 @@ class Color extends Object {
     }
     
     /**
-     *	Returns this color as YUV values
-     * 	@return array(integer)
+     * Returns this color as YUV values
+     * @return array(integer)
      */
     public function toYUV() {
     	return Color::RGBtoYUV($this->r, $this->g, $this->b);
@@ -326,11 +326,11 @@ class Color extends Object {
     }
     
     /**
-     * 	Convert YUV color values back to RGB values
-     * 	@param array(integer) $y
-     * 	@param integer $u
-     * 	@param integer $v
-     * 	@return array
+     * Convert YUV color values back to RGB values
+     * @param array(integer) $y
+     * @param integer $u
+     * @param integer $v
+     * @return array
      */
     public static function YUVtoRGB($y, $u = null, $v = null) {
     	if (is_array($y)) {
@@ -343,10 +343,10 @@ class Color extends Object {
     }
     
     /**
-     *	Converts a RGB Color to HUV Color
-     * 	@param array(integer)|integer RGB Array or red value
-     * 	@param integer Green value
-     * 	@param integer Blue value
+     * Converts a RGB Color to HUV Color
+     * @param array(integer)|integer RGB Array or red value
+     * @param integer Green value
+     * @param integer Blue value
      */
     public static function RGBtoHUV($r, $g = null, $b = null) {
     	if (is_array($r)) {
@@ -359,13 +359,11 @@ class Color extends Object {
     }
     
     /**
-     *	Returns this color as HUV values
-     * 	@return array(integer)
+     * Returns this color as HUV values
+     * @return array(integer)
      */
     public function toHUV() {
     	return Color::RGBtoHUV($this->r, $this->g, $this->b);
     }
     
 }
-
-?>

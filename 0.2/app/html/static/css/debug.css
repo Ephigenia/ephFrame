@@ -1,14 +1,14 @@
 @CHARSET "UTF-8";
 
 /**
- *  Some stylesheets that can be included during debugging your application
- * 	all styles are only used when DEBUG > 2
- * 	@author Marcel Eichner
- * 	@since 2009-05-29
+ * Some stylesheets that can be included during debugging your application
+ * all styles are only used when DEBUG > 2
+ * @author Marcel Eichner
+ * @since 2009-05-29
  */
 
 /**
- * 	Styles for sql log, shown if DEBUG > 1
+ * Styles for sql log, shown if DEBUG > 1
  */
 .debugOutput {
 	clear: both;
@@ -33,7 +33,7 @@
 }
 
 /**
- *	Styles for element Names, shown if debug.showElementName = true
+ * Styles for element Names, shown if debug.showElementName = true
  */
 div.elementName {
 	font-size: 12px;

@@ -2,85 +2,85 @@
 
 // @todo add method, var to add validation rules (from a model)
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- *	Abstract Form Field Class
+ * Abstract Form Field Class
  * 
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.component.Form.Field
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 04.11.2008
+ * @package ephFrame
+ * @subpackage ephFrame.lib.component.Form.Field
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 04.11.2008
  */
 abstract class FormField extends HTMLTag {
 	
 	/**
-	 * 	Stores an instance to the form this Form Field belongs to
-	 * 	@var Form
+	 * Stores an instance to the form this Form Field belongs to
+	 * @var Form
 	 */
 	public $form;
 	
 	/**
-	 * 	@var string
+	 * @var string
 	 */
 	public $type = 'text';
 	
 	/**
-	 * 	@var HTMLTag
+	 * @var HTMLTag
 	 */
 	public $label;
 	
 	/**
-	 * 	@var boolean
+	 * @var boolean
 	 */
 	public $mandatory = true;
 	
 	/**
-	 *	Stores a error message if validation failed for this form field, if no
-	 * 	specific error message was set and an error occured this is true.
-	 * 	@var string|boolean
+	 * Stores a error message if validation failed for this form field, if no
+	 * specific error message was set and an error occured this is true.
+	 * @var string|boolean
 	 */
 	public $error = false;
 	
 	/**
-	 *	Stores a description for the form field
-	 * 	@var string|boolean
+	 * Stores a description for the form field
+	 * @var string|boolean
 	 */
 	public $description = false;
 	
 	/**
-	 * 	Validation rule for this form field, checked in {@link Validate}
-	 * 	Same format as in model.
-	 * 	@var array
+	 * Validation rule for this form field, checked in {@link Validate}
+	 * Same format as in model.
+	 * @var array
 	 */
 	public $validate = array();
 	
 	/**
-	 *	Standard sgml tag name for input fields is input
-	 * 	@var string
+	 * Standard sgml tag name for input fields is input
+	 * @var string
 	 */
 	public $tagName = 'input';
 
 	/**
-	 *	Creates a new Formfield with the $name, $value and $attributes
-	 * 	@param string $name
-	 * 	@param string $value
-	 * 	@param array(string) array of attributes
+	 * Creates a new Formfield with the $name, $value and $attributes
+	 * @param string $name
+	 * @param string $value
+	 * @param array(string) array of attributes
 	 */
 	public function __construct($name, $value = null, Array $attributes = array()) {
 		$attributes['type'] = $this->type;
@@ -97,17 +97,17 @@ abstract class FormField extends HTMLTag {
 	}
 	
 	/**
-	 * 	Callback for custom logic
-	 * 	@return boolean
+	 * Callback for custom logic
+	 * @return boolean
 	 */
 	public function afterConstruct() {
 		return true;
 	}
 	
 	/**
-	 *	Set form field to be mandatory or not
-	 * 	@param boolean $value
-	 * 	@return FormField
+	 * Set form field to be mandatory or not
+	 * @param boolean $value
+	 * @return FormField
 	 */
 	public function mandatory($value) {
 		$this->mandatory = (bool) $value;
@@ -115,9 +115,9 @@ abstract class FormField extends HTMLTag {
 	}
 	
 	/**
-	 *	Set description for form field
-	 * 	@param string $description
-	 * 	@return FormField
+	 * Set description for form field
+	 * @param string $description
+	 * @return FormField
 	 */
 	public function description($description) {
 		$this->description = $description;
@@ -130,10 +130,10 @@ abstract class FormField extends HTMLTag {
 	}
 	
 	/**
-	 *	Sets the form field value or returns the submitted value
-	 *	
-	 * 	@param string	$value
-	 * 	@return string|FormField
+	 * Sets the form field value or returns the submitted value
+	 * 
+	 * @param string	$value
+	 * @return string|FormField
 	 */
 	public function value($value = null) {
 		// set form field value
@@ -156,8 +156,8 @@ abstract class FormField extends HTMLTag {
 	}
 	
 	/**
-	 *	Checks if this field has any submitted value
-	 * 	@return boolean
+	 * Checks if this field has any submitted value
+	 * @return boolean
 	 */
 	public function isEmpty() {
 		$val = $this->value();
@@ -165,10 +165,10 @@ abstract class FormField extends HTMLTag {
 	}
 	
 	/**
-	 *	Adds an validation Rule to the validation error, allready existent
-	 * 	rules will be overwritten.
-	 * 	@param array(string)
-	 * 	@return FormField
+	 * Adds an validation Rule to the validation error, allready existent
+	 * rules will be overwritten.
+	 * @param array(string)
+	 * @return FormField
 	 */
 	public function addValidationRule(Array $validationRule) {
 		if (ArrayHelper::dimensions($validationRule) == 1) {
@@ -180,17 +180,17 @@ abstract class FormField extends HTMLTag {
 	}
 	
 	/**
-	 *	Validate a single value or the current form field value and returns
-	 * 	the result. If the validation fails the error message is stored in 
-	 * 	$error:
-	 * 	<code>
-	 * 	if ($formField->validate('testvalue')) {
-	 * 		echo $FormField->error;
-	 *	}
-	 * 	</code>
-	 * 	
-	 * 	@param string|mixed $value
-	 * 	@return string|boolean
+	 * Validate a single value or the current form field value and returns
+	 * the result. If the validation fails the error message is stored in 
+	 * $error:
+	 * <code>
+	 * if ($formField->validate('testvalue')) {
+	 * 	echo $FormField->error;
+	 * }
+	 * </code>
+	 * 
+	 * @param string|mixed $value
+	 * @return string|boolean
 	 */
 	public function validate($value = null) {
 		if (func_num_args() == 0) {
@@ -253,11 +253,9 @@ abstract class FormField extends HTMLTag {
 }
 
 /**
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
- *	@author Ephigenia // Marcel Eichner <love@ephigenia.de>
- *	@since 26.05.2009
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
+ * @author Ephigenia // Marcel Eichner <love@ephigenia.de>
+ * @since 26.05.2009
  */
 class FormFieldException extends BasicException {} 
-
-?>

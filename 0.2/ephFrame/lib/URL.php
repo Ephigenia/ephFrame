@@ -1,66 +1,66 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 // load renderable renderable interface
 interface_exists('Renderable') or require dirname(__FILE__).'/Renderable.php';
 
 /**
- *	URL Class
+ * URL Class
  * 
- * 	U can use this class for analyzing, creating, manipulating every kind
- * 	of URL-Like Strings. Also the {@link DBDSN} used in this Framework is a
- * 	child of this class.
+ * U can use this class for analyzing, creating, manipulating every kind
+ * of URL-Like Strings. Also the {@link DBDSN} used in this Framework is a
+ * child of this class.
  *
- *	<code>
- *		// parsing urls
- *		$url = new URL("http://www.ephigenia.de/hello/#you");
- *		echo $url->host; 	// gets 'www.ephigenia.de'
- *		echo $url->anchor; 	// gets 'you'
+ * <code>
+ * // parsing urls
+ * $url = new URL("http://www.ephigenia.de/hello/#you");
+ * echo $url->host; 	// gets 'www.ephigenia.de'
+ * echo $url->anchor; 	// gets 'you'
  *
- *		// creating new urls
- *		$url = new Url();
- *		$url->host("www.ephigenia.de");
- *		$url->scheme("http");
- *		echo $url; 			// get 'http://www.ephigenia.de'
- *		echo $url->urlWithoutScheme(); // get www.ephgienia.de
- *	</code>
+ * // creating new urls
+ * $url = new Url();
+ * $url->host("www.ephigenia.de");
+ * $url->scheme("http");
+ * echo $url; 			// get 'http://www.ephigenia.de'
+ * echo $url->urlWithoutScheme(); // get www.ephgienia.de
+ * </code>
  * 
- * 	Some other classes may use this one, the best example is the {@link DBDSN}
- * 	class which is used to establish a connection to Database Servers.
- *	
- *	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 02.05.2007
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
- * 	@version 0.1
+ * Some other classes may use this one, the best example is the {@link DBDSN}
+ * class which is used to establish a connection to Database Servers.
+ * 
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 02.05.2007
+ * @package ephFrame
+ * @subpackage ephFrame.lib
+ * @version 0.1
  */
 class URL extends Object implements Renderable {
 	
 	/**
-	 * 	@var string
+	 * @var string
 	 */
 	public $url;
 	
 	/**
-	 * 	Stores the parsed parts of the url
-	 * 	@var array(string)
+	 * Stores the parsed parts of the url
+	 * @var array(string)
 	 */
 	protected $parsedUrl = array(
 		'scheme' => null,
@@ -75,18 +75,18 @@ class URL extends Object implements Renderable {
 	);
 	
 	/**
-	 *	Url Constructor
-	 *	@param string	$url
+	 * Url Constructor
+	 * @param string	$url
 	 */
     public function __construct($url = null) {
 	    return $this->_url($url);
     }
     
 	/**
-     *	Sets or returns the current url
-     * 	if you set a new url the url is parsed and stored into {@link parsedUrl}
-     * 	@param string $url
-     * 	@return string
+     * Sets or returns the current url
+     * if you set a new url the url is parsed and stored into {@link parsedUrl}
+     * @param string $url
+     * @return string
      */
 	private function _url($url = null) {
 		if ($url == null) return $this;
@@ -98,10 +98,10 @@ class URL extends Object implements Renderable {
 	}
 	
 	/**
-     *	Parses the url and stores the parsed parts in {@link parsedUrl}
-     * 	@param string $url
-     * 	@throws StringExpectedException
-     * 	@return boolean 
+     * Parses the url and stores the parsed parts in {@link parsedUrl}
+     * @param string $url
+     * @throws StringExpectedException
+     * @return boolean 
      */
     private function parse() {
     	$this->parsedUrl = array_merge($this->parsedUrl, parse_url($this->url));
@@ -113,8 +113,8 @@ class URL extends Object implements Renderable {
     }
     
     /**
-     * 	get or set method, internally used
-     * 	@param 
+     * get or set method, internally used
+     * @param 
      */
 	public function __call($method, $params) {
 		// overwriting this du to php 5.1.6 thinks that url function is the constructor
@@ -136,35 +136,35 @@ class URL extends Object implements Renderable {
 	}
 	
 	/**
-	 *	Returns the builded url
-	 * 	@return string
+	 * Returns the builded url
+	 * @return string
 	 */
 	public function __toString() {
 		return $this->render();
 	}
 	
 	/**
-	 * 	Callback called before {@link render} takes action
-	 * 	you can overwrite this method in subclasses to avoid rendering
-	 * 	@return boolean
+	 * Callback called before {@link render} takes action
+	 * you can overwrite this method in subclasses to avoid rendering
+	 * @return boolean
 	 */
 	public function beforeRender() {
 		return true;
 	}
 	
 	/**
-	 * 	@param string $url
-	 *	@return string
+	 * @param string $url
+	 * @return string
 	 */
 	public function afterRender($url) {
 		return $url;
 	}
 	
 	/**
-	 *	Sets or returns the path in the url
-	 * 	@param string $path
-	 * 	@param boolean $asArray
-	 * 	@return string
+	 * Sets or returns the path in the url
+	 * @param string $path
+	 * @param boolean $asArray
+	 * @return string
 	 */
 	public function path($path = null, $asArray = false) {
 		$argCount = func_num_args();
@@ -193,8 +193,8 @@ class URL extends Object implements Renderable {
 	}
 	
 	/**
-	 *	Builds a URL with the parsed date in {@link parsedUrl}
-	 * 	@return builded url 
+	 * Builds a URL with the parsed date in {@link parsedUrl}
+	 * @return builded url 
 	 */
     public function render() {
     	// drop if beforeRender fucks it off
@@ -245,10 +245,8 @@ class URL extends Object implements Renderable {
 }
 
 /**
- * 	Basic Url Exception
- *	@package ephFrame
- *	@subpackage ephFrame.lib.exception
+ * Basic Url Exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class UrlException extends ComponentException {}
-
-?>

@@ -1,76 +1,76 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- *	XML File/Node Class
+ * XML File/Node Class
  * 
- * 	! THIS CLASS IS NOT REALLY COOL; MUST BE REWRITTEN! 
- *	// todo remove upper comment if class is rewritten!
- * 	// todo rewrite this class as soon as possible
+ * ! THIS CLASS IS NOT REALLY COOL; MUST BE REWRITTEN! 
+ * // todo remove upper comment if class is rewritten!
+ * // todo rewrite this class as soon as possible
  * 
- *	This Class is an XML Node or a whole XML File (cause an xml file is a node with lots subnodes)
- *	I wrote this class because I didn't like the minixml integration or the DOM Model ;-)
+ * This Class is an XML Node or a whole XML File (cause an xml file is a node with lots subnodes)
+ * I wrote this class because I didn't like the minixml integration or the DOM Model ;-)
  *
- *	This class works with simplexml from php5, but could be enhanced (even for php4 support)
- *	by using an own xml parser. Maybe in the future ...
+ * This class works with simplexml from php5, but could be enhanced (even for php4 support)
+ * by using an own xml parser. Maybe in the future ...
  *
- *	Simply create a File from an array
- *	<code>
- *		$fileArray = array(
- *			"name"	=> "root",
- *			"attributes" => array("cubes" => "many"),
- *			"colours" => array(
- *				"color" => "yellow",
- *				"color" => "green"
- *			);
- *		);
- *		$xml = new XML($fileArray);
- *		$xml->saveTo("myBalls.xml");
- *	</code>
+ * Simply create a File from an array
+ * <code>
+ * $fileArray = array(
+ * 	"name"	=> "root",
+ * 	"attributes" => array("cubes" => "many"),
+ * 	"colours" => array(
+ * 		"color" => "yellow",
+ * 		"color" => "green"
+ * 	);
+ * );
+ * $xml = new XML($fileArray);
+ * $xml->saveTo("myBalls.xml");
+ * </code>
  *
- *	Read a file into an array
- *	<code>
- *		$xml = new XML("myBalls.xml");
- *		echo var_dump($xml);
- *	</code>
+ * Read a file into an array
+ * <code>
+ * $xml = new XML("myBalls.xml");
+ * echo var_dump($xml);
+ * </code>
  *
- *	Iterate through subnodes
- *	<code>
- *		foreach ($xml->nodes() as $childnode) {
- *			echo $childnode->name();
- *		}
- *	</code>
+ * Iterate through subnodes
+ * <code>
+ * foreach ($xml->nodes() as $childnode) {
+ * 	echo $childnode->name();
+ * }
+ * </code>
  *
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.component
- * 	@author Marcel Eichner // Ephigenia <marcel.eichner@elementar.net>
- * 	@since 24.08.2006
- * 	@uses File
- * 	@package File
+ * @package ephFrame
+ * @subpackage ephFrame.lib.component
+ * @author Marcel Eichner // Ephigenia <marcel.eichner@elementar.net>
+ * @since 24.08.2006
+ * @uses File
+ * @package File
  */
 class XML extends File {
 
 	public $filename;
 
 	/**
-	 *	Properties for XML acting as Node
+	 * Properties for XML acting as Node
 	 */
 	public $depth = 0;
 	public $value;
@@ -81,11 +81,11 @@ class XML extends File {
 	public $encoding = "utf-8";
 
 	/**
-	 *	XML File/Node Constructor
-	 *	Constructs an XML Object by loading a file or parsing an Array
+	 * XML File/Node Constructor
+	 * Constructs an XML Object by loading a file or parsing an Array
 	 *
-	 *	@param array|string		String: Filename of file to load, Array: Array which to parse
-	 *	@return XML	Instance of Object itsself
+	 * @param array|string		String: Filename of file to load, Array: Array which to parse
+	 * @return XML	Instance of Object itsself
 	 */
 	public function __construct($filenameOrArray = null, $encoding = null) {
 		$this->encoding($encoding);
@@ -109,9 +109,9 @@ class XML extends File {
 	}
 
 	/**
-	 *	Flushes XML Node, deletes all connection to subnodes, attributes and resets the
-	 *	Object
-	 *	@return XML
+	 * Flushes XML Node, deletes all connection to subnodes, attributes and resets the
+	 * Object
+	 * @return XML
 	 */
 	public function flush() {
 		$this->nodes = array();
@@ -121,11 +121,11 @@ class XML extends File {
 	}
 
 	/**
-	 * 	Saves XML Node Content (with all subnodes/attributes) to a file,
-	 * 	if no filename is given it tries to save in the previosly loaded file
-	 * 	@param string	$filename	File to save to
-	 * 	@return Saving Result
-	 * 	@throws XMLFileNameMissingException
+	 * Saves XML Node Content (with all subnodes/attributes) to a file,
+	 * if no filename is given it tries to save in the previosly loaded file
+	 * @param string	$filename	File to save to
+	 * @return Saving Result
+	 * @throws XMLFileNameMissingException
 	 */
 	public function save($filename = null) {
 		if ($filename === null) {
@@ -136,9 +136,9 @@ class XML extends File {
 	}
 
 	/**
-	 *	Saves XML Node Content in a File
-	 *	@param string	$filename	Filename to save to
-	 *	@return Boolean
+	 * Saves XML Node Content in a File
+	 * @param string	$filename	Filename to save to
+	 * @return Boolean
 	 */
 	public function saveTo($filename) {
 		if (empty($filename)) throw new XMLFileNameMissingException();
@@ -153,10 +153,10 @@ class XML extends File {
 	}
 
 	/**
-	 *	Loads XML File from filename set previosly by loading or using
-	 *	{@link filename} function
-	 *	@return Boolean
-	 *	@throws XMLFileNameMissingException
+	 * Loads XML File from filename set previosly by loading or using
+	 * {@link filename} function
+	 * @return Boolean
+	 * @throws XMLFileNameMissingException
 	 */
 	public function load() {
 		if (empty($this->filename)) throw new XMLFileNameMissingException();
@@ -164,10 +164,10 @@ class XML extends File {
 	}
 
 	/**
-	 *	Load XML File from given Filename
-	 *	@param string filename
-	 *	@return Boolean
-	 *	@throws XMLFileNameMissingException
+	 * Load XML File from given Filename
+	 * @param string filename
+	 * @return Boolean
+	 * @throws XMLFileNameMissingException
 	 */
 	public function loadFile($filename) {
 		if (empty($filename)) throw new XMLFileNameMissingException();
@@ -175,10 +175,10 @@ class XML extends File {
 	}
 
 	/**
-	 *	Sets filename to save to or load from (doesn't change the filename
-	 *	on harddisk!, use rename for that)
-	 *	@param string	$filename
-	 *	@return string
+	 * Sets filename to save to or load from (doesn't change the filename
+	 * on harddisk!, use rename for that)
+	 * @param string	$filename
+	 * @return string
 	 */
 	public function filename($filename = null) {
 		if ($filename !== null) { $this->filename = $filename; return $this; }
@@ -186,10 +186,10 @@ class XML extends File {
 	}
 
 	/**
-	 *	Loads XML Content from a Filea and parses it
-	 *	@param string	$filename
-	 *	@throws ephFrameWrongTypeException
-	 *	@return Boolean
+	 * Loads XML Content from a Filea and parses it
+	 * @param string	$filename
+	 * @throws ephFrameWrongTypeException
+	 * @return Boolean
 	 */
 	public function fromFile($filename) {
 		if (empty($filename) || !is_string($filename)) { throw new ephFrameWrongTypeException($filename,"string"); }
@@ -215,24 +215,24 @@ class XML extends File {
 	}
 
 	/**
-	 * 	Parses an Array to this node, no nodes will be deleted before importing,
-	 * 	unless you set flush to true
+	 * Parses an Array to this node, no nodes will be deleted before importing,
+	 * unless you set flush to true
 	 *
-	 * 	<code>
-	 * 		$xmlArray = array(
-	 * 			"img" => array(
-	 * 					"attributes" => array("src","img/hello.jpg", "border" => 0)
-	 * 				),
-	 * 			"p"	=> array(
-	 * 				"value"	=> "this is a text"
-	 * 			)
-	 * 		);
-	 * 		$xml = new XML();
-	 * 		$xml->fromArray($xmlArray);
-	 * 		echo $xml->toString();
-	 * 		// will give you
-	 * 		<img src="img/hello.jpg" border="0" /><p>this is a text</p>
-	 * 	</code>
+	 * <code>
+	 * 	$xmlArray = array(
+	 * 		"img" => array(
+	 * 				"attributes" => array("src","img/hello.jpg", "border" => 0)
+	 * 			),
+	 * 		"p"	=> array(
+	 * 			"value"	=> "this is a text"
+	 * 		)
+	 * 	);
+	 * 	$xml = new XML();
+	 * 	$xml->fromArray($xmlArray);
+	 * 	echo $xml->toString();
+	 * 	// will give you
+	 * 	<img src="img/hello.jpg" border="0" /><p>this is a text</p>
+	 * </code>
 	 */
 	public function fromArray($array, $depth = 0, $flush = false) {
 		if ($flush === true) $this->flush();
@@ -282,9 +282,9 @@ class XML extends File {
 	}
 
 	/**
-	 *	Returns XML Node Content as an Array, if there are multiple tags
-	 *	with the same name they will be returned as a subarray. See example
-	 *	for further description
+	 * Returns XML Node Content as an Array, if there are multiple tags
+	 * with the same name they will be returned as a subarray. See example
+	 * for further description
 	 *
 	 */
 	public function toArray($depth = 0) {
@@ -315,8 +315,8 @@ class XML extends File {
 	}
 
 	/**
-	 *	Parses String into XML Node Objects
-	 *	@param string	XML String to Parse
+	 * Parses String into XML Node Objects
+	 * @param string	XML String to Parse
 	 */
 	public function fromString($string) {
 		if (!empty($string)) {
@@ -327,8 +327,8 @@ class XML extends File {
 	}
 
 	/**
-	 *	Returns XML Node Content as a String (i.e. XML Code)
-	 *	@return string
+	 * Returns XML Node Content as a String (i.e. XML Code)
+	 * @return string
 	 */
 	public function toString($withXMLOpenTag = false) {
 		$nodeString = str_repeat("\t",$this->depth()+1)."<".$this->nodeName();
@@ -364,17 +364,17 @@ class XML extends File {
 	}
 
 	/**
-	 *	PHP5 Magic Function and alias for {@link toString}
-	 *	@see toString
-	 *	@return string
+	 * PHP5 Magic Function and alias for {@link toString}
+	 * @see toString
+	 * @return string
 	 */
 	public function __toString() {
 		return $this->toString();
 	}
 
 	/**
-	 * 	In the File Manner, this functions gives you the xml sourcecode
-	 * 	@return string
+	 * In the File Manner, this functions gives you the xml sourcecode
+	 * @return string
 	 */
 	public function toXML() {
 		return $this->toString();
@@ -382,9 +382,9 @@ class XML extends File {
 
 
 	/**
-	 * 	Sends common Http header to browser
-	 * 	@param string	$download	Actives additional download headers (for download dialog)
-	 * 	@return string
+	 * Sends common Http header to browser
+	 * @param string	$download	Actives additional download headers (for download dialog)
+	 * @return string
 	 */
 	public function header($downloadFileName = false) {
 		$headers = array();
@@ -400,9 +400,9 @@ class XML extends File {
 	}
 
 	/**
-	 * 	Returns parent Node if there is one or sets the parent Node
-	 * 	@param XML	$parent If Passed set to parent of this node
-	 * 	@return XML
+	 * Returns parent Node if there is one or sets the parent Node
+	 * @param XML	$parent If Passed set to parent of this node
+	 * @return XML
 	 */
 	public function parent($parent = null) {
 		if ($parent !== null) { $this->parent = $parent; return $this; }
@@ -410,18 +410,18 @@ class XML extends File {
 	}
 
 	/**
-	 *	Tests wheter this Node has a parent or not, root nodes
-	 *	have no parents
-	 *	@return boolean
+	 * Tests wheter this Node has a parent or not, root nodes
+	 * have no parents
+	 * @return boolean
 	 */
 	public function hasParent() {
 		return (!empty($this->parent));
 	}
 
 	/**
-	 *	Returns or sets Node Name
-	 *	@param string
-	 *	@return string Name of this Node
+	 * Returns or sets Node Name
+	 * @param string
+	 * @return string Name of this Node
 	 */
 	public function nodeName($nodeName = null) {
 		if ($nodeName !== null) { $this->nodeName = $nodeName; return $this; }
@@ -430,9 +430,9 @@ class XML extends File {
 	}
 
 	/**
-	 * 	Returns value of Node, the stuff between the < >
-	 * 	@param string	$value
-	 * 	@return string
+	 * Returns value of Node, the stuff between the < >
+	 * @param string	$value
+	 * @return string
 	 */
 	public function value($value = null) {
 		if ($value !== null) return $this->setValue($value);
@@ -440,9 +440,9 @@ class XML extends File {
 	}
 
 	/**
-	 *	part of {@link value}
-	 *	@param string
-	 *	@return XML
+	 * part of {@link value}
+	 * @param string
+	 * @return XML
 	 */
 	public function setValue($value) {
 		$this->value = $value;
@@ -450,25 +450,25 @@ class XML extends File {
 	}
 
 	/**
-	 *	part of {@link value}
-	 *	@param string
-	 *	@return string
+	 * part of {@link value}
+	 * @param string
+	 * @return string
 	 */
 	public function getValue() {
 		return $this->value;
 	}
 
 	/**
-	 * 	Tests wheter this Node has any value set or not
-	 * 	@return boolean
+	 * Tests wheter this Node has any value set or not
+	 * @return boolean
 	 */
 	public function hasValue() {
 		return strlen($this->value);
 	}
 
 	/**
-	 *	Returns node depth
-	 *	@return integer Depth of the node
+	 * Returns node depth
+	 * @return integer Depth of the node
 	 */
 	public function depth($depth = null) {
 		if ($depth !== null) { $this->depth = $depth; return $this; }
@@ -476,9 +476,9 @@ class XML extends File {
 	}
 
 	/**
-	 *	Sets or returns current encoding
-	 * 	@return string
-	 * 	@param string	$encoding
+	 * Sets or returns current encoding
+	 * @return string
+	 * @param string	$encoding
 	 */
 	public function encoding($encoding = null) {
 		if (func_num_args() > 0 && $encoding !== null) {
@@ -489,10 +489,10 @@ class XML extends File {
 	}
 
 	/**
-	 * 	Encodes a string that might have to be encoded -
-	 * 	check encoding you know
-	 * 	@param string	$str
-	 * 	@return string
+	 * Encodes a string that might have to be encoded -
+	 * check encoding you know
+	 * @param string	$str
+	 * @return string
 	 */
 	private function encode($str) {
 		switch (strtolower($this->encoding)) {
@@ -506,9 +506,9 @@ class XML extends File {
 	}
 
 	/**
-	 *	Decode a string that might has to be encoded
-	 * 	@param string	$str
-	 * 	@return string
+	 * Decode a string that might has to be encoded
+	 * @param string	$str
+	 * @return string
 	 */
 	private function decode($str) {
 		switch (strtolower($this->encoding)) {
@@ -522,16 +522,16 @@ class XML extends File {
 	}
 
 	/**
-	 *	Returns Childnodes
-	 *	@return array(XML)
+	 * Returns Childnodes
+	 * @return array(XML)
 	 */
 	public function nodes() {
 		return $this->nodes;
 	}
 
 	/**
-	 *	Returns first child of this node if there is one
-	 *	@return node
+	 * Returns first child of this node if there is one
+	 * @return node
 	 */
 	public function firstChild() {
 		if (count($this->nodes()) == 0) return null;
@@ -539,8 +539,8 @@ class XML extends File {
 	}
 
 	/**
-	 *	Deletes all Childnodes
-	 *	@return Boolean true on Success
+	 * Deletes all Childnodes
+	 * @return Boolean true on Success
 	 */
 	public function deleteNodes() {
 		$this->nodes = array();
@@ -548,19 +548,19 @@ class XML extends File {
 	}
 
 	/**
-	 *	Returns a Node which is named by $nodename
-	 *	If node is not found, Null is returned
-	 *	@param string	$nodename	Nodename to search
-	 *	@return XML
+	 * Returns a Node which is named by $nodename
+	 * If node is not found, Null is returned
+	 * @param string	$nodename	Nodename to search
+	 * @return XML
 	 */
 	public function node($nodename) {
 		return $this->getNode($nodename);
 	}
 
 	/**
-	 *	Adds a childnode
-	 *	@param XML
-	 *	@return Boolean
+	 * Adds a childnode
+	 * @param XML
+	 * @return Boolean
 	 */
 	public function addNode(&$node) {
 		if (is_array($node)) {
@@ -574,9 +574,9 @@ class XML extends File {
 	}
 
 	/**
-	 *	Deletes a node with the given name
-	 *	@param string $nodename
-	 *	@return Boolean
+	 * Deletes a node with the given name
+	 * @param string $nodename
+	 * @return Boolean
 	 */
 	public function deleteNode($nodename) {
 		if (($deleteNode = $this->getNode($nodename)) !== null) {
@@ -586,10 +586,10 @@ class XML extends File {
 	}
 
 	/**
-	 *	Returns a Node which is named by $nodename
-	 *	If node is not found, Null is returned
-	 *	@param string	$nodename	Nodename to search
-	 *	@return XML|null
+	 * Returns a Node which is named by $nodename
+	 * If node is not found, Null is returned
+	 * @param string	$nodename	Nodename to search
+	 * @return XML|null
 	 */
 	public function getNode($nodename) {
 		foreach ($this->nodes() as $node) {
@@ -599,26 +599,26 @@ class XML extends File {
 	}
 
 	/**
-	 *	Returns Number of Childnodes in this Node
-	 *	@return integer
+	 * Returns Number of Childnodes in this Node
+	 * @return integer
 	 */
 	public function nodeCount() {
 		return count($this->nodes());
 	}
 
 	/**
-	 *	Tests wheter this Node has any childnodes
-	 *	@return Boolean
+	 * Tests wheter this Node has any childnodes
+	 * @return Boolean
 	 */
 	public function hasNodes() {
 		return (count($this->nodes()) > 0);
 	}
 
 	/**
-	 * 	Tests wheter this XML Node has a childnode with
-	 * 	the given Name
-	 * 	@param string	$nodeName	Name of the node to be tested
-	 * 	@return boolean
+	 * Tests wheter this XML Node has a childnode with
+	 * the given Name
+	 * @param string	$nodeName	Name of the node to be tested
+	 * @return boolean
 	 */
 	public function hasNode($nodeName) {
 		foreach ($this->nodes() as $childNode) {
@@ -628,10 +628,10 @@ class XML extends File {
 	}
 
 	/**
-	 *	Returns all Attributes as an array
-	 *	$return[attributeName] = attributeValue
-	 * 	@param string $attributeName	Optional Parameter to return value of specific attribute
-	 *	@return array(string|integer)
+	 * Returns all Attributes as an array
+	 * $return[attributeName] = attributeValue
+	 * @param string $attributeName	Optional Parameter to return value of specific attribute
+	 * @return array(string|integer)
 	 */
 	public function attributes($attributeName = null) {
 		if ($attributeName !== null) {
@@ -641,8 +641,8 @@ class XML extends File {
 	}
 
 	/**
-	 *	Returns all Attributes as an string of attributes, usefull for html/xml tags
-	 *	@return string
+	 * Returns all Attributes as an string of attributes, usefull for html/xml tags
+	 * @return string
 	 */
 	public function attributesString() {
 		$return = "";
@@ -653,10 +653,10 @@ class XML extends File {
 	}
 
 	/**
-	 *	Sets or returns and Attribute
-	 *	@param string	$name	Name of Attribute to Set
-	 *	@param mixed	$value	New Value to set, if empty the value will be returned
-	 *	@return XML
+	 * Sets or returns and Attribute
+	 * @param string	$name	Name of Attribute to Set
+	 * @param mixed	$value	New Value to set, if empty the value will be returned
+	 * @return XML
 	 */
 	public function attribute($name, $value = null) {
 		if ($value !== null) return $this->setAttribute($name, $value);
@@ -667,19 +667,19 @@ class XML extends File {
 	}
 
 	/**
-	 *	Tests wheter this node has an attribute with the given name or not
-	 *	@param string $name
-	 *	@return Boolean
+	 * Tests wheter this node has an attribute with the given name or not
+	 * @param string $name
+	 * @return Boolean
 	 */
 	public function hasAttribute($name) {
 		return array_key_exists($name, $this->attributes);
 	}
 
 	/**
-	 *	Sets and Attribute, alias for {@link attribute}
-	 *	@param string	$name	Name of Attribute to Set
-	 *	@param mixed	$value	New Value
-	 *	@return XML
+	 * Sets and Attribute, alias for {@link attribute}
+	 * @param string	$name	Name of Attribute to Set
+	 * @param mixed	$value	New Value
+	 * @return XML
 	 */
 	public function setAttribute($name, $value) {
 		$this->attributes[$name] = $value;
@@ -687,14 +687,14 @@ class XML extends File {
 	}
 
 	/**
-	 *	Sets Multiple Attributes by an Array
-	 *	<code>
-	 *		$xmlNode->setAttributes(array("src" => "img/image.jpg", "border" => 0));
-	 *	</code>
+	 * Sets Multiple Attributes by an Array
+	 * <code>
+	 * $xmlNode->setAttributes(array("src" => "img/image.jpg", "border" => 0));
+	 * </code>
 	 *
-	 *	@param array(string)	$attributesArray
-	 *	@param Boolean			$decode			utf8_decode array values?
-	 *	@return XML	Instance of this Node
+	 * @param array(string)	$attributesArray
+	 * @param Boolean			$decode			utf8_decode array values?
+	 * @return XML	Instance of this Node
 	 */
 	public function setAttributes($attributesArray, $decode = false) {
 		foreach ($attributesArray as $attributeName => $attributeValue) {
@@ -705,16 +705,16 @@ class XML extends File {
 	}
 
 	/**
-	 *	Returns number of Attributes
-	 *	@return integer
+	 * Returns number of Attributes
+	 * @return integer
 	 */
 	public function attributesCount() {
 		return count($this->attributes());
 	}
 
 	/**
-	 *	Returns wheter this node has anny attribute
-	 *	@return boolean
+	 * Returns wheter this node has anny attribute
+	 * @return boolean
 	 */
 	public function hasAttributes() {
 		return (count($this->attributes) > 0);
@@ -723,15 +723,15 @@ class XML extends File {
 }
 
 /**
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class XMLException extends ComponentException {
 
 }
 /**
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class XMLFileNameMissingException extends XMLException {
 	public function __construct() {
@@ -739,4 +739,3 @@ class XMLFileNameMissingException extends XMLException {
 		parent::__construct();
 	}
 }
-?>

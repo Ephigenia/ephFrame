@@ -1,64 +1,64 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- * 	Time, methods and tools dealing with time.
+ * Time, methods and tools dealing with time.
  * 
- * 	This is partly tested in {@link TestTime}
+ * This is partly tested in {@link TestTime}
  * 
- *	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 02.05.2007
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.helper
- * 	@version 0.2
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 02.05.2007
+ * @package ephFrame
+ * @subpackage ephFrame.lib.helper
+ * @version 0.2
  */
 class Time extends Helper {
 	
 	/**
-	 *	Shifts a timestamp by days, month, years in the future or
-	 * 	past. If you want to shift to the future you use positve values,
-	 * 	dates in the past by using negative values.
+	 * Shifts a timestamp by days, month, years in the future or
+	 * past. If you want to shift to the future you use positve values,
+	 * dates in the past by using negative values.
 	 * 
-	 * 	@param integer	$timestamp	Time that should be shifted
-	 * 	@param integer	$days		Number of Days to shift
-	 * 	@param integer	$months		Number of Months to shift
-	 * 	@param integer	$years		Number of Years to shift
-	 * 	@return integer
+	 * @param integer	$timestamp	Time that should be shifted
+	 * @param integer	$days		Number of Days to shift
+	 * @param integer	$months		Number of Months to shift
+	 * @param integer	$years		Number of Years to shift
+	 * @return integer
 	 */
 	public static function shift($timestamp, $days = null, $months = null, $years = null) {
 		return mktime(0, 0, 0, date('m', $timestamp) + $months, date('d', $timestamp) + $days, date('Y', $timestamp) + $years);
 	}
 	
 	/**
-	 *	Checks if the given timestamp is from today
-	 * 	@param integer	$timestamp
-	 * 	@return boolean
+	 * Checks if the given timestamp is from today
+	 * @param integer	$timestamp
+	 * @return boolean
 	 */
 	public static function isToday($timestamp) {
 		return (date('d.m.Y', $timestamp) == date('d.m.Y', time()));
 	}
 	
 	/**
-	 *	Checks if the given timestamp is from yesterday
-	 * 	@param integer	$timestamp
-	 * 	@return boolean
+	 * Checks if the given timestamp is from yesterday
+	 * @param integer	$timestamp
+	 * @return boolean
 	 */
 	public static function isYesterday($timestamp) {
 		$yesterday = self::shift(time(),-1);
@@ -67,9 +67,9 @@ class Time extends Helper {
 	}
 	
 	/**
-	 *	Checks if the given timestamp is from tomorrow
-	 * 	@param integer	$timestamp
-	 * 	@return boolean
+	 * Checks if the given timestamp is from tomorrow
+	 * @param integer	$timestamp
+	 * @return boolean
 	 */
 	public static function isTomorrow($timestamp) {
 		$tomorrow = self::shift(time(), 1);
@@ -78,38 +78,38 @@ class Time extends Helper {
 	}
 	
 	/**
-	 *	Checks if the given timestamp is from this week
-	 * 	@param integer	$timestamp
-	 * 	@return boolean
+	 * Checks if the given timestamp is from this week
+	 * @param integer	$timestamp
+	 * @return boolean
 	 */
 	public static function isThisWeek($timestamp) {
 		return (date('W', $timestamp) == date("W", time()));
 	}
 	
 	/**
-	 * 	Checks if the given timestamp is from this month
-	 * 	@param integer	$timestamp
-	 * 	@return boolean
+	 * Checks if the given timestamp is from this month
+	 * @param integer	$timestamp
+	 * @return boolean
 	 */
 	public static function isThisMonth($timestamp) {
 		return (date('m', $timestamp) == date("m", time()));
 	}
 	
 	/**
-	 *	Checks if the given timestamp is from this year
-	 * 	@param integer	$timestamp
-	 * 	@return boolean
+	 * Checks if the given timestamp is from this year
+	 * @param integer	$timestamp
+	 * @return boolean
 	 */
 	public static function isThisYear($timestamp) {
 		return (date('Y', $timestamp) == date('Y', time()));
 	}
 	
 	/**
-	 *	Returns Time that has spend since $timestamp in human
-	 * 	readable format. (German)
-	 *	// todo put this to i18n class
-	 * 	@param  integer	$timstamp	Timestamp from the past
-	 * 	@return string	Created human readable time string
+	 * Returns Time that has spend since $timestamp in human
+	 * readable format. (German)
+	 * // todo put this to i18n class
+	 * @param  integer	$timstamp	Timestamp from the past
+	 * @return string	Created human readable time string
 	 */
 	public static function timeAgoInWords($timestamp) {
 		if (self::isToday($timestamp)) {
@@ -151,22 +151,22 @@ class Time extends Helper {
 	}
 	
 	/**
-	 *	Calculates the difference of two dates and returns an associative
-	 *	array with the keys "years","months","days"
+	 * Calculates the difference of two dates and returns an associative
+	 * array with the keys "years","months","days"
 	 *
-	 *	<code>
-	 *		// calculate the age of a person
-	 *		echo implode(",",Time::diff(time(),"1953/04/15"));
-	 *	</code>
+	 * <code>
+	 * // calculate the age of a person
+	 * echo implode(",",Time::diff(time(),"1953/04/15"));
+	 * </code>
 	 *
-	 *	@param	integer|string	$time1
-	 *							Timestamp or Date as string
-	 *	@param	integer|string	$time2
-	 *							Timestamp or Date as string
-	 *	@param	boolean			$signed
-	 *							true returns difference signed
-	 *							false return difference unsigned
-	 *	@return array(integer) Calculated Difference Array
+	 * @param	integer|string	$time1
+	 * 					Timestamp or Date as string
+	 * @param	integer|string	$time2
+	 * 					Timestamp or Date as string
+	 * @param	boolean			$signed
+	 * 					true returns difference signed
+	 * 					false return difference unsigned
+	 * @return array(integer) Calculated Difference Array
 	 */
 	public static function diff($time1, $time2 = null, $signed = true) {
 		if ($time2 === null) $time2 = time();
@@ -226,9 +226,9 @@ class Time extends Helper {
 	}
 		
 	/**
-	 *	Gets the last day of a month
-	 *	@param	integer	Last day of a month
-	 *	@return integer Last day of a month
+	 * Gets the last day of a month
+	 * @param	integer	Last day of a month
+	 * @return integer Last day of a month
 	 */
 	public static function lastDayOfMonth($timestamp = null) {
 		return date('d', self::lastDayOfMonthTimestamp($timestamp));
@@ -247,17 +247,17 @@ class Time extends Helper {
 	}
 		
 	/**
-	 *	Calculates the age of something in years
-	 *	<code>
-	 *		// calculate the age by using a string
-	 *		echo "I'm ".Time::calculateAgeInYears('1983/04/15')." years old.";
-	 *		// calculate the age by using a timestamp
-	 *		echo "My small brother is ".Time::calculateAgeInYears($litteBrotherBdate)." years old.";
-	 *	</code>
-	 *	@param integer|string	Timestamp or Date as a string
-	 *							If you pass the date of birth as a string, be sure to use a english formatted date
-	 *	@return integer Calculated Age in Years
-	 *	@see diff
+	 * Calculates the age of something in years
+	 * <code>
+	 * // calculate the age by using a string
+	 * echo "I'm ".Time::calculateAgeInYears('1983/04/15')." years old.";
+	 * // calculate the age by using a timestamp
+	 * echo "My small brother is ".Time::calculateAgeInYears($litteBrotherBdate)." years old.";
+	 * </code>
+	 * @param integer|string	Timestamp or Date as a string
+	 * 					If you pass the date of birth as a string, be sure to use a english formatted date
+	 * @return integer Calculated Age in Years
+	 * @see diff
 	 */
 	public static function ageInYears($time) {
 		$difference = self::diff(date('j-n-Y'), $time);
@@ -270,4 +270,3 @@ class Time extends Helper {
 	}
 	
 }
-?>

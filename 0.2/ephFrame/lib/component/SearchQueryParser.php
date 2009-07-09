@@ -1,37 +1,37 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- *	Search Query Parser
+ * Search Query Parser
  * 
- * 	This component can parse search query keywords such as "Marcel+Eichner".
- * 	Support for quoting is implemented. Support for boolean operators is still
- * 	missing.
+ * This component can parse search query keywords such as "Marcel+Eichner".
+ * Support for quoting is implemented. Support for boolean operators is still
+ * missing.
  * 
- * 	This is partly tested in {@link TestSearchQueryParser}
+ * This is partly tested in {@link TestSearchQueryParser}
  * 
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.component
- * 	@version 1.0
- * 	@author Marcel Eichner // Ephiagenia <love@ephigenia.de>
- * 	@since 20.05.2008
+ * @package ephFrame
+ * @subpackage ephFrame.lib.component
+ * @version 1.0
+ * @author Marcel Eichner // Ephiagenia <love@ephigenia.de>
+ * @since 20.05.2008
  */
 class SearchQueryParser extends Component {
 	
@@ -41,40 +41,40 @@ class SearchQueryParser extends Component {
 	public $query;
 	
 	/**
-	 *	Contains all values from the string, no matter if they are
-	 * 	substractive or not
-	 * 	@var array(string)
+	 * Contains all values from the string, no matter if they are
+	 * substractive or not
+	 * @var array(string)
 	 */
 	public $terms = array();
 	
 	/**
-	 *	Enable parsing with an eye on the +/- operators, if turned off, all
-	 * 	search terms, also these with -searchterm are added to {@link terms}
-	 * 	and {@link matchterms}
-	 * 	@var boolean
+	 * Enable parsing with an eye on the +/- operators, if turned off, all
+	 * search terms, also these with -searchterm are added to {@link terms}
+	 * and {@link matchterms}
+	 * @var boolean
 	 */
 	public $useOperators = true;
 	
 	/**
-	 * 	Enables parsing with quoting, query strings like 'what if "evil betty"'
-	 * 	will be parsed like 'what if evil betty' - without the quotes
-	 * 	@var boolean
+	 * Enables parsing with quoting, query strings like 'what if "evil betty"'
+	 * will be parsed like 'what if evil betty' - without the quotes
+	 * @var boolean
 	 */
 	public $useQuotes = true;
 	
 	/**
-	 *	@var array(string)
+	 * @var array(string)
 	 */
 	public $matchTerms = array();
 	
 	/**
-	 * 	@var array(string)
+	 * @var array(string)
 	 */
 	public $noMatchTerms = array();
 	
 	/**
-	 * 	Pass the query string this method
-	 * 	@param string $queryString
+	 * Pass the query string this method
+	 * @param string $queryString
 	 */
 	public function __construct($queryString) {
 		assert(is_string($queryString));
@@ -120,15 +120,13 @@ class SearchQueryParser extends Component {
 	}
 	
 	/**
-	 * 	Converts the a search query string with url-encoded chars to
-	 * 	a string without encodings
-	 * 	@param string $queryString
-	 * 	@return string
+	 * Converts the a search query string with url-encoded chars to
+	 * a string without encodings
+	 * @param string $queryString
+	 * @return string
 	 */
 	private function cleanUp($queryString) {
 		return urldecode($queryString);
 	}
 	
 }
-
-?>

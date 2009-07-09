@@ -1,48 +1,48 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 // load classes needed for this class
 class_exists('FileSystemNode') or require dirname(__FILE__).'/FileSystemNode.php';
-class_exists('Set') or require dirname(__FILE__).'/Set.php';
+class_exists('IndexedArray') or require dirname(__FILE__).'/IndexedArray.php';
 class_exists('ArrayHelper') or require dirname(__FILE__).'/helper/ArrayHelper.php';
 
 /**
- *	Directory Class
+ * Directory Class
  * 
- * 	This class is for creating, deleting and manipulating directories
- * 	on the local filesystem.
+ * This class is for creating, deleting and manipulating directories
+ * on the local filesystem.
  * 
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 06.05.2007
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
- * 	@version 0.2
- * 	@uses Set
- * 	@uses File
- * 	@uses ArrayHelper
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 06.05.2007
+ * @package ephFrame
+ * @subpackage ephFrame.lib
+ * @version 0.2
+ * @uses IndexedArray
+ * @uses File
+ * @uses ArrayHelper
  */
 class Dir extends FileSystemNode {
 	
 	/**
-	 *	Stores the path to this directory
-	 * 	@var string
+	 * Stores the path to this directory
+	 * @var string
 	 */
 	public $path;
 	
@@ -50,10 +50,10 @@ class Dir extends FileSystemNode {
 	public $listHiddenDirectories = false;
 	
 	/**
-	 * 	Directory Constructo$newFilename = $realFile->basename(false).'.'.$realFile->extension();r
-	 * 	missing trailing / are added
-	 * 	@param string $path
-	 * 	@return Directory
+	 * Directory Constructo$newFilename = $realFile->basename(false).'.'.$realFile->extension();r
+	 * missing trailing / are added
+	 * @param string $path
+	 * @return Directory
 	 */
 	public function __construct($path) {
 		if (is_object($path) && is_subclass_of($path, 'Controller')) {
@@ -70,11 +70,11 @@ class Dir extends FileSystemNode {
 	}
 	
 	/**
-	 *	Tries to create a new file with $filename and $content.
-	 *	@param string $filename
-	 * 	@param string $content
-	 *	@param string $class
-	 *	@return File
+	 * Tries to create a new file with $filename and $content.
+	 * @param string $filename
+	 * @param string $content
+	 * @param string $class
+	 * @return File
 	 */
 	public function newFile($filename, $content = null, $class = 'File') {
 		$newFilename = $this->nodeName.$filename;
@@ -86,30 +86,30 @@ class Dir extends FileSystemNode {
 	}
 	
 	/**
-	 * 	@return boolean
+	 * @return boolean
 	 */
 	public function isDir() {
 		return true;
 	}
 	
 	/**
-	 * 	@return boolean
+	 * @return boolean
 	 */
 	public function isFile() {
 		return false;
 	}
 	
 	/**
-	 *	Tests wheter this directory exists and is a directory
-	 * 	@return boolean
+	 * Tests wheter this directory exists and is a directory
+	 * @return boolean
 	 */
 	public function exists() {
 		return (parent::exists() && is_dir($this->path));
 	}
 	
 	/**
-	 *	Test if the directory exists and if not throws an exception
-	 * 	@return boolean
+	 * Test if the directory exists and if not throws an exception
+	 * @return boolean
 	 */
 	public function checkExistence() {
 		if (!$this->exists()) {
@@ -120,75 +120,75 @@ class Dir extends FileSystemNode {
 	}
 	
 	/**
-	 * 	Returns the number of files in this directory
-	 * 	@return integer
+	 * Returns the number of files in this directory
+	 * @return integer
 	 */
 	public function numFiles() {
 		return count($this->listFiles());
 	}
 	
 	/**
-	 *	Returns the directory name
-	 * 	<code>
-	 * 	$dir = new Dir('img/users/');
-	 * 	// echoes 'users'
-	 * 	echo $dir->dirName();
-	 * 	</code>
-	 * 	@return string
+	 * Returns the directory name
+	 * <code>
+	 * $dir = new Dir('img/users/');
+	 * // echoes 'users'
+	 * echo $dir->dirName();
+	 * </code>
+	 * @return string
 	 */
 	public function dirName() {
 		return dirname($this->nodeName);
 	}
 	
 	/**
-	 *	Returns the number of directories in this directory
-	 * 	@return integer
+	 * Returns the number of directories in this directory
+	 * @return integer
 	 */
 	public function numDirectories() {
 		return count($this->listDirectories());
 	}
 	
 	/**
-	 *	Returns Files in this directory
-	 * 	@return Array(File) of Files
+	 * Returns Files in this directory
+	 * @return Array(File) of Files
 	 */
 	public function listFiles($pattern = null) {
 		return ArrayHelper::extractByClassName($this->read($pattern), 'File');
 	}
 	
 	/**
-	 *	Returns Directories that are in this directory
-	 * 	@return Array(Dir) of Directories
+	 * Returns Directories that are in this directory
+	 * @return Array(Dir) of Directories
 	 */
 	public function listDirectories($pattern = null) {
 		return ArrayHelper::extractByClassName($this->read($pattern), get_class($this));
 	}
 	
 	/**
-	 * 	Array of files in a directory.
+	 * Array of files in a directory.
 	 * 
-	 *	Returns a {@link Set} of {@link File} in this directory.
+	 * Returns a {@link IndexedArray} of {@link File} in this directory.
 	 * 
-	 * 	This method gets you also the hidden files and directories if the
-	 * 	flags {@link listHiddenFiles} and {@link listHiddenDirectories} are on.
-	 *	Prevent listing hidden files by setting them to false.
+	 * This method gets you also the hidden files and directories if the
+	 * flags {@link listHiddenFiles} and {@link listHiddenDirectories} are on.
+	 * Prevent listing hidden files by setting them to false.
 	 * 
-	 * 	$pattern should be a regular expression starting with @ to filter files
-	 * 	and directories:
-	 * 	<code>
-	 * 	$dir = new Dir('../tmp/');
-	 * 	foreach($dir->read('@(jpg|gif|png)$@i') as $found) {
-	 * 		echo $found->nodeName;
-	 * 	}
-	 * 	</code>
+	 * $pattern should be a regular expression starting with @ to filter files
+	 * and directories:
+	 * <code>
+	 * $dir = new Dir('../tmp/');
+	 * foreach($dir->read('@(jpg|gif|png)$@i') as $found) {
+	 * 	echo $found->nodeName;
+	 * }
+	 * </code>
 	 * 
-	 * 	@param string $pattern regular expression (delimeter should be @) or simple file search like *.jpg
-	 * 	@return Set {@link Set} of files and directories
-	 * 	@throws DirNotFoundException if directory was not found
+	 * @param string $pattern regular expression (delimeter should be @) or simple file search like *.jpg
+	 * @return IndexedArray {@link IndexedArray} of files and directories
+	 * @throws DirNotFoundException if directory was not found
 	 */
 	public function read($pattern = null) {
 		$this->checkExistence();
-		$contents = new Set();
+		$contents = new IndexedArray();
 		foreach (scandir($this->nodeName) as $possible) {
 			// create either file or directory objects depending on found
 			if (!empty($pattern) && !preg_match($pattern, $possible)) continue;
@@ -208,10 +208,10 @@ class Dir extends FileSystemNode {
 	}
 	
 	/**
-	 *	Create directories rekursive
-	 * 	@param string|array(string) $directoryName
-	 * 	@param integer $chmod
-	 * 	@return Dir Instance of the newly created Directory
+	 * Create directories rekursive
+	 * @param string|array(string) $directoryName
+	 * @param integer $chmod
+	 * @return Dir Instance of the newly created Directory
 	 */
 	public function makeDir($newDirname, $chmod = 0777) {
 		if (is_array($newDirname)) {
@@ -238,20 +238,20 @@ class Dir extends FileSystemNode {
 	}
 	
 	/**
-	 *	Alias for {@link makeDir}
-	 * 	@param string|array(string) $directoryName
-	 * 	@param integer $chmod
-	 * 	@return DirectoryComponent Instance of the newly created Directory
+	 * Alias for {@link makeDir}
+	 * @param string|array(string) $directoryName
+	 * @param integer $chmod
+	 * @return DirectoryComponent Instance of the newly created Directory
 	 */
 	public function mkdir($newDirname, $chmod = 0777) {
 		return $this->makeDir($newDirname, $chmod);
 	}
 	
 	/**
-	 *	Returns the Size of a directory in bytes rekursive if wanted
-	 * 	@param boolean $rekursive
-	 * 	@param boolean $humanized Returned size is 'humanized'
-	 * 	@return integer
+	 * Returns the Size of a directory in bytes rekursive if wanted
+	 * @param boolean $rekursive
+	 * @param boolean $humanized Returned size is 'humanized'
+	 * @return integer
 	 */
 	public function size($rekursive = true, $humanized = false) {
 		$this->checkExistence();
@@ -279,15 +279,15 @@ class Dir extends FileSystemNode {
 }
 
 /**
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class DirException extends FileSystemNodeException {}
 
 /**
- * 	Thrown as soon a directory is needed but not existant.
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * Thrown as soon a directory is needed but not existant.
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class DirNotFoundException extends DirException {
 	public function __construct($directory = null) {
@@ -304,9 +304,9 @@ class DirNotFoundException extends DirException {
 }
 
 /**
- * 	Thrown as soon a directory is needed but not existant.
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * Thrown as soon a directory is needed but not existant.
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class DirNotWritableException extends DirException {
 	public function __construct($directory) {
@@ -322,12 +322,11 @@ class DirNotWritableException extends DirException {
 }
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class DirCreateErrorException extends DirException {
 	public function __construct($dirname) {
 		parent::__construct('Unable to create directory \''.$dirname.'\'');
 	}
 }
-?>

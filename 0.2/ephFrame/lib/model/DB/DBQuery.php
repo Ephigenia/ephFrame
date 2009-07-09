@@ -1,45 +1,45 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 ephFrame::loadClass('ephFrame.lib.Collection');
 
 /**
- * 	Abstract DB Query Class
+ * Abstract DB Query Class
  * 
- * 	This class should be father of all query classes in the framework and
- * 	in your project.
+ * This class should be father of all query classes in the framework and
+ * in your project.
  * 
- * 	See the different kinds of query classes, such as {@link DBSelectQuery},
- * 	{@DBDeleteQuery} for their usage.
+ * See the different kinds of query classes, such as {@link DBSelectQuery},
+ * {@DBDeleteQuery} for their usage.
  * 
- * 	// todo create class constants for possible verbs
- *	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- *	@since 19.05.2007
- *	@package ephFrame
- *	@subpackage ephFrame.lib.model.DB
- * 	@version 0.2.1
- * 	@uses Collection
- * 	@uses Hash
+ * // todo create class constants for possible verbs
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 19.05.2007
+ * @package ephFrame
+ * @subpackage ephFrame.lib.model.DB
+ * @version 0.2.1
+ * @uses Collection
+ * @uses Hash
  */
-abstract class DBQuery extends Object implements Renderable {
-	
+abstract class DBQuery extends Object implements Renderable
+{	
 	const ORDER_ASC = 'ASC';
 	const ORDER_DESC = 'DESC';
 	
@@ -53,57 +53,57 @@ abstract class DBQuery extends Object implements Renderable {
 	const FLAG_IGNORE = 'IGNORE';
 	
 	/**
-	 * 	@var string
+	 * @var string
 	 */
 	public $verb;
 	
 	/**
-	 * 	@var Hash
+	 * @var Hash
 	 */
 	public $select;
 	/**
-	 * 	@var Collection
+	 * @var Collection
 	 */
 	public $tables;
 	/**
-	 *	@var Collection
+	 * @var Collection
 	 */
 	public $join;
 	/**
-	 * 	@var Collection
+	 * @var Collection
 	 */
 	public $orderBy;
 	/**
-	 * 	@var Collection
+	 * @var Collection
 	 */
 	public $groupBy;
 	/**
-	 * 	@var Collection
+	 * @var Collection
 	 */
 	public $having;
 	/**
-	 * 	@var Hash
+	 * @var Hash
 	 */
 	public $values;
 	/**
-	 * 	@var Hash
+	 * @var Hash
 	 */
 	public $where;
 	
 	public $offset = 0;
 	/**
-	 * 	@var integer
+	 * @var integer
 	 */
 	public $count;
 	/**
-	 * 	Stores the flags for this query
-	 * 	@var Collection
+	 * Stores the flags for this query
+	 * @var Collection
 	 */
 	public $flags;
 	
 	/**
-	 * 	Some flags that can be turned of using {@link addFlag}
-	 * 	@var boolean
+	 * Some flags that can be turned of using {@link addFlag}
+	 * @var boolean
 	 */
 	public $highPriority = false;
 	public $lowPriority = false;
@@ -111,15 +111,15 @@ abstract class DBQuery extends Object implements Renderable {
 	public $ignore = false;
 	
 	/**
-	 * 	Adds a New Line Character after every part of the query
-	 * 	@var boolean
+	 * Adds a New Line Character after every part of the query
+	 * @var boolean
 	 */
 	public $autoNewLine = true;
 	
 	/**
-	 *	Creates a Database SQL Query object with the passed verb as command.
-	 * 	@param string $verb
-	 * 	@return DBQuery
+	 * Creates a Database SQL Query object with the passed verb as command.
+	 * @param string $verb
+	 * @return DBQuery
 	 */
 	public function __construct($verb = null, $table = null, $conditions = array(), $values = array()) {
 		if ($verb !== null) $this->verb($verb);
@@ -143,8 +143,8 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	Clears all settings for this query
-	 * 	@return DBQuery
+	 * Clears all settings for this query
+	 * @return DBQuery
 	 */
 	public function reset() {
 		$this->select = new Hash();
@@ -160,24 +160,24 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 *	Quote the argument so that should be safe agains SQL Injections.
+	 * Quote the argument so that should be safe agains SQL Injections.
 	 * 
-	 * 	The passed $val is quoted after it's type. Some types can not be quoted
-	 * 	correctly: Arrays, Objects, Resources - if one of these types arrives in
-	 * 	Quote only their type will be quoted.
+	 * The passed $val is quoted after it's type. Some types can not be quoted
+	 * correctly: Arrays, Objects, Resources - if one of these types arrives in
+	 * Quote only their type will be quoted.
 	 * 
-	 * 	String values don't need any quoting around it:
-	 * 	<code>
-	 * 	// will result in "SELECT * FROM user WHERE username = 'username'"
-	 * 	$query = 'SELECT * FROM user WHERE username = '.DBQuery::quote('username');
-	 * 	</code>
+	 * String values don't need any quoting around it:
+	 * <code>
+	 * // will result in "SELECT * FROM user WHERE username = 'username'"
+	 * $query = 'SELECT * FROM user WHERE username = '.DBQuery::quote('username');
+	 * </code>
 	 * 
-	 * 	You also can force a specific quoting type by passing the second param
-	 * 	$type to the method.
+	 * You also can force a specific quoting type by passing the second param
+	 * $type to the method.
 	 * 
-	 * 	@param mixed $val
-	 * 	@param string $type other type to use while quoting
-	 * 	@return string
+	 * @param mixed $val
+	 * @param string $type other type to use while quoting
+	 * @return string
 	 */
 	public static function quote($val, $type = null) {
 		if ($type === null) {
@@ -217,16 +217,16 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	Template for the rendered query, every keyword starting with a % character
-	 * 	is translated into a render[keyword] method call. This is some kind
-	 * 	of meta language for query rendering ;-)
-	 * 	@var array(string)
+	 * Template for the rendered query, every keyword starting with a % character
+	 * is translated into a render[keyword] method call. This is some kind
+	 * of meta language for query rendering ;-)
+	 * @var array(string)
 	 */
 	public $renderTemplate = '%verb %flags %select FROM %tables %join %where %groupBy %having %orderBy %limit';
 
 	/**
-	 *	Renders the query using the {@link renderTemplate} and returns it
-	 * 	@return string
+	 * Renders the query using the {@link renderTemplate} and returns it
+	 * @return string
 	 */
 	public function render() {
 		if (!$this->beforeRender()) return false;
@@ -259,12 +259,12 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	This method can be overwritten in any subclass ot add pre-rendering
-	 * 	logic to the query. This is used in this abstract class to add the 
-	 * 	flags to the query.
-	 * 	This method should always return true if the query should be rendered.
-	 * 	A false halts the rendering process.
-	 * 	@return boolean
+	 * This method can be overwritten in any subclass ot add pre-rendering
+	 * logic to the query. This is used in this abstract class to add the 
+	 * flags to the query.
+	 * This method should always return true if the query should be rendered.
+	 * A false halts the rendering process.
+	 * @return boolean
 	 */
 	public function beforeRender() {
 		if ($this->highPriority) {
@@ -283,11 +283,11 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	Here you can add after-rendering logic. The easiest example is to lowercase
-	 * 	everything in the query or check for xss attacks (which should be
-	 * 	impossible somehow)
-	 * 	@param string $rendered
-	 * 	@return string
+	 * Here you can add after-rendering logic. The easiest example is to lowercase
+	 * everything in the query or check for xss attacks (which should be
+	 * impossible somehow)
+	 * @param string $rendered
+	 * @return string
 	 */
 	public function afterRender($rendered) {
 		$rendered = trim($rendered);
@@ -295,15 +295,15 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 *	Adds an other table to the set of tables to run the sql command on.
-	 * 	<code>
-	 * 	// ... FROM my_blog_entries entries ...
-	 * 	$query->from('my_blog_entries', 'entries');
-	 * 	// pass some more tables
-	 * 	$query->from(array('my_blog_entries', 'my_comments'));
-	 * 	</code>
-	 * 	@param string $tablename Name of the table in the DB, optional with Database Name
-	 * 	@param string $alias optional table alias
+	 * Adds an other table to the set of tables to run the sql command on.
+	 * <code>
+	 * // ... FROM my_blog_entries entries ...
+	 * $query->from('my_blog_entries', 'entries');
+	 * // pass some more tables
+	 * $query->from(array('my_blog_entries', 'my_comments'));
+	 * </code>
+	 * @param string $tablename Name of the table in the DB, optional with Database Name
+	 * @param string $alias optional table alias
 	 */
 	public function table($tablename, $alias = null) {
 		if (is_array($tablename)) {
@@ -320,11 +320,11 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 *	Add a join statement
-	 * 	@param string $tablename name of table that should be joined
-	 * 	@param string $alias optional table alias
-	 * 	@param string $type join type to use, use the JOIN_* constants of this class
-	 * 	@param array() $conditions Join conditions, rendered as where statement
+	 * Add a join statement
+	 * @param string $tablename name of table that should be joined
+	 * @param string $alias optional table alias
+	 * @param string $type join type to use, use the JOIN_* constants of this class
+	 * @param array() $conditions Join conditions, rendered as where statement
 	 */
 	public function join($tablename, $alias = null, $type = self::JOIN, $conditions = array()) {
 		if (!is_array($conditions)) {
@@ -335,10 +335,10 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	Selects the verb for the SQL Query, that is the command for the query.
-	 * 	Some options may be SELECT, UPDATE, INSERT ...
-	 * 	@param string $verb
-	 * 	@return DBQuery
+	 * Selects the verb for the SQL Query, that is the command for the query.
+	 * Some options may be SELECT, UPDATE, INSERT ...
+	 * @param string $verb
+	 * @return DBQuery
 	 */
 	public function verb($verb = null) {
 		if (func_num_args() == 0) return $this->verb;
@@ -349,16 +349,16 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 *	Adds a single value statement to the values/insert statement, consisting
-	 * 	of the fieldname and the desired value. Some Examples:
-	 * 	<code>
-	 * 	// .... VALUES(created=120382103, title=`ephFrame seemes to be goood!`) ...
-	 * 	$query->value('created' => time());
-	 * 	$query->value('title' => 'ephFrame seemes to be goood!');
-	 * 	</code>
-	 * 	@param string $fieldname
-	 * 	@param mixed $value
-	 * 	@return DBQuery
+	 * Adds a single value statement to the values/insert statement, consisting
+	 * of the fieldname and the desired value. Some Examples:
+	 * <code>
+	 * // .... VALUES(created=120382103, title=`ephFrame seemes to be goood!`) ...
+	 * $query->value('created' => time());
+	 * $query->value('title' => 'ephFrame seemes to be goood!');
+	 * </code>
+	 * @param string $fieldname
+	 * @param mixed $value
+	 * @return DBQuery
 	 */
 	public function value($fieldname, $value) {
 		$fieldname = trim($fieldname);
@@ -368,13 +368,13 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	Adds multiple pairs of key values to the values array of the query that
-	 * 	is rendered depending on the {@link verb} property
-	 * 	<code>
-	 * 	$query->values(array('foo' => 'bar', 'country', 23);
-	 * 	</code>
-	 * 	@param array(string) $array
-	 *	@return DBQuery
+	 * Adds multiple pairs of key values to the values array of the query that
+	 * is rendered depending on the {@link verb} property
+	 * <code>
+	 * $query->values(array('foo' => 'bar', 'country', 23);
+	 * </code>
+	 * @param array(string) $array
+	 * @return DBQuery
 	 */
 	public function values(Array $array = array()) {
 		$this->values = new Hash($array);
@@ -382,10 +382,10 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	Adds a groupBy Statement
+	 * Adds a groupBy Statement
 	 *
-	 * 	@param string $fieldname
-	 * 	@return DBQuery
+	 * @param string $fieldname
+	 * @return DBQuery
 	 */
 	public function groupBy($fieldname) {
 		$fieldname = trim($fieldname);
@@ -395,23 +395,23 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	Adds an other statement to the orderby statement :)
-	 * 	The second parameter is interpreted as a second orderby statement if it's
-	 * 	not a valid order Direction
-	 * 	<code>
-	 * 	// ORDERBY created DESC
-	 * 	$query->orderBy('created', DBQuery::DESC);
-	 * 	// ORDERBY created DESC, id DESC
-	 * 	$query->orderBy('created DESC', 'id DESC');
-	 * 	</code>
+	 * Adds an other statement to the orderby statement :)
+	 * The second parameter is interpreted as a second orderby statement if it's
+	 * not a valid order Direction
+	 * <code>
+	 * // ORDERBY created DESC
+	 * $query->orderBy('created', DBQuery::DESC);
+	 * // ORDERBY created DESC, id DESC
+	 * $query->orderBy('created DESC', 'id DESC');
+	 * </code>
 	 * 
-	 * 	You can remove previously made orderBy Statements by removing them:
-	 * 	<code>
-	 * 	$query->orderBy->remove('created');	
-	 * 	</code>
-	 * 	@param string $fieldname
-	 * 	@param string $direction
-	 * 	@return DBQuery
+	 * You can remove previously made orderBy Statements by removing them:
+	 * <code>
+	 * $query->orderBy->remove('created');	
+	 * </code>
+	 * @param string $fieldname
+	 * @param string $direction
+	 * @return DBQuery
 	 */
 	public function orderBy($fieldname, $direction = null) {
 		$fieldname = trim($fieldname);
@@ -421,24 +421,24 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 *	Shortcut for setting the LIMIT parameters. You can also use both
-	 * 	seperated by adressing {@link offset} and {@link count}
-	 * 	<code>
-	 * 	// limit a query ... LIMIT 20, 30
-	 * 	$query->limit(20, 30);
-	 * 	</code>
-	 * 	@param integer $offset
-	 * 	@param integer $count
-	 * 	@return DBQuery
+	 * Shortcut for setting the LIMIT parameters. You can also use both
+	 * seperated by adressing {@link offset} and {@link count}
+	 * <code>
+	 * // limit a query ... LIMIT 20, 30
+	 * $query->limit(20, 30);
+	 * </code>
+	 * @param integer $offset
+	 * @param integer $count
+	 * @return DBQuery
 	 */
 	public function limit($offset, $count) {
 		return $this->offset($offset)->count($count);
 	}
 	
 	/**
-	 *	Sets the LIMIT offset of this query or returns it
-	 * 	@param integer $offset
-	 * 	@return integer|DBQuery
+	 * Sets the LIMIT offset of this query or returns it
+	 * @param integer $offset
+	 * @return integer|DBQuery
 	 */
 	public function offset($offset = null) {
 		if ($offset < 0) return $this;
@@ -446,9 +446,9 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 *	Sets the LIMIT count of this query or returns it
-	 * 	@param integer $count
-	 * 	@return integer
+	 * Sets the LIMIT count of this query or returns it
+	 * @param integer $count
+	 * @return integer
 	 */
 	public function count($count = null) {
 		if ($count < 0 || $count == null) return $this;
@@ -456,17 +456,17 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	Adds some stuff to the where statement of the query.
-	 * 	Some examples below should explain the different possibilities.
-	 * 	<code>
-	 * 	// add a where statement just as it is, this may be unsave if not
-	 * 	// checked or protected against manipulation from 3rd persons.
-	 * 	$query->where('foo=bar');
-	 * 	</code>
+	 * Adds some stuff to the where statement of the query.
+	 * Some examples below should explain the different possibilities.
+	 * <code>
+	 * // add a where statement just as it is, this may be unsave if not
+	 * // checked or protected against manipulation from 3rd persons.
+	 * $query->where('foo=bar');
+	 * </code>
 	 *
-	 * 	@param string $key
-	 * 	@param string $value
-	 * 	@return DBQuery
+	 * @param string $key
+	 * @param string $value
+	 * @return DBQuery
 	 */
 	public function where($key, $right = null) {
 		if (func_num_args() == 1) {
@@ -478,24 +478,24 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	Add a flag statement to the query, like IGNORE, LOW_PRIORITY etc.
-	 * 	The sub-classes, like {@link DBUpdateQuery}, {@link DBSelectQuery}
-	 * 	implement own properties for the flags, so you can use them.
-	 *  
-	 * 	<code>
-	 * 	// results in something like SELECT HIGH_PRIORITY FROM ...
-	 * 	$query->addFlag('HIGH_PRIORITY');
-	 * 	</code>
-	 * 	An other possible usage for the flags is adding comment style for 
-	 * 	enabling query running post processing - like directing queries to
-	 * 	other hosts with a specific comment or other statistic comments.
-	 * 	<code>
-	 * 	$query->addFlag('host2', true);
-	 * 	</code>
+	 * Add a flag statement to the query, like IGNORE, LOW_PRIORITY etc.
+	 * The sub-classes, like {@link DBUpdateQuery}, {@link DBSelectQuery}
+	 * implement own properties for the flags, so you can use them.
 	 * 
-	 * 	Double values will be ignored
-	 * 	@param string $flag
-	 * 	@return DBQuery
+	 * <code>
+	 * // results in something like SELECT HIGH_PRIORITY FROM ...
+	 * $query->addFlag('HIGH_PRIORITY');
+	 * </code>
+	 * An other possible usage for the flags is adding comment style for 
+	 * enabling query running post processing - like directing queries to
+	 * other hosts with a specific comment or other statistic comments.
+	 * <code>
+	 * $query->addFlag('host2', true);
+	 * </code>
+	 * 
+	 * Double values will be ignored
+	 * @param string $flag
+	 * @return DBQuery
 	 */
 	public function addFlag($flag, $asComment = false) {
 		if ($asComment) {
@@ -506,8 +506,8 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 *	Adds a comment to the query
-	 *	@param string $comment
+	 * Adds a comment to the query
+	 * @param string $comment
 	 */
 	public function addComment($comment) {
 		$this->flags->add('/* '.$comment.' */');
@@ -515,7 +515,7 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	@return string
+	 * @return string
 	 */
 	protected function renderValues() {
 		$rendered = '';
@@ -526,7 +526,7 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	@return string
+	 * @return string
 	 */
 	protected function renderSelect() {
 		if (count($this->select) == 0) {
@@ -544,7 +544,7 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	@return string
+	 * @return string
 	 */
 	protected function renderOrderBy() {
 		if (!count($this->orderBy)) {
@@ -554,9 +554,9 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	Renders the statement of the SQL Query with the tables in it
-	 * 	@param array(string) $tables
-	 * 	@return string
+	 * Renders the statement of the SQL Query with the tables in it
+	 * @param array(string) $tables
+	 * @return string
 	 */
 	protected function renderTables($tables = array()) {
 		if (func_num_args() == 0) {
@@ -581,15 +581,15 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	@return string
+	 * @return string
 	 */
 	protected function renderFlags() {
 		return $this->flags->implode(' ');
 	}
 	
 	/**
-	 * 	@param array(string) $where
-	 * 	@return string
+	 * @param array(string) $where
+	 * @return string
 	 */
 	protected function renderWhere($whereConditions = array(), $quote = false) {
 		if (func_num_args() == 0) {
@@ -629,8 +629,8 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	@param array(string) $join
-	 * 	@return string
+	 * @param array(string) $join
+	 * @return string
 	 */
 	public function renderJoin($join = array()) {
 		if (func_num_args() == 0) {
@@ -655,7 +655,7 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	@return string
+	 * @return string
 	 */
 	private function renderGroupBy() {
 		if (count($this->groupBy) <= 0) {
@@ -665,7 +665,7 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	@return string
+	 * @return string
 	 */
 	private function renderHaving() {
 		if (!count($this->having)) {
@@ -675,8 +675,8 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	Renders the limit part of the query
-	 * 	@return string
+	 * Renders the limit part of the query
+	 * @return string
 	 */
 	final private function renderLimit() {
 		if (empty($this->offset) && empty($this->count)) return null;
@@ -688,8 +688,8 @@ abstract class DBQuery extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	Returns the rendered query
-	 *	@return string
+	 * Returns the rendered query
+	 * @return string
 	 */
 	public function __toString() {
 		return $this->render();
@@ -698,10 +698,8 @@ abstract class DBQuery extends Object implements Renderable {
 }
 
 /**
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
-class DBQueryException extends BasicException {}
-
-
-?>
+class DBQueryException extends BasicException
+{}

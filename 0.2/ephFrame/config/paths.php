@@ -1,43 +1,43 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- * 	This file stores some paths that are used by the application and ephframe.
- * 	Please make sure that every path constant value ends with an '/'.
+ * This file stores some paths that are used by the application and ephframe.
+ * Please make sure that every path constant value ends with an '/'.
  */
 
 /**
- * 	ephFrame internal paths
+ * ephFrame internal paths
  */
 define ('FRAME_LIB_DIR', FRAME_ROOT.'lib/');
 define ('FRAME_COMPONENT_DIR', FRAME_LIB_DIR.'component/');
 define ('FRAME_HELPERS_DIR', FRAME_LIB_DIR.'helper/');
 
 /**
- * 	Path to vendor files, classes that come from third parties
+ * Path to vendor files, classes that come from third parties
  */
 define ('VENDOR_ROOT', FRAME_ROOT.'../vendor/');
 
 /**
- * 	Try to determine application root directory from current working
- * 	directory. Usually 'html'.
+ * Try to determine application root directory from current working
+ * directory. Usually 'html'.
  */
 if (!defined('APP_ROOT')) {
 	if (!CLI_MODE) { // && basename(getcwd()) == 'html') {
@@ -59,10 +59,10 @@ if (!defined('CACHE_DIR')) define ('CACHE_DIR', TMP_DIR.'cache'.DS);
 if (!defined('MODELCACHE_DIR')) define ('MODELCACHE_DIR', TMP_DIR.'model'.DS);
 
 /**
- *	Determine webroot, the directory that can be used for linking images
- * 	files relative on the server.
- * 	This is rather difficult, so please set your webroot in your paths file
- * 	if possible.
+ * Determine webroot, the directory that can be used for linking images
+ * files relative on the server.
+ * This is rather difficult, so please set your webroot in your paths file
+ * if possible.
  */
 if (!defined('WEBROOT')) {
 	if (isset($_SERVER['PHP_SELF'])) {
@@ -94,5 +94,3 @@ if (!defined('WEBROOT')) {
 }
 
 if (!defined('STATIC_DIR')) define('STATIC_DIR', 'static/');
-
-?>

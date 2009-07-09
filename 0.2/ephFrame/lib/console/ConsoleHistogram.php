@@ -3,36 +3,36 @@
 class_exists('ConsoleDrawing') or require dirname(__FILE__).'/../ConsoleDrawing.php';
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- * 	Draws a histogram-like graph into the console
+ * Draws a histogram-like graph into the console
  * 
- * 	<code>
- * 	
- * 	</code>
+ * <code>
  * 
- * 	@since 19.04.2008
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.console
+ * </code>
+ * 
+ * @since 19.04.2008
+ * @package ephFrame
+ * @subpackage ephFrame.lib.console
  */
-class ConsoleHistogram extends ConsoleDrawing {
-	
+class ConsoleHistogram extends ConsoleDrawing
+{	
 	public $x;
 	public $y;
 	public $width = 60;
@@ -110,9 +110,7 @@ class ConsoleHistogram extends ConsoleDrawing {
 }
 
 /**
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class ConsoleHistogramException extends ConsoleDrawingException {}
-
-?>

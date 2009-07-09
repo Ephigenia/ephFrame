@@ -1,60 +1,60 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
-class_exists('Set') or require dirname(__FILE__).'/Set.php';
+class_exists('IndexedArray') or require dirname(__FILE__).'/IndexedArray.php';
 
 /**
- * 	Set of Objects
- * 	
- * 	The {@link ObjectSet} works like the {@link Set} class but only accepting
- * 	instances of a specific class to be in it.
+ * IndexedArray of Objects
  * 
- * 	You can use this class for creating Sets of Model Objects or other classes.
+ * The {@link ObjectSet} works like the {@link IndexedArray} class but only accepting
+ * instances of a specific class to be in it.
  * 
- * 	<code>
- * 	$s = new ObjectSet('Set');
- * 	$c = new Set(1,2,3,4);
- * 	$s->add($c);
- * 	</code>
+ * You can use this class for creating Sets of Model Objects or other classes.
  * 
- * 	This is partly tested in {@link TestObjectSet}
+ * <code>
+ * $s = new ObjectSet('Set');
+ * $c = new IndexedArray(1,2,3,4);
+ * $s->add($c);
+ * </code>
  * 
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 19.07.2008
+ * This is partly tested in {@link TestObjectSet}
+ * 
+ * @package ephFrame
+ * @subpackage ephFrame.lib
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 19.07.2008
  */
-class ObjectSet extends Set {
+class ObjectSet extends IndexedArray {
 	
 	/**
-	 * 	Name of class this ObjectSet allows to store
-	 * 	@var string
+	 * Name of class this ObjectSet allows to store
+	 * @var string
 	 */
 	public $classname = '';
 	
 	/**
-	 * 	Constructs a new {@link ObjectSet}
+	 * Constructs a new {@link ObjectSet}
 	 *
-	 * 	@param string $classname
-	 * 	@param array $data
-	 * 	@return ObjectSet
+	 * @param string $classname
+	 * @param array $data
+	 * @return ObjectSet
 	 */
 	public function __construct($classname, $data = null) {
 		$this->classname = $classname;
@@ -66,9 +66,9 @@ class ObjectSet extends Set {
 	}
 	
 	/**
-	 * 	Adds an other object to the ObjectSet
-	 * 	@param object $object
-	 * 	@return ObjectSet
+	 * Adds an other object to the ObjectSet
+	 * @param object $object
+	 * @return ObjectSet
 	 */
 	public function add($object) {
 		$this->canBeAdded($object);
@@ -76,12 +76,12 @@ class ObjectSet extends Set {
 	}
 	
 	/**
-	 * 	Tests if $object can be added to this {@link ObjectSet}. If $object
-	 * 	is no object or instance of {@link classname} an exception is thrown.
-	 * 	@throws ObjectSetObjectExpectedException
-	 * 	@throws ObjectSetInvalidClassException
-	 *	@param mixed $object
-	 * 	@return boolean
+	 * Tests if $object can be added to this {@link ObjectSet}. If $object
+	 * is no object or instance of {@link classname} an exception is thrown.
+	 * @throws ObjectSetObjectExpectedException
+	 * @throws ObjectSetInvalidClassException
+	 * @param mixed $object
+	 * @return boolean
 	 */
 	private function canBeAdded($object) {
 		if (!is_object($object)) {
@@ -94,11 +94,11 @@ class ObjectSet extends Set {
 	}
 	
 	/**
-	 * 	Sets a specific index of the {@link ObjectSet} to a specific value.
-	 * 	This is like the {@link setValue} of the the parent class {@link Set}
-	 * 	but with checking for the correct class of the $value
-	 * 	@param integer $index
-	 * 	@param object $val
+	 * Sets a specific index of the {@link ObjectSet} to a specific value.
+	 * This is like the {@link setValue} of the the parent class {@link Set}
+	 * but with checking for the correct class of the $value
+	 * @param integer $index
+	 * @param object $val
 	 */
 	public function setValue($index, $object) {
 		$this->canBeAdded($object);
@@ -106,8 +106,8 @@ class ObjectSet extends Set {
 	}
 	
 	/**
-	 * 	Add an other $object to the beginning of the {@link ObjectSet}
-	 * 	@param object $val
+	 * Add an other $object to the beginning of the {@link ObjectSet}
+	 * @param object $val
 	 */
 	public function prepend($val) {
 		$this->canBeAdded($object);
@@ -126,14 +126,14 @@ class ObjectSet extends Set {
 }
 
 /**
- * 	@package ephFrame
- *	@subpackage ephFrame.lib.exception 
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception 
  */
-class ObjectSetException extends BasicException {}
+class ObjectSetException extends IndexedArrayException {}
 
 /**
- * 	@package ephFrame
- *	@subpackage ephFrame.lib.exception 
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception 
  */
 class ObjectSetObjectExpectedException extends ObjectSetException {
 	public function __construct(ObjectSet $objectSet, $var) {
@@ -144,8 +144,8 @@ class ObjectSetObjectExpectedException extends ObjectSetException {
 }
 
 /**
- * 	@package ephFrame
- *	@subpackage ephFrame.lib.exception 
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception 
  */
 class ObjectSetInvalidClassException extends ObjectSetException {
 	public function __construct(ObjectSet $objectSet, $object) {
@@ -155,5 +155,3 @@ class ObjectSetInvalidClassException extends ObjectSetException {
 		parent::__construct($message);
 	}
 }
-
-?>

@@ -25,10 +25,8 @@ if (!is_dir(MODELCACHE_DIR)) {
 }
 // check salt value
 if (defined('SALT') && SALT === 'priotaseloukeadotraeuocrailaejot') {
-	echo $this->renderElement('errorMessage', array('message' => 'You haven\'t change the SALT value in <q>/app/config.php</q>. Please change the value!'));
+	echo $this->renderElement('errorMessage', array('message' => 'You haven’t change the SALT value in <q>/app/config.php</q>. Please change the value!'));
 }
-?>
-
 <p class="hint">
 	You can modify this view by changing the layout '/app/view/layout/default.php' template file
 	or create your own content file by creating the file '/app/view/app/index.php' which is always

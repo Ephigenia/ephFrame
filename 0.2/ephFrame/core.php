@@ -1,33 +1,33 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- * 	This File stores some basic functions that are accessible without addressing
- * 	a class. Some of the functions don't even use a class.
+ * This File stores some basic functions that are accessible without addressing
+ * a class. Some of the functions don't even use a class.
  * 
- * 	Some like {@link loadClass} or {@link loadInterface} are just shortcuts
- * 	to the methods of {@link ephFrame}
+ * Some like {@link loadClass} or {@link loadInterface} are just shortcuts
+ * to the methods of {@link ephFrame}
  * 
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 16.09.2007
- * 	@package ephFrame
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 16.09.2007
+ * @package ephFrame
  */
 
 // test for loaded ephFrame
@@ -37,45 +37,45 @@ if (!class_exists('ephFrame')) {
 }
 
 /**
- * 	Function alias for {@link ephFrame}s loadInterface Method
- * 	@param string $interfacePath
- * 	@return boolean
+ * Function alias for {@link ephFrame}s loadInterface Method
+ * @param string $interfacePath
+ * @return boolean
  */
 function loadClass($classPath) {
 	return ephFrame::loadClass($classPath);
 }
 
 /**
- *	Load a component
- * 	@param string $componentName
- * 	@return boolean
+ * Load a component
+ * @param string $componentName
+ * @return boolean
  */
 function loadComponent($componentName) {
 	return ephFrame::loadComponent($componentName);
 }
 
 /**
- *	Load a helper
- * 	@param string $componentName
- * 	@return boolean
+ * Load a helper
+ * @param string $componentName
+ * @return boolean
  */
 function loadHelper($helperName) {
 	return ephFrame::loadHelper($helperName);
 }
 
 /**
- * 	Function alias for {@link ephFrame}s loadInterface Method
- * 	@param string $interfacePath
- * 	@return boolean
+ * Function alias for {@link ephFrame}s loadInterface Method
+ * @param string $interfacePath
+ * @return boolean
  */
 function loadInterface($interfacePath) {
 	return ephFrame::loadInterface($interfacePath);
 }
 
 /**
- * 	Coalesce works like the method from SQL, returning the first 
- * 	argument that is not null
- * 	@return mixed
+ * Coalesce works like the method from SQL, returning the first 
+ * argument that is not null
+ * @return mixed
  */
 if (!function_exists('coalesce')) {
 	function coalesce() {
@@ -87,8 +87,8 @@ if (!function_exists('coalesce')) {
 }
 
 /**
- *	Like {@link coalesce} but checking for empty arguments
- * 	@return mixed
+ * Like {@link coalesce} but checking for empty arguments
+ * @return mixed
  */
 if (!function_exists('coalesceEmpty')) {
 	function coalesceEmpty() {
@@ -100,9 +100,9 @@ if (!function_exists('coalesceEmpty')) {
 }
 
 /**
- *	This is a shortcut for the {@link Log} class to log messages into files
- * 	@param integer $level
- * 	@param string $message
+ * This is a shortcut for the {@link Log} class to log messages into files
+ * @param integer $level
+ * @param string $message
  */
 function logg($level, $message) {
 	if (!class_exists('Log')) {
@@ -112,11 +112,11 @@ function logg($level, $message) {
 }
 
 /**
- *	Returns the first match matched by the passed regular expression if 
- * 	there was a match (shortcut for preg_match and extracting)
- * 	@param string $subject
- * 	@param string $pattern
- * 	@return mixed
+ * Returns the first match matched by the passed regular expression if 
+ * there was a match (shortcut for preg_match and extracting)
+ * @param string $subject
+ * @param string $pattern
+ * @return mixed
  */
 function preg_match_first($subject, $pattern) {
 	preg_match($pattern, $subject, $found);
@@ -127,14 +127,14 @@ function preg_match_first($subject, $pattern) {
 }
 
 /**
- *	Generates a better random number using different seed values
- * 	It can also generate a range of numbers between min and max and return
- * 	an array.
- * 	@param integer $min
- * 	@param integer $max
- * 	@param integer $count number of random numbers that should be returned
- * 	@param boolean $doubles create array of random numbers with no repitition
- * 	@return integer|array(integer)
+ * Generates a better random number using different seed values
+ * It can also generate a range of numbers between min and max and return
+ * an array.
+ * @param integer $min
+ * @param integer $max
+ * @param integer $count number of random numbers that should be returned
+ * @param boolean $doubles create array of random numbers with no repitition
+ * @return integer|array(integer)
  */
 function rnd($min = 0, $max, $count = null, $doubles = false) {
 	swapIfLt($max, $min);
@@ -167,11 +167,11 @@ function rnd($min = 0, $max, $count = null, $doubles = false) {
 }
 
 /**
- *	Swaps the values of two variables if the first one is larger than
- * 	the second.
- * 	@param integer|float $var1
- * 	@param integer|float $var2
- * 	@return boolean
+ * Swaps the values of two variables if the first one is larger than
+ * the second.
+ * @param integer|float $var1
+ * @param integer|float $var2
+ * @return boolean
  */
 function swapIfGt(&$var1, &$var2) {
 	if ($var2 > $var1) {
@@ -185,25 +185,25 @@ function swapIfGt(&$var1, &$var2) {
 }
 
 /**
- *	Swaps the values of two variables if the first one is smaller than the
- * 	second
- * 	@param integer|float $var1
- * 	@param integer|float $var2
- * 	@return boolean
+ * Swaps the values of two variables if the first one is smaller than the
+ * second
+ * @param integer|float $var1
+ * @param integer|float $var2
+ * @return boolean
  */
 function swapIfLt(&$var1, &$var2) {
 	return swapIfGt($var2, $var1);
 }
 
 /**
- *	Assert test for untrue values and creates a php user error notice
- * 	if the assertion failes. Read the wiki entry for more information
- * 	about <a href="http://de.wikipedia.org/wiki/Assertion">Assertion</a>
- * 	Assertion also helps you to be more DBC-Like (Design by Contract)
- * 	read about this in The pragmatic programmer.
- * 	<code>
- * 	assert(1 == 2); // will trigger an user notice error
- * 	</code>
+ * Assert test for untrue values and creates a php user error notice
+ * if the assertion failes. Read the wiki entry for more information
+ * about <a href="http://de.wikipedia.org/wiki/Assertion">Assertion</a>
+ * Assertion also helps you to be more DBC-Like (Design by Contract)
+ * read about this in The pragmatic programmer.
+ * <code>
+ * assert(1 == 2); // will trigger an user notice error
+ * </code>
  */
 if (!function_exists('assert')) {
 	function assert($condition) {
@@ -213,18 +213,18 @@ if (!function_exists('assert')) {
 }
 
 /**
- * 	This should help to debug your stuff, this function only reacts
- * 	on a debugging level higher or equal to DEBUG_DEBUG. If you use
- * 	this function for every var_dumping or print_r action that you
- * 	might have used for debugging before you can use the search function
- * 	from your editor by searching for 'dump' and you get debugging echoes.
+ * This should help to debug your stuff, this function only reacts
+ * on a debugging level higher or equal to DEBUG_DEBUG. If you use
+ * this function for every var_dumping or print_r action that you
+ * might have used for debugging before you can use the search function
+ * from your editor by searching for 'dump' and you get debugging echoes.
  * 
- * 	You can also get prevent the debug message from output (echo) by
- * 	passing true as second parameter so you get the output that would have
- * 	been printed as return 
+ * You can also get prevent the debug message from output (echo) by
+ * passing true as second parameter so you get the output that would have
+ * been printed as return 
  *
- * 	@param mixed $var
- * 	@param boolean $output
+ * @param mixed $var
+ * @param boolean $output
  */
 function dump($var, $output = true) {
 	if (!$output) {
@@ -235,9 +235,9 @@ function dump($var, $output = true) {
 }
 
 /**
- * 	This is just like {@link dump} but with <pre> output
- * 	@param mixed $var
- * 	@link {@link dump}
+ * This is just like {@link dump} but with <pre> output
+ * @param mixed $var
+ * @link {@link dump}
  */
 function predump($var) {
 	echo '<pre>'.LF.print_r($var, true).LF.'</pre>'.LF;
@@ -250,9 +250,9 @@ function preBackTrace() {
 }
 
 /**
- *	Lowercases the first letter in a string if it's a letter, just like
- * 	ucfirst does. This is not mulitbytesave!
- * 	@param string $string
+ * Lowercases the first letter in a string if it's a letter, just like
+ * ucfirst does. This is not mulitbytesave!
+ * @param string $string
  */
 if (!function_exists('lcfirst')) {
 	function lcfirst($string) {
@@ -262,31 +262,31 @@ if (!function_exists('lcfirst')) {
 
 if (!function_exists('len')) {
 	/**
-	 * 	Alias for count or strlen on scalar vartypes, otherwise false
-	 * 	
+	 * Alias for count or strlen on scalar vartypes, otherwise false
+	 * 
 	 * <code>
-	 * 	// returns 4 (not 1)
-	 * 	$int = 1234;
-	 * 	var_dump(len($int));
+	 * // returns 4 (not 1)
+	 * $int = 1234;
+	 * var_dump(len($int));
 	 * 
-	 * 	// returns the length of the string (multibyte safe), so it's 17'
-	 * 	$string = "Hölle Hölle Hölle";
-	 * 	var_dump(len($string));
+	 * // returns the length of the string (multibyte safe), so it's 17'
+	 * $string = "Hölle Hölle Hölle";
+	 * var_dump(len($string));
 	 * 
-	 * 	// objects that implement an iterator or Countable pattern will return
-	 *  // the value that is implemented in count()
-	 * 	class t implements Countable {
-	 * 		function count() {
-	 * 			return 123;
-	 * 		}
+	 * // objects that implement an iterator or Countable pattern will return
+	 * // the value that is implemented in count()
+	 * class t implements Countable {
+	 * 	function count() {
+	 * 		return 123;
 	 * 	}
-	 * 	// in our example 123
-	 * 	var_dump(len($t));	
-	 * 	</code>
+	 * }
+	 * // in our example 123
+	 * var_dump(len($t));	
+	 * </code>
 	 * 
-	 * 	@param mixed $var
-	 * 	@return int
-	 * 	@todo TESTS, write a test for this
+	 * @param mixed $var
+	 * @return int
+	 * @todo TESTS, write a test for this
 	 */
 	function len($var) {
 		if (is_array($var)) {
@@ -307,12 +307,12 @@ if (!function_exists('len')) {
 
 if (!function_exists('json_encode')) {
 	/**
-	 *	Encodes php stuff to json code {@link http://www.json.org}.
-	 * 	This method provides json encoding if current php version is lower than
-	 * 	5.2 where json_encode was implemented. This does not handle character
-	 * 	encodings.
-	 * 	@param mixed $data
-	 * 	@return string
+	 * Encodes php stuff to json code {@link http://www.json.org}.
+	 * This method provides json encoding if current php version is lower than
+	 * 5.2 where json_encode was implemented. This does not handle character
+	 * encodings.
+	 * @param mixed $data
+	 * @return string
 	 */
 	function json_encode($a=false) {
 	    if (is_null($a)) return 'null';
@@ -347,5 +347,3 @@ if (!function_exists('json_encode')) {
 		}
 	}
 }
-
-?>

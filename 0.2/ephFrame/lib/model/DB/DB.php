@@ -1,21 +1,21 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 // load parent class
@@ -24,43 +24,43 @@ ephFrame::loadClass('ephFrame.lib.model.DB.DBDSN');
 ephFrame::loadInterface('ephFrame.lib.model.DB.DBInterface');
 
 /**
- * 	Abstract Database-Access-Object (DAO)
+ * Abstract Database-Access-Object (DAO)
  * 
- * 	This abstract class is the base class for every other DAO used in the
- * 	framework.
+ * This abstract class is the base class for every other DAO used in the
+ * framework.
  * 
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- *	@since 19.05.2007
- *	@package ephFrame
- *	@subpackage ephFrame.lib.model.DB
- * 	@version 0.2
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 19.05.2007
+ * @package ephFrame
+ * @subpackage ephFrame.lib.model.DB
+ * @version 0.2
  */
 abstract class DB extends Object implements DBInterface {
 	
 	/**
-	 * 	Stores the current {@link DBDSN} for this DAO
-	 * 	@var DBDSN
+	 * Stores the current {@link DBDSN} for this DAO
+	 * @var DBDSN
 	 */
 	public $DBDSN;
 	
 	/**
-	 *	Stores the ressource index for the opened connection
-	 * 	@var ressource
+	 * Stores the ressource index for the opened connection
+	 * @var ressource
 	 */
 	protected $connectionHandle;
 	
 	/**
-	 * 	Stores all queries send to the dao including the result id and a
-	 * 	{@link Timer}.
-	 * 	@var DAOQueryHistory
+	 * Stores all queries send to the dao including the result id and a
+	 * {@link Timer}.
+	 * @var DAOQueryHistory
 	 */
 	public $queries;
 	
 	/**
-	 * 	Create the DAO,
-	 * 	create the {@link DAOQueryHistory} which stores all the queries and
-	 * 	their performance.
-	 *  @return DAO
+	 * Create the DAO,
+	 * create the {@link DAOQueryHistory} which stores all the queries and
+	 * their performance.
+	 * @return DAO
 	 */
 	final public function __construct() {
 		$this->DBDSN = new DBDSN('');
@@ -69,17 +69,17 @@ abstract class DB extends Object implements DBInterface {
 	}
 	
 	/**
-	 *	Tests if the DAO has established a connection
-	 * 	@return boolean
+	 * Tests if the DAO has established a connection
+	 * @return boolean
 	 */
 	public function connected() {
 		return is_resource($this->connectionHandle);
 	}
 	
 	/**
-	 * 	Tests if a connection is established and will throw {@link DBNotConnectedException}
-	 * 	if not.
-	 *	@throws DBNotConnectedException
+	 * Tests if a connection is established and will throw {@link DBNotConnectedException}
+	 * if not.
+	 * @throws DBNotConnectedException
 	 */
 	public function checkConnection() {
 		if (!$this->connected()) {
@@ -89,9 +89,9 @@ abstract class DB extends Object implements DBInterface {
 	}
 	
 	/**
-	 * 	Conect to the database server using the passed {@link DBDSN}
-	 * 	@param DBDSN $dbdsn
-	 * 	@return DAO
+	 * Conect to the database server using the passed {@link DBDSN}
+	 * @param DBDSN $dbdsn
+	 * @return DAO
 	 */
 	public function connect(DBDSN $dbdsn) {
 		$this->DBDSN = $dbdsn;
@@ -100,19 +100,19 @@ abstract class DB extends Object implements DBInterface {
 	}
 	
 	/**
-	 *	Before connect callback, overwrite this in the dao subclass
-	 * 	the subclass should not establish a connection if {@link beforeConnect}
-	 *  returns false.
-	 * 	@return boolean
+	 * Before connect callback, overwrite this in the dao subclass
+	 * the subclass should not establish a connection if {@link beforeConnect}
+	 * returns false.
+	 * @return boolean
 	 */
 	public function beforeConnect() {
 		return true;	
 	}
 	
 	/**
-	 *	This is called after the connection is established. Overwrite this
-	 * 	in your subclasses.
-	 * 	@return DAO
+	 * This is called after the connection is established. Overwrite this
+	 * in your subclasses.
+	 * @return DAO
 	 */
 	public function afterConnect() {
 		if ($this->DBDSN->db()) {
@@ -125,17 +125,17 @@ abstract class DB extends Object implements DBInterface {
 	}
 	
 	/**
-	 *	Sets or returns the DBDSN which is used to establish the connection
-	 * 	@param DBDSN $dbdsn
-	 * 	@return DBDSN
+	 * Sets or returns the DBDSN which is used to establish the connection
+	 * @param DBDSN $dbdsn
+	 * @return DBDSN
 	 */
 	public function DBDSN(DBDSN $dbdsn = null) {
 		return $this->__getOrSet('DBDSN', $dbdsn);
 	}
 	
 	/**
-	 *	Callback called before Query is send to the database
-	 * 	@param string
+	 * Callback called before Query is send to the database
+	 * @param string
 	 */
 	public function beforeQuery($query) {
 		$this->checkConnection();
@@ -144,17 +144,17 @@ abstract class DB extends Object implements DBInterface {
 	}
 	
 	/**
-	 * 	Sends a Query to the Database and return a result (what a surprise!)
-	 * 	@param string|DBQuery $query
-	 * 	@return QueryResult
+	 * Sends a Query to the Database and return a result (what a surprise!)
+	 * @param string|DBQuery $query
+	 * @return QueryResult
 	 */
 	public function query($query) { }
 	
 	/**
-	 * 	Locks a table
+	 * Locks a table
 	 *
-	 * 	@param string $tablename
-	 * 	@return boolean
+	 * @param string $tablename
+	 * @return boolean
 	 */
 	public function lockTable($tablename) {
 		$this->query('LOCK TABLE '.$tablename.';');
@@ -162,10 +162,10 @@ abstract class DB extends Object implements DBInterface {
 	}
 	
 	/**
-	 * 	Unlocks a locked table
+	 * Unlocks a locked table
 	 *
-	 * 	@param string $tablename
-	 * 	@return boolean
+	 * @param string $tablename
+	 * @return boolean
 	 */
 	public function unlockTable($tablename) {
 		$this->query('UNLOCK TABLE '.$tablename.';');
@@ -173,35 +173,35 @@ abstract class DB extends Object implements DBInterface {
 	}
 	
 	/**
-	 * 	Returns the last id of the item that was inserted
-	 *	@return integer
+	 * Returns the last id of the item that was inserted
+	 * @return integer
 	 */
 	public function lastInsertId() {}
 	
 	/**
-	 * 	Select a specific database
-	 * 	@param string $dbname
-	 * 	@return boolean
+	 * Select a specific database
+	 * @param string $dbname
+	 * @return boolean
 	 */
 	public function selectDB($dbname = null) { }
 	
 	/**
-	 * 	Returns the code for the last error that occured
-	 * 	@return integer|boolean
+	 * Returns the code for the last error that occured
+	 * @return integer|boolean
 	 */
 	public function errorNo() { }
 	
 	/**
-	 * 	Returns the message of the last error occured
-	 * 	@return string
+	 * Returns the message of the last error occured
+	 * @return string
 	 */
 	public function errorMessage() { }
 	
 	public function disconnect() { }
 	
 	/**
-	 * 	Returns a {@link Hash} with all table columns and information about them
-	 * 	@return Hash
+	 * Returns a {@link Hash} with all table columns and information about them
+	 * @return Hash
 	 */
 	public function describe($tablename) {
 		if (!class_exists('DBDescribeQuery')) {
@@ -213,8 +213,8 @@ abstract class DB extends Object implements DBInterface {
 	}
 	
 	/**
-	 *	Returns the last query performed
-	 * 	@return DBQuery
+	 * Returns the last query performed
+	 * @return DBQuery
 	 */
 	final public function lastQuery() {
 		return $this->queries->last();
@@ -229,15 +229,13 @@ abstract class DB extends Object implements DBInterface {
 }
 
 /**
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class DBException extends BasicException { }
 
 /**
- * 	@package ephFrame
- *	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class DBNotConnectedException extends DBException {}
-
-?>

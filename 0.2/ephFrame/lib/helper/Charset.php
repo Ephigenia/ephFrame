@@ -1,42 +1,42 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- * 	Charset
+ * Charset
  * 
- * 	This is partially tested in {@link TestCharset}.
+ * This is partially tested in {@link TestCharset}.
  * 
- * 	Take care that this file is always saves in utf8 format!
- * 	
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 02.05.2007
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.helper
- * 	@version 0.2
+ * Take care that this file is always saves in utf8 format!
+ * 
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 02.05.2007
+ * @package ephFrame
+ * @subpackage ephFrame.lib.helper
+ * @version 0.2
  */
 class Charset extends Helper {
 	
 	/**
-	 * 	Checks if a string is ASCII
-	 *  @param string $string
-	 * 	@return boolean
+	 * Checks if a string is ASCII
+	 * @param string $string
+	 * @return boolean
 	 */
 	public static function isASCII($string) {
 		return (bool) (preg_match('/^[\\x00-\\x7A]*$/', $string));
@@ -48,11 +48,11 @@ class Charset extends Helper {
 	
 	
 	/**
-	 * 	Convert passed $string into ASCII Charset using iconv if
-	 * 	available.	
+	 * Convert passed $string into ASCII Charset using iconv if
+	 * available.	
 	 *
-	 * 	@param string $string
-	 * 	@return string
+	 * @param string $string
+	 * @return string
 	 */
 	public static function toASCII($string) {
 		$string = self::toSingleBytes($string);
@@ -67,8 +67,8 @@ class Charset extends Helper {
 	}
 	
 	/**
-	 *	Fixes wrong utf8 entities to their original entitiy
-	 * 	@return string
+	 * Fixes wrong utf8 entities to their original entitiy
+	 * @return string
 	 */
 	public static function toUtf8($string) {
 		self::$iso88591ToUtf8 = array(
@@ -105,16 +105,16 @@ class Charset extends Helper {
 	}
 	
 	/**
-	 * 	Translate multibyte characters in a $string to single byte characters
-	 * 	using a conversion array.
+	 * Translate multibyte characters in a $string to single byte characters
+	 * using a conversion array.
 	 * 
-	 * 	<code>
-	 * 	// should echo 'Egalite is faebulous';
-	 * 	echo Charset::toSingleBytes('Égalité is fäbulous');
-	 * 	</code>
+	 * <code>
+	 * // should echo 'Egalite is faebulous';
+	 * echo Charset::toSingleBytes('Égalité is fäbulous');
+	 * </code>
 	 * 
-	 * 	@param string $string
-	 * 	@return string
+	 * @param string $string
+	 * @return string
 	 */
 	public static function toSingleBytes($string) {
 		// create charset table cache
@@ -180,14 +180,14 @@ class Charset extends Helper {
 	}
 	
 	/**
-	 * 	Tests if a string is utf8 encoded.
+	 * Tests if a string is utf8 encoded.
 	 * 
-	 * 	This will use the iconv support if installed/compiled with php, which
-	 * 	is much faster than the regular expression match that is performed if
-	 * 	iconv is not installed.<br />
-	 * 	This function is from O'Reilly - Building Scalable Websites
-	 *  @param	string	$string
-	 * 	@return boolean
+	 * This will use the iconv support if installed/compiled with php, which
+	 * is much faster than the regular expression match that is performed if
+	 * iconv is not installed.<br />
+	 * This function is from O'Reilly - Building Scalable Websites
+	 * @param	string	$string
+	 * @return boolean
 	 */
 	public static function isUTF8($string) {
 		if (function_exists('iconv')) {
@@ -232,9 +232,9 @@ class Charset extends Helper {
 	const ISO_8859_1 = 'ISO-8859-1';
 	
 	/**
-	 *	Returns encoding detected by <a href="http://de.wikipedia.org/wiki/Byte_Order_Mark">BOM</a>
-	 * 	or false if no bom was found
-	 * 	@return string|boolean
+	 * Returns encoding detected by <a href="http://de.wikipedia.org/wiki/Byte_Order_Mark">BOM</a>
+	 * or false if no bom was found
+	 * @return string|boolean
 	 */
 	public static function BOM($string) {
 		$bom = false;
@@ -261,5 +261,3 @@ class Charset extends Helper {
 	}
 	
 }
-
-?>

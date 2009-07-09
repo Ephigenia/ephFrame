@@ -1,64 +1,64 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 class_exists('Controller') or require dirname(__FILE__).'/Controller.php';
 
 /**
- * 	[add description here]
- * 	@todo add doc for this!
+ * [add description here]
+ * @todo add doc for this!
  * 
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 28.10.2008
+ * @package ephFrame
+ * @subpackage ephFrame.lib
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 28.10.2008
  */
-class ConsoleController extends Controller {
-	
+class ConsoleController extends Controller
+{	
 	/**
-	 *	instance of the optparser for this console application
-	 * 	@var OptParse
+	 * instance of the optparser for this console application
+	 * @var OptParse
 	 */
 	protected $optParse;
 	
 	/**
-	 *	Clasname of the Optparse that should be used
-	 * 	@var string
+	 * Clasname of the Optparse that should be used
+	 * @var string
 	 */
 	protected $optParseClassname = 'ephFrame.lib.console.OptParse';
 	
 	/**
-	 *	Name of class that handles the output, as defualt it's consoledrawing
-	 * 	that can colour your output, but you can replace this by your own class
-	 * 	@var string
+	 * Name of class that handles the output, as defualt it's consoledrawing
+	 * that can colour your output, but you can replace this by your own class
+	 * @var string
 	 */
 	protected $consoleClassname = 'ephFrame.lib.console.ConsoleDrawing';
 	
 	/**
-	 * 	Console Class
-	 * 	@var Console
+	 * Console Class
+	 * @var Console
 	 */
 	protected $console;
 	
 	/**
-	 *	stores the with for some output messages of the application
-	 * 	@var integer
+	 * stores the with for some output messages of the application
+	 * @var integer
 	 */
 	protected $consoleWidth = 80;
 	
@@ -111,9 +111,7 @@ class ConsoleController extends Controller {
 }
 
 /**
- * 	@package ephFrame
- * 	@subpackage ephFrame.exceptions
+ * @package ephFrame
+ * @subpackage ephFrame.exceptions
  */
 class ConsoleControllerException extends ControllerException {}
-
-?>

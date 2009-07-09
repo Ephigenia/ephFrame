@@ -1,33 +1,33 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 class_exists('HTMLTag') or require dirname(__FILE__).'/../HTMLTag.php';
 
 /**
- * 	Class for handling Meta Tags
+ * Class for handling Meta Tags
  * 
- * 	@author Marcel Eichner // Ephiagenia <love@ephigenia.de>
- * 	@since 11.05.2008
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.component
- * 	@uses HTMLTag
+ * @author Marcel Eichner // Ephiagenia <love@ephigenia.de>
+ * @since 11.05.2008
+ * @package ephFrame
+ * @subpackage ephFrame.lib.component
+ * @uses HTMLTag
  */
 class MetaTags extends Hash implements Renderable {
 	
@@ -65,7 +65,7 @@ class MetaTags extends Hash implements Renderable {
 		} else {
 			$tagAttributes['name'] = $key;
 		}
-		if ($value instanceof Set) {
+		if ($value instanceof IndexedArray) {
 			$tagAttributes['content'] = $value->implode(',');
 		} else {
 			switch(gettype($value)) {
@@ -103,5 +103,3 @@ class MetaTags extends Hash implements Renderable {
 	}
 	
 }
-
-?>

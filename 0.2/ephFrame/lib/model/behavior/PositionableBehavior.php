@@ -1,36 +1,36 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- * 	Behavior for Models with position field
+ * Behavior for Models with position field
  * 
- * 	This is a simple Behavior that shows how behaviors could be used for models.
- * 	It will provide methods for moving model entries around in a one-dimension
- * 	hirarchy. So every Model should have a 'position' field defined as integer
- * 	and this position field can be manipulated if the model behaves as
- * 	Positionable.
- * 		
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 03.12.2008
- * 	@package ephFrame
- *	@subpackage ephFrame.lib.models.behaviors
+ * This is a simple Behavior that shows how behaviors could be used for models.
+ * It will provide methods for moving model entries around in a one-dimension
+ * hirarchy. So every Model should have a 'position' field defined as integer
+ * and this position field can be manipulated if the model behaves as
+ * Positionable.
+ * 	
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 03.12.2008
+ * @package ephFrame
+ * @subpackage ephFrame.lib.models.behaviors
  */
 class PositionableBehavior extends ModelBehavior {
 	
@@ -40,15 +40,15 @@ class PositionableBehavior extends ModelBehavior {
 	const MOVE_DIRECTION_BOTTOM = 'borrom';
 	
 	/**
-	 * 	Name of the field that stores the current position
-	 * 	@var integer
+	 * Name of the field that stores the current position
+	 * @var integer
 	 */
 	protected $positionFieldName = 'position';
 	
 	/**
-	 * 	Callback called whenever a new item is inserted, it will increase
-	 * 	its position by one
-	 *	@return boolean
+	 * Callback called whenever a new item is inserted, it will increase
+	 * its position by one
+	 * @return boolean
 	 */
 	public function beforeInsert() {
 		$newPosition = 0;
@@ -60,9 +60,9 @@ class PositionableBehavior extends ModelBehavior {
 	}
 	
 	/**
-	 * 	Collects all conditions that are important for retreiving lower or
-	 * 	higher positioned items and returns them.
-	 *	@return Hash
+	 * Collects all conditions that are important for retreiving lower or
+	 * higher positioned items and returns them.
+	 * @return Hash
 	 */
 	protected function collectModelConditions() {
 		$conditions = array();
@@ -73,10 +73,10 @@ class PositionableBehavior extends ModelBehavior {
 	}
 	
 	/**
-	 *	Return next model entry
-	 * 	@param array(string) additional conditions to use
-	 * 	@param boolean $looped begin at the first element when model is last element, double linked
-	 * 	@return boolean|Model
+	 * Return next model entry
+	 * @param array(string) additional conditions to use
+	 * @param boolean $looped begin at the first element when model is last element, double linked
+	 * @return boolean|Model
 	 */
 	public function next($additionalConditions = array(), $looped = false) {
 		if (!$this->model->exists()) return false;
@@ -92,10 +92,10 @@ class PositionableBehavior extends ModelBehavior {
 	}
 	
 	/**
-	 *	Return model entry that is before this model
-	 * 	@param array(string) additional conditions to use
-	 * 	@param boolean $looped return the last element if your in the first element (double linked)
-	 * 	@return boolean|Model
+	 * Return model entry that is before this model
+	 * @param array(string) additional conditions to use
+	 * @param boolean $looped return the last element if your in the first element (double linked)
+	 * @return boolean|Model
 	 */
 	public function previous($additionalConditions = array(), $looped = false) {
 		if (!$this->model->exists()) return false;
@@ -111,10 +111,10 @@ class PositionableBehavior extends ModelBehavior {
 	}
 	
 	/**
-	 * 	Returns the first element from all positionable models including the
-	 * 	belongsTo and hasOne Rules of the model.
-	 *	@param array(string) additional conditions to use
-	 * 	@return boolean|Model
+	 * Returns the first element from all positionable models including the
+	 * belongsTo and hasOne Rules of the model.
+	 * @param array(string) additional conditions to use
+	 * @return boolean|Model
 	 */
 	public function first($additionalConditions = array()) {
 		if (!$this->model->exists()) return false;
@@ -125,10 +125,10 @@ class PositionableBehavior extends ModelBehavior {
 	}
 	
 	/**
-	 * 	Returns the last element from all positionable models including the
-	 * 	belongsTo and hasOne Rules of the model.
-	 * 	@param array(string) additional conditions to use
-	 * 	@return boolean|Model
+	 * Returns the last element from all positionable models including the
+	 * belongsTo and hasOne Rules of the model.
+	 * @param array(string) additional conditions to use
+	 * @return boolean|Model
 	 */
 	public function last($additionalConditions = array()) {
 		if (!$this->model->exists()) return false;
@@ -139,16 +139,16 @@ class PositionableBehavior extends ModelBehavior {
 	}
 	
 	/**
-	 *	Tests if this model entry is the last element in the list
-	 * 	@return boolean
+	 * Tests if this model entry is the last element in the list
+	 * @return boolean
 	 */
 	public function isLast() {
 		return (!$this->next(null, false));
 	}
 	
 	/**
-	 *	Tests if this model entry is the first element in the list
-	 * 	@return boolean
+	 * Tests if this model entry is the first element in the list
+	 * @return boolean
 	 */
 	public function isFirst() {
 		return (!$this->previous(null, false));
@@ -191,5 +191,3 @@ class PositionableBehavior extends ModelBehavior {
 	}
 	
 }
-
-?>

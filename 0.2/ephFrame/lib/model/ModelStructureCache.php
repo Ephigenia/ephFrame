@@ -1,32 +1,32 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- * 	Class for persitens storage of model structure data.
+ * Class for persitens storage of model structure data.
  * 
- * 	This class stores and reads structures saved for the model.
+ * This class stores and reads structures saved for the model.
  * 
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 25.10.2008
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.model
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 25.10.2008
+ * @package ephFrame
+ * @subpackage ephFrame.lib.model
  */
 class ModelStructureCache extends Object {
 	
@@ -87,20 +87,20 @@ class ModelStructureCache extends Object {
 }
 
 /**
- * 	@package ephFrame
- *	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class ModelStructureCacheException extends ObjectException {}
 
 /**
- * 	@package ephFrame
- *	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class ModelStructureCacheDirException extends ModelStructureCacheException {}
 
 /**
- * 	@package ephFrame
- *	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class ModelStructureCacheDirNotFoundException extends ModelStructureCacheDirException {
 	public function __construct($dir) {
@@ -109,13 +109,11 @@ class ModelStructureCacheDirNotFoundException extends ModelStructureCacheDirExce
 }
 
 /**
- * 	@package ephFrame
- *	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class ModelStructureCacheDirNotWritableException extends ModelStructureCacheDirException {
 	public function __construct($dir) {
 		parent::__construct('Model cache directory is not writable \''.$dir.'\'.');
 	}
 }
-
-?>

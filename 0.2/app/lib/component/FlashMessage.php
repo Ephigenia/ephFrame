@@ -3,29 +3,29 @@
 require_once dirname(__FILE__).'/AppComponent.php';
 
 /**
- * 	Component to manage little flashing message for views
+ * Component to manage little flashing message for views
  * 
- * 	Example Controller code:
- * 	<code>
- * 	if (!$this->User->save()) {
- * 		$this->FlashMessage->set('Error while saving', FlashMessage::TYPE_ERROR);
- * 	}
- * 	</code>
+ * Example Controller code:
+ * <code>
+ * if (!$this->User->save()) {
+ * 	$this->FlashMessage->set('Error while saving', FlashMessage::TYPE_ERROR);
+ * }
+ * </code>
  * 
- *	@package app
- *	@subpackage app.lib.component
- *	@author Ephigenia // Marcel Eichner <love@ephigenia.de>
- *	@since 09.03.2009
+ * @package app
+ * @subpackage app.lib.component
+ * @author Ephigenia // Marcel Eichner <love@ephigenia.de>
+ * @since 09.03.2009
  */
-class FlashMessage extends AppComponent {
-
+class FlashMessage extends AppComponent
+{
 	public $components = array(
 		'Session'
 	);
 	
 	/**
-	 *	Different Flash Message types that can be used
-	 * 	@var string
+	 * Different Flash Message types that can be used
+	 * @var string
 	 */
 	const TYPE_ERROR 	= 'error';
 	const TYPE_HINT 		= 'hint';
@@ -59,5 +59,3 @@ class FlashMessage extends AppComponent {
 	}
 	
 }
-
-?>

@@ -1,66 +1,66 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 class_exists('ConsoleDrawing') or require dirname(__FILE__).'/ConsoleDrawing.php';
 
 /**
- * 	Box Drawing class in Console
+ * Box Drawing class in Console
  * 
- * 	This class will help you create boxes in the console with content in it. The
- * 	content will auto scroll if it's to long for the box. The borders of the box
- * 	can be custumized by changing the {@link boxChars} propterty of this class.
+ * This class will help you create boxes in the console with content in it. The
+ * content will auto scroll if it's to long for the box. The borders of the box
+ * can be custumized by changing the {@link boxChars} propterty of this class.
  * 
- * 	See this example, that creates a box in the console and fills it with random
- * 	characters.
- * 	<code>
- * 	$b = new ConsoleWindow(5, 5, 20, 10);
- *	for ($i = 0; $i < 100; $i++) {
- *		$b->content(chr(rand(34,120)), true);
- *		usleep(0.02 * 1000000); // ms
- *	}
- * 	</code>
+ * See this example, that creates a box in the console and fills it with random
+ * characters.
+ * <code>
+ * $b = new ConsoleWindow(5, 5, 20, 10);
+ * for ($i = 0; $i < 100; $i++) {
+ * $b->content(chr(rand(34,120)), true);
+ * usleep(0.02 * 1000000); // ms
+ * }
+ * </code>
  * 
- * 	Example Output:
- * 	<code>
- * 	┌─[ Drawing ]──────┐
- *  │ very long        │
- *  │ character shit   │
- *  │ Automatic        │
- *  │ Console Drawing  │
- *  │ x Drawing        │
- *  │                  │
- *  │                  │
- *  │                  │
- *  └──────────────────┘
- * 	</code>
- * 	
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.console
- *	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 28.07.2008
+ * Example Output:
+ * <code>
+ * ┌─[ Drawing ]──────┐
+ * │ very long        │
+ * │ character shit   │
+ * │ Automatic        │
+ * │ Console Drawing  │
+ * │ x Drawing        │
+ * │                  │
+ * │                  │
+ * │                  │
+ * └──────────────────┘
+ * </code>
+ * 
+ * @package ephFrame
+ * @subpackage ephFrame.lib.console
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 28.07.2008
  */
-class ConsoleWindow extends ConsoleDrawing {
-	
+class ConsoleWindow extends ConsoleDrawing
+{	
 	/**
-	 * 	Characters, used for box drawing
-	 * 	@var array(string)
+	 * Characters, used for box drawing
+	 * @var array(string)
 	 */
 	public $boxChars = array(
 		WACS_HLINE,		// horizontal line
@@ -81,22 +81,22 @@ class ConsoleWindow extends ConsoleDrawing {
 	public $title;
 	protected $titleFormat = '[ %s ]';
 	
-	/**	
-	 * 	Stores the current content of the box.
-	 * 	Please notice that if you change the content string on your own, you
-	 * 	need to call redrawContent for display.
-	 *	@var string
+	/** 
+	 * Stores the current content of the box.
+	 * Please notice that if you change the content string on your own, you
+	 * need to call redrawContent for display.
+	 * @var string
 	 */
 	public $content = '';
 	
 	/**
-	 *	Creates a new {@link ConsoleBox} in the Terminal window with the passed
-	 * 	propterties.
-	 * 	@param integer $x
-	 * 	@param integer $y
-	 * 	@param integer $width
-	 * 	@param integer $height
-	 * 	@param string $content initial content of the box
+	 * Creates a new {@link ConsoleBox} in the Terminal window with the passed
+	 * propterties.
+	 * @param integer $x
+	 * @param integer $y
+	 * @param integer $width
+	 * @param integer $height
+	 * @param string $content initial content of the box
 	 */
 	public function __construct($x, $y, $width, $height, $content = '', $drawBorder = null, $background = null) {
 		$this->x = $x;
@@ -115,11 +115,11 @@ class ConsoleWindow extends ConsoleDrawing {
 	}
 	
 	/**
-	 * 	Change the $content of the box or $append something to the content.
-	 * 	Right after the content is set the box content will redraw.
-	 * 	@param string $content
-	 * 	@param boolean $append
-	 * 	@return ConsoleBox
+	 * Change the $content of the box or $append something to the content.
+	 * Right after the content is set the box content will redraw.
+	 * @param string $content
+	 * @param boolean $append
+	 * @return ConsoleBox
 	 */
 	public function content($content, $append = false) {
 		if ($append) {
@@ -132,10 +132,10 @@ class ConsoleWindow extends ConsoleDrawing {
 	}
 	
 	/**
-	 *	Sets a new window title, the title is automatically shortened if it's
-	 * 	to long for the current window {@link width}
-	 * 	@param string $title
-	 * 	@return ConsoleWindow
+	 * Sets a new window title, the title is automatically shortened if it's
+	 * to long for the current window {@link width}
+	 * @param string $title
+	 * @return ConsoleWindow
 	 */
 	public function title($title) {
 		$this->title = $title;
@@ -144,8 +144,8 @@ class ConsoleWindow extends ConsoleDrawing {
 	}
 	
 	/**
-	 *	Redraw the hole box including border and content
-	 * 	@return ConsoleBox
+	 * Redraw the hole box including border and content
+	 * @return ConsoleBox
 	 */
 	public function redraw() {
 		if ($this->drawBorder) {
@@ -262,9 +262,9 @@ class ConsoleWindow extends ConsoleDrawing {
 
 
 /**
- * 	Automatic Test if ConsoleDrawing is called directly, so this file should
- * 	create 4 windows and fill it with random words. If that doesn't work
- * 	something must be wrong :D
+ * Automatic Test if ConsoleDrawing is called directly, so this file should
+ * create 4 windows and fill it with random words. If that doesn't work
+ * something must be wrong :D
  */
 if (basename($_SERVER['PHP_SELF']) == basename(__FILE__)) {
 	$randomWords = array('Automatic', 'Console', 'Drawing', 'Test', 'x', 'very long character shit');
@@ -289,5 +289,3 @@ if (basename($_SERVER['PHP_SELF']) == basename(__FILE__)) {
 	}
 	exit;
 }
-
-?>

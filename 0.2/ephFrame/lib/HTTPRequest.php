@@ -1,21 +1,21 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 class_exists('ArrayHelper') or require dirname(__FILE__).'/helper/ArrayHelper.php';
@@ -24,42 +24,42 @@ class_exists('HTTPHeader') or require dirname(__FILE__).'/HTTPHeader.php';
 class_exists('Charset') or require dirname(__FILE__).'/helper/Charset.php';
 
 /**
- *	Http Request Class
- * 	
- * 	A Class that can handle the current HTTP Request (with __construct(true))
- * 	or send HTTP Requests to other hosts and Return a {@link HTTPResponse}.
+ * Http Request Class
  * 
- * 	How to read from the actual HTTP Request
- * 	<code>
- * 	$request = new HTTPRequest(true);
- * 	if ($request->get('id')) {
- * 		// do something with the catched id
- * 	}
- * 	</code>
+ * A Class that can handle the current HTTP Request (with __construct(true))
+ * or send HTTP Requests to other hosts and Return a {@link HTTPResponse}.
  * 
- * 	Use the HTTP Request class for retreiving information from google maps
- * 	<code>
- * 	$request = new HTTPRequest(array('apicode' => 'asdlkj', 'output' => 'xml'));
- * 	$request->set('q', 'Kopernikusstr. 8, Berlin');
- * 	$response = $request->send('maps.google.com/maps/geo');
- * 	echo $response->dump();
- * 	</code>
+ * How to read from the actual HTTP Request
+ * <code>
+ * $request = new HTTPRequest(true);
+ * if ($request->get('id')) {
+ * 	// do something with the catched id
+ * }
+ * </code>
  * 
- * 	Use HTTP Request class for reading a website
- * 	<code>
- * 	$request = new HTTPRequest();
- * 	$response = $request->send('http://code.ephigenia.de');
- * 	// map it to __toString();
- * 	echo $response;
- * 	</code>
+ * Use the HTTP Request class for retreiving information from google maps
+ * <code>
+ * $request = new HTTPRequest(array('apicode' => 'asdlkj', 'output' => 'xml'));
+ * $request->set('q', 'Kopernikusstr. 8, Berlin');
+ * $response = $request->send('maps.google.com/maps/geo');
+ * echo $response->dump();
+ * </code>
  * 
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 06.05.2007
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
- * 	@uses ArrayHelper
- * 	@uses HTTPResponse
- * 	@version 0.1
+ * Use HTTP Request class for reading a website
+ * <code>
+ * $request = new HTTPRequest();
+ * $response = $request->send('http://code.ephigenia.de');
+ * // map it to __toString();
+ * echo $response;
+ * </code>
+ * 
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 06.05.2007
+ * @package ephFrame
+ * @subpackage ephFrame.lib
+ * @uses ArrayHelper
+ * @uses HTTPResponse
+ * @version 0.1
  */
 class HTTPRequest extends Component {
 
@@ -67,8 +67,8 @@ class HTTPRequest extends Component {
 	const METHOD_POST = 'POST';
 	
 	/**
-	 * 	Concrete Request Method
-	 * 	@var string
+	 * Concrete Request Method
+	 * @var string
 	 */
 	public $method;
 	
@@ -80,26 +80,26 @@ class HTTPRequest extends Component {
 	public $referer = false;
 	
 	/**
-	 * 	@var HTTPHeader
+	 * @var HTTPHeader
 	 */
 	public $header;
 	
 	/**
-	 * 	Timeout in seconds for outgoing request
-	 * 	@var integer
+	 * Timeout in seconds for outgoing request
+	 * @var integer
 	 */
 	public $timeout = 5;
 	
 	/**
-	 *	Stores post and get variables
-	 * 	@var array(string)
+	 * Stores post and get variables
+	 * @var array(string)
 	 */
 	public $data = array();
 	
 	/**
-	 *	Creates a HTTPRequest that can be send away
-	 * 	@param boolean|array(string) $autofillOrData
-	 * 	@return HTTPRequest
+	 * Creates a HTTPRequest that can be send away
+	 * @param boolean|array(string) $autofillOrData
+	 * @return HTTPRequest
 	 */
 	public function __construct($autofillOrData = false) {
 		$this->header = new HTTPHeader();
@@ -162,31 +162,31 @@ class HTTPRequest extends Component {
 	}
 	
 	/**
-	 *	Tests if a sended request is ajax (only works with jquery)
-	 * 	@return boolean
+	 * Tests if a sended request is ajax (only works with jquery)
+	 * @return boolean
 	 */
 	public function isAjax() {
 		return ($this->header->get('x_requested_with') == 'XMLHttpRequest');
 	}
 	
 	/**
-	 * 	Read from the HTTPRequest using the ArrayHelper::extract method to
-	 * 	support reading from arrays
-	 * 	<code>
-	 * 	$a = $request->read('projectname/user/id');
-	 * 	</code>
-	 * 	@param string $name
-	 * 	@return mixed
+	 * Read from the HTTPRequest using the ArrayHelper::extract method to
+	 * support reading from arrays
+	 * <code>
+	 * $a = $request->read('projectname/user/id');
+	 * </code>
+	 * @param string $name
+	 * @return mixed
 	 */
 	public function get($name) {
 		return ArrayHelper::extract($this->data, $name);
 	}
 	
 	/**
-	 * 	Send the request with the current method, data and uri to 
-	 * 	the current host, or you specify a custom url and pass it to the method
-	 * 	@param string $url
-	 * 	@return HTTPResponse
+	 * Send the request with the current method, data and uri to 
+	 * the current host, or you specify a custom url and pass it to the method
+	 * @param string $url
+	 * @return HTTPResponse
 	 */
 	public function send($url = null) {
 		// use passed url
@@ -219,12 +219,12 @@ class HTTPRequest extends Component {
 	}
 	
 	/**
-	 * 	Basically builds a valid HTTP Request to send of to a Web Server
+	 * Basically builds a valid HTTP Request to send of to a Web Server
 	 *
-	 * 	@param string $host ip or host that should be harmed with the request
-	 * 	@param strign $uri requested uri on that host
-	 * 	@param unknown_type $query
-	 * 	@return unknown
+	 * @param string $host ip or host that should be harmed with the request
+	 * @param strign $uri requested uri on that host
+	 * @param unknown_type $query
+	 * @return unknown
 	 */
 	private function buildRequest($host, $uri = '/', $query = '') {
 		if (empty($uri)) {
@@ -253,26 +253,26 @@ class HTTPRequest extends Component {
 	}
 	
 	/**
-	 * 	Build a request string from the data for this request or use the passed
-	 * 	array to generate the request string.
+	 * Build a request string from the data for this request or use the passed
+	 * array to generate the request string.
 	 * 
-	 *  The Request string is the part of the url that is added to the requested
-	 * 	URI - Suche as for example:
-	 * 	<code>
-	 * 	?id=245&mode=list
-	 * 	</code>
+	 * The Request string is the part of the url that is added to the requested
+	 * URI - Suche as for example:
+	 * <code>
+	 * ?id=245&mode=list
+	 * </code>
 	 * 
-	 * 	This method can also handle multiple dimension arrays, rendering them
-	 * 	as php would do in forms:
-	 * 	<strong>not finished</strong>
-	 * 	<code>
-	 * 	?id=234&mode=edit&categories[]=1&categories[]=34
-	 * 	</code>
+	 * This method can also handle multiple dimension arrays, rendering them
+	 * as php would do in forms:
+	 * <strong>not finished</strong>
+	 * <code>
+	 * ?id=234&mode=edit&categories[]=1&categories[]=34
+	 * </code>
 	 * 
-	 * 	All Strings will be urlencoded
-	 *  
-	 *	@param array $data
-	 *	@return string
+	 * All Strings will be urlencoded
+	 * 
+	 * @param array $data
+	 * @return string
 	 */
 	public function buildRequestQuery($data = null) {
 		if (!$data) {
@@ -288,8 +288,8 @@ class HTTPRequest extends Component {
 	}
 	
 	/**
-	 * 	Dumps the data from the request and returns it
-	 * 	@return string
+	 * Dumps the data from the request and returns it
+	 * @return string
 	 */
 	public function dump() {
 		$rendered = '';
@@ -302,16 +302,14 @@ class HTTPRequest extends Component {
 }
 
 /**
- *	@package ephFrame
- *	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class HTTPRequestException extends BasicException {}
 
 /**
- * 	@package ephFrame
- *	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class HTTPRequestFSockError extends HTTPRequestException {
 }
-
-?>

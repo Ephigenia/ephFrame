@@ -1,44 +1,44 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- * 	HTTP Status Codes
+ * HTTP Status Codes
  * 
- * 	Stores all known http 1.1 status codes I was able to find
+ * Stores all known http 1.1 status codes I was able to find
  * 
- * 	Retreive HTTP Status Message from HTTP Status code
- * 	<code>
- * 	echo HTTPStatusCode::message(404);
- * 	</code>
+ * Retreive HTTP Status Message from HTTP Status code
+ * <code>
+ * echo HTTPStatusCode::message(404);
+ * </code>
  *
- *	@author Marcel Eichner // Ephigenia <love@ephigenia.de
- * 	@since 16.12.2007
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
- * 	@static
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de
+ * @since 16.12.2007
+ * @package ephFrame
+ * @subpackage ephFrame.lib
+ * @static
  */
 class HTTPStatusCode extends Object {
 	
 	/**
-	 * 	Collected StatusCode -> Message String collection
-	 * 	@var array(string)
+	 * Collected StatusCode -> Message String collection
+	 * @var array(string)
 	 */
 	public static $statusCodes = array(
 		100 => 'Continue',
@@ -83,10 +83,10 @@ class HTTPStatusCode extends Object {
 	);
 	
 	/**
-	 * 	Returns the status message if found in the status code array. If the
-	 * 	status code is not found false is returned
-	 * 	@param string|integer $code
-	 * 	@return string|boolean
+	 * Returns the status message if found in the status code array. If the
+	 * status code is not found false is returned
+	 * @param string|integer $code
+	 * @return string|boolean
 	 */
 	public static function message($code) {
 		$code = (int) $code;
@@ -97,17 +97,17 @@ class HTTPStatusCode extends Object {
 	}
 	
 	/**
-	 * 	Returns a valid header message for the http status code passed
+	 * Returns a valid header message for the http status code passed
 	 * 
-	 * 	Create a 404 response header status message
-	 * 	<code>
-	 * 	// should echo 'HTTP/1.0 404 Not Found
-	 * 	echo HttpStatusCode::header(404, '1.0');
-	 * 	</code>
-	 * 	
-	 * 	@param string|integer $code
-	 * 	@param string|integer|float $httpVersion
-	 * 	@return string
+	 * Create a 404 response header status message
+	 * <code>
+	 * // should echo 'HTTP/1.0 404 Not Found
+	 * echo HttpStatusCode::header(404, '1.0');
+	 * </code>
+	 * 
+	 * @param string|integer $code
+	 * @param string|integer|float $httpVersion
+	 * @return string
 	 */
 	public static function header($code, $httpVersion = '1.x') {
 		if (!$msg = self::message($code)) {
@@ -117,9 +117,9 @@ class HTTPStatusCode extends Object {
 	}
 	
 	/**
-	 * 	Send a header message with the passed status code to the client
-	 * 	@param string|integer $code
-	 * 	@return boolean
+	 * Send a header message with the passed status code to the client
+	 * @param string|integer $code
+	 * @return boolean
 	 */
 	public static function send($code) {
 		if (!$headerMessage = self::header($code)) {
@@ -130,5 +130,3 @@ class HTTPStatusCode extends Object {
 	}
 	
 }
-
-?>

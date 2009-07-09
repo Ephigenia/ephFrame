@@ -1,51 +1,51 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 // Load String Class that is needed
 ephFrame::loadClass('ephFrame.lib.helper.String');
 
 /**
- *	Sanitizer
+ * Sanitizer
  * 
- * 	The Sanitizer takes strings and arrays of string and converts them for a
- * 	display in a specifice content.
+ * The Sanitizer takes strings and arrays of string and converts them for a
+ * display in a specifice content.
  * 
- * 	So for example you want to save a blog comment with username, email and
- * 	text. The Text should allow some html tags but encode every not allowed tag
- * 	including for example <script>-Tags.<br />
- * 	We would then include this in the Save-Method in the CommentController:
- * 	<code>
- * 	public function save() {
- * 		// sanitize submitted data
- * 		Sanitize::sanitize($this->request->data, Sanitize::HTML, array('text', 'email'));
- * 	}
- * 	</code>
+ * So for example you want to save a blog comment with username, email and
+ * text. The Text should allow some html tags but encode every not allowed tag
+ * including for example <script>-Tags.<br />
+ * We would then include this in the Save-Method in the CommentController:
+ * <code>
+ * public function save() {
+ * 	// sanitize submitted data
+ * 	Sanitize::sanitize($this->request->data, Sanitize::HTML, array('text', 'email'));
+ * }
+ * </code>
  * 
- * 	The Sanitizer also can clean strings up for you with the {@link clean}
- * 	method which also accepts flags as parameter.
- * 	
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.helper
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 10.06.2007
- * 	@uses String
+ * The Sanitizer also can clean strings up for you with the {@link clean}
+ * method which also accepts flags as parameter.
+ * 
+ * @package ephFrame
+ * @subpackage ephFrame.lib.helper
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 10.06.2007
+ * @uses String
  */
 class Sanitizer extends Helper {
 	
@@ -56,6 +56,7 @@ class Sanitizer extends Helper {
 	const HTML = 16;
 	const INT = 32;
 	const FLOAT = 64;
+	const FILENAME = 128;
 	
 	const CLEAN_CARRIAGE = 1;
 	const CLEAN_SPACES = 2;
@@ -85,7 +86,6 @@ class Sanitizer extends Helper {
 		if ($flags & self::CLEAN_SPACES) {
 			$var = preg_replace('@[\s+]@', ' ', $var);
 		}
-		
 		if ($flags & self::CLEAN_UNICODE) {
 			$var = preg_replace("@&#([0-9]+);@s", "&#\\1;", $var);
 		}
@@ -121,12 +121,13 @@ class Sanitizer extends Helper {
 		if ($flags & self::HTML) $var = self::html($var);
 		if ($flags & self::INT) $var = self::int($var);
 		if ($flags & self::FLOAT) $var = self::float($var);
+		if ($flags & self::FILENAME) $var = self::filename($var);
 		return $var;
 	}
 	
 	public static function panic(&$var, $ignore = null) {
 		if (is_array($var)) return self::sanitize($var, self::PANIC, $ignore);
-		$var = preg_replace('@[^0-9a-z]@i', '', $var);
+		$var = preg_replace('@[^0-9a-z_-]@i', '', $var);
 		return $var;
 	}
 	
@@ -138,6 +139,22 @@ class Sanitizer extends Helper {
 		return preg_replace('@[^'.preg_quote($allow, '@').']@i', '', $string);
 	}
 	
+	/**
+	 *	Cleans $string to be a valid filename on every system
+	 *	- stripping trailing and leading dots
+	 *  - replace special characters (that are not asc-ii)
+	 *	- replace space with underscores
+	 * 	@param $string
+	 */
+	public static function filename($string) {
+		$return = trim($string, '.');
+		return String::toURL($string, '_');
+	}
+	
+	/**
+	 * @param $string
+	 * @return string
+	 */
 	public static function sql($string) {
 		if (is_array($string)) return self::sanitize($string, self::SQL);
 		return mysql_real_escape_string($string);
@@ -186,5 +203,3 @@ class Sanitizer extends Helper {
 	}
 	
 }
-
-?>

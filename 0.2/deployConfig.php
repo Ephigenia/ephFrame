@@ -6,11 +6,11 @@ $version = trim(file_get_contents(dirname(__FILE__).'/ephFrame/VERSION.txt'));
 $codeMoreSleepTarget = '/Users/Ephigenia/Sites/code.moresleep.net/trunc/html/ephFrame/';
 
 /**
- *	This is the deploy configuration for ephFrame framwork using ephDeploy
- *  {@link http://code.ephigenia.de/projects/ephDeploy/}
+ * This is the deploy configuration for ephFrame framwork using ephDeploy
+ * {@link http://code.ephigenia.de/projects/ephDeploy/}
  *
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 06.09.2008
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 06.09.2008
  */
 $config = array(
 
@@ -116,5 +116,3 @@ $config = array(
 	) // targets
 	
 ); // config
-
-?>

@@ -1,96 +1,96 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 // load required parent classes
 class_exists('Hash') or require dirname(__FILE__).'/Hash.php';
 
 /**
- * 	View (part of MVC)
+ * View (part of MVC)
  * 
- *	A view is something the user gets to see when he uses the app.
+ * A view is something the user gets to see when he uses the app.
  * 
- * 	The View is generated from a layout file base and rendering a view created
- * 	from the controller name and action. This is a vary deep part of the ephFrame
- * 	framework.
+ * The View is generated from a layout file base and rendering a view created
+ * from the controller name and action. This is a vary deep part of the ephFrame
+ * framework.
  * 
- * 	A View can render {@link Element}s by using this kind of code in a view template.
- * 	Read more about elements in the docs of {@link Element}
- * 	<code>
- * 	// element must be located in /app/views/elements/elementName.php
- * 	echo $this->renderElement('elementName', array('dataVarName' => 'value');
- * 	// element must be located in /app/views/elements/sub/elementName.php
- * 	echo $this->renderElement('sub/elementName', array('dataVarName' => 'value');
- * 	</code>
- * 	
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 09.08.2007
- * 	@version 0.1
- *  @package ephFrame
- * 	@subpackage ephFrame.lib.component
- * 	@uses Hash
- * 	@uses Element
+ * A View can render {@link Element}s by using this kind of code in a view template.
+ * Read more about elements in the docs of {@link Element}
+ * <code>
+ * // element must be located in /app/views/elements/elementName.php
+ * echo $this->renderElement('elementName', array('dataVarName' => 'value');
+ * // element must be located in /app/views/elements/sub/elementName.php
+ * echo $this->renderElement('sub/elementName', array('dataVarName' => 'value');
+ * </code>
+ * 
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 09.08.2007
+ * @version 0.1
+ * @package ephFrame
+ * @subpackage ephFrame.lib.component
+ * @uses Hash
+ * @uses Element
  */
 abstract class View extends Hash implements Renderable {
 	
 	/**
-	 *	Name of this view (this is used to get the
-	 * 	Directory name)
-	 * 	@var string
+	 * Name of this view (this is used to get the
+	 * Directory name)
+	 * @var string
 	 */
 	protected $name;
 
 	/**
-	 *	@var string
+	 * @var string
 	 */
 	private $action;
 	
 	/**
-	 * 	Extension for layout and view files
-	 * 	this is some kind of security issue here not to use html
-	 * 	@var string
+	 * Extension for layout and view files
+	 * this is some kind of security issue here not to use html
+	 * @var string
 	 */
 	protected $templateExtension = 'php';
 	
 	/**
-	 * 	Filename for this view, created in the __constructor
-	 * 	@var string
+	 * Filename for this view, created in the __constructor
+	 * @var string
 	 */
 	public $filename;
 	
 	/**
-	 * 	Optional name for a theme to use in the path
-	 * 	@var string
+	 * Optional name for a theme to use in the path
+	 * @var string
 	 */
 	public $theme = '';
 	
 	/**
-	 *	Content type for this view that can be send to the client
-	 * 	@var string
+	 * Content type for this view that can be send to the client
+	 * @var string
 	 */
 	public $contentType = 'text/plain';
 	
 	public $dir = VIEW_DIR;
 	
 	/**
-	 *	View constructor
-	 * 	@return View
+	 * View constructor
+	 * @return View
 	 */
 	public function __construct($name, $action = 'index', $data = null) {
 		if (is_object($data)) {
@@ -109,8 +109,8 @@ abstract class View extends Hash implements Renderable {
 	}
 	
 	/**
-	 * 	Returns the filename of this view
-	 * 	@return string
+	 * Returns the filename of this view
+	 * @return string
 	 */
 	protected function createViewFilename () {
 		$knownPart = lcfirst($this->name).DS.lcfirst($this->action).'.'.$this->templateExtension;
@@ -139,11 +139,11 @@ abstract class View extends Hash implements Renderable {
 	}
 	
 	/**
-	 * 	Renders the view by requiring a php file based on the view action name
+	 * Renders the view by requiring a php file based on the view action name
 	 * 
-	 *	@throws ViewFileNotFoundException
-	 * 	@throws LayoutFileNotFoundException
-	 * 	@return string
+	 * @throws ViewFileNotFoundException
+	 * @throws LayoutFileNotFoundException
+	 * @return string
 	 */
 	public function render() {
 		// viewfilename
@@ -162,25 +162,25 @@ abstract class View extends Hash implements Renderable {
 	}
 	
 	/**
-	 * 	Echoes or returns the content of an {@link Element}.
+	 * Echoes or returns the content of an {@link Element}.
 	 * 
-	 * 	This will try to render an element with the $elementName with the given	
-	 * 	$data (data from the current controller is added automatically).
-	 * 	If you want to disable the direct output of the element, pass $output
-	 * 	as false.
+	 * This will try to render an element with the $elementName with the given	
+	 * $data (data from the current controller is added automatically).
+	 * If you want to disable the direct output of the element, pass $output
+	 * as false.
 	 * 
-	 * 	Code from a view:
-	 *	<code>
-	 * 	$this->renderElement('mainMenu', array('menuEntries' => array(
-	 * 		'main' => '/',
-	 * 		'users' => '/users/'
-	 * 	));
-	 * 	</code>
+	 * Code from a view:
+	 * <code>
+	 * $this->renderElement('mainMenu', array('menuEntries' => array(
+	 * 	'main' => '/',
+	 * 	'users' => '/users/'
+	 * ));
+	 * </code>
 	 * 
-	 * 	@param string $elementName
-	 * 	@param array $data
-	 * 	@param boolean $output
-	 * 	@return string
+	 * @param string $elementName
+	 * @param array $data
+	 * @param boolean $output
+	 * @return string
 	 */
 	public function renderElement($elementName, $data = array(), $output = true) {
 		// load Element class
@@ -205,19 +205,19 @@ abstract class View extends Hash implements Renderable {
 }
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception 
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception 
  */
 class ViewException extends BasicException {
 	/**
-	 * 	@var View
+	 * @var View
 	 */
 	public $view;
 }
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception 
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception 
  */
 class ViewFileNotFoundException extends ViewException {
 	public function __construct(View $view) {
@@ -227,10 +227,10 @@ class ViewFileNotFoundException extends ViewException {
 	}
 }
 
-/**	
- * 	Thrown if a layout directory was not found
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception 
+/** 
+ * Thrown if a layout directory was not found
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception 
  */
 class ThemeNotFoundException extends ViewException {
 	public function __construct(View $view) {
@@ -241,8 +241,8 @@ class ThemeNotFoundException extends ViewException {
 }
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception 
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception 
  */
 class LayoutFileNotFoundException extends ViewException {
 	public function __construct(View $view) {
@@ -251,5 +251,3 @@ class LayoutFileNotFoundException extends ViewException {
 		parent::__construct($message);
 	}
 }
-
-?>

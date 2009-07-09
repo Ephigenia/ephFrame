@@ -1,49 +1,49 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 /**
- *	File Representing a Class Path of ephFrame
+ * File Representing a Class Path of ephFrame
  * 
- * 	This File is initially loaded when you intiate ephFrame. It is always
- * 	available and is used to major class loading functionallity of ephFrame.
- * 	In fact it's used by the {@link ephFrame} {@link loadClass} method.
+ * This File is initially loaded when you intiate ephFrame. It is always
+ * available and is used to major class loading functionallity of ephFrame.
+ * In fact it's used by the {@link ephFrame} {@link loadClass} method.
  * 
- * 	The Classpath also stores the successfull stranslated paths in {@link cache}
- * 	use {@link reset} to delete the cache
+ * The Classpath also stores the successfull stranslated paths in {@link cache}
+ * use {@link reset} to delete the cache
  * 
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 05.06.2007
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 05.06.2007
+ * @package ephFrame
+ * @subpackage ephFrame.lib
  */
 class ClassPath extends Object {
 	
 	/**
-	 *	Stores all translated classPaths
-	 * 	@var array(string)
+	 * Stores all translated classPaths
+	 * @var array(string)
 	 */
 	public static $cache = array();
 	
 	/**
-	 *	devider for valid classpaths
-	 * 	@var string
+	 * devider for valid classpaths
+	 * @var string
 	 */
 	public static $classPathDevider = '.';
 	
@@ -54,19 +54,19 @@ class ClassPath extends Object {
 	const VALID_CLASS_PATH = '/^([a-zA-Z]+[a-zA-Z0-9_-]*\\.*)+$/';
 	
 	/**
-	 *	Deletes the cache
-	 * 	@return boolean
+	 * Deletes the cache
+	 * @return boolean
 	 */
 	public static function reset() {
 		self::$cache = array();
 	}
 	
 	/**
-	 * 	Extracts the class/interface name from a class path
-	 * 	@param string $classPath
-	 * 	@return string|boolean
-	 * 	@throws ClassPathEmptyClassNameException
-	 *  @static
+	 * Extracts the class/interface name from a class path
+	 * @param string $classPath
+	 * @return string|boolean
+	 * @throws ClassPathEmptyClassNameException
+	 * @static
 	 */
 	public static function className($classPath) {
 		if (!is_string($classPath)) throw new StringExpectedException();
@@ -79,14 +79,14 @@ class ClassPath extends Object {
 	}
 	
 	/**
-	 * 	Translates class path from 'ephFrame.lib.component'
-	 * 	format to a filename
-	 * 	@throws IntrusionException on brakes or control chars in classpath such as the x00 string
-	 * 	@throws ClassPathMalFormedException
-	 * 	@param string $classPath
-	 * 	@param boolean $ignoreCache set to true to ignore the cache
-	 *  @static
-	 * 	@return string	filename
+	 * Translates class path from 'ephFrame.lib.component'
+	 * format to a filename
+	 * @throws IntrusionException on brakes or control chars in classpath such as the x00 string
+	 * @throws ClassPathMalFormedException
+	 * @param string $classPath
+	 * @param boolean $ignoreCache set to true to ignore the cache
+	 * @static
+	 * @return string	filename
 	 */
 	public static function translatePath($classPath, $ignoreCache = false) {
 		if (!isset(self::$cache[$classPath]) || $ignoreCache === true) {
@@ -111,9 +111,9 @@ class ClassPath extends Object {
 	}
 	
 	/**
-	 *	Tests if the file represented by this classpath exists
-	 * 	@static
-	 * 	@return boolean
+	 * Tests if the file represented by this classpath exists
+	 * @static
+	 * @return boolean
 	 */
 	public static function exists($classPath) {
 		$translatedPath = self::translatePath($classPath);
@@ -124,14 +124,14 @@ class ClassPath extends Object {
 }
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class ClassPathException extends BasicException {}
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class ClassPathEmptyClassNameException extends ClassPathException {
 	public function __construct() {
@@ -141,8 +141,8 @@ class ClassPathEmptyClassNameException extends ClassPathException {
 }
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class ClassPathMalFormedException extends ClassPathException {
 	public function __construct($classPath) {
@@ -150,5 +150,3 @@ class ClassPathMalFormedException extends ClassPathException {
 		parent::__construct($this->message);
 	}
 }
-
-?>

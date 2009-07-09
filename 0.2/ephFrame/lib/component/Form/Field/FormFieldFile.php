@@ -1,21 +1,21 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 class_exists('FormField') or require(dirname(__FILE__).'/FormField.php');
@@ -23,32 +23,32 @@ class_exists('File') or require(dirname(__FILE__).'/../../../File.php');
 class_exists('PHPINI') or require(dirname(__FILE__).'/../../../PHPINI.php');
 
 /**
- * 	Simple Form File Upload Field
+ * Simple Form File Upload Field
  * 
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 04.11.2008
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.component.Form.Field
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 04.11.2008
+ * @package ephFrame
+ * @subpackage ephFrame.lib.component.Form.Field
  */
 class FormFieldFile extends FormField {
 	
 	/**
-	 *	Name of the class that should be returned by {@link value}
-	 *	Usually this class is an extension of {@link File}
-	 * 	@var string
+	 * Name of the class that should be returned by {@link value}
+	 * Usually this class is an extension of {@link File}
+	 * @var string
 	 */
 	public $fileClassName = 'File';
 	
 	/**
-	 *	Overwrite Parents type attribute
-	 * 	@var string
+	 * Overwrite Parents type attribute
+	 * @var string
 	 */
 	public $type = 'file';
 	
 	/**
-	 *	Form Field File Values can be just read, not written and will return
-	 * 	an instance of $fileClassName class if field was submitted with a file
-	 * 	@return File.
+	 * Form Field File Values can be just read, not written and will return
+	 * an instance of $fileClassName class if field was submitted with a file
+	 * @return File.
 	 */
 	public function value($value = null) {
 		if (func_num_args() == 0 && $this->isUploaded() && !empty($_FILES[$this->attributes->name]['tmp_name'])) {
@@ -93,8 +93,8 @@ class FormFieldFile extends FormField {
 	}
 	
 	/**
-	 *	Checks if any file was uploaded with this field
-	 * 	@return boolean
+	 * Checks if any file was uploaded with this field
+	 * @return boolean
 	 */
 	protected function isUploaded() {
 		// first check if form was submitted
@@ -105,8 +105,8 @@ class FormFieldFile extends FormField {
 	}
 	
 	/**
-	 *	Returns the name of the file uploaded if any file was uploaded.
-	 * 	@return string
+	 * Returns the name of the file uploaded if any file was uploaded.
+	 * @return string
 	 */
 	public function originalFilename() {
 		if (!$this->isUploaded()) return false;
@@ -116,12 +116,10 @@ class FormFieldFile extends FormField {
 }
 
 /**
- * 	File form field exception
- *	@author Ephigenia // Marcel Eichner <love@ephigenia.de>
- *	@since 26.05.2009
+ * File form field exception
+ * @author Ephigenia // Marcel Eichner <love@ephigenia.de>
+ * @since 26.05.2009
  */
 class FormFieldFileException extends FormFieldException {
 	
 }
-
-?>

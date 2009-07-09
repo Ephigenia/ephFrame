@@ -1,116 +1,116 @@
 <?php
 
 /**
- * 	ephFrame: http://code.moresleep.net/project/ephFrame/
- * 	Copyright 2007+, Ephigenia M. Eichner, Kopernikusstr. 8, 10245 Berlin
+ * ephFrame: http://code.moresleep.net/project/ephFrame/
+ * Copyright 2007+, Ephigenia M. Eichner, Kopernikusstr. 8, 10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
- * 	@license http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright Copyright 2007+, Ephigenia M. Eichner
- * 	@link http://code.ephigenia.de/projects/ephFrame/
- * 	@filesource
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ * @license http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright Copyright 2007+, Ephigenia M. Eichner
+ * @link http://code.ephigenia.de/projects/ephFrame/
+ * @filesource
  */
 
 class_exists('HTTPRequest') or require dirname(__FILE__).'/HTTPRequest.php';
 
 /**
- *	Controller Class
- * 	
- * 	Basic Application Controller class.
- * 	
- * 	// todo add some doc for this
+ * Controller Class
  * 
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
- * 	@version 0.1
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 10.08.2007
+ * Basic Application Controller class.
+ * 
+ * // todo add some doc for this
+ * 
+ * @package ephFrame
+ * @subpackage ephFrame.lib
+ * @version 0.1
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 10.08.2007
  */
-abstract class Controller extends Object implements Renderable {
-	
+abstract class Controller extends Object implements Renderable
+{	
 	/**
-	 * 	Default controller action
-	 *	@var string
+	 * Default controller action
+	 * @var string
 	 */
 	public $action = 'index';
 	
 	/**
-	 *	optional name for the controller, used for the view folder
-	 * 	@var string
+	 * optional name for the controller, used for the view folder
+	 * @var string
 	 */
 	public $name;
 	
 	/**
-	 *	@var HTTPRequest
+	 * @var HTTPRequest
 	 */
 	public $request;
 	
 	/**
-	 * 	@var HTTPResponse
+	 * @var HTTPResponse
 	 */
 	public $response;
 	
 	/**
-	 *	@var Hash
+	 * @var Hash
 	 */
 	public $data = array(
 		'pageTitle' => 'ephFrame'
 	);
 	
 	/**
-	 *	Stores the parameters from the router
-	 * 	@var array(mixed)
+	 * Stores the parameters from the router
+	 * @var array(mixed)
 	 */
 	public $params = array();
 	
 	/**
-	 *	Default view layout for a controller
-	 * 	@var string
+	 * Default view layout for a controller
+	 * @var string
 	 */
 	public $layout = 'default';
 	
 	/**
-	 *	Optional Theme name that should be used
-	 *	@var string
+	 * Optional Theme name that should be used
+	 * @var string
 	 */
 	public $theme = false;
 	
 	/**
-	 *	Default view class for a controller, if you want to use views that are
-	 * 	stored in the app use paths like 'app.lib.MyCustomView'
-	 * 	@var string
+	 * Default view class for a controller, if you want to use views that are
+	 * stored in the app use paths like 'app.lib.MyCustomView'
+	 * @var string
 	 */
 	public $viewClassName = 'HTMLView';
 	
 	/**
-	 *	Array of models this controller uses
-	 * 	@param array(string)
+	 * Array of models this controller uses
+	 * @param array(string)
 	 */
 	public $uses = array();
 	
 	/**
-	 *	Array of components used by this controller
-	 * 	@var array(string)
+	 * Array of components used by this controller
+	 * @var array(string)
 	 */
 	public $components = array('Session');
 	
 	/**
-	 *	array of helper names used in the view when rendered
-	 * 	@var array(string)
+	 * array of helper names used in the view when rendered
+	 * @var array(string)
 	 */
 	public $helpers = array();
 	
 	/**
-	 * 	Stores a number of form names that are used by this controller
-	 * 	@var array(string)
+	 * Stores a number of form names that are used by this controller
+	 * @var array(string)
 	 */
 	public $forms = array();
 	
 	/**
-	 * 	Controller Constructor
-	 * 	@param HTTPRequest $request
-	 * 	@return Controller
+	 * Controller Constructor
+	 * @param HTTPRequest $request
+	 * @return Controller
 	 */
 	final public function __construct(HTTPRequest $request) {
 		// get component list from parent class and merge them with this
@@ -150,12 +150,12 @@ abstract class Controller extends Object implements Renderable {
 	public function afterConstruct() {}
 	
 	/**
-	 * 	Default create action
+	 * Default create action
 	 */
 	public function create() {}
 	
 	/**
-	 *	@param integer $id
+	 * @param integer $id
 	 */
 	public function delete($id = null) {
 		$id = ($id === null) ? (int) @$this->params['id'] : $id;
@@ -170,8 +170,8 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	Standard edit action method
-	 *	@param integer $id
+	 * Standard edit action method
+	 * @param integer $id
 	 */
 	public function edit($id = null) {
 		$id = (int) ($id === null) ? $this->params['id'] : $id;
@@ -189,7 +189,7 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	Default view action
+	 * Default view action
 	 * @param integer $id
 	 */
 	public function view($id = null) {
@@ -205,12 +205,12 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	Standard index action
+	 * Standard index action
 	 * 
-	 * 	This will get all entries from the model that matches to this controller.
-	 * 	So if you have a UserController, this index action will provide _all_
-	 * 	entries from the User Model (if assigned and working) to the view.
-	 * 	You can overwrite or inherit this behavior in your child classes.
+	 * This will get all entries from the model that matches to this controller.
+	 * So if you have a UserController, this index action will provide _all_
+	 * entries from the User Model (if assigned and working) to the view.
+	 * You can overwrite or inherit this behavior in your child classes.
 	 */
 	public function index() {
 		if (isset($this->{$this->name})) {
@@ -231,10 +231,10 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	/**
-	 *	Default RSS Action tries to provide a Set of entries of the associated
-	 * 	model from this controller in the view.
+	 * Default RSS Action tries to provide a Set of entries of the associated
+	 * model from this controller in the view.
 	 * 
-	 * 	@return boolean
+	 * @return boolean
 	 */
 	public function rss() {
 		if (isset($this->{$this->name})) {
@@ -250,10 +250,10 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	Standard search action, searches for a $key $keyword match and lists
-	 * 	all matches
+	 * Standard search action, searches for a $key $keyword match and lists
+	 * all matches
 	 *
-	 * 	@param string $keyword
+	 * @param string $keyword
 	 */
 	public function search($keyword = null, $fields = array()) {
 		if (empty($keyword)) return true;
@@ -267,7 +267,7 @@ abstract class Controller extends Object implements Renderable {
 				$conditions[] = $this->{$this->name}->name.'.'.$fieldInfo->name.' LIKE '.$searchTermQuoted.' OR';
 			}
 			if (empty($conditions)) {
-				return new Set();
+				return new IndexedArray();
 			}
 			$page = (isset($this->params['page'])) ? $this->params['page'] : 1;
 			$pagination = $this->{$this->name}->paginate($page, null, $conditions);
@@ -281,19 +281,19 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	/**
-	 *	Sets or returns the view layout name assigned to this controller
-	 * 	@param string $layout
-	 * 	@return string
+	 * Sets or returns the view layout name assigned to this controller
+	 * @param string $layout
+	 * @return string
 	 */
 	public function layout($layout = null) {
 		return $this->__getOrSet('layout', $layout);
 	}
 	
 	/**
-	 * 	Initiates all models associated by the {@link models} array to this
-	 * 	controller and tries to establish a database connection using the
-	 * 	data from /app/config/db.php
-	 * 	@return boolean
+	 * Initiates all models associated by the {@link models} array to this
+	 * controller and tries to establish a database connection using the
+	 * data from /app/config/db.php
+	 * @return boolean
 	 */
 	private function initModels() {
 		if (!in_array($this->name, $this->uses)) {
@@ -338,16 +338,16 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	Initiate Components
+	 * Initiate Components
 	 * 
-	 * 	This method iterates the list of component names and loads, initates
-	 * 	and startsup the component in this order:
-	 * 	 # load component class (error if not found)
-	 *   # init component right after loading
-	 *   # attach component to this controller ($this->$componentname)
-	 *  After all components, and components that are specified in the components
-	 * 	all components receive the startup signal.
-	 * 	@return boolean
+	 * This method iterates the list of component names and loads, initates
+	 * and startsup the component in this order:
+	 *  # load component class (error if not found)
+	 * # init component right after loading
+	 * # attach component to this controller ($this->$componentname)
+	 * After all components, and components that are specified in the components
+	 * all components receive the startup signal.
+	 * @return boolean
 	 */
 	protected function initComponents() {
 		logg(Log::VERBOSE_SILENT, 'ephFrame: '.get_class($this).' adds components: \''.implode(', ', $this->components).'\'');
@@ -359,30 +359,30 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	Tests if this controller has a {@link Component} attached
-	 * 	@param string $componentName
-	 * 	@return boolean
+	 * Tests if this controller has a {@link Component} attached
+	 * @param string $componentName
+	 * @return boolean
 	 */
 	public function hasComponent($componentName) {
 		return in_array($componentName, $this->components);
 	}
 	
 	/**
-	 * 	Loads and Adds a new {@link Component} to the Controller at run-time.
+	 * Loads and Adds a new {@link Component} to the Controller at run-time.
 	 * 
-	 * 	You can use this to dynamicly add components to controllers that should
-	 * 	only be available on some certain actions.
-	 * 	<code>
-	 * 	class TestController extends AppController {
-	 * 		public function testI28n() {
-	 * 			$this->addComponent('I28n');
-	 * 		}
-	 *  }
-	 * 	</code>
-	 * 	
-	 * 	@param string $componentName
-	 * 	@param boolean $startUp Fires the startup signal to the component
-	 * 	@return boolean
+	 * You can use this to dynamicly add components to controllers that should
+	 * only be available on some certain actions.
+	 * <code>
+	 * class TestController extends AppController {
+	 * 	public function testI28n() {
+	 * 		$this->addComponent('I28n');
+	 * 	}
+	 * }
+	 * </code>
+	 * 
+	 * @param string $componentName
+	 * @param boolean $startUp Fires the startup signal to the component
+	 * @return boolean
 	 */
 	public function addComponent($componentName, $startUp = true) {
 		assert(is_string($componentName) && !empty($componentName));
@@ -410,10 +410,10 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	/**
-	 *	At this point all components that are used by this controller should
-	 * 	be added to the component list (also added by other components) and
-	 * 	get the startup signal now.
-	 * 	@return boolean
+	 * At this point all components that are used by this controller should
+	 * be added to the component list (also added by other components) and
+	 * get the startup signal now.
+	 * @return boolean
 	 */
 	public function startUpComponents() {
 		foreach($this->components as $componentName) {
@@ -424,9 +424,9 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	Initiates all {@link Helper}s listed in the {@link helpers} property
-	 * 	of the controller and returns true.
-	 * 	@return boolean
+	 * Initiates all {@link Helper}s listed in the {@link helpers} property
+	 * of the controller and returns true.
+	 * @return boolean
 	 */
 	private function initHelpers() {
 		assert(is_array($this->helpers));
@@ -437,16 +437,16 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	Adds an other helper to the controller view data on run-time.
+	 * Adds an other helper to the controller view data on run-time.
 	 * 
-	 * 	So you cann add Helpers in controller actions if you don't want to have
-	 * 	them in the $helpers array of the controller.
-	 * 	<code>
-	 * 	// in a controller action
-	 * 	$this->addHelper('HTML');
-	 * 	</code>
-	 * 	@param string $helperName Classpath or Classname of Helper Class
-	 * 	@return boolean
+	 * So you cann add Helpers in controller actions if you don't want to have
+	 * them in the $helpers array of the controller.
+	 * <code>
+	 * // in a controller action
+	 * $this->addHelper('HTML');
+	 * </code>
+	 * @param string $helperName Classpath or Classname of Helper Class
+	 * @return boolean
 	 */
 	public function addHelper($helperName) {
 		assert(is_string($helperName) && !empty($helperName));
@@ -480,9 +480,9 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	/**
-	 *	Adds an other form to the controller
-	 * 	@param string $formName
-	 * 	@return Controller
+	 * Adds an other form to the controller
+	 * @param string $formName
+	 * @return Controller
 	 */
 	public function addForm($formName) {
 		if (!in_array($formName, $this->forms)) {
@@ -501,24 +501,24 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	/**
-	 *	Provide named variable for view
+	 * Provide named variable for view
 	 *
-	 *	Use this method to set variables that should be available in the view
-	 *	when it’s rendered:
-	 *	<code>
-	 *	$this->set('UserName', $User->get('username');
-	 *	</code>
-	 *	Then you can access the variable like this:
-	 *	<code>
-	 *	Username: <?= $UserName; ?> (<a href="/logout/">logout</a>)
-	 *	</code>
-	 *	
-	 *	Variables that you’ve allready set to a value will be overwritten, you
-	 *	can use {@link append} to append to variables.
+	 * Use this method to set variables that should be available in the view
+	 * when it’s rendered:
+	 * <code>
+	 * $this->set('UserName', $User->get('username');
+	 * </code>
+	 * Then you can access the variable like this:
+	 * <code>
+	 * Username: <?= $UserName; ?> (<a href="/logout/">logout</a>)
+	 * </code>
+	 * 
+	 * Variables that you’ve allready set to a value will be overwritten, you
+	 * can use {@link append} to append to variables.
 	 *
-	 * 	@param string $name
-	 * 	@param mixed $value
-	 * 	@return Controller
+	 * @param string $name
+	 * @param mixed $value
+	 * @return Controller
 	 */
 	public function set($name, $value) {
 		$this->data[$name] = $value;
@@ -526,11 +526,11 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	/**
-	 *	Sets an other action for this controller, this affects the view that
-	 * 	is used and also calls the method that has the same name as the action
-	 * 	@param string $action
-	 * 	@param array(mixed) $params
-	 * 	@return boolean
+	 * Sets an other action for this controller, this affects the view that
+	 * is used and also calls the method that has the same name as the action
+	 * @param string $action
+	 * @param array(mixed) $params
+	 * @return boolean
 	 */
 	public function action($action, Array $params = array()) {
 		assert(is_string($action) && !empty($action));
@@ -576,10 +576,10 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	/**
-	 *	Disables browser cache for this controller by sending not caching
-	 * 	header commands to the client
-	 * 	// todo set the headers in the response object instead of sending directly
-	 * 	@return boolean true
+	 * Disables browser cache for this controller by sending not caching
+	 * header commands to the client
+	 * // todo set the headers in the response object instead of sending directly
+	 * @return boolean true
 	 */
 	public function disableCache() {
 		logg(Log::VERBOSE_SILENT, 'Controller disableCache called in \''.get_class($this).'\'');
@@ -592,10 +592,10 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	The Rendering action of the controller happens after the action was
-	 * 	called.
+	 * The Rendering action of the controller happens after the action was
+	 * called.
 	 * 
-	 *	@return string
+	 * @return string
 	 */
 	public function render() {
 		// call beforeRender on Controller and Components
@@ -638,52 +638,52 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	/**
-	 * 	This is a hook for everything that should happen before Rendering
+	 * This is a hook for everything that should happen before Rendering
 	 * 
-	 * 	Some examples:
-	 * 	# add additional keywords to the header
-	 *  # render menues before Rendering
-	 *  # Sanitizing data
+	 * Some examples:
+	 * # add additional keywords to the header
+	 * # render menues before Rendering
+	 * # Sanitizing data
 	 * 
-	 * 	This method should return true if you want the controller to render the
-	 * 	output.
+	 * This method should return true if you want the controller to render the
+	 * output.
 	 *
-	 * 	@return boolean
+	 * @return boolean
 	 */
 	public function beforeRender() {
 		return true;
 	}
 	
 	/**
-	 * 	Called everytime a controller gets a new action. called before the action
-	 * 	is called and after all component are called.
-	 *	@param string $action action that is to be called
-	 * 	@return boolean
+	 * Called everytime a controller gets a new action. called before the action
+	 * is called and after all component are called.
+	 * @param string $action action that is to be called
+	 * @return boolean
 	 */
 	public function beforeAction($action) {
 		return true;
 	}
 	
 	/**
-	 *	Called after action is done
-	 *	@param string $action action that is done
-	 *	@return boolean
+	 * Called after action is done
+	 * @param string $action action that is done
+	 * @return boolean
 	 */
 	public function afterAction($action) {
 		return true;
 	}
 	
 	/**
-	 * 	This is a hook for your own after rendering logic.
-	 * 	
-	 * 	So you can set every character to lowerspace or beautify the html code
-	 * 	that is echoed.
+	 * This is a hook for your own after rendering logic.
 	 * 
-	 * 	This method should always return a string, the string that is finally
-	 * 	send to the client.
-	 * 	
-	 * 	@param string $content
-	 * 	@return string
+	 * So you can set every character to lowerspace or beautify the html code
+	 * that is echoed.
+	 * 
+	 * This method should always return a string, the string that is finally
+	 * send to the client.
+	 * 
+	 * @param string $content
+	 * @return string
 	 */
 	public function afterRender($content) {
 		// if we're in debugging mode we add the sql history dump to the view
@@ -710,27 +710,27 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	/**
-	 *	Send redirect header to client
-	 *  
-	 * 	This will send a redirect header directing to $url with the http $status
-	 * 	code and exit php if you pass $exit = true.<br />
-	 * 	The status code must be a valid HTTP-Statuscode or 'perm', 'permanent',
-	 * 	'p' for permanent moved (301), or 'tmp', 'temp', 't' for temporary
-	 * 	redirect (307).<br />
-	 * 	The status code will not be send if it's invalid.<br />
-	 * 	This will overwrite previously send location and status header.<br />
+	 * Send redirect header to client
 	 * 
-	 * 	<code>
-	 * 	// for example direct to user login and exit
-	 * 	$this->redirect('/user/login/', null, true);
-	 * 	// skip to an other url
-	 * 	$this->redirect('http://code.nomoresleep.net/', 'p', true);
-	 * 	</code>
+	 * This will send a redirect header directing to $url with the http $status
+	 * code and exit php if you pass $exit = true.<br />
+	 * The status code must be a valid HTTP-Statuscode or 'perm', 'permanent',
+	 * 'p' for permanent moved (301), or 'tmp', 'temp', 't' for temporary
+	 * redirect (307).<br />
+	 * The status code will not be send if it's invalid.<br />
+	 * This will overwrite previously send location and status header.<br />
 	 * 
-	 * 	@param string $url
-	 * 	@param integer $status HTTP 1.1 status code
-	 * 	@param boolean $exit exit after redirect
-	 * 	@return boolean
+	 * <code>
+	 * // for example direct to user login and exit
+	 * $this->redirect('/user/login/', null, true);
+	 * // skip to an other url
+	 * $this->redirect('http://code.nomoresleep.net/', 'p', true);
+	 * </code>
+	 * 
+	 * @param string $url
+	 * @param integer $status HTTP 1.1 status code
+	 * @param boolean $exit exit after redirect
+	 * @return boolean
 	 */
 	public function redirect($url, $status = 'p', $exit = true) {
 		if (!class_exists('HTTPStatusCode')) ephFrame::loadClass('ephFrame.lib.HTTPStatusCode');
@@ -751,12 +751,12 @@ abstract class Controller extends Object implements Renderable {
 	}
 	
 	/**
-	 *	Returns the refererrer submitted by the client if found
-	 * 	Set $local to true to only use internal urls (external urls will be
-	 * 	ignored)
-	 * 	@param string $default default referer returned on empty referers
-	 * 	@param boolean $local Use only local referers
-	 * 	@return string
+	 * Returns the refererrer submitted by the client if found
+	 * Set $local to true to only use internal urls (external urls will be
+	 * ignored)
+	 * @param string $default default referer returned on empty referers
+	 * @param boolean $local Use only local referers
+	 * @return string
 	 */
 	public function referer($default = false, $local = true) {
 		if ($this->request->referer) {
@@ -773,16 +773,16 @@ abstract class Controller extends Object implements Renderable {
 }
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class ControllerException extends BasicException {
 	
 }
 
 /**
- *	@package ephFrame
- * 	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class ControllerMissingActionException extends ControllerException {
 	public function __construct(Controller $controller, $action = null) {
@@ -795,5 +795,3 @@ class ControllerMissingActionException extends ControllerException {
 		parent::__construct($message);
 	}
 }
-
-?>

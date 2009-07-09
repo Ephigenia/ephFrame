@@ -1,46 +1,46 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 // load needed classes
 class_exists('Hash') or require dirname(__FILE__).'/Hash.php';
 
 /**
- * 	A Router
+ * A Router
  * 
- * 	The Router acts like a dispatcher that matches the incoming request to
- * 	a mvc structure by returning the controller that fits to the incoming
- * 	request.<br />
- * 	<br />
- * 	parse request url strings to get controller and action names
+ * The Router acts like a dispatcher that matches the incoming request to
+ * a mvc structure by returning the controller that fits to the incoming
+ * request.<br />
+ * <br />
+ * parse request url strings to get controller and action names
  * 
- *	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 18.09.2007
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
- * 	@version 0.1
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 18.09.2007
+ * @package ephFrame
+ * @subpackage ephFrame.lib
+ * @version 0.1
  */
-class Router extends Hash {
-	
+class Router extends Hash
+{	
 	/**
-	 * 	Default dispatching rules
-	 * 	@var array(string)
+	 * Default dispatching rules
+	 * @var array(string)
 	 */
 	public $data = array(
 		'root' => array(
@@ -50,25 +50,25 @@ class Router extends Hash {
 	);
 	
 	/**
-	 * 	Stores parameter values matched to a route
-	 * 	@var array(string)
+	 * Stores parameter values matched to a route
+	 * @var array(string)
 	 */
 	public $params = array();
 	
 	/**
-	 * 	Default Controller Name
-	 * 	@var string
+	 * Default Controller Name
+	 * @var string
 	 */
 	public $controller = 'app';
 	
 	/**
-	 *  Default controller action name
-	 * 	@var string
+	 * Default controller action name
+	 * @var string
 	 */
 	public $action = 'index';
 	
 	/**
-	 * 	@return Router
+	 * @return Router
 	 */
 	public function __construct() {
 		$this->loadRoutes();
@@ -79,7 +79,7 @@ class Router extends Hash {
 	public static $instance;
 	
 	/**
-	 * 	@return DBConnectionManager
+	 * @return DBConnectionManager
 	 */
 	public static function getInstance() {
 		if (empty(self::$instance)) {
@@ -89,17 +89,17 @@ class Router extends Hash {
 	}
 	
 	/**
-	 * 	Load the routes into the {@link data} array
+	 * Load the routes into the {@link data} array
 	 */
 	private function loadRoutes() {
 		require_once APP_ROOT.'config'.DS.'routes.php';
 	}
 	
 	/**
-	 *	Parses a url to extract controller, action and params if specified
-	 * 	in router data array.
-	 * 	@param string $url
-	 * 	@return Router
+	 * Parses a url to extract controller, action and params if specified
+	 * in router data array.
+	 * @param string $url
+	 * @return Router
 	 */
 	public function parse($url) {
 		$debug = false;
@@ -173,10 +173,10 @@ class Router extends Hash {
 	}
 	
 	/**
-	 *	Translates a route template to a valid regular expression and returns it
-	 *	
-	 * 	@param string	$routeTemplate
-	 * 	@return string
+	 * Translates a route template to a valid regular expression and returns it
+	 * 
+	 * @param string	$routeTemplate
+	 * @return string
 	 */
 	private function createRouteRegexp($routeTemplate) {
 		$regexp = trim($routeTemplate);
@@ -201,26 +201,26 @@ class Router extends Hash {
 	}
 	
 	/**
-	 *	Return a uri route named $routeName
+	 * Return a uri route named $routeName
 	 *
-	 *	This can be very helpfull to fullfill DRY principles. This will return
-	 *	the uri to a named route you’ve defined in the router before using 
-	 *	{@link addRoute}.
+	 * This can be very helpfull to fullfill DRY principles. This will return
+	 * the uri to a named route you’ve defined in the router before using 
+	 * {@link addRoute}.
 	 *
-	 *	<code>
-	 *	echo $HTML->link(Router::getRoute('login'), 'login');
-	 *	</code>
+	 * <code>
+	 * echo $HTML->link(Router::getRoute('login'), 'login');
+	 * </code>
 	 *
-	 *	This will also replace some parameters you defined in the uri (not
-	 *	implemented yet!!!)
-	 *	<code>
-	 *	echo $HTML->link(Router::getRoute('userEdit', array('id' => $User->id)), 'User editieren');
-	 *	</code>
-	 *	
-	 * 	@param string			$routeName	name of route that should be returned
-	 * 	@param array(string)	$params		array of parameters to replace in the uri of the route if foudn
-	 * 	@param boolean 		$includeWebroot
-	 * 	@return string|boolean 	false if route name could not be found, otherwise the resulting uri
+	 * This will also replace some parameters you defined in the uri (not
+	 * implemented yet!!!)
+	 * <code>
+	 * echo $HTML->link(Router::getRoute('userEdit', array('id' => $User->id)), 'User editieren');
+	 * </code>
+	 * 
+	 * @param string			$routeName	name of route that should be returned
+	 * @param array(string)	$params		array of parameters to replace in the uri of the route if foudn
+	 * @param boolean 		$includeWebroot
+	 * @return string|boolean 	false if route name could not be found, otherwise the resulting uri
 	 */
 	public static function getRoute($routeName, $params = array(), $url = false) {
 		$router = self::getInstance();
@@ -244,11 +244,11 @@ class Router extends Hash {
 	}
 	
 	/**
-	 *	Replaces all parameter placeholders (:id or :username) in an uri-string
-	 *	with the values from the second parameter array
-	 * 	@param string			$uri
-	 * 	@param array(string)	$params
-	 * 	@return string
+	 * Replaces all parameter placeholders (:id or :username) in an uri-string
+	 * with the values from the second parameter array
+	 * @param string			$uri
+	 * @param array(string)	$params
+	 * @return string
 	 */
 	public static function insertParams($uri, Array $params = array())  {
 		foreach($params as $k => $v) {
@@ -258,11 +258,11 @@ class Router extends Hash {
 	}
 	
 	/**
-	 *	Add route to routes list
-	 * 	
-	 * 	@param string $routeName	name of that route
-	 * 	@param string $path uri for the route, including param regexps
-	 * 	@param array(string) $params default resulting parameters
+	 * Add route to routes list
+	 * 
+	 * @param string $routeName	name of that route
+	 * @param string $path uri for the route, including param regexps
+	 * @param array(string) $params default resulting parameters
 	 */
 	public static function addRoute($routeName = null, $path, Array $params = array()) {
 		$router = self::getInstance();
@@ -286,5 +286,3 @@ class Router extends Hash {
 	}
 	
 }
-
-?>

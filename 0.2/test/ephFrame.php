@@ -1,26 +1,30 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright 2007+, Ephigenia M. Eichner, Kopernikusstr. 8, 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
- * 	@license http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright Copyright 2007+, Ephigenia M. Eichner
- * 	@link http://code.ephigenia.de/projects/ephFrame/
- * 	@filesource
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
+ * 
+ * @license		http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright	copyright 2007+, Ephigenia M. Eichner
+ * @link		http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @filesource
  */
 
 /**
- * 	This is a ephFrame TestCase using the SimpleTest-PHP-Testing Suite.
- * 	If you want to test ephFrame on your machine you need to have SimpleTest
- * 	installed in /ephFrame/vendor/simpletest/.
+ * This is a ephFrame TestCase using the SimpleTest-PHP-Testing Suite.
+ * If you want to test ephFrame on your machine you need to have SimpleTest
+ * installed in /ephFrame/vendor/simpletest/.
  * 
- *	This file should setup a hole framework wide test, testing components and
- * 	Helpers.
- * 	@package ephFrame
- * 	@subpackage ephFrame.test
+ * This file should setup a hole framework wide test, testing components and
+ * Helpers.
+ * @package ephFrame
+ * @subpackage ephFrame.test
  */
 
 require_once dirname(__FILE__).'/autorun.php';
@@ -42,7 +46,7 @@ $helperTests->addTestFile('lib/helper/TestHTML.php');
 
 // ephFrame basic classes
 $helperTests->addTestFile('lib/TestFile.php');
-$helperTests->addTestFile('lib/TestSet.php');
+$helperTests->addTestFile('lib/TestIndexedArray.php');
 $helperTests->addTestFile('lib/TestCSV.php');
 $helperTests->addTestFile('lib/TestObjectSet.php');
 $helperTests->addTestFile('lib/TestCollection.php');
@@ -67,5 +71,3 @@ $helperTests->addTestFile('lib/component/TestLog.php');
 $helperTests->addTestFile('lib/model/DB/TestSelectQuery.php');
 
 $helperTests->run($reporter);
-
-?>

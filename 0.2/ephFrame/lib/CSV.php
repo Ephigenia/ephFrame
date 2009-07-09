@@ -1,95 +1,95 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 class_exists('File') or require dirname(__FILE__).'/File.php';
 
 /**
- *	CSV File
+ * CSV File
  *
- * 	Multipurpose CSV Class, which makes it easy to import / export Data as
- * 	Arrays from CSV Files.
+ * Multipurpose CSV Class, which makes it easy to import / export Data as
+ * Arrays from CSV Files.
  *
- * 	Loading a CSV File and returning content
- * 	<code>
- * 	$csvFile = new CSV("csvexample.csv");
- * 	echo '<table border="0">';
- * 	foreach ($csvFile->getContent() as $Row) {
- * 		echo "<tr>\n";
- * 		foreach ($Row as $CellValue) {
- * 			echo "<td>".$CellValue."</td>";
- * 		}
- * 		echo "</tr>\n";
+ * Loading a CSV File and returning content
+ * <code>
+ * $csvFile = new CSV("csvexample.csv");
+ * echo '<table border="0">';
+ * foreach ($csvFile->getContent() as $Row) {
+ * 	echo "<tr>\n";
+ * 	foreach ($Row as $CellValue) {
+ * 		echo "<td>".$CellValue."</td>";
  * 	}
- * 	</code>
+ * 	echo "</tr>\n";
+ * }
+ * </code>
  *
- * 	Exporting to a CSV File, for example, a list of entries in a project
- * 	<code>
- * 	$csvFile = new CSV();
- * 	foreach ($Projects->asArray() as $entry) {
- * 		// $entry is an array here
- * 		// $entry["time"]
- * 		// $entry["text"];
- * 		$csv->addRow($entry);
- * 	}
- * 	echo $csv->toCSV();
- * 	</code>
+ * Exporting to a CSV File, for example, a list of entries in a project
+ * <code>
+ * $csvFile = new CSV();
+ * foreach ($Projects->asArray() as $entry) {
+ * 	// $entry is an array here
+ * 	// $entry["time"]
+ * 	// $entry["text"];
+ * 	$csv->addRow($entry);
+ * }
+ * echo $csv->toCSV();
+ * </code>
  * 
- * 	@todo add multiline-column support
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * 	@since 19.05.2007
- * 	@version 0.2
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib
+ * @todo add multiline-column support
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 19.05.2007
+ * @version 0.2
+ * @package ephFrame
+ * @subpackage ephFrame.lib
  */
 class CSV extends File implements Renderable, Iterator, Countable {
 
 	/**
-	 *	CSV File Content, Don't touch
-	 *	@var array(array(string))
+	 * CSV File Content, Don't touch
+	 * @var array(array(string))
 	 */
 	protected $data = array();
 	
 	/**
-	 *	Row Seperators
-	 *	@var array
+	 * Row Seperators
+	 * @var array
 	 */
 	private $seperators = array(';', ',', '|');
 	
 	/**
-	 * 	Stores the regular expression for matching lines for
-	 * 	caching purposes
-	 * 	@var string
+	 * Stores the regular expression for matching lines for
+	 * caching purposes
+	 * @var string
 	 */
 	protected $lineRegExp;
 	
 	/**
-	 *	Iterator index
-	 * 	@var integer
+	 * Iterator index
+	 * @var integer
 	 */
 	protected $iterartorPosition;
 
 	/**
-	 *	CSV File Constructer
-	 *	@param string|array $filename
-	 *	@param string|array	$seperator
-	 * 	@return CSV
+	 * CSV File Constructer
+	 * @param string|array $filename
+	 * @param string|array	$seperator
+	 * @return CSV
 	 */
 	public function __construct($filename = null, $seperator = null) {
 		$this->recreateLineRegExp();
@@ -108,9 +108,9 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	}
 
 	/**
-	 *	Sets or returns the current row seperator for this csv file
-	 *	@param array|string
-	 * 	@return array
+	 * Sets or returns the current row seperator for this csv file
+	 * @param array|string
+	 * @return array
 	 */
 	public function seperator($seperator = null) {
 		if (func_num_args() == 0) return $this->seperators;
@@ -127,8 +127,8 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	}
 
 	/**
-	 * 	re-creates the line regexp for caching
-	 * 	@return string
+	 * re-creates the line regexp for caching
+	 * @return string
 	 */
 	protected function recreateLineRegExp() {
 		$seperatorRexExp = implode($this->seperators);
@@ -136,9 +136,9 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	}
 
 	/**
-	 *	Unencoded a Column from csv
-	 *	@param string	$column
-	 *	@return string
+	 * Unencoded a Column from csv
+	 * @param string	$column
+	 * @return string
 	 */
 	protected function unencodeColumn($column) {
 		$value = $column;
@@ -151,9 +151,9 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	}
 
 	/**
-	 *	Encodes a single coloumn for CSV
-	 *	@param string	$column
-	 *	@return string
+	 * Encodes a single coloumn for CSV
+	 * @param string	$column
+	 * @return string
 	 */
 	protected function encodeColumn($column) {
 		$encoded = $column;
@@ -169,8 +169,8 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	}
 
 	/**
-	 *	Parses a line from csv line and returns the parsed data array
-	 *	@return array(string)
+	 * Parses a line from csv line and returns the parsed data array
+	 * @return array(string)
 	 */
 	protected function parseLine($raw) {
 		if (!is_string($raw)) return false;
@@ -186,9 +186,9 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	}
 
 	/**
-	 * 	Returns one line of parsed csv data as an array or false if the end
-	 * 	is reached
-	 * 	@return array(array(string))
+	 * Returns one line of parsed csv data as an array or false if the end
+	 * is reached
+	 * @return array(array(string))
 	 */
 	public function read() {
 		return $this->parseLine(parent::read());
@@ -203,27 +203,27 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	}
 	
 	/**
-	 * 	{@link render} callback
-	 * 	@return boolean
+	 * {@link render} callback
+	 * @return boolean
 	 */
 	public function beforeRender() {
 		return true;
 	}
 	
 	/**
-	 *	{@link render} callback
-	 * 	@param string $rendered
-	 * 	@return string
+	 * {@link render} callback
+	 * @param string $rendered
+	 * @return string
 	 */
 	public function afterRender($rendered) {
 		return $rendered;
 	}
 
 	/**
-	 *	Renders the CSV Table from the data in the {@link tableData} array
-	 * 	and returns the rendered string. The Seperator that is used is
-	 * 	the first from the {@link seperators} array
-	 *	@return string
+	 * Renders the CSV Table from the data in the {@link tableData} array
+	 * and returns the rendered string. The Seperator that is used is
+	 * the first from the {@link seperators} array
+	 * @return string
 	 */
 	public function render() {
 		$rendered = '';
@@ -249,8 +249,8 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	}
 
 	/**
-	 * 	Overwrites File Class Defined append Function
-	 * 	@see addRow
+	 * Overwrites File Class Defined append Function
+	 * @see addRow
 	 */
 	public function append($arr) {
 		if (is_string($arr)) $arr = array($arr);
@@ -259,15 +259,15 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	}
 
 	/**
-	 *	Saves the contents to the filename set
+	 * Saves the contents to the filename set
 	 */
 	public function save() {
 		return parent::write($this->render());
 	}
 
 	/**
-	 *	Saves conents in the given File
-	 *	@param string	$filename
+	 * Saves conents in the given File
+	 * @param string	$filename
 	 */
 	public function saveAs($filename) {
 		$classname = get_class($this);
@@ -278,8 +278,8 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	}
 	
 	/**
-	 *	Returns the number of lines 
-	 * 	@return integer
+	 * Returns the number of lines 
+	 * @return integer
 	 */
 	public function count() {
 		if (empty($this->data)) $this->read();
@@ -316,9 +316,7 @@ class CSV extends File implements Renderable, Iterator, Countable {
 }
 
 /**
- *	@package ephFrame
- *	@subpackage ephFrame.lib.exception
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
  */
 class CSVException extends BasicException {}
-
-?>

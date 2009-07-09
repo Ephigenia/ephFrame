@@ -1,56 +1,56 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 // load parent class
-ephFrame::loadClass('ephFrame.lib.model.DB.DB');
-ephFrame::loadClass('ephFrame.lib.model.DB.MySQL.MySQLException');
-ephFrame::loadClass('ephFrame.lib.model.DB.MySQL.MySQLQueryResult');
+class_exists('DB') or require dirname(__FILE__).'/../DB.php';
+class_exists('MySQLException') or require dirname(__FILE__).'/MySQLException.php';
+class_exists('MySQLQueryResult') or require dirname(__FILE__).'/MySQLQueryResult.php';
+class_exists('DBQuery') or require dirname(__FILE__).'/DBQuery.php';
 ephFrame::loadClass('ephFrame.lib.helper.Timer');
-ephFrame::loadClass('ephFrame.lib.model.DB.DBQuery');
 
 /**
- * 	MySQL Database-Access-Object (DAO)
+ * MySQL Database-Access-Object (DAO)
  * 
- * 	The MySQL DAO is made for accessing data from a MySQL Server. It should
- * 	provide all methods the {@link DAO} provide.
+ * The MySQL DAO is made for accessing data from a MySQL Server. It should
+ * provide all methods the {@link DAO} provide.
  * 
- * 	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- *	@since 19.05.2007
- *	@package ephFrame
- *	@subpackage ephFrame.lib.model.DB.MySQL
- * 	@version 0.2
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 19.05.2007
+ * @package ephFrame
+ * @subpackage ephFrame.lib.model.DB.MySQL
+ * @version 0.2
  */
 class MySQL extends DB implements DBInterface {
 	
 	/**
-	 *	Connect to a MySQL Server
+	 * Connect to a MySQL Server
 	 * 
-	 * 	This will try to set up a non-persistent connection to a MySQL Server
-	 * 	using the {@link DBDSN} passed to the method. If any error occurs a
-	 * 	{@link MySQLConnectionErrorException} is thrown that stores information
-	 * 	about the error that occured.
-	 * 	After a successfull connect {@link afterConnect} is called.
-	 * 	
-	 * 	@param DBDSN $dbdsn
-	 * 	@throws MySQLHandleConnectionException
-	 * 	@return DAOMySQL
+	 * This will try to set up a non-persistent connection to a MySQL Server
+	 * using the {@link DBDSN} passed to the method. If any error occurs a
+	 * {@link MySQLConnectionErrorException} is thrown that stores information
+	 * about the error that occured.
+	 * After a successfull connect {@link afterConnect} is called.
+	 * 
+	 * @param DBDSN $dbdsn
+	 * @throws MySQLHandleConnectionException
+	 * @return DAOMySQL
 	 */
 	public function connect(DBDSN $dbdsn) {
 		$this->DBDSN($dbdsn);
@@ -67,11 +67,11 @@ class MySQL extends DB implements DBInterface {
 	}
 	
 	/**
-	 *	Selects a specific DB. If no $dbname is passed the DB Name from the
-	 * 	{@link DBDSN} which was used to connect to the database is used.
-	 * 	@param string $dbName
-	 * 	@throws MySQLException
-	 * 	@return boolean
+	 * Selects a specific DB. If no $dbname is passed the DB Name from the
+	 * {@link DBDSN} which was used to connect to the database is used.
+	 * @param string $dbName
+	 * @throws MySQLException
+	 * @return boolean
 	 */
 	public function selectDB($dbName = null) {
 		if ($dbName === null) $dbName = $this->DBDSN->db();
@@ -86,18 +86,18 @@ class MySQL extends DB implements DBInterface {
 	}
 	
 	/**
-	 *	Selects a specific charset
-	 * 	@param string $charset
-	 * 	@return bolean
+	 * Selects a specific charset
+	 * @param string $charset
+	 * @return bolean
 	 */
 	public function selectCharset($charset) {
 		return $this->query('SET NAMES '.DBQuery::quote($charset));
 	}
 	
 	/**
-	 *	BeforeQuery Callback, called before a query is send
-	 * 	@param string|DBSelectQuery
-	 * 	@return string|DBSelectQuery
+	 * BeforeQuery Callback, called before a query is send
+	 * @param string|DBSelectQuery
+	 * @return string|DBSelectQuery
 	 */
 	public function beforeQuery($query) {
 		return parent::beforeQuery($query);
@@ -107,12 +107,12 @@ class MySQL extends DB implements DBInterface {
 	public $queryCache = array();
 	
 	/**
-	 *	Sends a Query (@link DBQuery} to the Database and returns 
-	 * 	a {@link DBResult} object with the results
-	 * 	@param DBQuery $query
-	 * 	@param boolean	$cached
-	 * 	@return QueryResult
-	 * 	@throws MySQLException
+	 * Sends a Query (@link DBQuery} to the Database and returns 
+	 * a {@link DBResult} object with the results
+	 * @param DBQuery $query
+	 * @param boolean	$cached
+	 * @return QueryResult
+	 * @throws MySQLException
 	 */
 	public function query($query, $cached = true) {
 		if (!($query = $this->beforeQuery($query))) {
@@ -143,8 +143,8 @@ class MySQL extends DB implements DBInterface {
 	}
 	
 	/**
-	 * 	Returns the last id of the item that was inserted
-	 *	@return integer
+	 * Returns the last id of the item that was inserted
+	 * @return integer
 	 */
 	public function lastInsertId() {
 		$this->checkConnection();
@@ -152,23 +152,21 @@ class MySQL extends DB implements DBInterface {
 	}
 	
 	/**
-	 * 	Returns the error number of the last error that occured, except no error
-	 * 	has occured.
-	 * 	@return integer|boolean
+	 * Returns the error number of the last error that occured, except no error
+	 * has occured.
+	 * @return integer|boolean
 	 */
 	public function errorNo() {
 		return mysql_errno();
 	}
 	
 	/**
-	 *	Returns the error message for the last error that occured, except no
-	 * 	error has occured
-	 * 	@return string|boolean
+	 * Returns the error message for the last error that occured, except no
+	 * error has occured
+	 * @return string|boolean
 	 */
 	public function errorMessage() {
 		return mysql_error();
 	}
 	
 }
-
-?>

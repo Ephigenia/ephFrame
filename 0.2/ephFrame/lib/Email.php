@@ -205,5 +205,3 @@ class InvalidEmailAddressException extends EmailException {
 	}
 	
 }
-
-?>

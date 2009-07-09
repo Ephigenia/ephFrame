@@ -1,10 +1,10 @@
 /**
- * 	Core java-script
- * 	@author Ephigenia M. Eichner
+ * Core java-script
+ * @author Ephigenia M. Eichner
  */
 
 /**
- *	make some stuff to get the current browser in use
+ * make some stuff to get the current browser in use
  */
 var BROWSER = '';
 if (navigator.userAgent.match(/msie/ig)) {
@@ -14,9 +14,9 @@ if (navigator.userAgent.match(/msie/ig)) {
 }
 
 /**
- *	Checks if the given var is empty in any kind of perspective
- *	@param mixed string
- *  @return boolean
+ * Checks if the given var is empty in any kind of perspective
+ * @param mixed string
+ * @return boolean
  */
 function isEmpty(string) {
 	if (string == '') return true;
@@ -26,12 +26,12 @@ function isEmpty(string) {
 }
 
 /**
- *	Remove an index from an indexed array
- *	<code>
- *	var a = new Array(0,1,2,3,4,5);
- *	// should alert '0,2,3,4,5'
- *	alert(a.remove(2));
- *	</code>
+ * Remove an index from an indexed array
+ * <code>
+ * var a = new Array(0,1,2,3,4,5);
+ * // should alert '0,2,3,4,5'
+ * alert(a.remove(2));
+ * </code>
  */
 Array.prototype.remove = function(from, to) {
 	var rest = this.slice((to || from) + 1 || this.length);
@@ -40,12 +40,12 @@ Array.prototype.remove = function(from, to) {
 };
 
 /**
- *	Delete Values from an indexed array with the passed value or regular
- *	expression
- *	<code>
- *	// filter all non-numeric entries
- *	var a = arr.filter(/[^\d]/);
- *	</code>
+ * Delete Values from an indexed array with the passed value or regular
+ * expression
+ * <code>
+ * // filter all non-numeric entries
+ * var a = arr.filter(/[^\d]/);
+ * </code>
  */
 Array.prototype.filter = function(m) {
 	for (var a = 0; a < this.length; a++) {
@@ -58,8 +58,8 @@ Array.prototype.filter = function(m) {
 }
 
 /**
- *	Returns the index of the $value if found
- * 	@param array(mixed) $val
+ * Returns the index of the $value if found
+ * @param array(mixed) $val
  */
 Array.prototype.indexOf = function($val) {
 	for(var a = 0; a < this.length; a++) {
@@ -72,9 +72,9 @@ Array.prototype.indexOf = function($val) {
 
 
 /**
- *	Url Escapes utf8 characters in a string and returns it
- *	@param string data
- *	@return string
+ * Url Escapes utf8 characters in a string and returns it
+ * @param string data
+ * @return string
  */
 function escape_utf8(data) {
 	if (isEmpty(data)) return '';

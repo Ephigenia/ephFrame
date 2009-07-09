@@ -1,21 +1,21 @@
 /**
- *	jQuery Extensions creating dialog-like windows
+ * jQuery Extensions creating dialog-like windows
  *
- *	This class can help you making your web-application look fancy better!
- *	It will create cool looking windows with buttons and inputs in it. No need
- *	for ugly OS-Depending Confirmation / Prompt Windows.
+ * This class can help you making your web-application look fancy better!
+ * It will create cool looking windows with buttons and inputs in it. No need
+ * for ugly OS-Depending Confirmation / Prompt Windows.
  *
- *	Example Usage of dialog.prompt
- *	<code>
- *	$().dialog.confirm('confirm', 'Do You really want to delete this?', function(result) {
- *		if (result) {
- *			document.location.href = '...deleteurl';
- *		}
- *	}));
- *	</code>
- *	
- *	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
- *	@since 2008-11-12
+ * Example Usage of dialog.prompt
+ * <code>
+ * $().dialog.confirm('confirm', 'Do You really want to delete this?', function(result) {
+ * if (result) {
+ * 	document.location.href = '...deleteurl';
+ * }
+ * }));
+ * </code>
+ * 
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 2008-11-12
  */
 (function($) {
 	

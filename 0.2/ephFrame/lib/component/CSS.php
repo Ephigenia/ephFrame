@@ -1,21 +1,21 @@
 <?php
 
 /**
- * 	ephFrame: <http://code.moresleep.net/project/ephFrame/>
- * 	Copyright (c) 2007+, Ephigenia M. Eichner
- * 						 Kopernikusstr. 8
- * 						 10245 Berlin
+ * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * Copyright (c) 2007+, Ephigenia M. Eichner
+ *                      Kopernikusstr. 8
+ *                      10245 Berlin
  *
- * 	Licensed under The MIT License
- * 	Redistributions of files must retain the above copyright notice.
+ * Licensed under The MIT License
+ * Redistributions of files must retain the above copyright notice.
  * 
- * 	@license		http://www.opensource.org/licenses/mit-license.php The MIT License
- * 	@copyright		copyright 2007+, Ephigenia M. Eichner
- * 	@link			http://code.ephigenia.de/projects/ephFrame/
- * 	@version		$Revision$
- * 	@modifiedby		$LastChangedBy$
- * 	@lastmodified	$Date$
- * 	@filesource		$HeadURL$
+ * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
+ * @copyright   copyright 2007+, Ephigenia M. Eichner
+ * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @version		$Revision$
+ * @modifiedby		$LastChangedBy$
+ * @lastmodified	$Date$
+ * @filesource		$HeadURL$
  */
 
 class_exists('File') or require dirname(__FILE__).'/../File.php';
@@ -23,78 +23,78 @@ class_exists('Collection') or require dirname(__FILE__).'/../Collection.php';
 class_exists('String') or require dirname(__FILE__).'/../helper/String.php';
 
 /**
- * 	Class Collecting CSS definitions and files for the view
+ * Class Collecting CSS definitions and files for the view
  * 
- * 	The directory used for rendering the css file includes is STATIC_DIR by
- * 	default. You can set your own css directory changing dir property of CSS.<br />
- * 	<br />
- * 	The simplest example of how you can use this component is by showing you
- * 	how ot add css files or css rules to your application:
- * 	<code>
- * 	class ExampleController extends AppController {
- * 		public $components = array('CSS');
- * 		public function exampleAction() {
- * 			$this->CSS->link('css/main.css');
- * 		}
+ * The directory used for rendering the css file includes is STATIC_DIR by
+ * default. You can set your own css directory changing dir property of CSS.<br />
+ * <br />
+ * The simplest example of how you can use this component is by showing you
+ * how ot add css files or css rules to your application:
+ * <code>
+ * class ExampleController extends AppController {
+ * 	public $components = array('CSS');
+ * 	public function exampleAction() {
+ * 		$this->CSS->link('css/main.css');
  * 	}
- * 	</code>
- * 	
- * 	The cool thing about the ephFrame is that you can add css files even from
- * 	an {@link Element} which are in your views! So here a simple example to add a
- * 	CSS File from an element, like for example <q>/view/elements/menu.php</q>
- * 	<code>
- * 		// add meun styles for the element
- * 		$CSS->addFile('css/menu.css');
- * 	</code>
- * 	
- * 	The effort about it that you get collected code. Elements in the view collect
- * 	js, css code. No peated code. So you might like it - DRY Style ;-) Ho!
+ * }
+ * </code>
  * 
- * 	@todo add external css scripts, like http://lalaland.de/fancy.css
- * 	@author Marcel Eichner // Ephiagenia <love@ephigenia.de>
- * 	@since 11.05.2008
- * 	@package ephFrame
- * 	@subpackage ephFrame.lib.component
- * 	@uses CSSCompressor
- * 	@uses CSSPacker
- * 	@uses Collection
+ * The cool thing about the ephFrame is that you can add css files even from
+ * an {@link Element} which are in your views! So here a simple example to add a
+ * CSS File from an element, like for example <q>/view/elements/menu.php</q>
+ * <code>
+ * 	// add meun styles for the element
+ * 	$CSS->addFile('css/menu.css');
+ * </code>
+ * 
+ * The effort about it that you get collected code. Elements in the view collect
+ * js, css code. No peated code. So you might like it - DRY Style ;-) Ho!
+ * 
+ * @todo add external css scripts, like http://lalaland.de/fancy.css
+ * @author Marcel Eichner // Ephiagenia <love@ephigenia.de>
+ * @since 11.05.2008
+ * @package ephFrame
+ * @subpackage ephFrame.lib.component
+ * @uses CSSCompressor
+ * @uses CSSPacker
+ * @uses Collection
  */
-class CSS extends Component implements Renderable {
-	
+class CSS extends Component implements Renderable
+{	
 	/**
-	 * 	Collection that stores the name of css files added
-	 * 	@var Collection
+	 * Collection that stores the name of css files added
+	 * @var Collection
 	 */
 	public $files = array();
 	
 	/**
-	 *	Collection that stores css files that are added by url
-	 * 	@var Collection
+	 * Collection that stores css files that are added by url
+	 * @var Collection
 	 */
 	public $urls = array();
 	
 	/**
-	 * 	Store plain text css definitions
-	 * 	@var array(string)
+	 * Store plain text css definitions
+	 * @var array(string)
 	 */
 	public $plain = array();
 	
 	/**
-	 * 	Will compress external files as well
-	 * 	@var boolean
+	 * Will compress external files as well
+	 * @var boolean
 	 */
 	public $compress = true;
 	
 	/**
-	 * 	Turns automatic css file packaging on
-	 * 	@var boolean
+	 * Turns automatic css file packaging on
+	 * @var boolean
 	 */
 	public $pack = true;
 	
 	/**
-	 * 	Directories where css files can exist, add multiple paths
-	 * 	that CSS should search in
-	 * 	@var string
+	 * Directories where css files can exist, add multiple paths
+	 * that CSS should search in
+	 * @var string
 	 */
 	public $dirs = array('static/css/');
 	
@@ -112,12 +112,12 @@ class CSS extends Component implements Renderable {
 	}
 	
 	/**
-	 * 	Add plain css definitions
-	 * 	<code>
-	 * 	$CSS->add('body: { font-family: Arial; }');
-	 * 	</code>
-	 * 	@param string $css
-	 * 	@return CSS
+	 * Add plain css definitions
+	 * <code>
+	 * $CSS->add('body: { font-family: Arial; }');
+	 * </code>
+	 * @param string $css
+	 * @return CSS
 	 */
 	public function add($css) {
 		if (!in_array($css, $this->plain)) {
@@ -127,15 +127,15 @@ class CSS extends Component implements Renderable {
 	}
 	
 	/**
-	 * 	Add a single or multiple files to javascript
+	 * Add a single or multiple files to javascript
 	 * 
-	 * 	<code>
-	 * 	$JavaScript->addFile('test.js');
-	 * 	$JavaScript->addFile(array('test.js'));
-	 * 	</code>
+	 * <code>
+	 * $JavaScript->addFile('test.js');
+	 * $JavaScript->addFile(array('test.js'));
+	 * </code>
 	 * 
-	 * 	@param string $filename
-	 * 	@return JavaScript
+	 * @param string $filename
+	 * @return JavaScript
 	 */
 	public function addFile($filename) {
 		$args = func_get_args();
@@ -157,9 +157,9 @@ class CSS extends Component implements Renderable {
 	}
 	
 	/**
-	 * 	Alias for {@link link}
-	 * 	@param $files
-	 * 	@return JavaScript
+	 * Alias for {@link link}
+	 * @param $files
+	 * @return JavaScript
 	 */
 	public function addFiles($files) {
 		$args = func_get_args();
@@ -167,9 +167,9 @@ class CSS extends Component implements Renderable {
 	}
 	
 	/**
-	 * 	Alias for {@link link}
-	 * 	@param $files
-	 * 	@return JavaScript
+	 * Alias for {@link link}
+	 * @param $files
+	 * @return JavaScript
 	 */
 	public function link($filename) {
 		$args = func_get_args();
@@ -232,4 +232,3 @@ class CSS extends Component implements Renderable {
 	}
 
 }
-?>
