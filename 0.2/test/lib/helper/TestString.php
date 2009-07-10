@@ -74,7 +74,7 @@ class TestString extends UnitTestCase {
 		$expectedResult = 'You\'re seeing page 1 of 2 pages in total';
 		$expectedResultMultiple = '1 of 2 pages, you are on page 1';
 		// with associative arrays
-		$this->assertEqual(String::substitute('You\'re seeing page %page% of %total% pages in total',
+		$this->assertEqual(String::substitute('You\'re seeing page :page of :total pages in total',
 			array(
 				'page' => 1,
 				'total' => 2	
@@ -82,7 +82,7 @@ class TestString extends UnitTestCase {
 		), $expectedResult);
 		// associative array multiple
 		// with associative arrays
-		$this->assertEqual(String::substitute('%page% of %total% pages, you are on page %page%',
+		$this->assertEqual(String::substitute(':page of :total pages, you are on page :page',
 			array(
 				'page' => 1,
 				'total' => 2	
@@ -90,11 +90,11 @@ class TestString extends UnitTestCase {
 		), $expectedResultMultiple);
 		// with indexed array
 		$this->assertEqual(
-			String::substitute('You\'re seeing page %1% of %2% pages in total', 1, 2),
+			String::substitute('You\'re seeing page :1 of :2 pages in total', 1, 2),
 			$expectedResult);
 		// with indexed array, multiple usage
 		$this->assertEqual(
-			String::substitute('%1% of %2% pages, you are on page %1%', 1, 2),
+			String::substitute(':1 of :2 pages, you are on page :1', 1, 2),
 			$expectedResultMultiple);
 		// indexed / associative array
 		// not supported now
@@ -142,12 +142,12 @@ class TestString extends UnitTestCase {
 	}
 	
 	public function test() {
-		$result = String::substitute('You\'re seeing page %page% of %total% pages', array(
+		$result = String::substitute('You\'re seeing page :page of :total pages', array(
 			'total' => 100,
 			'page' => 1
 		));
 		$this->assertEqual($result, 'You\'re seeing page 1 of 100 pages');
-		$result = String::substitute('You\'re seeing page %1% of %0% pages', array(
+		$result = String::substitute('You\'re seeing page :1 of :0 pages', array(
 			100,
 			1
 		));

@@ -21,8 +21,8 @@ require_once dirname(__FILE__).'/config.php';
 
 if (!file_exists(SIMPLE_TEST.'autorun.php')) {
 	die('Error: Unable to find Simpletest autorun file. Please install Simpletest into \''.SIMPLE_TEST.'\' directory'."\n");
-	
 }
+
 // include simple test libs and fire them up
 require_once SIMPLE_TEST.'autorun.php';
 require_once SIMPLE_TEST.'reporter.php';

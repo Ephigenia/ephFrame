@@ -61,10 +61,10 @@ class TestInflector extends UnitTestCase {
 	
 	public function testDelimeterSeperate() {
 		$a = array(
-			'hallo my name is Earl' => 'hallo_my_name_is_Earl',
-			'youAreSo Great' => 'you_Are_So_Great',
-			'testTHe_great' => 'test_T_He_great',
-			'  master Testa' => 'master_Testa',
+			'hallo my name is Earl' => 'hallo_my_name_is_earl',
+			'youAreSo Great' => 'you_are_so_great',
+			'testTHe_great' => 'test_t_he_great',
+			'  master Testa' => 'master_testa',
 			' @freak 123   ' => '@freak_123'
 		);
 		foreach($a as $input => $output) {

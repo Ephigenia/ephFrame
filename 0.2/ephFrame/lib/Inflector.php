@@ -137,11 +137,11 @@ class Inflector extends Object {
 	 * @param string $delimeter The delimeter ot use, usually its an underscore _
 	 * @return string converted string
 	 */
-	public static function delimeterSeperate($string, $delimeter = '_', $lowered = true) {
+	public static function delimeterSeperate($string, $delimeter = '_', $noCase = true) {
 		if ($delimeter == null) $delimeter = '_';
-		$string = preg_replace('@(?!^)([A-Z]|\s+)@', $delimeter.'\\1', $string);
+		$string = preg_replace('@(?!^)(([A-Z])|\s)@', $delimeter.'\\2', trim($string));
 		$string = preg_replace('@('.$delimeter.'){2,}@', $delimeter, $string);
-		if ($lowered) {
+		if ($noCase) {
 			$string = strtolower($string);
 		}
 		return $string;

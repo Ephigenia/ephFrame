@@ -260,11 +260,15 @@ class File extends FileSystemNode {
 	 * @return string|boolean false if no extension is found
 	 * @static
 	 */
-	public static function ext($filename) {
+	public static function ext($filename, $noCase = true) {
 		if (($pos = strrpos($filename, '.')) === false) {
 			return false;
 		} else {
-			return strtolower(trim(substr($filename, $pos + 1)));
+			if ($noCase) {
+				return strtolower(trim(substr($filename, $pos + 1)));
+			} else {
+				return trim(substr($filename, $pos + 1));
+			}
 		}
 	}
 	

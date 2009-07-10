@@ -35,8 +35,8 @@ class TestHTML extends UnitTestCase
 	
 	public function testImg() {
 		$HTML = new HTML();
-		$this->assertEqual((string) $HTML->img('bild.jpg'), '<img src="bild.jpg" />');
-		$this->assertEqual((string) $HTML->img('bild.jpg', array('class' => 'test class')), '<img class="test class" src="bild.jpg" />');
+		$this->assertEqual((string) $HTML->img('bild.jpg'), '<img src="'.WEBROOT.'static/img/bild.jpg" alt="" />');
+		$this->assertEqual((string) $HTML->img('bild.jpg', array('class' => 'test class')), '<img class="test class" src="'.WEBROOT.'static/img/bild.jpg" alt="" />');
 	}
 	
 	public function testLink() {

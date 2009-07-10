@@ -26,7 +26,6 @@
  * @package ephFrame
  * @subpackage ephFrame.test
  */
-
 require_once dirname(__FILE__).'/autorun.php';
 
 if (isset($_SERVER['HTTP_HOST'])) {
@@ -43,6 +42,7 @@ $helperTests->addTestFile('lib/helper/TestString.php');
 $helperTests->addTestFile('lib/helper/TestTime.php');
 $helperTests->addTestFile('lib/helper/TestCharset.php');
 $helperTests->addTestFile('lib/helper/TestHTML.php');
+$helperTests->addTestFile('lib/helper/TestSanitizer.php');
 
 // ephFrame basic classes
 $helperTests->addTestFile('lib/TestFile.php');

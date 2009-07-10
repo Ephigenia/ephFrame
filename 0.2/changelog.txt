@@ -1,7 +1,7 @@
 changelog for ephFrame
 ----------------------
 
-2009-07-09
+2009-07-10
 + fixed missing created update field when inserting new model entries with multiple behaviors
 + added theming, which includes js/css search in theme directory
 + fixed js packer to append line-feed at end of packed js files
@@ -24,6 +24,8 @@ changelog for ephFrame
 + replaced %1% placeholders to :[name] in string::substitute
 + added alias for string::substitute - string::insert
 + new formating for files skipping ?> in files and no tabs in PHPDocBlocks
++ Sanitizer::filename sanitizes filenames
++ Controller->redirect added optional beforeRedirect method
 
 2009-05-25
 + added model behaviors callable from every model

@@ -719,6 +719,9 @@ abstract class Controller extends Object implements Renderable
 	 * redirect (307).<br />
 	 * The status code will not be send if it's invalid.<br />
 	 * This will overwrite previously send location and status header.<br />
+	 *
+	 * It will also call beforeRedirect before redirecting the user with all
+	 * the parameters.
 	 * 
 	 * <code>
 	 * // for example direct to user login and exit
@@ -733,6 +736,7 @@ abstract class Controller extends Object implements Renderable
 	 * @return boolean
 	 */
 	public function redirect($url, $status = 'p', $exit = true) {
+		$this->beforeRedirect($url, $status, $exit);
 		if (!class_exists('HTTPStatusCode')) ephFrame::loadClass('ephFrame.lib.HTTPStatusCode');
 		if ($url !== null) {
 			header('Location: '.$url, true);
@@ -749,6 +753,8 @@ abstract class Controller extends Object implements Renderable
 		}
 		return true;
 	}
+	
+	public function beforeRedirect($url, $status = 'p', $exit = true) {}
 	
 	/**
 	 * Returns the refererrer submitted by the client if found

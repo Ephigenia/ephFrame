@@ -62,7 +62,8 @@ class TestFile extends UnitTestCase
 		$this->assertEqual(File::ext('Mültibäite.hä?  '), 'hä?');
 		$this->assertEqual(File::ext('Simplefilename...ext'), 'ext');
 		// uppercase extensions
-		$this->assertEqual(File::ext('Simplefilename...eXt'), 'eXt');
+		$this->assertEqual(File::ext('Simplefilename...eXt'), 'ext');
+		$this->assertEqual(File::ext('Simplefilename...eXt', false), 'eXt');
 		// test empty extensions
 		$this->assertEqual(File::ext('S'), '');
 	}

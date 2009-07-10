@@ -34,7 +34,7 @@ class TestObjectSet extends UnitTestCase {
 	}
 	
 	public function testGeneral() {
-		$set = new ObjectSet('Set');
+		$set = new ObjectSet('IndexedArray');
 		$set->add(new IndexedArray('test'));
 		$set->add(new IndexedArray('zero'));
 		$set->add(new IndexedArray(1));

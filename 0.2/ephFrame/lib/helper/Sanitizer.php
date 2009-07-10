@@ -144,11 +144,19 @@ class Sanitizer extends Helper {
 	 *	- stripping trailing and leading dots
 	 *  - replace special characters (that are not asc-ii)
 	 *	- replace space with underscores
+	 *	- limit the length of the filename to 255 chars
+	 *	- strip path information
 	 * 	@param $string
+	 *	@return string
 	 */
 	public static function filename($string) {
-		$return = trim($string, '.');
-		return String::toURL($string, '_');
+		$filename = String::toURL(trim(basename($string, '.')), '_');
+		if (($dotPos = strpos($filename, '.')) !== false) {
+			$extension = substr($filename, $dotPos + 1);
+			$basename  = substr($filename, 0, $dotPos);
+			return substr($basename, 0, 230 - strlen($extension) - 1).'.'.$extension;
+		}
+		return String::substr($filename, 0, 255);
 	}
 	
 	/**

@@ -167,9 +167,8 @@ class Log extends Component {
 	public static function write($level, $message) {
 		// log message only if level is higher or equal current reporting level
 		if ($level <= self::$level) {
-			$log = self::getInstance();
 			$logFile = new File(self::logFileName($level));
-			$logFile->append($log->createLogMessage($message));
+			$logFile->append(self::getInstance()->createLogMessage($message));
 		}
 		return true;
 	}
@@ -229,21 +228,17 @@ class Log extends Component {
 	public static function logFileName($level) {
 		if (!isset(self::$logFilenames[$level])) {
 			$path = realpath(self::$path).DS;
-			$logFileBasename = '';
-			if ($level == self::ERROR || $level == self::WARNING) {
-				$logFileBaseName = 'error';
+			if (in_array($level, array(self::ERROR, self::WARNING))) {
+				$filename = 'error';
 			} elseif (array_key_exists($level, self::$levels)) {
-				$logFileBaseName = self::$levels[$level];
+				$filename = self::$levels[$level];
 			} elseif (!empty($level)) {
-				$logFileBasename = $level;
+				$filename = $level;
+			} else {
+				$filename = '';
 			}
 			// cleanup the filename
-			$logFileBasename = strtolower($logFileBasename);
-			$logFileBasename = Charset::toSingleBytes($logFileBasename);
-			// replace spaces
-			$logFileBasename = preg_replace('/\s+/', '_', $logFileBasename);
-			// replace any control character or non-word stuff
-			$logFileBasename = preg_replace('/[^-_., \d\w]/u', '', $logFileBasename);
+			$filename = Sanitizer::filename($filename);
 			// limit size of level name to unix type filename length
 			$logFileBasename = substr($logFileBasename, 0, 255);
 			if (empty($logFileBasename)) {

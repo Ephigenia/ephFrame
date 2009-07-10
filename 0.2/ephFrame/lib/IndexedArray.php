@@ -609,6 +609,7 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 				$cpy->delAll($minimum);
 				$minimums[] = $minimum;
 			}
+			
 			$classname = get_class($this);
 			return new $classname($minimums);
 		}
@@ -869,10 +870,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @return boolean
 	 */
 	public function delAll($value) {
-		$index = $this->indexOf($value);
-		if ($index !== false) {
+		while (($index = $this->indexOf($value)) !== false) {
 			$this->del($index);
-			$index = $this->indexOf($value);
 		}
 		return $this;
 	}

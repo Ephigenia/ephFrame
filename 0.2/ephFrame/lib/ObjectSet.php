@@ -87,7 +87,7 @@ class ObjectSet extends IndexedArray {
 		if (!is_object($object)) {
 			throw new ObjectSetObjectExpectedException($this, $object);
 		}
-		if (!($object instanceof $this->classname)) {
+		if (!empty($this->classname) && !($object instanceof $this->classname)) {
 			throw new ObjectSetInvalidClassException($this, $object);
 		}
 		return true;
@@ -144,13 +144,14 @@ class ObjectSetObjectExpectedException extends ObjectSetException {
 }
 
 /**
+ * Thrown if an invalid object instance is tried to add to {@link ObjectSet}
  * @package ephFrame
  * @subpackage ephFrame.lib.exception 
  */
 class ObjectSetInvalidClassException extends ObjectSetException {
-	public function __construct(ObjectSet $objectSet, $object) {
-		$message = sprintf('%s expects objects of class \'%s\'. You tried \'%s\' which was wrong.',
-			get_class($objectSet), get_class($objectSet->classname), get_class($object)
+	public function __construct(ObjectSet $objectSet, Object $object) {
+		$message = sprintf('%s expects instances of \'%s\', you passed \'%s\' which is not accepted.',
+			get_class($objectSet), $objectSet->classname, get_class($object)
 		);
 		parent::__construct($message);
 	}
