@@ -45,7 +45,7 @@ class AppController extends Controller {
 	);
 	
 	public function beforeRender() {
-		$this->CSS->addFile(array(
+		$this->CSS->addFiles(array(
 			'reset',
 			'app',
 			'form',
@@ -63,4 +63,3 @@ class AppController extends Controller {
  * @subpackage app.libs.exceptions
  */
 class AppControllerException extends ControllerException {}
-

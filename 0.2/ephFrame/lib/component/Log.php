@@ -78,7 +78,7 @@ class Log extends Component {
 	 * Base path were log files are stored
 	 * @var string
 	 */
-	public static $path;
+	public static $path = LOG_DIR;
 	
 	/**
 	 * Standarized english date format, that should be standard for all log
@@ -130,10 +130,6 @@ class Log extends Component {
 		,self::VERBOSE => 'verbose'
 		,self::VERBOSE_SILENT => 'verbose'
 	);
-	
-	public function __construct() {
-		self::$path = LOG_DIR;
-	}
 
 	/**
 	 * Returns an instance of Log
@@ -213,7 +209,7 @@ class Log extends Component {
 	 * Stores the translated log file names as cache
 	 * @var array(string)
 	 */
-	public static $logFilenames = array();
+	public static $filenameCache = array();
 	
 	/**
 	 * Translates the log level to a full path to the log filename and returns it
@@ -226,8 +222,7 @@ class Log extends Component {
 	 * @return string
 	 */
 	public static function logFileName($level) {
-		if (!isset(self::$logFilenames[$level])) {
-			$path = realpath(self::$path).DS;
+		if (!isset(self::$filenameCache[$level])) {
 			if (in_array($level, array(self::ERROR, self::WARNING))) {
 				$filename = 'error';
 			} elseif (array_key_exists($level, self::$levels)) {
@@ -235,19 +230,17 @@ class Log extends Component {
 			} elseif (!empty($level)) {
 				$filename = $level;
 			} else {
-				$filename = '';
+				$filename = 'unknown_level';
 			}
 			// cleanup the filename
 			$filename = Sanitizer::filename($filename);
-			// limit size of level name to unix type filename length
-			$logFileBasename = substr($logFileBasename, 0, 255);
-			if (empty($logFileBasename)) {
-				$logFileBasename = 'unknown_level';
+			if (empty($filename)) {
+				$filename = 'unknown_level';
 			}
 			// return the resulting path to the logfile
-			self::$logFilenames[$level] = $path.$logFileBasename.self::$extension;
+			self::$filenameCache[$level] = realpath(self::$path).DS.$filename.self::$extension;
 		} 
-		return self::$logFilenames[$level];
+		return self::$filenameCache[$level];
 	}
 	
 }

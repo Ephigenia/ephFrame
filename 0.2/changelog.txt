@@ -26,6 +26,7 @@ changelog for ephFrame
 + new formating for files skipping ?> in files and no tabs in PHPDocBlocks
 + Sanitizer::filename sanitizes filenames
 + Controller->redirect added optional beforeRedirect method
++ added String::prepend / append to add optional parts to a string
 
 2009-05-25
 + added model behaviors callable from every model

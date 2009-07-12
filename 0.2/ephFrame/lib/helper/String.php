@@ -87,8 +87,10 @@ class String extends Helper {
 	 * @param string $append
 	 * @param string $condString
 	 * @param boolean $caseSensitive
+	 * @param boolean $isEmpty
+	 * @return string
 	 */
-	public static function append($string, $append, $condString = null, $caseSensitive = false) {
+	public static function append($string, $append, $condString = null, $caseSensitive = false, $isEmpty = true) {
 		assert(is_scalar($string) && is_scalar($append));
 		if ($condString !== null) {
 			if ($condString == true) $condString = $append;
@@ -103,23 +105,29 @@ class String extends Helper {
 	
 	/**
 	 * Prepends a string to an other
+	 *
+	 * Prepends $prepend string to $string if optional $condString is not present
+	 * at the beginning of the text in $caseSensitive. String is not prepended
+	 * if input $string is empty and $isEmpty.
 	 * 
 	 * @param string $string
 	 * @param string $prepend
 	 * @param string $condString
 	 * @param boolean $caseSensitive
+	 * @param boolean $isEmpty prepends the string only if the input $string was not empty
 	 * @return string
 	 */
-	public static function prepend($string, $prepend, $condString = null, $caseSensitive = false) {
-		assert(is_scalar($string) && is_scalar($prepend));
+	public static function prepend($string, $prepend, $condString = null, $caseSensitive = false, $isEmpty = true) {
+		$string = (string) $string;
 		if ($condString !== null) {
-			if ($condString == true) $condString = $prepend;
+			if ($condString == true) $condString = (string) $prepend;
 			if (($caseSensitive && substr($string, 0, -strlen($condString)) == $condString) || 
 			   (!$caseSensitive && self::lower(substr($string, 0, -strlen($condString))) == String::lower($condString))
 				) {
 				return $string;
 			}
 		}
+		if (empty($string) && $isEmpty == false) return $string;
 		return $prepend.$string;
 	}
 	

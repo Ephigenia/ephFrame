@@ -139,8 +139,8 @@ class CSS extends Component implements Renderable
 	 */
 	public function addFile($filename) {
 		$args = func_get_args();
-		if (count($args[0]) > 1) {
-			return $this->addFile($args[0]);
+		if (is_array($filename)) {
+			$args = $filename;
 		}
 		array_map('strval', array_map('trim', $args));
 		foreach($args as $filename) {
