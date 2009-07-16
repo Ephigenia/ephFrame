@@ -222,7 +222,6 @@ abstract class Controller extends Object implements Renderable
 				$pagination['url'] = Router::getRoute($this->name.'Paged');
 				$this->set('pagination', $pagination);
 			}
-			
 			if (!$entries) {
 				return true;
 			}
@@ -538,6 +537,10 @@ abstract class Controller extends Object implements Renderable
 		$this->action = $action;
 		$this->set('action', $this->action);
 		$this->params = $params;
+		// check params for special keys like layout, theme etc
+		foreach (array('layout', 'theme') as $v) {
+			if (isset($this->params[$v])) $this->{$v} = $this->params[$v];
+		}
 		if (method_exists($this, $action)) {
 			// call beforeaction on every component
 			foreach($this->components as $componentName) {
@@ -631,7 +634,10 @@ abstract class Controller extends Object implements Renderable
 		if (isset($_SERVER['HTTP_ACCEPT_ENCODING']) && !preg_match('/gzip/i', $_SERVER['HTTP_ACCEPT_ENCODING']) && $this->response->enableGZipCompression) {
 			$this->response->enableGZipCompression = false;
 		}
-		$this->response->header->set('Content-Type', $view->contentType.'; charset=utf-8');
+		// set content header if not allready set
+		if ($this->response->header->isEmpty('Content-Type')) {
+			$this->response->header->set('Content-Type', $view->contentType.'; charset=utf-8');
+		}
 		$rendered = $this->response->render();
 		$this->response->header->send();
 		return $rendered;

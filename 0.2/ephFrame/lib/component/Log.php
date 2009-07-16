@@ -92,7 +92,7 @@ class Log extends Component {
 	 * // todo extract this to optional new class ?
 	 * @var string
 	 */
-	public static $format = '%date% [%ip%] %message%';
+	public static $format = ':date [:ip] :message';
 	
 	/**
 	 * Extension of log files
@@ -164,7 +164,9 @@ class Log extends Component {
 		// log message only if level is higher or equal current reporting level
 		if ($level <= self::$level) {
 			$logFile = new File(self::logFileName($level));
-			$logFile->append(self::getInstance()->createLogMessage($message));
+			if ($logFile->writable()) {
+				$logFile->append(self::getInstance()->createLogMessage($message));
+			}
 		}
 		return true;
 	}

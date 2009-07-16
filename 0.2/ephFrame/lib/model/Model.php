@@ -469,6 +469,13 @@ class Model extends Object {
 	}
 	
 	/**
+	 *	Returns unique id string for a model entry
+	 */
+	public function uniqueId($length = 8) {
+		return substr(md5(SALT.$this->id), 0, $length);
+	}
+	
+	/**
 	 * Alias for {@link detailPageUri}
 	 * @return string
 	 */
@@ -1265,6 +1272,16 @@ class Model extends Object {
 	}
 	
 	/**
+	 * Returns true if something from this model is found that meets
+	 * the $conditions you passed, otherwise false
+	 * @param array(string) $conditions
+	 * @return boolean
+	 */
+	public function hasAny($conditions) {
+		return ($this->findOne($conditions) !== false);
+	}
+	
+	/**
 	 * Returns random amount of entries from the model
 	 * @param array(string) $conditions
 	 * @return IndexedArray(Model)|boolean
@@ -1555,7 +1572,6 @@ class Model extends Object {
 	 * @return Model
 	 */
 	protected function loadStructure() {
-//		$this->modelCacheTTL = 0;
 		if (!isset($this->modelStructureCache)) {
 			$this->modelStructureCache = new ModelStructureCache($this, $this->modelCacheTTL);
 		}

@@ -148,8 +148,9 @@ class Form extends HTMLTag {
 				$this->prepend(new HTMLTag('p', array('class' => 'error'), nl2br(implode(LF, $this->errors))));
 				$this->errorsDone = true;
 			// success messages
-			} elseif (!empty($this->successMessages)) {
+			} elseif (!empty($this->successMessages) && !isset($this->successDone)) {
 				if (!is_array($this->successMessages)) $this->successMessages = array($this->successMessages);
+				$this->successDone = true;
 				$this->prepend(new HTMLTag('p', array('class' => 'success'), nl2br(implode(LF, $this->successMessages))));
 			}
 		}

@@ -35,4 +35,5 @@ Registry::set('DEBUG', DEBUG_PRODUCTION);
  */
 if (isset($_SERVER['HTTP_HOST'])) {
 	Registry::set('WEBROOT_URL', ($_SERVER['SERVER_PORT'] == 80 ? 'http' : $_SERVER['SERVER_PORT']).'://'.$_SERVER['HTTP_HOST'].'/');
+	Registry::set('APP_URL', ($_SERVER['SERVER_PORT'] == 80 ? 'http' : $_SERVER['SERVER_PORT']).'://'.$_SERVER['HTTP_HOST'].WEBROOT);
 }

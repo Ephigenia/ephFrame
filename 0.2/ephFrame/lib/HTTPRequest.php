@@ -119,6 +119,14 @@ class HTTPRequest extends Component {
 		return $this->method == self::METHOD_GET;
 	}
 	
+	public function hostname() {
+		// determine host name if possible
+		if (empty($this->hostname)) {
+			$this->hostname = gethostbyaddr($this->host);
+		}
+		return $this->hostname;
+	}
+	
 	private function autofill() {
 		if (isset($_SERVER)) {
 			$this->method = $_SERVER['REQUEST_METHOD'];
@@ -128,8 +136,6 @@ class HTTPRequest extends Component {
 		if ($this->host == '::1') {
 			$this->host = '127.0.0.1';
 		}
-		// determin host name if possible
-		$this->hostname = gethostbyaddr($this->host);
 		// set referer if ther's any
 		if (isset($_SERVER['HTTP_REFERER'])) {
 			$this->referer = $_SERVER['HTTP_REFERER'];

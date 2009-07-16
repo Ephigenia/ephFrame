@@ -53,6 +53,14 @@ class ErrorController extends AppController {
 		}
 	}
 	
+	public function missingLayoutFile() {
+		$filename = $this->params['missingLayoutFilename'];
+		$basename = basename($filename);
+		$layoutname = substr($basename, 0, -strrpos($basename,'.'));
+		$this->set('layoutname', $layoutname);
+		$this->set('filename', $filename);
+	}
+	
 	public function missingView() {
 		$this->set('missingController', $this->params['missingController']);
 		$this->set('missingAction', $this->params['missingAction']);
