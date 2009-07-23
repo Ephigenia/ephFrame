@@ -107,11 +107,15 @@ class HTTPHeader extends Hash {
 	 */
 	public function parse($rawHeader) {
 		if (!is_string($rawHeader)) return false;
+		// extract status and response code
+		if (preg_match('@HTTP/1.\d\s(\d{1,3})\s([^\n]+)@', $rawHeader, $found)) {
+			$this->statusCode = (int) $found[1];
+		}
 		// parse header parts of raw message if there are any:
 		$parsedHeader = array();
 		if (preg_match_all($this->headerRegExp, $rawHeader, $foundHeaders, PREG_SET_ORDER)) {
 			foreach($foundHeaders as $index => $headerData) {
-				$headerdata[2] = trim($headerdata[2]);
+				$headerData[2] = trim($headerData[2]);
 				// strip quotes
 				preg_replace('/^["\']|["\']$/', '', $headerData[2]);
 				$parsed[$headerData[1]] = trim($headerData[2]);

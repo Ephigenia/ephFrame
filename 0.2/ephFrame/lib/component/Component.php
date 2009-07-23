@@ -25,7 +25,7 @@ interface_exists('ephFrameComponent') or require(dirname(__FILE__).'/ephFrameCom
  * 
  * Components do:
  * - help a controller
- * 	- help a model (should be static maybe)
+ * - help a model (should be static maybe)
  * 
  * Components should not:
  * 	- Do basic stuff like lower every string or convert something into an
@@ -85,6 +85,7 @@ abstract class Component extends Object implements ephFrameComponent {
 	/**
 	 * This is called right after a controller constructed a new Component.
 	 * @param Controller $controller
+	 * @return Component
 	 * @final 
 	 */
 	public function init(Controller $controller) {
@@ -101,10 +102,7 @@ abstract class Component extends Object implements ephFrameComponent {
 	 * @return true
 	 */
 	protected function initComponents() {
-		// merge list of components from parent component class
-		//$parentClass = get_parent_class($this);
-		//$parentClassVars = get_class_vars($parentClass);
-		//$this->components = array_merge($parentClassVars['components'], $this->components);
+		// init components used by this component
 		foreach ($this->components as $componentName) {
 			$componentClassName = ClassPath::className($componentName);
 			// component not attached to controller, therefore do that now 
@@ -145,19 +143,30 @@ abstract class Component extends Object implements ephFrameComponent {
 		return true;
 	}
 	
+	/**
+	 * Called right after the controller rendered everything, add something
+	 * to the rendered output here in your own components. This method should
+	 * always return the rendered content to the controller.
+	 * @param string $rendered
+	 * @return string
+	 */
 	public function afterRender($rendered) {
 		return $rendered;
 	}
 	
 	/**
 	 * Callback that is called right before controller calls his action
-	 * @return true
+	 * @return boolean
 	 */
-	public function beforeAction($actionName) {
+	public function beforeAction() {
 		return true;
 	}
 	
-	public function afterAction($actionName) {
+	/**
+	 * Callback that is calld after action was performed in the controller
+	 * @return boolean
+	 */
+	public function afterAction() {
 		return true;
 	}
 	

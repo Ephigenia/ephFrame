@@ -108,10 +108,10 @@ class HTTPResponse extends Object implements Renderable {
 			$this->body = $raw;
 			return $raw;
 		}
-		$this->content = trim($found[1]);
+		$this->body = trim($found[1]);
 		// okay, we know that we got some header infos here, parse 'em!
 		$this->header->parse($raw);
-		return $this->content;
+		return $this->body;
 	}
 	
 	/**

@@ -105,7 +105,7 @@ class Sanitizer extends Helper {
 		if ($flags == null) {
 			$flags = self::PARANOID; 
 		}
-		$var = self::clean($var);
+		//$var = self::clean($var);
 		if (is_array($var)) {
 			foreach($var as $i => $v) {
 				if ($include == null || ($include !== null && in_array($i, $include))) {
@@ -174,6 +174,8 @@ class Sanitizer extends Helper {
 	}
 	
 	public static function html($string, $allowedTags = array()) {
+		if (is_array($string)) return self::sanitize($string, self::HTML);
+		return $string;
 		// first replace various encodings of < and > back to < and >
 		$string = preg_replace('@%3C|&gt;?|&#0*60;?|&#x0*3C;?|\\\x3C|\\\u003C@', '<', $string);
 		$string = preg_replace('@%3E|&lt;?|&#0*62;?|&#x0*3E;?|\\\x3E|\\\u003E@', '>', $string);

@@ -142,13 +142,13 @@ class HTTPRequest extends Component {
 		}
 		if ($this->method == self::METHOD_GET) {
 			$this->data = &$_GET;
-			$this->data = array_merge($_POST, $this->data);
+			$this->data = array_merge($_POST, &$this->data);
 		} else {
 			$this->data = &$_POST;
-			$this->data = array_merge($_GET, $this->data);
+			$this->data = array_merge($_GET, &$this->data);
 		}
 		// fix wrong decoded utf8 entities
-		$this->data = array_map(array('Charset', 'toUtf8'), $this->data);
+		$this->data = array_map(array('Charset', 'toUtf8'), &$this->data);
 		// strip slashes from all values if magic quotes are on
 		if (function_exists('get_magic_quotes_gpc') && !get_magic_quotes_gpc()) {
 			if (!defined('ephFrameHTTPRequestAddSlashesOk')) {

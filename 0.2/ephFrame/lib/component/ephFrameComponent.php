@@ -34,6 +34,6 @@ interface ephFrameComponent {
 	
 	public function beforeRender();
 	
-	public function beforeAction($actionName);
+	public function beforeAction();
 
 }

@@ -65,10 +65,26 @@ class DBConfig {
 	 * @var string
 	 */
 	public $default = 'mysql://root:gDE3ge@localhost:3306/ephFrameTest/#utf8';
+	
+	/**
+	 * Default database connection as array configuration
+	 * @var array(string)
+	 */
+	/*
+	public $default = array(
+				'scheme' => 'mysql',
+				// 'socket' => 'localhost:/tmp/mysql5.sock',
+				'user' => 'root',
+				'pass' => '',
+				'db' => 'ephFrameTest',
+				'charset' => 'utf8'
+	);
+	*/
 
 	public function __construct() {
 		// switch DB Configs depending on user name (example how to switch)
-		switch(get_current_user()) {
+		$username = strtolower(get_current_user());
+		switch($username) {
 			case 'yourUsername':
 				$this->default = 'mysql://';
 				break;

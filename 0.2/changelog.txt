@@ -1,7 +1,7 @@
 official changelog for ephFrame
 ------------------------------------------------------------------------------
 
-2009-07-16
+2009-07-18
 + fixed missing created update field when inserting new model entries with multiple behaviors
 + added theming, which includes js/css search in theme directory
 + fixed js packer to append line-feed at end of packed js files
@@ -33,6 +33,10 @@ official changelog for ephFrame
 + model supports uniqueId method now (custom length)
 + model supports hasAny now that returns true if conditions met that are passed to it
 + httprequest->hostname now optional (saving performance if not needed)
++ before/afterAction will not get the action parameter anymore (can be read by $this->controller->action or $this->action)
++ form: renamed configureModel to configure
++ form $configure can contain form fields
++ httpheader parses status code now, httpresponse variable name fixed
 
 2009-05-25
 + added model behaviors callable from every model

@@ -552,9 +552,9 @@ abstract class Controller extends Object implements Renderable
 			}
 			// call beforeAction on every form
 			foreach($this->forms as $FormName) {
-				$this->{$FormName}->beforeAction($action);
+				$this->{$FormName}->beforeAction();
 			}
-			if ($this->beforeAction($action) === false) {
+			if ($this->beforeAction() === false) {
 				$this->name = 'error';
 				$this->action('404', array());
 			} else {
@@ -569,7 +569,7 @@ abstract class Controller extends Object implements Renderable
 				$this->callMethod('after'.ucFirst($action));
 			}
 			// call genereal afterAction
-			$this->afterAction($action);
+			$this->afterAction();
 			// call afteraction on components
 			foreach($this->components as $componentName) {
 				$this->{$componentName}->afterAction($action);
@@ -666,7 +666,7 @@ abstract class Controller extends Object implements Renderable
 	 * @param string $action action that is to be called
 	 * @return boolean
 	 */
-	public function beforeAction($action) {
+	public function beforeAction() {
 		return true;
 	}
 	
@@ -675,7 +675,7 @@ abstract class Controller extends Object implements Renderable
 	 * @param string $action action that is done
 	 * @return boolean
 	 */
-	public function afterAction($action) {
+	public function afterAction() {
 		return true;
 	}
 	

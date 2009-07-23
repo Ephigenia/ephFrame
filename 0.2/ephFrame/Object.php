@@ -71,12 +71,12 @@ abstract class Object {
 	
 	/**
 	 * Calls a object's method
-	 * @param string $methodName
-	 * @param array(mixed) $parameters
+	 * @param string $name
+	 * @param array(mixed) $args
 	 * @return mixed
 	 */
-	public function callMethod($methodName, &$parameters = null) {
-		return call_user_func_array(array(&$this, $methodName), $parameters);
+	public function callMethod($name, &$args = null) {
+		return call_user_func_array(array(&$this, $name), $args);
 	}
 	
 	/**

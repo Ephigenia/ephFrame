@@ -235,7 +235,7 @@ class NestedSetBehavior extends ModelBehavior {
 		if (!empty($this->cachedPath)) {
 			return $this->cachedPath;
 		}
-		$q = $this->model->createSelectQuery();
+		$q = $this->model->createSelectQuery(null, null, null, null, 0);
 		$q->where($this->model->lft.' BETWEEN '.$this->model->name.'.lft AND '.$this->model->name.'.rgt');
 		if (!$includeCurrent) {
 			$q->where($this->model->name.'.'.$this->model->primaryKeyName.' <> '.$this->model->get($this->model->primaryKeyName));

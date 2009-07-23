@@ -67,12 +67,11 @@ class Form extends HTMLTag {
 	public $successMessages = array();
 	
 	/**
-	 * Name of Models from the controller that should autamticly used in this
-	 * form and more configuration stuff.
-	 * Set this to false if you don’t want the form to be auto generate
+	 * Array that describes the form, can contain model names and form field
+	 * configuration as arrays. check docu for more
 	 * @param array(string)
 	 */
-	public $configureModel = array();
+	public $config = array();
 	
 	/**
 	 * Creates a new Form Instance
@@ -117,7 +116,7 @@ class Form extends HTMLTag {
 	 * Callback that is called right before controller calls his action
 	 * @return true
 	 */
-	public function beforeAction($actionName = null) {
+	public function beforeAction() {
 		return true;
 	}
 	
@@ -213,7 +212,7 @@ class Form extends HTMLTag {
 	 * 
 	 * <code>
 	 * if ($userForm->hasField('username')) {
-	 * $userForm->username->value('Your Username');
+	 * 	$userForm->username->value('Your Username');
 	 * }
 	 * </code>
 	 * 
@@ -233,17 +232,37 @@ class Form extends HTMLTag {
 	 * @return FormField
 	 */
 	public function newField($type, $name, $value = null, Array $attributes = array()) {
+		// load form field class
 		if (strpos($type, '.') == false) {
-			$fieldClassname = 'FormField'.ucFirst($type);
-			$fieldClassPath = 'ephFrame.lib.component.Form.Field.'.$fieldClassname;
+			$classname = 'FormField'.ucFirst($type);
+			$fieldClassPath = 'ephFrame.lib.component.Form.Field.'.$classname;
 		} else {
-			$fieldClassname = ClassPath::className($type);
+			$classname = ClassPath::className($type);
 			$fieldClassPath = $type;
 		}
-		if (!class_exists($fieldClassname)) {
+		if (!class_exists($classname)) {
 			ephFrame::loadClass($fieldClassPath);
 		}
-		return new $fieldClassname($name, $value, $attributes);
+		// create form field instance
+		if (!empty($attributes['value'])) {
+			$value = $attributes['value'];
+			unset($attributes['value']);
+		}
+		$field = new $classname($name, $value, $attributes);
+		// set additional attributes
+		if (!empty($attributes['options'])) {
+			$field->addOptions[$attributes['options']];
+		}
+		if (!empty($attributes['label'])) {
+			$field->label($attributes['label']);
+		}
+		if (!empty($attributes['mandatory'])) {
+			$field->mandatory = $attributes['mandatory'];
+		}
+		if (!empty($attributes['validate'])) {
+			$field->addValidationRule($attributes['validate']);
+		}
+		return $field;
 	}
 	
 	/**
@@ -339,38 +358,65 @@ class Form extends HTMLTag {
 	 * @return true
 	 */
 	public function configure() {
-		if (empty($this->configureModel) && $this->configureModel !== false) {
+		// backwards compatibility when configure was named configureMOdel
+		// @DEPRECIATED & @OLD
+		if (isset($this->configureModel)) {
+			$this->config = array_merge($this->config, $this->configureModel);
+		}
+		// add model for a form if missing
+		if (empty($this->config) && $this->config !== false) {
 			$possibleModelName = substr(get_class($this), 0, -4);
-			if (isset($this->controller->$possibleModelName)) {
-				$this->configureModel[] = $possibleModelName;
+			if (isset($this->controller->{$possibleModelName}) && $this->controller->{$possibleModelName} instanceof Model) {
+				$this->config[] = $possibleModelName;
 			}
 		}
-		if (!empty($this->configureModel)) {
+		// add models 
+		if (!empty($this->config)) {
 			// catch $this->configureModel = 'User';
-			if (!is_array($this->configureModel)) {
-				$this->configureModel = array($this->configureModel);
+			if (!is_array($this->config)) {
+				$this->config = array($this->config);
 			}
 			// parse every model definition array for the form
-			foreach($this->configureModel as $modelName => $config) {
-				// create valid config array if not array or not properly filled
-				if (!is_array($config)) {
-					$modelName = $config;
-					$config = array();
-				}
-				if (!isset($config['ignore'])) $config['ignore'] = array();
-				if (!isset($config['fields'])) $config['fields'] = array();
-				// add fields depending on model if model attached to controller
-				if (isset($this->controller->{$modelName})) {
-					$this->configureModel($this->controller->$modelName, $config['ignore'], $config['fields']);
+			foreach($this->config as $modelName => $config) {
+				
+				// $configure = array(array('type' => 'submit', label => 'save')) notation
+				if (is_int($modelName) && is_array($config)) {
+					if (!isset($config['type'])) $config['type'] = text;
+					if (!isset($config['name'])) $config['name'] = $config['type'];
+					$field = $this->newField($config['type'], @$config['name'], null, $config);
+					$this->addField($field);
+				// $configure = array([modelname] => config) notation
 				} else {
-					Log::write(Log::VERBOSE, get_class($this).': missing model to configure in controller: '.$modelName);
-				}
-			}
-		}
+					// create valid config array if not array or not properly filled
+					if (!is_array($config)) {
+						$modelName = $config;
+						$config = array();
+					}
+					if (!isset($config['ignore'])) $config['ignore'] = array();
+					if (!isset($config['fields'])) $config['fields'] = array();
+					// add fields depending on model if model attached to controller
+					if (isset($this->controller->{$modelName})) {
+						$this->configureModel($this->controller->$modelName, $config['ignore'], $config['fields']);
+					} else {
+						Log::write(Log::VERBOSE, get_class($this).': missing model to configure in controller: '.$modelName);
+					}
+				} // if
+				
+			} // foreach
+		} // if
+		$this->afterConfig();
 		// add missing submit field if missing
-		if (!$this->childWithAttribute('type', 'submit')) {
+		if (!$this->fieldset->childWithAttribute('type', 'submit')) {
 			$this->add($this->newField('submit', 'submit', 'submit'));
 		}
+		return true;
+	}
+	
+	/**
+	 *	Callback called after {@link config} was called
+	 *	@return boolean
+	 */
+	public function afterConfig() {
 		return true;
 	}
 	

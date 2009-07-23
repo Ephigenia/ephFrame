@@ -104,6 +104,13 @@ class Validator extends Helper {
 	}
 	
 	/**
+	 *	Returns true if $val is between $min and $max
+	 */
+	public static function between($val, $min, $max) {
+		return ($val > $min && $val < $max);
+	}
+	
+	/**
 	 * Regexp for valid german zip codes 
 	 */
 	const ZIP_DE = '/^\\d{5}$/';
