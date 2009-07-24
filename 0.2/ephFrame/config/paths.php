@@ -69,11 +69,6 @@ if (!defined('WEBROOT')) {
 		$dirname = dirname($_SERVER['PHP_SELF']);
 		$relPath = split('/', trim($dirname, '/'));
 		$absPath = split('/', trim(APP_ROOT, '/'));
-		if (isset($_GET['debug'])) {
-			var_dump($relPath);
-			var_dump($absPath);
-			die(var_dump($__webroot));
-		}
 		if (count($relPath) == 1) {
 			$__webroot = rtrim(dirname(dirname($_SERVER['PHP_SELF']).'../'), '/').'/';
 		} elseif ($absPath[count($absPath)-1] == $relPath[count($relPath)-2]) {

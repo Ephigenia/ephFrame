@@ -1,7 +1,7 @@
 official changelog for ephFrame
 ------------------------------------------------------------------------------
 
-2009-07-18
+2009-07-24
 + fixed missing created update field when inserting new model entries with multiple behaviors
 + added theming, which includes js/css search in theme directory
 + fixed js packer to append line-feed at end of packed js files
@@ -37,6 +37,7 @@ official changelog for ephFrame
 + form: renamed configureModel to configure
 + form $configure can contain form fields
 + httpheader parses status code now, httpresponse variable name fixed
++ model query and DBConnectionManager usage bit optimized (saving some RAM)
 
 2009-05-25
 + added model behaviors callable from every model

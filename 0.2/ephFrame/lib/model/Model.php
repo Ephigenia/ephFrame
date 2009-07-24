@@ -100,12 +100,6 @@ class Model extends Object {
 	protected $useDBConfig = 'default';
 	
 	/**
-	 * Stores an instance of a DB Object that accepts queries
-	 * @var DB
-	 */
-	protected $DB;
-	
-	/**
 	 * Array of validation rules for Model Properties
 	 * @var array(string)
 	 */
@@ -233,9 +227,6 @@ class Model extends Object {
 		if (empty($this->name)) {
 			$this->name = get_class($this);
 		}
-		
-		// set db source
-		$this->useDB($this->useDBConfig);
 		// generate tablename if empty
 		$this->tablename();
 		// create structure array by reading structure from database
@@ -279,12 +270,14 @@ class Model extends Object {
 		}
 		$this->afterConstruct();
 		$this->behaviors->call('afterConstruct');
-		
 		return $this;
 	}
 	
 	public static $associationCache = array();
 	
+	/**
+	 * callback called after model finished constructing and init
+	 */
 	public function afterConstruct() {
 		return true;
 	}
@@ -431,9 +424,10 @@ class Model extends Object {
 	 * Removes a binding to an other model
 	 *
 	 * <code>
-	 * $user->unbindModel
+	 * $user->unbindModel('Node', 'BlogPost');
 	 * </code>
-	 * @param unknown_type $modelName
+	 * @param string $modelName
+	 * @return boolean
 	 */
 	public function unbind($modelName) {
 		if (func_num_args() > 1) {
@@ -491,25 +485,6 @@ class Model extends Object {
 	 */
 	protected function validAssociationType($associationType) {
 		return in_array($associationType, $this->associationTypes);
-	}
-	
-	/**
-	 * Set the database config that should be used by this model, default is
-	 * default. The Database Configs are created in {@link DBConfig} in /app/config/.
-	 * 
-	 * So you can dynamicly change the sources of your models, like here in this
-	 * example:
-	 * <code>
-	 * $this->User->useDB('newDB');
-	 * </code>
-	 *
-	 * @param string $dbConfigName
-	 * @return Model
-	 */
-	public function useDB($dbConfigName) {
-		$this->useDBConfig = $dbConfigName;
-		$this->DB = DBConnectionManager::getInstance()->get($this->useDBConfig);
-		return $this;
 	}
 	
 	/**
@@ -616,10 +591,8 @@ class Model extends Object {
 			return false;
 		}
 		// validate model data first
-		if ($validate) {
-			if (!$this->validate($this->data)) {
-				return false;
-			}
+		if ($validate && !$this->validate($this->data)) {
+			return false;
 		}
 		// create save query for this model
 		if (!$this->exists()) {
@@ -690,8 +663,9 @@ class Model extends Object {
 			$quotedData[$key] = DBQuery::quote($this->data[$key], $this->structure[$key]->quoting);
 		}
 		$q = new InsertQuery($this->tablename, $quotedData);
-		$this->DB->query($q);
-		$this->set($this->primaryKeyName, $this->DB->lastInsertId());
+		$db = DBConnectionManager::getInstance()->get($this->useDBConfig);
+		$db->query($q);
+		$this->set($this->primaryKeyName, $db->lastInsertId());
 		$this->afterInsert();
 		$this->behaviors->call('afterInsert');
 		return true;
@@ -770,7 +744,8 @@ class Model extends Object {
 			$id = (int) $id;
 		}
 		if (!$this->beforeDelete($id) || !$this->behaviors->call('beforeDelete', array($id))) return false;
-		$this->DB->query(new DeleteQuery($this->tablename, array($this->primaryKeyName => $id)));
+		$db = DBConnectionManager::getInstance()->get($this->useDBConfig);
+		$db->query(new DeleteQuery($this->tablename, array($this->primaryKeyName => $id)));
 		$this->afterDelete();
 		$this->behaviors->call('afterDelete');
 		$this->reset();
@@ -1088,20 +1063,24 @@ class Model extends Object {
 			$return->add($model);
 			if ($justOne) break;
 		}
-		if ($justOne) {
-			return $return[0];
+		unset($model, $associationData, $conig, $modelData);
+		if ($justOne) {			
+			$return = $return[0];
 		}
 		return $return;
 	}
 	
 	/**
-	 * Send a query to the db 
+	 * Send a query to the db and return result
 	 * @param $query
 	 * @param $depth
-	 * @return unknown_type
+	 * @return Boolean|Model|Set
 	 */
 	public function query($query, $depth = null) {
-		return $this->createSelectResultList($this->DB->query($query), false, $depth);
+		if ($db = DBConnectionManager::getInstance()->get($this->useDBConfig)) {
+			return $this->createSelectResultList($db->query($query), false, $depth);
+		}
+		return $r;
 	}
 	
 	/**
@@ -1121,25 +1100,47 @@ class Model extends Object {
 	public function find($conditions = array(), $order = null, $depth = null) {
 		$query = $this->createSelectQuery($conditions, $order, null, null, $depth);
 		if (!$this->beforeFind($query)) return false;
-		$result = $this->DB->query($query, $depth); 
+		if ($r = $this->query($query, $depth)) {
+			return $this->afterFind($r[0]);
+		}
+		return false;
+		/*
+		$db = DBConnectionManager::getInstance()->get($this->useDBConfig);
+		$result = $db->query($query->__toString(), $depth); 
 		if ($resultSet = $this->createSelectResultList($result, true)) {
 			return $this->afterFind($resultSet);
+		}
+		return false;
+		*/
+	}
+	
+	/**
+	 * Finds one entry from the model with the matching conditions and order rules
+	 * @param array(string)|string $conditions
+	 * @param array(string)|string $order
+	 * @param integer	$depth
+	 * @return Model|boolean
+	 */
+	public function findOne($conditions, $order = null, $depth = null) {
+		if ($ret = $this->findAll($conditions, $order, 0, 1, $depth)) {
+			return $ret[0];
 		}
 		return false;
 	}
 	
 	/**
 	 * Callback get's called before {@link find} query is send to database
-	 * @param string $query
-	 * @return boolean
+	 * @param string|Query $query
+	 * @return boolean|Query
 	 */
 	public function beforeFind($query) {
-		return true;
+		return $query;
 	}
 	
 	/**
 	 * Callback called before $results are returned from the model
-	 * @var mixed $results
+	 * @param mixed $results
+	 * @return mixed
 	 */
 	public function afterFind($results) {
 		return $results;
@@ -1208,14 +1209,14 @@ class Model extends Object {
 	public function listAll($fieldname, $conditions = array(), $order = array(), $offset = 0, $count = null, $depth = null) {
 		$list = array();
 		$query = $this->createSelectQuery($conditions, $order, $offset, $count, $depth);
+		if (!($r = $this->query($query, $depth))) {
+			return $list;
+		}
 		if (!strpos($fieldname, '.')) {
 			$fieldname = $this->name.'.'.$fieldname;
 		}
-		if (!$r = $this->DB->query($query)) {
-			return $list;
-		}
 		while($arr = $r->fetchAssoc()) {
-			if (strpos($fieldname, '%') !== false) {
+			if (strpos($fieldname, ':') !== false) {
 				$list[$arr[$this->name.'.'.$this->primaryKeyName]] = String::substitute($fieldname, $arr);
 			} else {
 				if (!isset($arr[$fieldname])) {
@@ -1241,34 +1242,23 @@ class Model extends Object {
 	 * 
 	 * @param array(string)|string $conditions
 	 * @param array(string)|string $order
-	 * @param integer $count Number of items to return
+	 * @param integer $count Number of model items to return
 	 * @param integer $offset Offset to select from
 	 * @return IndexedArray(Model)|boolean
 	 */
 	public function findAll($conditions = null, $order = null, $offset = 0, $count = null, $depth = null) {
-		$query = $this->createSelectQuery($conditions, $order, $offset, $count, $depth);
-		if (!$this->beforeFind($query)) return false;
-		$result = $this->DB->query($query, $depth);
+		if (!($query = $this->beforeFind($this->createSelectQuery($conditions, $order, $offset, $count, $depth)))) return false;
+		if ($r = $this->query($query)) {
+			return $this->afterFind($r);
+		}
+		return false;
+		/*
+		$db = DBConnectionManager::getInstance()->get($this->useDBConfig);
+		$result = $db->query($query, $depth);
 		if ($resultSet = $this->createSelectResultList($result, false, $depth)) {
 			return $this->afterFind($resultSet);
 		}
-		return false;
-	}
-	
-	/**
-	 * Finds one entry from the model with the matching conditions and order rules
-	 * @param array(string)|string $conditions
-	 * @param array(string)|string $order
-	 * @param integer	$depth
-	 * @return Model|boolean
-	 */
-	public function findOne($conditions, $order = null, $depth = null) {
-		$ret = $this->findAll($conditions, $order, 0, 1, $depth);
-		if ($ret) {
-			return $ret[0];
-		} else {
-			return false;
-		}
+		return false;*/
 	}
 	
 	/**
@@ -1309,12 +1299,22 @@ class Model extends Object {
 	public function countAll($conditions = null, $offset = null, $count = null) {
 		$query = $this->createSelectQuery($conditions, array(), $offset, $count);
 		$query->select = new Hash(array('COUNT(*)' => 'count'));
-		$result = $this->DB->query($query);
+		if (!($result = $this->query($query))) {
+			return false;
+		}
+		/*
+		$db = DBConnectionManager::getInstance()->get($this->useDBConfig);
+		$result = $db->query($query);
+		unset($db);
+		
 		if (!$result) {
 			return false;
 		}
+		echo var_dump();
+		
 		$r = $result->fetchAssoc();
-		return $r['count'];
+		*/
+		return (int) $result[0]->get('count');
 	}
 	
 	/**
@@ -1479,7 +1479,7 @@ class Model extends Object {
 				return null;
 			}
 		}
-		user_error(sprintf('%s->%s undefined variable name', get_class($this), $fieldname), E_USER_ERROR);
+		trigger_error(get_class($this).'->'.$fieldname.' undefined variable name', E_USER_ERROR);
 	}
 	
 	public function __get($fieldname) {
@@ -1575,8 +1575,9 @@ class Model extends Object {
 		if (!isset($this->modelStructureCache)) {
 			$this->modelStructureCache = new ModelStructureCache($this, $this->modelCacheTTL);
 		}
+		$db = DBConnectionManager::getInstance()->get($this->useDBConfig);
 		if (!$this->structure = $this->modelStructureCache->load()) {
-			$tableInfo = $this->DB->describe($this->tablename());
+			$tableInfo = $db->describe($this->tablename());
 			// parse table info column by column
 			foreach($tableInfo as $index => $columnInfo) {
 				$modelField = new ModelFieldInfo($columnInfo);
@@ -1584,6 +1585,7 @@ class Model extends Object {
 			}
 			$this->modelStructureCache->save($this->structure);
 		}
+		unset($db);
 		// creating all key indexes in th edata array and fill them with null
 		// or their default value from the field info
 		foreach($this->structure as $fieldName => $fieldInfo) {
