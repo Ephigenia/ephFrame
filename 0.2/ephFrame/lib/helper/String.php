@@ -639,6 +639,14 @@ class String extends Helper {
 	}
 	
 	/**
+	 * Alias for {@link randomString}
+	 * @return string
+	 */
+	public static function random($length = 8, $salt = null) {
+		return self::randomString($length, $salt);
+	}
+	
+	/**
 	 * Creates a Password using {@link randomString} or you
 	 * pass 'human' or 'humanreadable' as $salt and then {@link $genereateHumanReadablePassword} is used
 	 * 

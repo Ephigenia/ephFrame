@@ -91,6 +91,8 @@ class Dispatcher extends Object {
 		// failed DB Connection 
 		} catch (MySQLConnectionAccessDeniedException $e) {
 			die('check db connection string, invalid login');
+		} catch (ModelStructureCacheDirNotWritableException $e) {
+			return $this->dispatch('Error/directoryNotWritable', array('directory' => $e->dir));
 		}
 		return $controller;
 	}

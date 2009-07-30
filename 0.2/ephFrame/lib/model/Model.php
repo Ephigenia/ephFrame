@@ -1063,8 +1063,7 @@ class Model extends Object {
 			$return->add($model);
 			if ($justOne) break;
 		}
-		unset($model, $associationData, $conig, $modelData);
-		if ($justOne) {			
+		if ($justOne) {
 			$return = $return[0];
 		}
 		return $return;
@@ -1078,7 +1077,8 @@ class Model extends Object {
 	 */
 	public function query($query, $depth = null) {
 		if ($db = DBConnectionManager::getInstance()->get($this->useDBConfig)) {
-			return $this->createSelectResultList($db->query($query), false, $depth);
+			$result = $db->query($query);
+			return $this->createSelectResultList($result, false, $depth);
 		}
 		return $r;
 	}
@@ -1208,21 +1208,17 @@ class Model extends Object {
 	 */
 	public function listAll($fieldname, $conditions = array(), $order = array(), $offset = 0, $count = null, $depth = null) {
 		$list = array();
-		$query = $this->createSelectQuery($conditions, $order, $offset, $count, $depth);
-		if (!($r = $this->query($query, $depth))) {
+		if (!($r = $this->query($this->createSelectQuery($conditions, $order, $offset, $count, $depth), $depth))) {
 			return $list;
 		}
 		if (!strpos($fieldname, '.')) {
 			$fieldname = $this->name.'.'.$fieldname;
 		}
-		while($arr = $r->fetchAssoc()) {
+		foreach ($r as $obj) {
 			if (strpos($fieldname, ':') !== false) {
-				$list[$arr[$this->name.'.'.$this->primaryKeyName]] = String::substitute($fieldname, $arr);
+				$list[$obj->id] = String::substitute($fieldname, $obj->toArray());
 			} else {
-				if (!isset($arr[$fieldname])) {
-					break;
-				}
-				$list[$arr[$this->name.'.'.$this->primaryKeyName]] = $arr[$fieldname];
+				$list[$obj->id] = $obj->get($fieldname);
 			}
 		}
 		return $list;
@@ -1252,13 +1248,6 @@ class Model extends Object {
 			return $this->afterFind($r);
 		}
 		return false;
-		/*
-		$db = DBConnectionManager::getInstance()->get($this->useDBConfig);
-		$result = $db->query($query, $depth);
-		if ($resultSet = $this->createSelectResultList($result, false, $depth)) {
-			return $this->afterFind($resultSet);
-		}
-		return false;*/
 	}
 	
 	/**
@@ -1471,6 +1460,9 @@ class Model extends Object {
 	 */
 	public function get($fieldname, $default = null) {
 		if (is_scalar($fieldname)) {
+			if (substr($fieldname, 0, strlen($this->name)) == $this->name) {
+				$fieldname = substr($fieldname, strlen($this->name) + 1);
+			}
 			if (empty($this->data[$fieldname]) && func_num_args() > 1) {
 				return $default;
 			} elseif (isset($this->data[$fieldname])) {

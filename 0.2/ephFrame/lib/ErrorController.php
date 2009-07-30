@@ -45,6 +45,10 @@ class ErrorController extends AppController {
 		return parent::beforeRender();
 	}
 	
+	public function directoryNotWritable() {
+		die(var_dump($this->params));
+	}
+	
 	public function missingController() {
 		if (isset($this->params['controllerName'])) {
 			$this->set('controllerName', $this->params['controllerName']);
