@@ -181,7 +181,7 @@ class File extends FileSystemNode {
 	 * @param string
 	 * @return File
 	 */
-	public function move($filename, $newFilename = null) {
+	public function move($filename, $newFilename = null, $overwrite = false) {
 		$this->checkExistence();
 		// directory class passed as param
 		if ($filename instanceof Dir) {
@@ -192,6 +192,11 @@ class File extends FileSystemNode {
 		}
 		// check directory existence
 		$dir->checkExistence();
+		if (file_exists($filename)) {
+			if ($overwrite) {
+				unlink($filename);
+			}
+		}
 		if ($this->isUploaded()) {
 			move_uploaded_file($this->nodeName, $filename);	
 		} else {

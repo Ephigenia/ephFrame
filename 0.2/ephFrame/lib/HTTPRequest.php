@@ -121,6 +121,10 @@ class HTTPRequest extends Component {
 		return $this->method == self::METHOD_GET;
 	}
 	
+	/**
+	 * Returns the name of the requesting host
+	 * @return string
+	 */
 	public function hostname() {
 		// determine host name if possible
 		if (empty($this->hostname)) {

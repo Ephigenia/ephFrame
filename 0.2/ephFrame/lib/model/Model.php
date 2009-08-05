@@ -93,6 +93,12 @@ class Model extends Object {
 	public $data = array();
 	
 	/**
+	 * stores an instance of a DB Access object after model initializisation
+	 * @var DB
+	 */
+	public $DB;
+	
+	/**
 	 * Name of the DB Configuration from {@link DB_CONFIG} that should be used
 	 * by this model. Change the used config name with {@link useDB}
 	 * @var string
@@ -259,7 +265,6 @@ class Model extends Object {
 //				$this->$k->name = $k;
 //			}
 //		}
-		
 		// load inital data from array data or primary id
 		if (is_array($id)) {
 			$this->fromArray($id, $fieldNames);
@@ -268,6 +273,7 @@ class Model extends Object {
 				return false;
 			}
 		}
+		$this->DB = DBConnectionManager::getInstance()->get($this->useDBConfig);
 		$this->afterConstruct();
 		$this->behaviors->call('afterConstruct');
 		return $this;
@@ -1104,14 +1110,6 @@ class Model extends Object {
 			return $this->afterFind($r[0]);
 		}
 		return false;
-		/*
-		$db = DBConnectionManager::getInstance()->get($this->useDBConfig);
-		$result = $db->query($query->__toString(), $depth); 
-		if ($resultSet = $this->createSelectResultList($result, true)) {
-			return $this->afterFind($resultSet);
-		}
-		return false;
-		*/
 	}
 	
 	/**
@@ -1206,7 +1204,7 @@ class Model extends Object {
 	 * @param $conditions
 	 * @return array(string)
 	 */
-	public function listAll($fieldname, $conditions = array(), $order = array(), $offset = 0, $count = null, $depth = null) {
+	public function listAll($fieldname, $conditions = array(), $order = array(), $offset = 0, $count = null, $depth = 1) {
 		$list = array();
 		if (!($r = $this->query($this->createSelectQuery($conditions, $order, $offset, $count, $depth), $depth))) {
 			return $list;

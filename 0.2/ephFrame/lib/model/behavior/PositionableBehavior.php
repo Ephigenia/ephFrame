@@ -52,7 +52,7 @@ class PositionableBehavior extends ModelBehavior {
 	 */
 	public function beforeInsert() {
 		$newPosition = 0;
-		if ($lastModel = $this->model->find(null, array($this->model->name.'.position DESC'))) {
+		if ($lastModel = $this->model->findOne(null, array($this->model->name.'.position DESC'))) {
 			$newPosition = (int) $lastModel->get($this->positionFieldName) + 1;
 		}
 		$this->model->set($this->positionFieldName, $newPosition);

@@ -164,6 +164,9 @@ class Log extends Component {
 		// log message only if level is higher or equal current reporting level
 		if ($level <= self::$level) {
 			$logFile = new File(self::logFileName($level));
+			if (!$logFile->exists()) {
+				$logFile->create();
+			}
 			if ($logFile->writable()) {
 				$logFile->append(self::getInstance()->createLogMessage($message));
 			}

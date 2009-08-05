@@ -41,6 +41,17 @@ ephFrame::loadClass('ephFrame.lib.helper.Charset');
 class String extends Helper {
 	
 	/**
+	 * Returns $default if $string is empty
+	 * @param string $string
+	 * @param string $default
+	 * @return string
+	 */
+	public static function ifEmpty($string, $default) {
+		if (empty($string)) return $default;
+		return $string;
+	}
+	
+	/**
 	 * Convert a $string to an url conform string by replacing space with
 	 * $spaceReplace Character and lowercase the string.
 	 * Returns false if the resulting string is empty.

@@ -97,7 +97,9 @@ final class ephFrame {
 	 */
 	public static function setErrorReporting() {
 		if (Registry::get('DEBUG') > DEBUG_PRODUCTION) {
-			if (!Log::$level) Log::$level = Log::VERBOSE;
+			if (Registry::get('DEBUG') >= DEBUG_VERBOSE) {
+				Log::$level = Log::VERBOSE;
+			}
 			if (Registry::defined('ERROR_REPORTING')) {
 				error_reporting(Registry::get('ERROR_REPORTING'));
 			} else {
