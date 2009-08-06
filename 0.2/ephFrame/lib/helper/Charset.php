@@ -57,9 +57,9 @@ class Charset extends Helper {
 	public static function toASCII($string) {
 		$string = self::toSingleBytes($string);
 		if (function_exists('iconv')) {
-			if (self::isUTF8($string) && ($result = @iconv('UTF-8', 'ASCII//TRANSLIT', $string))) {
+			if (self::isUTF8($string) && ($result = @iconv('UTF-8', 'ASCII//IGNORE', $string))) {
 				return $result;
-			} elseif ($result = @iconv('ISO-8859-1', 'ASCII', $string)) {
+			} elseif ($result = @iconv('ISO-8859-1', 'ASCII//IGNORE', $string)) {
 				return $result;
 			}
 		}
@@ -150,6 +150,8 @@ class Charset extends Helper {
 				chr(0xF6) => 'oe', chr(0xD6) => 'OE',
 				chr(0xFC) => 'ue', chr(0xDC) => 'UE', 
 				chr(0xDF) => 'ss',
+				// long dash
+				chr(0x96) => '-',
 				// è			  é					ê
 				chr(0xE8) => 'e', chr(0xE9) => 'e', chr(0xEA) => 'e',
 				// È			  É					Ê
@@ -191,7 +193,7 @@ class Charset extends Helper {
 	 */
 	public static function isUTF8($string) {
 		if (function_exists('iconv')) {
-			return (iconv('UTF-8', 'UTF-8', $string) == $string);
+			return (@iconv('UTF-8//IGNORE', 'UTF-8//IGNORE', $string) == $string);
 		} else {
 			$regexp = '[\xC0-\xDF](^\x80-\xBF]|$)'.
 				'|[\xE0-\xEF].{0,1}([^\x80-\xBF]|$)'.

@@ -436,7 +436,12 @@ class Model extends Object {
 	 * @return boolean
 	 */
 	public function unbind($modelName) {
-		if (func_num_args() > 1) {
+		if (is_array($modelName)) {
+			foreach($modelName as $a) {
+				$this->unbind($a);
+			}
+			return true;
+		} else if (func_num_args() > 1) {
 			$args = func_get_args();
 			foreach($args as $modelName) {
 				$this->unbind($modelName);
