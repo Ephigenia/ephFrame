@@ -32,4 +32,4 @@ ephFrame::loadClass('ephFrame.lib.Dispatcher');
  */
 class AppDispatcher extends Dispatcher {
 		
-}
+} // END AppDispatcher class

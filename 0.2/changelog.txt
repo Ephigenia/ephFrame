@@ -1,7 +1,7 @@
 official changelog for ephFrame
 ------------------------------------------------------------------------------
 
-2009-08-05
+2009-08-11
 + fixed missing created update field when inserting new model entries with multiple behaviors
 + added theming, which includes js/css search in theme directory
 + fixed js packer to append line-feed at end of packed js files
@@ -40,6 +40,7 @@ official changelog for ephFrame
 + model query and DBConnectionManager usage bit optimized (saving some RAM)
 + added error message for not writable directores in Dispatcher
 + added String::ifEmpty for default echo
++ model name which is alias used in every query possible
 
 2009-05-25
 + added model behaviors callable from every model

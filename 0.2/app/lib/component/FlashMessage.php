@@ -58,4 +58,4 @@ class FlashMessage extends AppComponent
 		return $this;
 	}
 	
-}
+} // END FlashMessage class

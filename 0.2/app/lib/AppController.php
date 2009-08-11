@@ -32,8 +32,8 @@ ephFrame::loadClass('ephFrame.lib.Controller');
  * @package app
  * @subpackage app.lib
  */
-class AppController extends Controller {
-	
+class AppController extends Controller
+{	
 	public $helpers = array(
 		'HTML'
 	);
@@ -56,7 +56,7 @@ class AppController extends Controller {
 		return parent::beforeRender();
 	}
 	
-}
+} // END AppController class
 
 /**
  * @package app

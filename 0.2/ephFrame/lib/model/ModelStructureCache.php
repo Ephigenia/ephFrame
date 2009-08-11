@@ -45,7 +45,7 @@ class ModelStructureCache extends Object {
 	public function __construct($model, $ttl = HOUR) {
 		$this->model = $model;
 		$this->ttl = $ttl;
-		$this->filename = MODELCACHE_DIR.$this->model->name.'.'.$this->fileExtension;
+		$this->filename = MODELCACHE_DIR.$this->model->tablename.'.'.$this->fileExtension;
 		return $this;
 	}
 	

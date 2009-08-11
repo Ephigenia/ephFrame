@@ -172,6 +172,19 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 		return $this;
 	}
 	
+	public function prependTo($key, $value) {
+		if ($this->hasKey($key)) {
+			if (is_array($this->data[$key])) {
+				$this->data[$key] = array_unshift($this->data[$key], $value);
+			} else {
+				$this->data[$key] = $value.$this->data[$key];
+			}
+		} else {
+			$this->set($key, $value);
+		}
+		return $this;
+	}
+	
 	/**
 	 * Append values from an array to the IndexedArray
 	 * 
