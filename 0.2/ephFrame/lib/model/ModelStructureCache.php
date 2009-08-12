@@ -57,7 +57,7 @@ class ModelStructureCache extends Object {
 		if (isset(self::$cache[$this->model->name])) {
 			return self::$cache[$this->model->name];
 		}
-		if ($this->ttl > 0 && file_exists($this->filename) && $this->expired()) {
+		if ($this->ttl > 0 && file_exists($this->filename) && is_readable($this->filename) && $this->expired()) {
 			foreach (json_decode(file_get_contents($this->filename)) as $fieldName => $fieldInfoArr) {
 				$this->structure[$fieldName] = new ModelFieldInfo();
 				$this->structure[$fieldName]->fromJson($fieldInfoArr);

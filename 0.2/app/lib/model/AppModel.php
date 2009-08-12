@@ -26,6 +26,7 @@ ephFrame::loadClass('ephFrame.lib.model.Model');
  * @package app
  * @subpackage app.lib.models
  */
-class AppModel extends Model {
+class AppModel extends Model
+{
 	
-}
+} // END AppModel class

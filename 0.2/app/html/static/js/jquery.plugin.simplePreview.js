@@ -1,22 +1,20 @@
 /**
- * Simple Preview
- * 
- * SimplePreview automaticly creates a toolbar before or after input fields
- * and creates a preview div before or after the input field so that you'll get
- * a live preview of the content from the input field. This is cool for editing
- * blog entries or longer texts that can have simple html-tags in it.
- * 
- * Usage:
- * $('.textarea').simplePreview();
- * 
- * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * @since 2008-11-11
+ *  Simple Preview
+ *  
+ *  SimplePreview automaticly creates a toolbar before or after input fields
+ *	and creates a preview div before or after the input field so that you'll get
+ *	a live preview of the content from the input field. This is cool for editing
+ *	blog entries or longer texts that can have simple html-tags in it.
+ *  
+ *  Usage:
+ *  	$('.textarea').simplePreview();
+ *  
+ *	@author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ *	@since 2008-11-11
  */
 (function($) {
 
 	$.fn.simplePreview = function(options) {
-		
-		$(this).loadJS(document.WEBROOT + 'static/js/jquery.plugin.dialog.js');
 		
 		// default simplePreview configuration
 		var defaults = {
@@ -28,15 +26,22 @@
 			bold: { label: 'bold', replaceSelection: '<strong>%s</strong>' },
 			italic: { label: 'italic', replaceSelection: '<em>%s</em>' },
 			quote: { label: 'quote', replaceSelection: '<q>%s</q>' },
-			//code: { label: 'code', replaceSelection: '<code>%s</code>' },
+			code: { label: 'code', replaceSelection: '<code>%s</code>' },
 			
 			// url replacement
 			url: { label: 'url', callback: function(config, selection) {
-					$('body').dialog.prompt('Add URL', 'Please enter a valid URL here:', 'http://www.', function(url) {
-						if (url == '' || url == 'http://www.') return;
-						if (selection.text == '') selection.text = url;
-						var text = config.target.val();
-						config.target.val(text.substr(0, selection.start) + '<a href="' + url + '">' + selection.text + '</a>' + text.substr(selection.end));
+					window.DialogManager.create('Prompt', {
+						title: 'Bitte eingeben',
+						content: 'Bitte geben Sie eine gültige URL ein:',
+						value: 'http://',
+						width: 640,
+						callback: function(dialog, url) {
+							dialog.close();
+							if (url == '' || url == 'http://www.' || url == 'http://') return;
+							if (selection.text == '') selection.text = url;
+							var text = config.target.val();
+							config.target.val(text.substr(0, selection.start) + '<a href="' + url + '" rel="external" title="' + selection.text + '">' + selection.text + '</a>' + text.substr(selection.end));
+						}
 					});
 					config.target.trigger('keyup');
 				} // function
@@ -70,31 +75,36 @@
 			var buttonName = config.buttons[i];
 			if (typeof(possibleButtons[buttonName]) == 'object') {
 				usedButtons[buttonName] = possibleButtons[buttonName];
+			} else {
+				usedButtons[i] = buttonName;
 			}
 		}
 		
 		var inputName = $(this).attr('name');
-		
+
 		// TOOLBAR
 		// --------
 		if (typeof(usedButtons) == 'object') {
 			var toolbarClassName = inputName + 'Toolbar';
-			$(this).before('<div class="' + toolbarClassName + ' simplePreviewToolbar" />');
-			var toolbar = $('.' + toolbarClassName);
+			var toolbar = $('<div class="' + toolbarClassName + ' simplePreviewToolbar" />');
+			$(this).before(toolbar);
 			for (i in usedButtons) {
 				var btnConfig = usedButtons[i];
 				if (typeof(btnConfig) !== 'object') continue;
 				btnConfig.target = $(this);
-				var btnClassName = inputName + 'Button' + btnConfig.label;
-				toolbar.append('<a href="javascript:void(0);" title="' + btnConfig.label + '" class="' + btnClassName + ' ' + btnConfig.label + '"><span>' + btnConfig.label + '</span></a>');
+				// add button to toolbar
+				var button = $('<a href="javascript:void(0);" title="' + btnConfig.label + '" class="' + inputName + 'Button' + btnConfig.label + ' ' + btnConfig.label + '"><span>' + btnConfig.label + '</span></a>');
+				toolbar.append(button);
+				button.data('btnConfig', btnConfig);
 				// add click action to buttons
-				$('.' + btnClassName).data('btnConfig', btnConfig);
-				$('.' + btnClassName).click(function() {
+				button.click(function() {
 					var btnConfig = $(this).data('btnConfig');
 					var selection = btnConfig.target.getSelection();
+					// replace text using replaceSelection param
 					if (btnConfig.replaceSelection) {
 						var replaced = btnConfig.replaceSelection.replace(/%s/, selection.text);
 						btnConfig.target.replaceSelection(replaced);
+					// replace using callback
 					} else if (btnConfig.callback) {
 						btnConfig.callback(btnConfig, selection);
 					}

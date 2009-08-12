@@ -30,6 +30,7 @@ ephFrame::loadClass('ephFrame.lib.Dispatcher');
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de
  * @since 16.12.2007
  */
-class AppDispatcher extends Dispatcher {
+class AppDispatcher extends Dispatcher
+{
 		
 } // END AppDispatcher class

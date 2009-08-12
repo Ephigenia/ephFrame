@@ -150,6 +150,7 @@ class NestedSetBehavior extends ModelBehavior {
 	 * @return array(Model)
 	 */
 	public function tree($depth = null, $depthModel = null) {
+		if ($this->model->exists() && !$this->hasChildren()) return new IndexedArray();
 		$q = $this->model->createSelectQuery(null, null, null, null, $depthModel);
 		$q->addComment($this->model->name.'->'.get_class($this).'->depth(depth: '.$depth.', depthModel: '.$depthModel.')');
 		$q->select('COUNT(p.id)-1 AS level');

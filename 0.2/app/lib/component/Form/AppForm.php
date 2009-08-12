@@ -32,4 +32,4 @@ ephFrame::loadClass('ephFrame.lib.component.Form.Form');
 class AppForm extends Form
 {
 
-}
+} // END AppForm class

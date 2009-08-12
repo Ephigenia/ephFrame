@@ -35,7 +35,7 @@ blockquote cite {
 
 /** page structure styles **/
 #content {
-	width: 640px;
+	width: 740px;
 	padding: 20px;
 	line-height: 1.8em;	
 }
@@ -57,7 +57,7 @@ h2 {
 }
 
 #footer {
-	padding: 20px;	
+	padding: 20px;
 }
 
 /** paragraph styles **/

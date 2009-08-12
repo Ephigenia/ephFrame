@@ -354,7 +354,7 @@ class Model extends Object {
 			}
 		}
 		// prevent unlimited nesting
-		if (is_object($bind) && (get_class($bind) == $modelAlias || isset($this->{$modelAlias}) || isset($bind->{$modelAlias}))) {
+		if (is_object($bind) && (get_class($bind) == $modelAlias || $bind->name == $modelAlias || isset($this->{$modelAlias}) || isset($bind->{$modelAlias}))) {
 			$this->{$modelAlias} = $bind;
 		} else {
 			$this->{$modelAlias} = new $classname($this, $modelAlias);
@@ -426,32 +426,26 @@ class Model extends Object {
 	}
 	
 	/**
-	 * Removes a binding to an other model
-	 *
+	 * Removes bindings with $modelName or multiple models
 	 * <code>
 	 * $user->unbindModel('Node', 'BlogPost');
 	 * </code>
-	 * @param string $modelName
+	 * @param string|array(string) $modelName
 	 * @return boolean
 	 */
 	public function unbind($modelName) {
 		if (is_array($modelName)) {
-			foreach($modelName as $a) {
-				$this->unbind($a);
-			}
-			return true;
-		} else if (func_num_args() > 1) {
-			$args = func_get_args();
-			foreach($args as $modelName) {
-				$this->unbind($modelName);
-			}
-			return true;
+			$modelNames = $modelName;
+		} else {
+			$modelNames = func_get_args();
 		}
-		if (isset($this->{$modelName})) {
-			$this->{$modelName} = false;
-			unset($this->belongsTo[$modelName]);
-			unset($this->hasMany[$modelName]);
-			unset($this->hasOne[$modelName]);
+		foreach($modelNames as $modelName) {
+			if (isset($this->{$modelName})) {
+				unset($this->{$modelName});
+				unset($this->belongsTo[$modelName]);
+				unset($this->hasMany[$modelName]);
+				unset($this->hasOne[$modelName]);
+			}
 		}
 		return true;
 	}
@@ -1024,10 +1018,12 @@ class Model extends Object {
 				} else {
 					$modelClassname2 = $modelName;
 				}
+				/*
 				$model->$modelName = new $modelClassname2();
 				$model->$modelName->name = $modelName;
 				$model->$modelName->fromArray($modelData);
 				$model->$modelName->depth = $depth - 1;
+				*/
 			}
 			// fetch associated data if detph is larger than one
 			if ($depth >= 1) {
