@@ -1,113 +1,138 @@
 official changelog for ephFrame
 ------------------------------------------------------------------------------
 
+2009-09-13
++	added Text Helper that replaces URLs and Emails in Text automatically with 
+ 	links
++	added Security Component that limits actions to specific HTTP Methods
++	dramatically decreased memory and compile time usage in model class that
+	makes everything up to 50% faster
+
 2009-08-12
-+ dramatically decreased memory and compile time usage in model 
-+ fixed missing created update field when inserting new model entries with multiple behaviors
-+ added theming, which includes js/css search in theme directory
-+ fixed js packer to append line-feed at end of packed js files
-+ added after[Action] and before[Action] callbacks in the controller
-+ added subversion keywords and new formatted copyright message on every file
-+ SGMLAttributes don’t render attributes with empty values anymore
-+ DBDSN in db.php can be an array, enabling socket connections with it
-+ missing afterAction callback for controller added (called after components)
-+ empty cookie values return false now
-+ fixed object->__mergeParentProperty to merge correctly using ->{$varname}
-+ File->basename(true) will return with extension and false without extension
-+ Dir->newFile can create new Files on the fly
-+ CSS/JS Packer use Dir class to create Packed files now
-+ added default view for missingtable error message
-+ form->configure uses varchar length from model fields as maxLength for input fields
-+ renamed Set class to IndexedArray!!!
-+ fixed issue with String::substr() on php 5.2.6
-+ imageconvolution added if missing in ImageSharpenFilter (needs high performance!)
-+ image uses imageantialias only if function exists
-+ replaced %1% placeholders to :[name] in string::substitute
-+ added alias for string::substitute - string::insert
-+ new formating for files skipping ?> in files and no tabs in PHPDocBlocks
-+ Sanitizer::filename sanitizes filenames
-+ Controller->redirect added optional beforeRedirect method
-+ added String::prepend / append to add optional parts to a string
-+ router can have theme, layout as parameter to change them in controller
-+ added error message for layout missing exception
-+ view adds http content-type header only if missing
-+ model supports uniqueId method now (custom length)
-+ model supports hasAny now that returns true if conditions met that are passed to it
-+ httprequest->hostname now optional (saving performance if not needed)
-+ before/afterAction will not get the action parameter anymore (can be read by $this->controller->action or $this->action)
-+ form: renamed configureModel to configure
-+ form $configure can contain form fields
-+ httpheader parses status code now, httpresponse variable name fixed
-+ model query and DBConnectionManager usage bit optimized (saving some RAM)
-+ added error message for not writable directores in Dispatcher
-+ added String::ifEmpty for default echo
-+ model name which is alias used in every query possible
++	fixed missing created update field when inserting new model entries with
+	multiple behaviors
++	added theming, which includes js/css search in theme directory
++	fixed js packer to append line-feed at end of packed js files
++	added after[Action] and before[Action] callbacks in the controller
++	added subversion keywords and new formatted copyright message on every
+	file
++	SGMLAttributes don’t render attributes with empty values anymore
++	DBDSN in db.php can be an array, enabling socket connections with it
++	missing afterAction callback for controller added (called after
+	components)
++	empty cookie values return false now
++	fixed object->__mergeParentProperty to merge correctly using ->{$varname}
++	File->basename(true) will return with extension and false without 
+	extension
++	Dir->newFile can create new Files on the fly
++	CSS/JS Packer use Dir class to create Packed files now
++	added default view for missingtable error message
++	form->configure uses varchar length from model fields as maxLength for 
+	input fields
++	renamed Set class to IndexedArray!!!
++	fixed issue with String::substr() on php 5.2.6
++	imageconvolution added if missing in ImageSharpenFilter (needs high 
+	performance!)
++	image uses imageantialias only if function exists
++	replaced %1% placeholders to :[name] in string::substitute
++	added alias for string::substitute - string::insert
++	new formating for files skipping ?> in files and no tabs in PHPDocBlocks
++	Sanitizer::filename sanitizes filenames
++	Controller->redirect added optional beforeRedirect method
++	added String::prepend / append to add optional parts to a string
++	router can have theme, layout as parameter to change them in controller
++	added error message for layout missing exception
++	view adds http content-type header only if missing
++	model supports uniqueId method now (custom length)
++	model supports hasAny now that returns true if conditions met that are 
+	passed to it
++	httprequest->hostname now optional (saving performance if not needed)
++	before/afterAction will not get the action parameter anymore (can be read 	
+	by $this->controller->action or $this->action)
++	form: renamed configureModel to configure
++	form $configure can contain form fields
++	httpheader parses status code now, httpresponse variable name fixed
++	model query and DBConnectionManager usage bit optimized (saving some RAM)
++	added error message for not writable directores in Dispatcher
++	added String::ifEmpty for default echo
++	model name which is alias used in every query possible
 
 2009-05-25
-+ added model behaviors callable from every model
-+ controller actions can return false to render 404 page
-+ added NestedSetBehavior, FlagableBehavior and PositionableBehavior
-+ added Form Field Classes and Form with configure
-+ Log Levels now used correctly
-+ Model can return random sets
-+ Model can return simple list of fields from table
-+ Model->findBy supports depth parameter
-+ Model query class caches query and results
-+ Model can now unbind and bind other models on the fly
-+ Image->stretchResizeTo fixed
-+ javascript and css component can include files from http://...
-+ optimized model - bind, create methods
-+ added CURL and Scraper Class
-+ app/config/paths.php included before frameworks paths.php
-+ Routes reusable with their names and parameters
++	added model behaviors callable from every model
++	controller actions can return false to render 404 page
++	added NestedSetBehavior, FlagableBehavior and PositionableBehavior
++	added Form Field Classes and Form with configure
++	Log Levels now used correctly
++	Model can return random sets
++	Model can return simple list of fields from table
++	Model->findBy supports depth parameter
++	Model query class caches query and results
++	Model can now unbind and bind other models on the fly
++	Image->stretchResizeTo fixed
++	javascript and css component can include files from http://...
++	optimized model - bind, create methods
++	added CURL and Scraper Class
++	app/config/paths.php included before frameworks paths.php
++	Routes reusable with their names and parameters
 
 2008-10-26
-+ changed the controller order actions to create components again
-+ created ModelStructureCache to handle the save and load stuff of a model (refactoring)
-+ modelfieldinfo now stores length (also float) and types correctly
-+ router copies same route names data from allready existing routes
-+ view renders all variables (to sad that the Hash seemes to have a bug on foreach sometimes?)
-+ added message to application default index if model cache dir does not exists or not writable
-+ enabled Log again
-+ controller now loads all components, then the models and then startups all components
-+ removed some log messages from controller and component
-+ model saved structure files are now read correctly (still not very cool implementation)
-+ Session loads up correctly (removed double load in controller)
-+ query history now skips the results part if there was just one
++	changed the controller order actions to create components again
++	created ModelStructureCache to handle the save and load stuff of a model 
+	(refactoring)
++	modelfieldinfo now stores length (also float) and types correctly
++	router copies same route names data from allready existing routes
++	view renders all variables (to sad that the Hash seemes to have a bug on 
+	foreach sometimes?)
++	added message to application default index if model cache dir does not 	
+	exists or not writable
++	enabled Log again
++	controller now loads all components, then the models and then startups all 
+	components
++	removed some log messages from controller and component
++	model saved structure files are now read correctly (still not very cool 
+	implementation)
++	Session loads up correctly (removed double load in controller)
++	query history now skips the results part if there was just one
 
 2008-10-24
-+ form adds default action now, WEBROOT+current url
-+ form fields now save their validate status (error message in formfield->error)
-+ added form field password 
-+ html helper now can create simple P-Elements
-+ new sequence of component, model init, controller sends startup to components now after model init and after all components are attached to controller
-+ validator can now replace some wilcard names (%name%) in the error messages
-+ set now supports isEmpty for checking if a index is empty or the hole set is "empty"
-+ missing view now renders the hole path to the missing view file
-+ introducing appForm standrad form class for applications
-+ javascript addFile now acts like addFiles with multiple arguments
++	form adds default action now, WEBROOT+current url
++	form fields now save their validate status (error message in 
+	formfield->error)
++	added form field password 
++	html helper now can create simple P-Elements
++	new sequence of component, model init, controller sends startup to 
+	components now after model init and after all components are attached to 
+	controller
++	validator can now replace some wilcard names (%name%) in the error 
+	messages
++	set now supports isEmpty for checking if a index is empty or the hole set 
+	is "empty"
++	missing view now renders the hole path to the missing view file
++	introducing appForm standrad form class for applications
++	javascript addFile now acts like addFiles with multiple arguments
 
 2008-10-23
-+ controller send now content type from view class
-+ added xml view class
-+ added simple rss action for controller
-+ Validator fixed access to $validatorObject callback
-+ db-query values now not escaped (should be done by model now)
-+ added readme.txt dummy file
-+ added absolute url to registry
++	controller send now content type from view class
++	added xml view class
++	added simple rss action for controller
++	Validator fixed access to $validatorObject callback
++	db-query values now not escaped (should be done by model now)
++	added readme.txt dummy file
++	added absolute url to registry
 
 2008-10-21
-+ started rewrite of Form and FormField classes (new validator class)
-+ model uses the new validator class now
-+ added structure.sql file to /app/config/ to store table structures
-+ changed url parameter to __url in /webroot/.htaccess
-+ changed HTTPRequest to handle POST / GET Vars depending on the Request-Method
-+ fixed bug in model cache loading
++	started rewrite of Form and FormField classes (new validator class)
++	model uses the new validator class now
++	added structure.sql file to /app/config/ to store table structures
++	changed url parameter to __url in /webroot/.htaccess
++	changed HTTPRequest to handle POST / GET Vars depending on the 
+	Request-Method
++	fixed bug in model cache loading
 
 2008-10-20
-+ added validation array that validates model data before saving
-+ added third parameter for save to save only specific fields of the model
-+ fixed/enhanced creation of resulting model set lists and single returns when
-  retreiving model data
-+ added ModelBehavior to models that can act like plugins in model logic
-  supporting callbacks for beforeSave, afterSave ...
++	added validation array that validates model data before saving
++	added third parameter for save to save only specific fields of the model
++	fixed/enhanced creation of resulting model set lists and single returns 
+	when retreiving model data
++	added ModelBehavior to models that can act like plugins in model logic
+	supporting callbacks for beforeSave, afterSave ...

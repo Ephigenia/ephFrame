@@ -18,8 +18,6 @@
  * @filesource		$HeadURL$
  */
 
-loadHelper('Sanitize');
-
 /**
  * OS Detecting Class
  * 
@@ -38,7 +36,6 @@ loadHelper('Sanitize');
  * @since 22.02.2007
  * @package ephFrame
  * @subpackage ephFrame.lib.component
- * @uses Sanitize
  */
 class OS extends Component implements Renderable {
 	

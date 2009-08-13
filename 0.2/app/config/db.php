@@ -64,7 +64,7 @@ class DBConfig {
 	 * Default database connection string, see {@link DBDSN} 
 	 * @var string
 	 */
-	public $default = 'mysql://root:gDE3ge@localhost:3306/ephFrameTest/#utf8';
+	public $default = 'mysql://root:@localhost:3306/grueezi/#utf8';
 	
 	/**
 	 * Default database connection as array configuration

@@ -629,7 +629,7 @@ class String extends Helper {
 	 * @return	string	generated string
 	 **/
 	public static function randomString($length = 8, $salt = null) {
-		if (!is_int($length) || empty($length)) throw new IntegerExpectedException();
+		$length = (int) abs($length);
 		if (empty($salt)) $salt = 'A-Za-z0-9';
 		// custom salt with patterns
 		if ($salt % 3 == 0) {
