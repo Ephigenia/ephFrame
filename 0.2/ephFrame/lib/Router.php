@@ -243,6 +243,14 @@ class Router extends Hash
 		return $uri;
 	}
 	
+	public static function url($routeName, $params = array()) {
+		return self::getRoute($routeName, $params, true);
+	}
+	
+	public static function uri($routeName, $params = array()) {
+		return self::getRoute($routeName, $params, false);
+	}
+	
 	/**
 	 * Replaces all parameter placeholders (:id or :username) in an uri-string
 	 * with the values from the second parameter array

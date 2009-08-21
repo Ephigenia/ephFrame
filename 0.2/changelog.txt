@@ -1,7 +1,17 @@
 official changelog for ephFrame
 ------------------------------------------------------------------------------
 
-2009-09-13
+2009-08-21
++	moves isEmpty to core.php file so that the method is available everywhere
+	also changed logic to it returns the first argument passed that is not
+	empty() and renamed it to coalesce (removed old coalesce method)
++	added whitelist filter to Hash class that removes all keys that are not
+	in the whitelist of keys
++	added uri and url method to router class
++	added default HitCount Behavior to Behaviors that can increase single
+	model fields when used (very usefull for increasing view + 1 f.e.)
+
+2009-08-13
 +	added Text Helper that replaces URLs and Emails in Text automatically with 
  	links
 +	added Security Component that limits actions to specific HTTP Methods

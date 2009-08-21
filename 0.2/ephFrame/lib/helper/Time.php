@@ -224,6 +224,13 @@ class Time extends Helper {
 		// return result
 		return $return;
 	}
+	
+	/**
+	 * Return a timestamp for the monday of a week a day is in
+	 */
+	public static function weekMonday($year, $month, $day) {
+		return strtotime($year.'-W'.date('W', mktime(12, 0, 0,$month, $day, $year)).'-1');
+	}
 		
 	/**
 	 * Gets the last day of a month

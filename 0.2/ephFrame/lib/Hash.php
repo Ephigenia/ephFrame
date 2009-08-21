@@ -41,6 +41,21 @@ class_exists('IndexedArray') or require dirname(__FILE__).'/IndexedArray.php';
 class Hash extends IndexedArray {
 	
 	/**
+	 * Deletes all indexes from the {@link Hash} that are not in the whitelist
+	 * of $keys passed to this method
+	 * @param array(string)
+	 * @return Hash
+	 */
+	public function whitelist(Array $keys = array()) {
+		foreach($this->data as $key => $value) {
+			if (!in_array($key, $keys)) {
+				unset($this->data[$key]);
+			}
+		}
+		return $this;
+	}
+	
+	/**
 	 * Fills the Hash with the passed $data
 	 * @param array(mixed) $data
 	 * @return Hash

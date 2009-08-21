@@ -72,19 +72,20 @@ function loadInterface($interfacePath) {
 	return ephFrame::loadInterface($interfacePath);
 }
 
+
 /**
- * Coalesce works like the method from SQL, returning the first 
- * argument that is not null
+ * Returns the first argument that is not empty
  * @return mixed
  */
-if (!function_exists('coalesce')) {
+if (!function_exists('isEmpty')) {
 	function coalesce() {
 		foreach(func_get_args() as $arg) {
-			if ($arg !== null) return $arg;
+			if (!empty($arg)) return $arg;
 		}
-		return null;
+		return false;
 	}
 }
+
 
 /**
  * Like {@link coalesce} but checking for empty arguments
