@@ -59,7 +59,7 @@ class TestTime extends UnitTestCase {
 			mktime(12, 1, 0, 11, 10, 2009) => '1 Monat, 1 Tag',
 			mktime(12, 1, 0, 10, 10, 2009) => '1 Minute',
 			mktime(12, 1, 1, 10, 10, 2009) => '1 Minute, 1 Sekunde',
-			mktime(12, 1, 31, 10, 10, 2009) => '1 Minute, 34 Sekunden',
+			mktime(12, 1, 31, 10, 10, 2009) => '1 Minute, 31 Sekunden',
 			) as $left => $right) {
 			$this->assertEqual(Time::nice($time, $left), $right);
 		}
