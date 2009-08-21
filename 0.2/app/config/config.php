@@ -1,9 +1,11 @@
 <?php
 
 /**
- * This file is included after all ephFrame configuration vars
- * are set, you can modify configuration variables by overwriting
- * them.
+ * Application Configuration File
+ *
+ * This file is loaded right after the framework setup and bevor any controller
+ * is loaded. You can completely overwrite and change configurationv vars here.
+ *
  * @package app
  * @subpackage app.config
  */
@@ -14,7 +16,7 @@
  * third argument for Registry::set, see {@link Registry}
  * (The Debug Level Constants are set in ephFrame/config/constants.php)
  */
-Registry::set('DEBUG', DEBUG_PRODUCTION);
+Registry::set('DEBUG', DEBUG_DEBUG);
 
 /**
  * !!CHANGE THIS AS SOON AS POSSIBLE!!
@@ -24,7 +26,7 @@ define('SALT', 'priotaseloukeadotraeuocrailaejot');
 
 /**
  * Session Name (also the name for the session cookie)
- * change this if you want to
+ * change this if you need to
  */
 define('SESSION_NAME', 'app');
 
@@ -45,9 +47,3 @@ date_default_timezone_set('Europe/Berlin');
  * debug.css must be included as well DEBUG > DEBUG_PRODUCTION
  */
 // Registry::set('debug.showElementName', true);
-
-/**
- * Override DEBUGs level default error_reporting value by setting ERROR_REPORTING
- * value to your specific value
- */
-// ?XDEBUG_PROFILE=1

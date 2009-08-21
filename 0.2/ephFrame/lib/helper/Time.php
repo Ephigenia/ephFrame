@@ -105,9 +105,55 @@ class Time extends Helper {
 	}
 	
 	/**
+	 * Return a nicely formatted string for a time difference or time in 
+	 * past or future
+	 * @param integer $timestamp
+	 * @param integer $timestamp2
+	 * @param integer $precision
+	 * @return string
+	 */
+	public static function nice($timestamp, $timestamp2 = null, $precision = 2) {
+		// parameter sanitize
+		if ($timestamp2 == null) $timestamp2 = time();
+		if ($precision <= 0) return null;
+		$precision = coalesce(abs((int) $precision), 1);
+		// translation matrix
+		$delta = (int) $timestamp - (int) $timestamp2;
+		$intervals = array(
+			12 * 30 * 24 * 60 * 60	=> array('Jahr', 'Jahre'),
+			30 * 24 * 60 * 60       => array('Monat', 'Monaten'),
+			24 * 60 * 60            => array('Tag', 'Tagen'),
+			60 * 60                 => array('Stunde', 'Stunden'),
+			60                      => array('Minute', 'Minuten'),
+			1                       => array('Sekunde', 'Sekunden'),
+			0						=> array('jetzt')
+		);
+		foreach($intervals as $seconds => $arr) {
+			if ($seconds == 0) {
+				return $arr[0];
+			}
+			if (abs($i = $delta / $seconds) >= 1) {
+				if ($precision > 1 && func_num_args() >= 2) {
+					$j = floor(abs($i));
+				} else {
+					$j = round(abs($i));
+				}		
+				$add = self::nice($timestamp + $j * $seconds * ($delta < 0 ? 1 : -1), $timestamp2, $precision - 1, true);
+				return $j.' '.$arr[$j > 1].(!empty($add) && $add !== $intervals[0][0] ? ', '.$add : '');
+			}
+		}
+		return $intervals[0][0];
+	}
+	
+	public static function niceShort($timestamp, $timestamp2 = null) {
+		return self::nice($timestamp, $timestamp2, 1);
+	}
+	
+	/**
 	 * Returns Time that has spend since $timestamp in human
 	 * readable format. (German)
 	 * // todo put this to i18n class
+	 * @deprecated use {@link nice} instead
 	 * @param  integer	$timstamp	Timestamp from the past
 	 * @return string	Created human readable time string
 	 */

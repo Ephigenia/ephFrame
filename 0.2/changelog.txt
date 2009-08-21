@@ -10,6 +10,8 @@ official changelog for ephFrame
 +	added uri and url method to router class
 +	added default HitCount Behavior to Behaviors that can increase single
 	model fields when used (very usefull for increasing view + 1 f.e.)
++	added Time::nice and niceShort method to replace timeAgoInWords soon
++	styles of simpletest changed a bit
 
 2009-08-13
 +	added Text Helper that replaces URLs and Emails in Text automatically with 

@@ -30,13 +30,24 @@ require_once dirname(__FILE__).'/autorun.php';
 
 if (isset($_SERVER['HTTP_HOST'])) {
 	header('Content-Type: text/html; charset=utf-8');
-	$reporter = new HtmlReporter('utf-8');
+	class ephFrameTestHTMLReporter extends HtmlReporter {
+		public function _getCss() {
+			return parent::_getCss().'
+			body, html {
+				font-family: Pragmata, Monaco, Courier;
+				margin: 0.6em 1em;
+				font-size: 100.01%;
+				line-height: 1.5em;
+			}
+			';
+		}
+	}
+	$reporter = new ephFrameTestHTMLReporter('utf-8');
 } else {
 	$reporter = new TextReporter();
 }
 
 $helperTests = new GroupTest('ephFrame Framework Unit Test');
-
 // ephFrame Helper Tests, simpler stuff
 $helperTests->addTestFile('lib/helper/TestString.php');
 $helperTests->addTestFile('lib/helper/TestTime.php');

@@ -20,7 +20,7 @@
 require_once dirname(__FILE__).'/../../autorun.php';
 
 /**
- * [SOME DOCU HERE WOULD BE NICE HEE!?]
+ * Test for the TimeHelper
  * 
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 18.08.2008
@@ -33,6 +33,38 @@ class TestTime extends UnitTestCase {
 		ephFrame::loadClass('ephFrame.lib.helper.Time');
 	}
 	
+	public function testNiceShort() {
+		$time1 = mktime(0, 0, 0, 6, 1, 2009);
+		foreach(array(
+			mktime(0, 0, 0, 6, 1, 2009) => 'jetzt',
+			mktime(0, 0, 10, 6, 1, 2009) => '10 Sekunden',
+			mktime(0, 0, 59, 6, 1, 2009) => '59 Sekunden',
+			mktime(0, 1, 0, 6, 1, 2009) => '1 Minute',
+			mktime(0, -1, 0, 6, 1, 2009) => '1 Minute',
+			mktime(0, 59, 59, 6, 1, 2009) => '60 Minuten',
+			mktime(0, -1, 0, 6, 1, 2008) => '1 Jahr',
+			mktime(0, 0, 0, 3, 1, 2009) => '3 Monaten',
+			) as $left => $right) {
+			$this->assertEqual(Time::niceShort($time1, $left), $right);
+		}
+	}
+	
+	public function testNice() {
+		// 2009-10-10 12:00:00
+		$time = mktime(12, 0, 0, 10, 10, 2009);
+		foreach(array(
+			mktime(12, 0, 0, 10, 10, 2009) => 'jetzt',
+			mktime(0, 0, 0, 10, 10, 2009) => '12 Stunden',
+			mktime(12, 0, 0, 11, 10, 2009) => '1 Monat, 1 Tag',
+			mktime(12, 1, 0, 11, 10, 2009) => '1 Monat, 1 Tag',
+			mktime(12, 1, 0, 10, 10, 2009) => '1 Minute',
+			mktime(12, 1, 1, 10, 10, 2009) => '1 Minute, 1 Sekunde',
+			mktime(12, 1, 31, 10, 10, 2009) => '1 Minute, 34 Sekunden',
+			) as $left => $right) {
+			$this->assertEqual(Time::nice($time, $left), $right);
+		}
+	}
+	
 	public function testIsToday() {
 		$this->assertEqual(Time::isToday(time()), true);
 		$this->assertEqual(Time::isToday(time()-DAY), false);
@@ -43,4 +75,4 @@ class TestTime extends UnitTestCase {
 		$this->assertEqual(Time::isYesterday(time()-DAY), true);
 	}
 	
-}
+} // END TestTime class
