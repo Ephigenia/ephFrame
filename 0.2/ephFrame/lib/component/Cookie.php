@@ -135,6 +135,11 @@ class Cookie extends Component {
 	public function __construct() {
 		parent::__construct();
 		$this->data = &$_COOKIE;
+		foreach($this->data as $k => $v) {
+			if (is_string($v) && substr($v, 0, 2) == 'a:') {
+				$this->data[$k] = unserialize(stripslashes($v));
+			}
+		}
 		if (empty($this->domain) && isset($_SERVER['HTTP_HOST'])) {
 			$this->domain = $_SERVER['HTTP_HOST'];
 		}
@@ -185,7 +190,6 @@ class Cookie extends Component {
 	 */
 	public function write($varname, $value, $ttl = null, $path = null, $domain = null, $flags = null) {
 		if (!is_string($varname) || strlen($varname) == 0) throw new StringExpectedException();
-		if (is_object($value) || is_array($value)) throw new StringExpectedException();
 		$this->data[$varname] = $value;
 		$this->saveData[$varname] = array(
 			'value' => $value,
@@ -223,7 +227,7 @@ class Cookie extends Component {
 	 */
 	public function read($varname) {
 		if ($this->defined($varname)) {
-			if (!strlen($this->data[$varname])) return false;
+			if (empty($this->data[$varname])) return false;
 			return $this->data[$varname];
 		}
 		return false;
@@ -273,7 +277,10 @@ class Cookie extends Component {
 			if (!empty($debug)) {
 				echo '<pre>setting '.$cookieName.': '.$cookieData['value'].' (ttl: '.$ttl.' - till: '.date('d.m.Y H:i', $death).')</pre>';
 			}
-			@setcookie($cookieName, $value, $death, $path, $domain, $secure, $httpOnly);
+			if (is_array($value)) {
+				$value = serialize($value);
+			}
+			setcookie($cookieName, $value, $death, $path, $domain, $secure, $httpOnly);
 		}
 		if (!empty($debug)) die('debug set to true in Cookie->save()');
 		$count = count($this->saveData);
