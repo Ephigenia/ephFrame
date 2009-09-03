@@ -607,8 +607,11 @@ abstract class DBQuery extends Object implements Renderable
 		$rendered = '';
 		foreach($conditions as $left => $right) {
 			$connector = ' = ';
-			// skip connector if allready there (bad workaround)
-			if (preg_match('@^\s*(<|>|=|LIKE)@i', $right)) {
+			if (is_array($right)) {
+				$right = 'IN ('.implode(',', array_map(array($this, 'quote'), $right) ).')';
+			// skip connector if allready there (bad workaround)	
+			}
+			if (preg_match('@^\s*(<|>|=|LIKE|IN)@i', $right)) {
 				$connector = ' ';
 			}
 			// todo create cool condition array that can map all conditions possible

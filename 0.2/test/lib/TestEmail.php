@@ -33,11 +33,7 @@ class TestEmail extends UnitTestCase
 	}
 	
 	public function testConstructor() {
-		$m = new Email('thomas@nomoresleep.net');
-		$m->addTo("thomas@michelbach.biz");
-		$m->addTo("thomas@michelbach.biz");
-		$m->addTo("torsten@nomoresleep.net");
-		print_r($m);
+	
 	}
 	
 }

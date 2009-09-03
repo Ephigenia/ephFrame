@@ -103,7 +103,13 @@ class Socket extends Object {
 	 */
 	public function __construct($host = null, $port = null, $timeout = null) {
 		if ($host) $this->host = $host;
-		if ($port) $this->port = (int) $port;
+		if ($port !== null) {
+			if (!preg_match('@\d+@', $port)) {
+				$this->port = getprotobyname($port);
+			} else {
+				$this->port = (int) $port;
+			}
+		}	
 		if ($timeout) $this->timeout = (int) $timeout;
 		return $this;	
 	}
@@ -153,10 +159,11 @@ class Socket extends Object {
 	 * echo $response;
 	 * </code>
 	 * 
-	 * @param boolean $return set this to true to return after every read cycle
+	 * @param string $bufferSize
+	 * @param boolean $chunked set this to true to return after every read cycle
 	 * @return string
 	 */
-	public function read($bufferSize = null, $return = false) {
+	public function read($bufferSize = null, $chunked = false) {
 		$this->checkConnection();
 		if ($bufferSize == null) {
 			$bufferSize = $this->bufferSize;
@@ -165,7 +172,7 @@ class Socket extends Object {
 		while($chunk = fread($this->stream, $bufferSize)) {
 			$response .= $chunk;
 			$this->bytesRead += strlen($chunk);
-			if ($return) return $chunk;
+			if ($chunked) return $chunk;
 		}
 		return $response;
 	}
@@ -250,7 +257,7 @@ class Socket extends Object {
  * @subpackage ephFrame.lib.exception
  */
 class SocketException extends Exception {
-	public function __construct(Socket $socket) {
+	public function __construct($socket) {
 		$this->message = 'Socket Error:'.LF.$this->message;
 		$socket->disconnect();
 		parent::__construct();
@@ -300,7 +307,7 @@ class SocketEmptyPortException extends SocketException {
 class SocketNotConnectedException extends SocketException {
 	public function __construct($socket) {
 		$this->message = 'Not Connected';
-		parent::__construct();
+		parent::__construct($socket);
 	}
 }
 

@@ -316,7 +316,6 @@ abstract class Controller extends Object implements Renderable
 			$classPath = 'App.lib.model.'.$modelName;
 			$modelName = ClassPath::className($classPath);
 		}
-		
 		try {
 			if (!class_exists($modelName)) {
 				ephFrame::loadClass($classPath);

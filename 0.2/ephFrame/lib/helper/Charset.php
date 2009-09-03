@@ -101,7 +101,14 @@ class Charset extends Helper {
 //			// « 			  »
 //			chr(0xAB) => '«', chr(0xBB) => '»'
 		);
-		return strtr($string, self::$iso88591ToUtf8);
+		if (is_array($string)) {
+			foreach($string as $k => $v) {
+				$string[$k] = strtr($v, self::$iso88591ToUtf8);
+			}
+		} else {
+			return strtr($string, self::$iso88591ToUtf8);
+		}
+		return $string;
 	}
 	
 	/**

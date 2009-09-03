@@ -50,6 +50,10 @@ class MimeTypes extends Helper {
 		}
 		return false;
 	}
+	
+	public static function get($filenameOrExtension) {
+		return self::mimeType($filenameOrExtension);
+	}
 
 	/**
 	 * Alias Function for {@link mimeType}

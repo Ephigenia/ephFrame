@@ -91,7 +91,9 @@ class String extends Helper {
 	 * @return string
 	 */
 	public static function append($string, $append, $condString = null, $caseSensitive = false, $isEmpty = true) {
-		assert(is_scalar($string) && is_scalar($append));
+		$string = (string) $string;
+		$append = (string) $append;
+		if (strlen($append) == 0) return $string;
 		if ($condString !== null) {
 			if ($condString == true) $condString = $append;
 			if (($caseSensitive && substr($string, -strlen($condString)) == $condString) || 
@@ -119,6 +121,8 @@ class String extends Helper {
 	 */
 	public static function prepend($string, $prepend, $condString = null, $caseSensitive = false, $isEmpty = true) {
 		$string = (string) $string;
+		$prepend = (string) $prepend;
+		if (strlen($prepend) == 0) return $string;
 		if ($condString !== null) {
 			if ($condString == true) $condString = (string) $prepend;
 			if (($caseSensitive && substr($string, 0, -strlen($condString)) == $condString) || 
@@ -182,8 +186,9 @@ class String extends Helper {
 	 * @param integer $end
 	 * @return string
 	 */
-	public static function upper($string = null, $start = 0, $end = null, $charset = Charset::UTF_8) {
+	public static function upper($string, $start = 0, $end = null, $charset = Charset::UTF_8) {
 		$string = (string) $string;
+		if (strlen($string) == 0) return $string;
 		if (Charset::isUTF8($string)) {
 			if ($end !== null) {
 				return self::substr($string, 0, $start).mb_strtoupper(self::substr($string, $start, $end), $charset).self::substr($string, $end);
@@ -195,6 +200,14 @@ class String extends Helper {
 			}
 			return strtoupper($string);
 		}
+	}
+	
+	/**
+	 * alias for {@link upper}
+	 * @return string
+	 */
+	public function up($string, $start = 0, $end = null, $charset = Charset::UTF_8) {
+		return self::upper($string, $start, $end, $charset);
 	}
 	
 	/**
@@ -211,7 +224,7 @@ class String extends Helper {
 	 * @return string
 	 * @static
 	 */
-	public static function ucFirst($string = null, $length = 1) {
+	public static function ucFirst($string, $length = 1) {
 		return self::upper($string, 0, $length);
 	}
 	
@@ -223,8 +236,9 @@ class String extends Helper {
 	 * @param string $charset
 	 * @return string
 	 */
-	public static function lower($string = null, $start = 0, $end = null, $charset = Charset::UTF_8) {
+	public static function lower($string, $start = 0, $end = null, $charset = Charset::UTF_8) {
 		$string = (string) $string;
+		if (strlen($string) == 0) return $string;
 		if (Charset::isUTF8($string)) {
 			if ($end !== null) {
 				return self::substr($string, 0, $start).mb_strtolower(self::substr($string, $start, $end), $charset).self::substr($string, $end);
@@ -236,6 +250,14 @@ class String extends Helper {
 			}
 			return strtolower($string);
 		}
+	}
+	
+	/**
+	 * alias for {@link lower}
+	 * @return string
+	 */
+	public function low($string, $start = 0, $end = null, $charset = Charset::UTF_8) {
+		return self::lower($string, $start, $end, $charset);
 	}
 
 	/**

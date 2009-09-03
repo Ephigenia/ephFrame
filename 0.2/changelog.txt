@@ -1,6 +1,20 @@
 official changelog for ephFrame
 ------------------------------------------------------------------------------
 
+2009-09-03
++	Model COnditions like this array('User.id' => array('1','2','5')) will
+	create a IN (1,2,5) query (no properly quoting yet!)
++	Added Email Component from ephFrame 0.1 refactored
++	Email Component logs emails to log directory if $delivery is set to
+ 	'debug' for testing
++	Email can send UTF8 subjects now including german umlauts! (tested on
+	OSX Mail and Webmail mobileme.com and iPhone)
++	Email Component attach files that are not there:
+	->attach($filename, $content)
+
+2009-08-29
++	added up and low as alias for upper and lower in String helper
+
 2009-08-21
 +	moves isEmpty to core.php file so that the method is available everywhere
 	also changed logic to it returns the first argument passed that is not

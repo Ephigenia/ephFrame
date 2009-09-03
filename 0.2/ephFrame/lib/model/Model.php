@@ -444,7 +444,7 @@ class Model extends Object {
 				unset($this->{$modelName});
 				unset($this->belongsTo[$modelName]);
 				unset($this->hasMany[$modelName]);
-				unset($this->hasOne[$modelName]);
+				unset($this->hasOne[$modelName]);	
 			}
 		}
 		return true;

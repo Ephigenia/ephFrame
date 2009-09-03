@@ -477,7 +477,6 @@ class Form extends HTMLTag {
 			$fieldInfo['name'] = $modelFieldInfo->name;
 			// type of field defined in field config
 			if (!empty($fieldInfo['type'])) {
-				
 			// create form field depending on db-table field type
 			} else if (array_key_exists($modelFieldInfo->name, $this->fieldNameFormTypeMapping)) {
 				$fieldInfo['type'] = $this->fieldNameFormTypeMapping[$modelFieldInfo->name];
@@ -524,8 +523,11 @@ class Form extends HTMLTag {
 				if (isset($fieldInfo['maxLength'])) {
 					$field->attributes->set('maxLength', (int) $fieldInfo['maxLength']);
 				}
-				if (isset($model->validate[$fieldInfo['name']])) {
+				if (isset($model->validate[$fieldInfo['name']])) {				
 					$field->addValidationRule($model->validate[$fieldInfo['name']]);
+				}
+				if (isset($fieldInfo['options'])) {
+					$field->addOptions($fieldInfo['options']);
 				}
 				if ($fieldInfo['type'] == 'enum' && count($modelFieldInfo->enumOptions) > 2) {
 					foreach($modelFieldInfo->enumOptions as $optionValue) {
