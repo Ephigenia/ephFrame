@@ -64,7 +64,7 @@ class DBConfig {
 	 * Default database connection string, see {@link DBDSN} 
 	 * @var string
 	 */
-	public $default = 'mysql://root:@localhost:3306/grueezi/#utf8';
+	public $default = 'mysql://root:@localhost:3306/test/#utf8';
 	
 	/**
 	 * Default database connection as array configuration
@@ -83,7 +83,7 @@ class DBConfig {
 
 	public function __construct() {
 		// switch DB Configs depending on user name (example how to switch)
-		$username = strtolower(get_current_user());
+		$username = strtolower(@get_current_user());
 		switch($username) {
 			case 'yourUsername':
 				$this->default = 'mysql://';

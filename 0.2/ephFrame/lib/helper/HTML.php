@@ -97,8 +97,8 @@ class HTML extends Helper {
 		if (!empty($url)) {
 			$attributes['href'] = $url;
 		}
-		if (!empty($label) && !isset($attributes['title']) && !preg_match('/<[^>]+>/', $label)) {
-			$attributes['title'] = $label;
+		if (!empty($label) && !isset($attributes['title'])) { //} && !preg_match('/<[^>]+>/', $label)) {
+			$attributes['title'] = strip_tags($label);
 		}
 		if ($label === null || $label === false || $label === '') {
 			$label = $url;

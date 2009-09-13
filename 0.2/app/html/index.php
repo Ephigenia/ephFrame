@@ -18,8 +18,8 @@
  * ephFrame root. (in this example it’s depending on the current user name
  * for deploying on multiple servers)
  */
-switch(get_current_user()) {
-	case 'Ephigenia':
+switch(strtolower(@get_current_user())) {
+	case 'ephigenia':
 		require '../../ephFrame/startup.php';
 		break;
 	default:

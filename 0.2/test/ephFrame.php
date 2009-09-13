@@ -46,13 +46,15 @@ if (isset($_SERVER['HTTP_HOST'])) {
 } else {
 	$reporter = new TextReporter();
 }
-
+// error_reporting(E_ALL);
 $helperTests = new GroupTest('ephFrame Framework Unit Test');
 // ephFrame Helper Tests, simpler stuff
+
 $helperTests->addTestFile('lib/helper/TestString.php');
 $helperTests->addTestFile('lib/helper/TestTime.php');
 $helperTests->addTestFile('lib/helper/TestCharset.php');
 $helperTests->addTestFile('lib/helper/TestHTML.php');
+$helperTests->addTestFile('lib/helper/TestValidator.php');
 $helperTests->addTestFile('lib/helper/TestSanitizer.php');
 
 // ephFrame basic classes
@@ -80,5 +82,4 @@ $helperTests->addTestFile('lib/component/TestLog.php');
 
 // DAO Tests
 $helperTests->addTestFile('lib/model/DB/TestSelectQuery.php');
-
 $helperTests->run($reporter);

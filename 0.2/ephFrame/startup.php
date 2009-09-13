@@ -41,7 +41,7 @@ foreach (get_defined_vars() as $varname) {
 
 // disable magic quotes
 if(function_exists('set_magic_quotes_runtime')) {
-    set_magic_quotes_runtime(FALSE);
+	@set_magic_quotes_runtime(FALSE);
 }
 
 // ephFrame Basic Stuff

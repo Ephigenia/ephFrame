@@ -16,7 +16,7 @@
  * third argument for Registry::set, see {@link Registry}
  * (The Debug Level Constants are set in ephFrame/config/constants.php)
  */
-Registry::set('DEBUG', DEBUG_DEBUG);
+Registry::set('DEBUG', DEBUG_VERBOSE);
 
 /**
  * !!CHANGE THIS AS SOON AS POSSIBLE!!
@@ -35,6 +35,11 @@ define('SESSION_NAME', 'app');
  * This Setting influences alle location based methods of php
  */ 
 date_default_timezone_set('Europe/Berlin');
+
+/**
+ *	Set default language for I18n Component
+ */
+Registry::set('DEFAULT_LANGUAGE', 'de_de');
 
 /**
  * Optional default logging level, this is also affected by setting DEBUG,

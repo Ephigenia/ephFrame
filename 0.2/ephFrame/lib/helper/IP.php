@@ -46,7 +46,7 @@ class IP extends Helper {
 			return 0;
 		}
 		if (!is_array($ip)) {
-			$ips = split('\.', $ip);
+			$ips = explode('.', $ip);
 		}
         return ($ips[3] + ($ips[2] * 256) + ($ips[1] * 65536) + ($ips[0] * 16777216));
 	}

@@ -189,7 +189,7 @@ class ConsoleWindow extends ConsoleDrawing
 		if (empty($this->content)) return $this;
 		// auto scroll content
 		$content = wordwrap($this->content, $width, "\n", true);
-		$lines = split("\n", $content);
+		$lines = explode(LF, $content);
 		if (count($lines) >= $height) {
 			$lines = array_slice($lines, -$height);	
 		}

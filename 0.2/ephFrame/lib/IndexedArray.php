@@ -308,7 +308,7 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 */
 	public function fromString($string, $devider = null) {
 		if ($devider !== null) {
-			$this->fromArray(split($devider, $string));
+			$this->fromArray(explode($devider, $string));
 		} else {
 			$this->fromArray(String::each($string));
 		}

@@ -299,7 +299,7 @@ class Form extends HTMLTag {
 			if (!empty($val)) {
 				$filledFields++;
 			}
-			if (($formFieldCount > 1 && $filledFields > 1) || ($formFieldCount <= 2 && $filledFields == 1)) {
+			if (($formFieldCount > 1 && $filledFields > 0) || ($formFieldCount <= 2 && $filledFields == 1)) {
 				return true;
 			}
 		}
@@ -384,7 +384,7 @@ class Form extends HTMLTag {
 				
 				// $configure = array(array('type' => 'submit', label => 'save')) notation
 				if (is_int($modelName) && is_array($config)) {
-					if (!isset($config['type'])) $config['type'] = text;
+					if (!isset($config['type'])) $config['type'] = 'text';
 					if (!isset($config['name'])) $config['name'] = $config['type'];
 					$field = $this->newField($config['type'], @$config['name'], null, $config);
 					$this->addField($field);

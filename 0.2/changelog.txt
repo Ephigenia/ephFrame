@@ -1,6 +1,12 @@
 official changelog for ephFrame
 ------------------------------------------------------------------------------
 
+2009-09-11
++	now php 5.3 compatible
+	removed depreciated function calls (split -> explode)
+	set_magic_quotes_runtime
++	fixed bug where email validation fails on emails like l.name@host.com
+
 2009-09-03
 +	Model COnditions like this array('User.id' => array('1','2','5')) will
 	create a IN (1,2,5) query (no properly quoting yet!)

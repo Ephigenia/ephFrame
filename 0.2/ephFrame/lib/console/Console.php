@@ -131,7 +131,7 @@ class Console extends Object {
 		$lineLength = 80;
 		if (strlen($text) > $lineLength) {
 			if (substr($text, -1, 1) == LF) {
-				$splitWrappedText = split(LF, wordwrap($text, $lineLength));
+				$splitWrappedText = explode(LF, wordwrap($text, $lineLength));
 				$newText = array();
 				foreach($splitWrappedText as $line) {
 					$newText[] = str_pad($line, $lineLength, ' ');

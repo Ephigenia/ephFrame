@@ -67,8 +67,8 @@ if (!defined('MODELCACHE_DIR')) define ('MODELCACHE_DIR', TMP_DIR.'model'.DS);
 if (!defined('WEBROOT')) {
 	if (isset($_SERVER['PHP_SELF'])) {
 		$dirname = dirname($_SERVER['PHP_SELF']);
-		$relPath = split('/', trim($dirname, '/'));
-		$absPath = split('/', trim(APP_ROOT, '/'));
+		$relPath = explode('/', trim($dirname, '/'));
+		$absPath = explode('/', trim(APP_ROOT, '/'));
 		if (count($relPath) == 1) {
 			$__webroot = rtrim(dirname(dirname($_SERVER['PHP_SELF']).'../'), '/').'/';
 		} elseif ($absPath[count($absPath)-1] == $relPath[count($relPath)-2]) {

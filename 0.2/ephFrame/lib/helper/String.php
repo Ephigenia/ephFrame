@@ -60,7 +60,8 @@ class String extends Helper {
 		$string = strip_tags($string);
 		$string = Charset::toASCII($string);
 		$string = preg_replace('@\s+@', $spaceReplace, $string);
-		$string = preg_replace('@([^a-zA-Z0-9_,.+-])@', '', $string);
+		$string = strtr($string, array('+' => 'plus'));
+		$string = preg_replace('@([^a-zA-Z0-9_,.-])@', '', $string);
 		$string = trim($string, $spaceReplace);
 		// replace single & multiple spaces
 		if (strlen($spaceReplace) > 0) {
