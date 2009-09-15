@@ -1,7 +1,9 @@
 <?php
 
 /**
- * Email class with SMTP/Mail Delivery
+ * Email class with SMTP/Mail or Debug-Output Delivery
+ *
+ * 
  *
  * @package ephFrame
  * @subpackage ephFrame.lib.component
@@ -45,6 +47,13 @@ class Email extends Component implements Renderable
 		$this->boundary = md5(time());
     	$this->boundaryAlt = md5(time().'alternative');
 		return parent::__construct();
+	}
+	
+	public function reset() {
+		$this->header = $this->attachments = array();
+		$this->cc = $this->bcc = array();
+		$this->message = $this->htmlMessage = '';
+		return $this;
 	}
 	
 	public function attach($filename, $content = null) {

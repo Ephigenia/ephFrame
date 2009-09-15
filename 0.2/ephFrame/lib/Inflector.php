@@ -114,6 +114,7 @@ class Inflector extends Object {
 	 * <a href="http://en.wikipedia.org/wiki/CamelCase">Camelcase</a> is a
 	 * very common format for variable names in programming languages.
 	 * 
+	 * @deprecated use {@link camelize}
 	 * @param string $string
 	 * @param boolean $upper uppercase the first character too?
 	 * @return string
@@ -126,6 +127,10 @@ class Inflector extends Object {
 		return $result;
 	}
 	
+	public static function camelize($string, $ucFirst = false) {
+		return self::camellize($string, $ucFirst);
+	}
+		
 	/**
 	 * Delimeter seperate words just_as_this_is.
 	 * <code>

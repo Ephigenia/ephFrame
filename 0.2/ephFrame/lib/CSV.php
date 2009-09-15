@@ -48,7 +48,7 @@ class_exists('File') or require dirname(__FILE__).'/File.php';
  * 	// $entry["text"];
  * 	$csv->addRow($entry);
  * }
- * echo $csv->toCSV();
+ * echo $csv->toString();
  * </code>
  * 
  * @todo add multiline-column support
@@ -202,6 +202,10 @@ class CSV extends File implements Renderable, Iterator, Countable {
 		return $r;
 	}
 	
+	public function toCSV() {
+		return $this->render();
+	}
+	
 	/**
 	 * {@link render} callback
 	 * @return boolean
@@ -252,7 +256,7 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	 * Overwrites File Class Defined append Function
 	 * @see addRow
 	 */
-	public function append($arr) {
+	public function append($arr, $glue = false) {
 		if (is_string($arr)) $arr = array($arr);
 		$this->data[] = $arr;
 		return $this;
@@ -273,8 +277,7 @@ class CSV extends File implements Renderable, Iterator, Countable {
 		$classname = get_class($this);
 		$newFile = new $classname($filename);
 		$newFile->write($this->render());
-		$this->filename = $filename;
-		return $this;
+		return $newFile;
 	}
 	
 	/**

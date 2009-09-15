@@ -149,7 +149,6 @@ final class ephFrame {
 		return true;
 	}
 	
-	
 	/**
 	 * Loads a class, syntax is like in flash or javascript applications:
 	 * <code>

@@ -112,6 +112,6 @@ class ConsoleController extends Controller
 
 /**
  * @package ephFrame
- * @subpackage ephFrame.exceptions
+ * @subpackage ephFrame.lib.exceptions
  */
 class ConsoleControllerException extends ControllerException {}

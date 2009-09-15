@@ -157,12 +157,8 @@ class File extends FileSystemNode {
 	 * @return boolean
 	 */
 	public function checkExistence() {
-		if (empty($this->nodeName)) {
-			throw new FileEmptyException($this);
-		}
-		if (!$this->exists()) {
+		if (empty($this->nodeName) || !$this->exists()) {
 			throw new FileNotFoundException($this);
-			return false;
 		}
 		return true;
 	}
@@ -458,10 +454,10 @@ class File extends FileSystemNode {
 		if (!$this->exists()) {
 			$fp = $this->create();
 		}
-		$fp = fopen($this->filename, 'w');
+		$fp = fopen($this->nodeName, 'w');
 		fputs($fp, $content, strlen($content));
 		fclose($fp);
-		return true;
+		return $this;
 	}
 	
 	/**
@@ -497,7 +493,9 @@ class File extends FileSystemNode {
 	 * @return File
 	 */
 	public function saveAs($filename) {
-		$this->checkExistence();
+		if (!empty($this->nodeName)) {
+			$this->checkExistence();
+		}
 		$classname = get_class($this);
 		$newFile = new $classname($filename);
 		$newFile->write(file_get_contents($this->nodeName));

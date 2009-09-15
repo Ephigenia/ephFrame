@@ -629,6 +629,6 @@ class Form extends HTMLTag {
 
 /**
  * @package ephFrame
- * @subpackage ephFrame.exceptions
+ * @subpackage ephFrame.lib.exceptions
  */
 class FormException extends ObjectException {}

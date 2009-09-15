@@ -29,7 +29,7 @@
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 04.09.2008
  * @package ephFrame
- * @subpackage ephFrame.model.DB
+ * @subpackage ephFrame.lib.model.DB
  */
 class DBConnectionManager extends Object {
 	

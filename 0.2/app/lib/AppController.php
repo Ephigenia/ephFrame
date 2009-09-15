@@ -42,6 +42,7 @@ class AppController extends Controller
 		'CSS',
 		'JavaScript',
 		'MetaTags',
+		'Email'
 	);
 	
 	public function beforeRender() {
@@ -56,10 +57,24 @@ class AppController extends Controller
 		return parent::beforeRender();
 	}
 	
+	public function testEmail() {
+		// $this->Email->delivery = 'debug';
+		$this->Email->from = 'ephigenia@mac.com';
+		$this->Email->subject = 'TESTMAIL';
+		$this->Email->attach('/Users/Ephigenia/Sites/session_fixation.pdf');
+		$this->Email->attach('testfilename.txt', 'an other textfile');
+//		$this->Email->htmlMessage = '<strong>HTML CONTENT</strong>alskjd';
+		$this->Email->message = 'NOCH EINE NACHRICHT '.LF.'ü ä ö Ü Ä Ö ß – …';
+		$r = $this->Email->send($this->Email->from, 'ü ä ö Ü Ä Ö ß – …');
+		var_dump($r);
+		die();
+	}
+	
 } // END AppController class
 
 /**
  * @package app
  * @subpackage app.libs.exceptions
  */
-class AppControllerException extends ControllerException {}
+class AppControllerException extends ControllerException
+{}
