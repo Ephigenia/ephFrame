@@ -309,9 +309,6 @@ class Model extends Object {
 					$modelAlias = $config;
 					$config = array();
 				}
-				if (get_class($this) == 'NodeText') {
-					//echo get_class($this).'->'.$modelAlias.'<br />';
-				}
 				if (in_array($associationType, array('hasMany', 'hasAndBelongsToMany'))) {
 					$this->{Inflector::plural($modelAlias)} = new IndexedArray();
 				}
@@ -359,7 +356,6 @@ class Model extends Object {
 		} else {
 			$this->{$modelAlias} = new $classname($this, $modelAlias);
 		}
-//		$this->{$modelAlias}->name = $modelAlias;
 		$this->{$modelAlias}->{$this->name} = $this;
 		$this->{$modelAlias}->{$this->name}->name = $this->name;
 		
@@ -1013,17 +1009,13 @@ class Model extends Object {
 			$model->{$this->name} = $this;
 			// hasOne, belongsTo data
 			foreach($this->belongsTo + $this->hasOne as $modelName => $config) {
-				if (isset($config['class'])) {
-					$modelClassname2 = $config['class']; 
-				} else {
-					$modelClassname2 = $modelName;
+				$modelClassname2 = coalesce(@$config['class'], $modelName);
+				if (!isset($model->{$modelName})) {
+					$model->{$modelName} = new $modelClassname2(false, false);
+					$model->{$modelName}->name = $modelName;
+					$model->{$modelName}->fromArray($modelData);
+					$model->{$modelName}->depth = $depth - 1;
 				}
-				/*
-				$model->$modelName = new $modelClassname2();
-				$model->$modelName->name = $modelName;
-				$model->$modelName->fromArray($modelData);
-				$model->$modelName->depth = $depth - 1;
-				*/
 			}
 			// fetch associated data if detph is larger than one
 			if ($depth >= 1) {

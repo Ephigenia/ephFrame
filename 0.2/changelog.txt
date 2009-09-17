@@ -1,7 +1,8 @@
 official changelog for ephFrame
 ===========================================================================
 
-2009-09-15
+2009-09-17
++	Dynamic Binding with bind() works again with aliases
 +	Some Email and CSV class related fixes
 
 2009-09-11
