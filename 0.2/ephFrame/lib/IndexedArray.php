@@ -361,6 +361,12 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 		}
 	}
 	
+	/**
+	 * Alias method for {@link get}
+	 * @param integer $index
+	 * @param mixed $default
+	 * @return mixed
+	 */
 	public function read($index, $default = null) {
 		return $this->get($index, $default);
 	}

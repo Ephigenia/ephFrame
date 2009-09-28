@@ -21,8 +21,21 @@
 class_exists('Controller') or require dirname(__FILE__).'/Controller.php';
 
 /**
- * [add description here]
- * @todo add doc for this!
+ * Console Controller
+ * 
+ * The console controller class is like the appcontroller for web applications
+ * but for scripts that run in the command line.
+ *
+ * ephFrame supports a lot of cool features that you’ve never seen with php
+ * and command line. You can use the full power of the {@link Console} or 
+ * {@link ConsoleDrawing} class that can create ProgressBars, Windows and
+ * even Histograms.
+ * It also provides the power of {@link OptParse} class that handles options
+ * and arguments like the Python or C integration.
+ *
+ * You can set up your own Console Tasks by creating a task class in a file
+ * named like the task name and call it through the ephFrame console.php
+ * script.
  * 
  * @package ephFrame
  * @subpackage ephFrame.lib
@@ -72,6 +85,7 @@ class ConsoleController extends Controller
 		$this->optParse = new $optParseClassName();
 		$this->init();
 		while($this->main()) {}
+		$this->quit();
 	}
 	
 	protected function init() {

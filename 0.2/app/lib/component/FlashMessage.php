@@ -20,7 +20,7 @@ require_once dirname(__FILE__).'/AppComponent.php';
 class FlashMessage extends AppComponent
 {
 	public $components = array(
-		'Session'
+		'Session',
 	);
 	
 	/**
@@ -28,9 +28,13 @@ class FlashMessage extends AppComponent
 	 * @var string
 	 */
 	const TYPE_ERROR 	= 'error';
-	const TYPE_HINT 		= 'hint';
+	const TYPE_HINT 	= 'hint';
 	const TYPE_DEFAULT 	= self::TYPE_HINT;
 	
+	/**
+	 * Name of session variable that stores the flash message
+	 * @var string
+	 */
 	public $sessionVarname = 'flashMessage';
 	
 	public function beforeRender() {
@@ -39,6 +43,10 @@ class FlashMessage extends AppComponent
 			$this->reset();
 		}
 		return parent::beforeRender();
+	}
+	
+	public function hasMessage() {
+		return $this->Session->read($this->sessionVarname);
 	}
 	
 	public function set($message, $type = self::TYPE_DEFAULT) {

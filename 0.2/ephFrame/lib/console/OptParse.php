@@ -121,7 +121,6 @@ class OptParse extends Object
 			$this->rawArgs = array_slice($argv, 1);
 		}
 		// merge config with parent class configs
-		
 		$this->parse();
 		return $this;
 	}

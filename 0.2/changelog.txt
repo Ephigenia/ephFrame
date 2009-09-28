@@ -1,6 +1,13 @@
 official changelog for ephFrame
 ===========================================================================
 
+2009-09-28
++	moved ephFrame path decision from index.php ino ephFrame.php
++	Added AppHelper class
++ 	Added /console/console.php script that loads console tasks
++	Helpers now can access controller by $this->controller if set
++	HTML Helper uses $theme from controller to link images right
+
 2009-09-17
 +	Dynamic Binding with bind() works again with aliases
 +	Some Email and CSV class related fixes

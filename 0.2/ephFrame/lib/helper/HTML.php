@@ -120,7 +120,15 @@ class HTML extends Helper {
 	 */
 	public function image($src, Array $attributes = array()) {
 		if (strpos($src, '/') !== 0 && substr($src, 0, 7) !== 'http://') {
-			$src = WEBROOT.STATIC_DIR.'img/'.$src;
+			if ($this->controller->theme) {
+				$searchPaths[] = STATIC_DIR.'theme/'.$this->controller->theme.'/img/'.$src;
+			}
+			$searchPaths[] = STATIC_DIR.'img/'.$src;
+			foreach($searchPaths as $filename) {
+				if (!file_exists($filename)) continue;
+				$src = WEBROOT.$filename;
+				break;
+			}
 		}
 		$attributes['src'] = $src;
 		if (empty($attributes['alt']) && @$attributes['alt'] !== false) {

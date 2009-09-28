@@ -24,4 +24,7 @@
  * @subpackage app.config
  */
 Router::addRoute('root', '/', array('controller' => 'App', 'action' => 'index'));
+
+Router::addRoute('testRedirect', '/testRedirect', array('redirect' => 'http://www.ephigenia.de'));
+
 Router::addRoute(null, '/:action', array('controller' => 'App', 'action' => 'index'));

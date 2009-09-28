@@ -14,18 +14,9 @@
  */
 
 /**
- * modify the require instruction to include the startup.php file from the
- * ephFrame root. (in this example it’s depending on the current user name
- * for deploying on multiple servers)
+ * load ephFrame
  */
-switch(strtolower(@get_current_user())) {
-	case 'ephigenia':
-		require '../../ephFrame/startup.php';
-		break;
-	default:
-		require '../../../ephFrame/startup.php';
-		break;
-}
+require dirname(__FILE__).'/ephFrame.php';
 
 /**
  * Create the dispatcher that creates the controller ... which will

@@ -29,5 +29,12 @@
  * @subpackage ephFrame.lib.helper
  */
 abstract class Helper extends Object {
+
+	protected $controller;
+
+	public function __construct($controller = null) {
+		if (is_object($controller))	$this->controller = $controller;
+		return $this;
+	}
 	
 }
