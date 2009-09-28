@@ -31,9 +31,16 @@ class TestString extends UnitTestCase {
 	
 	public function testAppend() {
 		$this->assertEqual(String::append('A', 'B'), 'AB');
+		$this->assertEqual(String::append('AC', 'C', true), 'AC');
+		$this->assertEqual(String::append('AC', 'c', true, true), 'ACc');
+		$this->assertEqual(String::append('AC', 'c', true, false), 'AC');
+		$this->assertEqual(String::append('', ''), '');
+		$this->assertEqual(String::append('', '', true, true), '');
 	}
 	
 	public function testPrepend() {
+		$this->assertEqual(String::prepend('www.ephigenia.de', 'http://'), 'http://www.ephigenia.de');
+		$this->assertEqual(String::prepend('http://www.ephigenia.de', 'http://', true), 'http://www.ephigenia.de');
 		$this->assertEqual(String::prepend('B', 'A'), 'AB');
 	}
 

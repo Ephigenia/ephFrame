@@ -126,8 +126,8 @@ class String extends Helper {
 		if (strlen($prepend) == 0) return $string;
 		if ($condString !== null) {
 			if ($condString == true) $condString = (string) $prepend;
-			if (($caseSensitive && substr($string, 0, -strlen($condString)) == $condString) || 
-			   (!$caseSensitive && self::lower(substr($string, 0, -strlen($condString))) == String::lower($condString))
+			if (($caseSensitive && substr($string, 0, strlen($condString)) == $condString) || 
+			   (!$caseSensitive && self::lower(substr($string, 0, strlen($condString))) == String::lower($condString))
 				) {
 				return $string;
 			}

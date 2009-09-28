@@ -39,6 +39,10 @@ class TestTime extends UnitTestCase {
 			mktime(0, 0, 0, 6, 1, 2009) => 'jetzt',
 			mktime(0, 0, 10, 6, 1, 2009) => '10 Sekunden',
 			mktime(0, 0, 59, 6, 1, 2009) => '59 Sekunden',
+			mktime(0, 0, 29, 6, 1, 2009) => '29 Sekunden',
+			mktime(0, 0, 30, 6, 1, 2009) => '30 Sekunden',
+			mktime(0, 0, 31, 6, 1, 2009) => '31 Sekunden',
+			mktime(12, 0, 0, 6, 1, 2009) => '12 Stunden',
 			mktime(0, 1, 0, 6, 1, 2009) => '1 Minute',
 			mktime(0, -1, 0, 6, 1, 2009) => '1 Minute',
 			mktime(0, 59, 59, 6, 1, 2009) => '60 Minuten',
@@ -54,7 +58,10 @@ class TestTime extends UnitTestCase {
 		$time = mktime(12, 0, 0, 10, 10, 2009);
 		foreach(array(
 			mktime(12, 0, 0, 10, 10, 2009) => 'jetzt',
-			mktime(0, 0, 0, 10, 10, 2009) => '12 Stunden',
+			mktime(12, 0, 29, 10, 10, 2009) => '29 Sekunden',
+			mktime(13, 0, 29, 10, 10, 2009) => '1 Stunde, 29 Sekunden',
+			mktime(13, 0, 30, 10, 10, 2009) => '1 Stunde, 30 Sekunden',
+			mktime(13, 0, 40, 10, 10, 2009) => '1 Stunde, 40 Sekunden',
 			mktime(12, 0, 0, 11, 10, 2009) => '1 Monat, 1 Tag',
 			mktime(12, 1, 0, 11, 10, 2009) => '1 Monat, 1 Tag',
 			mktime(12, 1, 0, 10, 10, 2009) => '1 Minute',
