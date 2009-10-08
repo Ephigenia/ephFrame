@@ -33,7 +33,7 @@
  * @author Marcel Eichner // Ephiagenia <love@ephigenia.de>
  * @since 20.05.2008
  */
-class SearchQueryParser extends Component {
+class SearchQueryParser extends AppComponent {
 	
 	/**
 	 * @var string

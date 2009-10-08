@@ -45,7 +45,7 @@ class_exists('String') or require dirname(__FILE__).'/../helper/String.php';
  * @uses JSCompressor
  * @uses JSPacker
  */
-class JavaScript extends Component implements Renderable {
+class JavaScript extends AppComponent implements Renderable {
 	
 	/**
 	 * Collection that stores the name of js files added

@@ -63,12 +63,15 @@ final class ephFrame {
 			require (FRAME_LIB_DIR.'Registry.php');
 			require (FRAME_ROOT.'config/config.php');
 			require (FRAME_LIB_DIR.'Renderable.php');
-			require (FRAME_LIB_DIR.'component/Log.php');
 			// project include stuff (some config variables can be overwritten there)
 			include (APP_ROOT.'config/config.php');
 			include (APP_ROOT.'config/db.php');
+			class_exists('AppComponent') or require APP_LIB_DIR.'component/AppComponent.php';
+			class_exists('AppHelper') or require APP_LIB_DIR.'helper/AppHelper.php';
+			require (FRAME_LIB_DIR.'component/Log.php');
 			class_exists('AppController') or require APP_LIB_DIR.'AppController.php';
 			class_exists('AppModel') or require APP_LIB_DIR.'model/AppModel.php';
+			
 			if (file_exists(APP_LIB_DIR.'component/Form/AppForm.php') && !class_exists('AppForm')) {
 				require APP_LIB_DIR.'component/Form/AppForm.php';
 			}

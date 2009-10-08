@@ -59,7 +59,7 @@ class_exists('String') or require dirname(__FILE__).'/../helper/String.php';
  * @uses CSSPacker
  * @uses Collection
  */
-class CSS extends Component implements Renderable
+class CSS extends AppComponent implements Renderable
 {	
 	/**
 	 * Collection that stores the name of css files added

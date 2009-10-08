@@ -26,7 +26,7 @@
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 2009-07-22
  */
-class Security extends Component 
+class Security extends AppComponent 
 {
 	/**
 	 * List of controller actions that need to be posted

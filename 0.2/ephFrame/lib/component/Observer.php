@@ -33,7 +33,7 @@ class_exists('IndexedArray') or require dirname(__FILE__).'/../IndexedArray.php'
  * @subpackage ephFrame.lib.component
  * @abstract 
  */
-abstract class Observer extends Component implements SplObserver {
+abstract class Observer extends AppComponent implements SplObserver {
 	
 	/**
 	 * List of Event Listeners

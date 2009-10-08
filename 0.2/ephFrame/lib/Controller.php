@@ -431,6 +431,10 @@ abstract class Controller extends Object implements Renderable
 		foreach($this->helpers as $helperName) {
 			$this->addHelper($helperName);
 		}
+		foreach($this->helpers as $helperName) {
+			$className = ClassPath::className($helperName);
+			$this->data->get($className)->startup();
+		}
 		return true;
 	}
 	
@@ -447,7 +451,6 @@ abstract class Controller extends Object implements Renderable
 	 * @return boolean
 	 */
 	public function addHelper($helperName) {
-		assert(is_string($helperName) && !empty($helperName));
 		// extract component class name
 		$className = ClassPath::className($helperName);
 		// try app and frame paths
@@ -455,7 +458,7 @@ abstract class Controller extends Object implements Renderable
 		// verbose log message
 		logg(Log::VERBOSE_SILENT, 'ephFrame: '.get_class($this).' loaded helper '.$helperName.' successfully');
 		// attach component to controller
-		$this->set($className, new $className($this));
+		$this->data->set($className, new $className($this));
 		return true;
 	}
 	
@@ -468,7 +471,6 @@ abstract class Controller extends Object implements Renderable
 		foreach($this->forms as $formName) {
 			$this->addForm($formName);
 		}
-		
 		// startup and init all forms
 		foreach($this->forms as $formName) {
 			$this->{$formName}->startup($this);
@@ -545,6 +547,10 @@ abstract class Controller extends Object implements Renderable
 			foreach($this->components as $componentName) {
 				$this->{$componentName}->beforeAction($action);
 			}
+			foreach($this->helpers as $helperName) {
+				$className = ClassPath::className($helperName);
+				$this->data->get($className)->beforeAction($action);
+			}
 			// call controller before[ActionName] if possible
 			if (method_exists($this,'before'.ucFirst($action))) {
 				$this->callMethod('before'.ucFirst($action));
@@ -572,6 +578,10 @@ abstract class Controller extends Object implements Renderable
 			// call afteraction on components
 			foreach($this->components as $componentName) {
 				$this->{$componentName}->afterAction($action);
+			}
+			foreach($this->helpers as $helperName) {
+				$className = ClassPath::className($helperName);
+				$this->data->get($className)->afterAction($action);
 			}
 		}
 		return true;
@@ -606,6 +616,10 @@ abstract class Controller extends Object implements Renderable
 			$className = ClassPath::className($componentName);
 			$this->{$className}->beforeRender($this);
 		}
+		foreach($this->helpers as $helperName) {
+			$className = ClassPath::className($helperName);
+			$this->data->get($className)->beforeRender($this);
+		}
 		// load view class if available
 		if (!strpos($this->viewClassName, '.')) {
 			ephFrame::loadClass('ephFrame.lib.'.$this->viewClassName);
@@ -627,6 +641,10 @@ abstract class Controller extends Object implements Renderable
 		foreach($this->components as $componentName) {
 			$className = ClassPath::className($componentName);
 			$content = $this->{$className}->afterRender($content);
+		}
+		foreach($this->helpers as $helperName) {
+			$className = ClassPath::className($helperName);
+			$this->data->get($className)->afterRender($content);
 		}
 		$this->response->body = $this->afterRender($content);
 		// @todo add this to request/response

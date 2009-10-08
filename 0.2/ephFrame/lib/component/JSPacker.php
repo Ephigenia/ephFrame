@@ -47,7 +47,7 @@
  * @uses File
  * @todo normalize File Packer to not beeing a component and JS and CSS Packer inherit from the new create class
  */
-class JSPacker extends Component {
+class JSPacker extends AppComponent {
 	
 	/**
 	 * Boolean value to enable JS Compression

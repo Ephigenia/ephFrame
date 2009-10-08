@@ -31,7 +31,7 @@ class_exists('File') or require dirname(__FILE__).'/../File.php';
  * @subpackage ephFrame.lib.component
  * @uses File
  */
-abstract class Compressor extends Component {
+abstract class Compressor extends AppComponent {
 	
 	/**
 	 * Compresses the passes string

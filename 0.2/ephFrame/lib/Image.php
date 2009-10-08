@@ -957,6 +957,9 @@ class Image extends File implements Renderable
 	 * This method will calculate the memory usage in bytes that an image
 	 * with $width, $height, $Bits and $channels would use in memory and return
 	 * the result.
+	 *
+	 * Read more about the $fudgeFactorArgument on the php help site:
+	 * http://us3.php.net/manual/en/function.imagecreatefromjpeg.php
 	 * 
 	 * @param $width
 	 * @param $height
@@ -964,8 +967,8 @@ class Image extends File implements Renderable
 	 * @param $channels
 	 * @return integer
 	 */
-	public static function calculateMemoryUsage($width, $height, $bits, $channels = 3) {
-		return $width * $height * $bits * $channels / 8;
+	public static function calculateMemoryUsage($width, $height, $bits = 8, $channels = 3, $fudgeFactor = 1.65) {
+		return $width * $height * $bits * $channels / 8 * $fudgeFactor;
 	}
 
 	/**

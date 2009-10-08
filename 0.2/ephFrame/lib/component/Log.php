@@ -72,7 +72,7 @@ class_exists('File') or require dirname(__FILE__).'/../File.php';
  * @uses Charset
  * @uses ArrayHelper
  */
-class Log extends Component {
+class Log extends AppComponent {
 	
 	/**
 	 * Base path were log files are stored

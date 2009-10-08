@@ -37,7 +37,7 @@ class_exists('HTTPRequest') or require dirname(__FILE__).'/../HTTPRequest.php';
  * @subpackage ephFrame.lib.component
  * @uses HTTPRequest
  */
-class GoogleMapsCoordinatesSearch extends Component {
+class GoogleMapsCoordinatesSearch extends AppComponent {
 
 	/**
 	 * default api code for localhost

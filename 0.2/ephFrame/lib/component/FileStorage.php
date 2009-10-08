@@ -87,7 +87,7 @@ class_exists('String') or require dirname(__FILE__).'/../helper/String.php';
  * @uses Dir
  * @uses String
  */
-class FileStorageComponent extends Component {
+class FileStorageComponent extends AppComponent {
 	
 	/**
 	 * Root directory the store stores the files

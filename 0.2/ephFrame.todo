@@ -4,5 +4,30 @@ To-Do-List for ephFrame
 This file contains wishes from users, enhancements etc. for the ephFrame 
 framwork.
 
-- Set combine
-- Set merge
+General:
+- create file that stores enviorenments?
+- make config folder for host configs
+- make folder for user configs
+- make db table prefix config in db.php
+
+HTMLTable Helper:
+- create Helper
+- method for creating table cells
+- method for creating table headers
+
+Paginator Helper:
+- make method for sorting links
+- method for a string with numbers of pages etc, item etc.
+- make multi-model
+
+I18N:
+✓ enable gettext module usage from php
+- write gettext workaround if gettext extension not installed
+
+Set/IndexeArray:
+- implement cakephp-like combine
+- implement cakephp-like merge
+
+Email:
+- create email layout file that is used by the email component, this will make
+  it easy to create email layout files with headers and footers and stuff

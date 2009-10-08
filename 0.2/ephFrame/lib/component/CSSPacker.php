@@ -49,7 +49,7 @@ class_exists('File') or require dirname(__FILE__).'/../File.php';
  * @uses CSSCompressor
  * @uses File
  */
-class CSSPacker extends Component {
+class CSSPacker extends AppComponent {
 	
 	public $compress = true;
 	

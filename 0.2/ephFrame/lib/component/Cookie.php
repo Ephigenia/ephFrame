@@ -77,7 +77,7 @@
  * @subpackage ephFrame.lib.helper
  * @version 0.1
  */
-class Cookie extends Component {
+class Cookie extends AppComponent {
 	
 	/**
 	 * Use this when setting a cockie for http only

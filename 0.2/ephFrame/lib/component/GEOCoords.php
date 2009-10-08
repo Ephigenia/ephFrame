@@ -31,7 +31,7 @@
  * @package ephFrame
  * @subpackage ephFrame.lib.component
  */
-class GEOCoords extends Component {
+class GEOCoords extends AppComponent {
 	
 	/**
 	 * Stores the constant radius at the equator

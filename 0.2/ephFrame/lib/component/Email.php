@@ -3,14 +3,12 @@
 /**
  * Email class with SMTP/Mail or Debug-Output Delivery
  *
- * 
- *
  * @package ephFrame
  * @subpackage ephFrame.lib.component
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 2009-08-30
  */
-class Email extends Component implements Renderable
+class Email extends AppComponent implements Renderable
 {
 	public $to;
 	

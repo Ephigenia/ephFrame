@@ -26,16 +26,28 @@ ephFrame::loadClass('ephFrame.lib.HTMLTag');
  * View Helper Class for quick echoeing html tags. This can be make the rendering
  * of simple html tags much easier.
  * 
+ * See the examples for every method of this helper to get an overview. Also
+ * you can enhance the possibilities of this helper by chanhing your
+ * {@link AppHelper} class.
+ * 
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de
  * @since 01.01.2008
  * @package ephFrame
  * @subpackage ephFrame.lib.helper
  * @uses HTMLTag
  */
-class HTML extends Helper {
+class HTML extends AppHelper {
 	
 	/**
-	 * Creates a new HTML Tag and returns it
+	 * Create valid {@link HTMLTag} object with passed arguments and return it
+	 * 
+	 * <code>
+	 * // create a a-tag with a link to a homepage
+	 * echo $HTML->tag('a', 'The Developer’s Homepage', array('href' => 'http://www.marceleichner.de'));
+	 * // create simple p-tags with content
+	 * echo $HTML->tag('p', 'this is a message to everybody!');
+	 * </code>
+	 * 
 	 * @param string $tagName
 	 * @param string $value
 	 * @param array $attributes
@@ -46,10 +58,11 @@ class HTML extends Helper {
 	}
 	
 	/**
-	 * 
+	 * This is basically the same like {@link tag} but it will only return the
+	 * opening tag for the created tag not the the closing tag.
 	 * @param $tagName
 	 * @param $attributes
-	 * @return unknown_type
+	 * @return String
 	 */
 	public function openTag($tagName, Array $attributes = array()) {
 		$tag = new HTMLTag($tagName, $attributes, '&nbsp;');
@@ -70,27 +83,44 @@ class HTML extends Helper {
 	 * @return HTMLTag
 	 */
 	public function p($content, Array $attributes = array()) {
-		return new HTMLTag('p', $attributes, $content);
+		return $this->tag('p', $content, $attributes);
 	}
 	
 	/**
-	 * Creates an email link, but encoding the email address
+	 * Returns a {@link HTMLTag} object with a link to an email addy.
+	 * 
+	 * The email addy will be encoded so some spam-bots will not be able to
+	 * recognize it’s a email addy. Also you can add an optional alternate 
+	 * $label:
+	 * <code>
+	 * // will create a link to mailto:love@ephigenia.de
+	 * echo $HTML->email('love@ephigenia.de');
+	 * // use alternate label
+	 * echo $HTML->email('love@ephigenia.de', 'ephFrame Author');
+	 * </code>
+	 * 
 	 * @param string email
-	 * @param string label
+	 * @param string label optional alternate label, default is the email addy
+	 * @param array(string) $attributes optional additional attributes for {@link HTMLTag}
 	 * @return string
 	 */
-	public function email($email, $label = null) {
+	public function email($email, $label = null, Array $attributes = array()) {
 		$emailEncoded = String::htmlOrdEncode($email);
 		if ($label == null) {
 			$label = $emailEncoded;
 		}
-		return $this->link('mailto:'.$emailEncoded, $label);
+		return $this->link('mailto:'.$emailEncoded, $label, $attributes);
 	}
 	
 	/**
-	 * Creates a XHTML Valid link element.
+	 * Returns an A-Tag as {@link HTMLTag} object
+	 * 
+	 * The title attribute for the link is automatically created if not passed
+	 * in the $attributes array.
+	 * 
 	 * @param string $url
-	 * @param array(string) $attributes
+	 * @param string $label optional alternate label, default is the url
+	 * @param array(string) $attributes optional link attributes
 	 * @return HTMLTag
 	 */
 	public function link($url, $label = null, Array $attributes = array()) {
@@ -113,9 +143,13 @@ class HTML extends Helper {
 	}
 	
 	/**
-	 * Returns a Image HTML Tag
-	 * @param string $src
-	 * @param array(string) $attributes
+	 * Return a IMG-Tag as {@link HTMLTag} object.
+	 * 
+	 * This will also use the theme as searchpath for the passed image url to
+	 * look for an image.
+	 * 
+	 * @param string $src source url for the image that should be used
+	 * @param array(string) $attributes optional additional attributes for img-tag
 	 * @return HTMLTag
 	 */
 	public function image($src, Array $attributes = array()) {
@@ -154,4 +188,4 @@ class HTML extends Helper {
 		return $this->callMethod('image', $args);
 	}
 	
-}
+} // END HTML class

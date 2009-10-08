@@ -53,7 +53,7 @@
  * @package ephFrame
  * @subpackage ephFrame.lib.component
  */
-class WikiText extends Component {
+class WikiText extends AppComponent {
 
 	/**
 	 * Wiki syntax array

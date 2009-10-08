@@ -1,10 +1,13 @@
 official changelog for ephFrame
 ===========================================================================
 
-2009-09-28
+2009-10-02
++	Added Paginator Helper that makes pagintion easier to use!
++	Added and changed docu for HTML Helper
 +	Fixed String::prepend to use conditional string correctly
 +	moved ephFrame path decision from index.php ino ephFrame.php
-+	Added AppHelper class
++	Added AppHelper class with various callbacks
++	All basic components extend from AppComponent now
 + 	Added /console/console.php script that loads console tasks
 +	Helpers now can access controller by $this->controller if set
 +	HTML Helper uses $theme from controller to link images right

@@ -32,7 +32,7 @@
  * @author Marcel Eichner // Ephiagenia <love@ephigenia.de>
  * @since 03.05.2008
  */
-class I18n extends Component {
+class I18n extends AppComponent {
 	
 	/**
 	 * Current locale used

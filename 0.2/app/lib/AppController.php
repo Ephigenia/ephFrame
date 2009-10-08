@@ -39,6 +39,7 @@ class AppController extends Controller
 	);
 	
 	public $components = array(
+		'I18n',
 		'CSS',
 		'JavaScript',
 		'MetaTags',

@@ -31,10 +31,54 @@
 abstract class Helper extends Object {
 
 	protected $controller;
+	
+	/**
+	 * List of helpers used in this component
+	 * @var array(string)
+	 */
+	public $helpers = array();
 
 	public function __construct($controller = null) {
 		if (is_object($controller))	$this->controller = $controller;
+		$this->__mergeParentProperty('helpers');
+		$this->init();
 		return $this;
 	}
 	
-}
+	public function init() {
+		$this->initHelpers();
+		return true;
+	}
+	
+	public function startup() {
+		return true;
+	}
+	
+	protected function initHelpers() {
+		foreach($this->helpers as $HelperName) {
+			$className = ClassPath::className($HelperName);
+			if (!class_exists($className)) {
+				loadHelper($HelperName);
+			}
+			$this->{$className} = new $className();
+		}
+		return true;
+	}
+	
+	public function beforeAction() {
+		return true;
+	}
+	
+	public function afterAction() {
+		return true;
+	}
+	
+	public function beforeRender() {
+		return true;
+	}
+	
+	public function afterRender($content = null) {
+		return $content;
+	}
+	
+} // END Helper class

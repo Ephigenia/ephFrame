@@ -233,7 +233,7 @@ class Router extends Hash
 		$uri = $routeConfig['path'];
 		// replace params
 		if (is_array($params)) {
-			$uri = self::insertParams($uri, $params);
+			$uri = String::substitute($uri, $params);
 		}
 		if ($url) {
 			$uri = rtrim(Registry::get('WEBROOT_URL'), '/').WEBROOT.$uri;
@@ -249,20 +249,6 @@ class Router extends Hash
 	
 	public static function uri($routeName, $params = array()) {
 		return self::getRoute($routeName, $params, false);
-	}
-	
-	/**
-	 * Replaces all parameter placeholders (:id or :username) in an uri-string
-	 * with the values from the second parameter array
-	 * @param string			$uri
-	 * @param array(string)	$params
-	 * @return string
-	 */
-	public static function insertParams($uri, Array $params = array())  {
-		foreach($params as $k => $v) {
-			$uri = str_replace(':'.$k, $v, $uri);
-		}
-		return $uri;	
 	}
 	
 	/**

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ephFrame 2.0 Test\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2008-05-03 23:49+0100\n"
+"POT-Creation-Date: 2009-10-02 20:06+0100\n"
 "PO-Revision-Date: \n"
 "Last-Translator: Marcel Eichner <love@ephigenia.de>\n"
 "Language-Team: Marcel Eichner <love@ephigenia.de>\n"
@@ -10,18 +10,8 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-SourceCharset: utf-8\n"
-"X-Poedit-Basepath: /Users/Ephigenia/Sites/ephFrameNew/ephFrame/ephFrame/app/\n"
+"X-Poedit-Basepath: .\n"
 "X-Poedit-Language: German\n"
 "X-Poedit-Country: GERMANY\n"
-"X-Poedit-KeywordsList: gettext;_\n"
-"X-Poedit-SearchPath-0: /Users/Ephigenia/Sites/ephFrameNew/ephFrame/ephFrame/app\n"
-
-#: /Users/Ephigenia/Sites/ephFrameNew/ephFrame/ephFrame/app/libs/controllers/TestController.php:36
-#: /Users/Ephigenia/Sites/ephFrameNew/ephFrame/ephFrame/app/libs/controllers/TestController.php:37
-msgid "Hi Freaks!"
-msgstr "Hallo liebe verrückte Crazy Peoples!"
-
-#: /Users/Ephigenia/Sites/ephFrameNew/ephFrame/ephFrame/app/libs/controllers/TestController.php:38
-msgid "A"
-msgstr "BMCC"
-
+"X-Poedit-KeywordsList: gettext;__;__html\n"
+"X-Poedit-SearchPath-0: ../../../\n"

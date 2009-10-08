@@ -20,7 +20,8 @@
 require_once dirname(__FILE__).'/../../autorun.php';
 
 /**
- * [SOME DOCU HERE WOULD BE NICE HEE!?]
+ * Unit Tests for the {@link HTML} Helper class from the {@link ephFrame}
+ * framework
  * 
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 18.08.2008
@@ -31,6 +32,12 @@ class TestHTML extends UnitTestCase
 {
 	public function setUp() {
 		ephFrame::loadClass('ephFrame.lib.helper.HTML');
+	}
+	
+	public function testEmail() {
+		$HTML = new HTML();
+		$this->assertEqual((string) $HTML->email('love@ephigenia.de'), '<a href="mailto:&#108;&#111;&#118;&#101;&#64;&#101;&#112;&#104;&#105;&#103;&#101;&#110;&#105;&#97;&#46;&#100;&#101;" title="&#108;&#111;&#118;&#101;&#64;&#101;&#112;&#104;&#105;&#103;&#101;&#110;&#105;&#97;&#46;&#100;&#101;">&#108;&#111;&#118;&#101;&#64;&#101;&#112;&#104;&#105;&#103;&#101;&#110;&#105;&#97;&#46;&#100;&#101;</a>');
+		$this->assertEqual((string) $HTML->email('love@ephigenia.de', 'Other Label'), '<a href="mailto:&#108;&#111;&#118;&#101;&#64;&#101;&#112;&#104;&#105;&#103;&#101;&#110;&#105;&#97;&#46;&#100;&#101;" title="Other Label">Other Label</a>');
 	}
 	
 	public function testImg() {
@@ -48,4 +55,4 @@ class TestHTML extends UnitTestCase
 		$this->assertEqual((string) $HTML->link('?p=asdlkj&amp;=tralala', 'values & werte'), '<a href="?p=asdlkj&amp;=tralala" title="values &amp; werte">values & werte</a>');
 	}
 	
-}
+} // END TestHTML class
