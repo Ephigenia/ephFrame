@@ -181,7 +181,7 @@ class Image extends File implements Renderable
 	 * @return Image
 	 */
 	public function applyFilter(ImageFilter $filter) {
-		$filter->apply(&$this);
+		$filter->apply($this);
 		return $this;
 	}
 	
