@@ -108,6 +108,7 @@ final class ephFrame {
 			} else {
 				error_reporting(E_ALL + E_STRICT);
 			}
+			PHPINI::set('allow_call_time_pass_reference', true);
 			PHPINI::set('display_errors', 'yes');
 			PHPINI::set('display_startup_errors', 'yes');
 		} else {
