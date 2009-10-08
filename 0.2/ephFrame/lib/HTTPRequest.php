@@ -142,19 +142,21 @@ class HTTPRequest extends Component {
 		if ($this->host == '::1') {
 			$this->host = '127.0.0.1';
 		}
+		$_GET['test'] = 'HALLO';
 		// set referer if ther's any
 		if (isset($_SERVER['HTTP_REFERER'])) {
 			$this->referer = $_SERVER['HTTP_REFERER'];
 		}
 		if ($this->method == self::METHOD_GET) {
 			$this->data = &$_GET;
-			$this->data = array_merge($_POST, &$this->data);
+			$this->data = array_merge($_POST, $this->data);
 		} else {
 			$this->data = &$_POST;
-			$this->data = array_merge($_GET, &$this->data);
+			$this->data = array_merge($_GET, $this->data);
 		}
 		// fix wrong decoded utf8 entities
-		$this->data = array_map(array('Charset', 'toUtf8'), &$this->data);
+		$this->data = array_map(array('Charset', 'toUtf8'), $this->data);
+	
 		// strip slashes from all values if magic quotes are on
 		if (function_exists('get_magic_quotes_gpc') && !get_magic_quotes_gpc()) {
 			if (!defined('ephFrameHTTPRequestAddSlashesOk')) {

@@ -1,7 +1,8 @@
 official changelog for ephFrame
 ===========================================================================
 
-2009-10-02
+2009-10-08
++	Fixed function call with reference in HTTPRequest and Cookie Class
 +	Added Paginator Helper that makes pagintion easier to use!
 +	Added and changed docu for HTML Helper
 +	Fixed String::prepend to use conditional string correctly
