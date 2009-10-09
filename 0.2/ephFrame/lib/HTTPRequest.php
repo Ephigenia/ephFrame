@@ -142,7 +142,6 @@ class HTTPRequest extends Component {
 		if ($this->host == '::1') {
 			$this->host = '127.0.0.1';
 		}
-		$_GET['test'] = 'HALLO';
 		// set referer if ther's any
 		if (isset($_SERVER['HTTP_REFERER'])) {
 			$this->referer = $_SERVER['HTTP_REFERER'];
