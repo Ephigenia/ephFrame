@@ -66,7 +66,6 @@ class Dir extends FileSystemNode {
 		parent::__construct($path);
 		if (empty($path)) throw new StringExpectedException();
 		$this->path = $path;
-		if (!$this->exists()) throw new DirNotFoundException($this);
 	}
 	
 	/**
@@ -208,20 +207,20 @@ class Dir extends FileSystemNode {
 	}
 	
 	/**
-	 * Create directories rekursive
+	 * Create a new subdirectory or create this directory in the filesystem.
+	 * 
 	 * @param string|array(string) $directoryName
 	 * @param integer $chmod
 	 * @return Dir Instance of the newly created Directory
 	 */
-	public function makeDir($newDirname, $chmod = 0777) {
+	public function create($newDirname = null, $chmod = 0777) {
 		if (is_array($newDirname)) {
 			$newDirname = implode(DS, $newDirname);
 		}
-		// return newDirname directory component if directory allread exists
 		if (is_dir($this->nodeName.$newDirname)) {
 			return new Dir($this->nodeName.$newDirname);
 		}
-		$folder = explode(DS, $this->nodeName.$newDirname);
+		$folder = explode(DS, rtrim($this->nodeName.$newDirname, DS));
 		$mkfolder = '';
 		for ($i = 0; isset($folder[$i]); $i++) {
 			$mkfolder .= $folder[$i];
@@ -244,7 +243,26 @@ class Dir extends FileSystemNode {
 	 * @return DirectoryComponent Instance of the newly created Directory
 	 */
 	public function mkdir($newDirname, $chmod = 0777) {
-		return $this->makeDir($newDirname, $chmod);
+		return $this->create($newDirname, $chmod);
+	}
+	
+	/**
+	 * recursivly delete directory passed or current directory
+	 * @param string $path
+	 * @return boolean
+	 */
+	public function delete($path = null) {
+		if (func_num_args() == 0) {
+			$dir = $this;
+		} else {
+			$dir = new Dir($path);
+		}
+		if ($dir->exists()) return false;
+		$dir->listHiddenFiles = true;
+		foreach(array_merge($dir->listFiles(), $dir->listDirectories()) as $Obj) {
+			$Obj->delete();
+		}
+		return rmdir($this->nodeName);
 	}
 	
 	/**

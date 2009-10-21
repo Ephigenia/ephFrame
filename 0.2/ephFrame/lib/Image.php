@@ -165,8 +165,8 @@ class Image extends File implements Renderable
 			//if (!$this->exists()) throw new FileNotFoundException($this);
 		} else  {
 			assert($filenameWidthOrHandle > 0 && $height > 0);
-			$this->width = $filenameWidthOrHandle;
-			$this->height = $height;
+			$this->width = abs((int) $filenameWidthOrHandle);
+			$this->height = abs((int) $height);
 			$this->createHandle();
 			if ($backgroundColor) {
 				$this->createColor($backgroundColor);
@@ -662,6 +662,10 @@ class Image extends File implements Renderable
 		return $this;
 	}
 	
+	public function resize($width, $height, $contrainProps = true, $upScale = true) {
+		return $this->resizeTo($width, $height, $contrainProps, $upScale);
+	}
+	
 	/**
 	 * Calculates width and height of a thumb
 	 * 
@@ -751,13 +755,7 @@ class Image extends File implements Renderable
 		return $this;
 	}
 	
-	/**
-	 * Alias for {@link stretchResizeTo}
-	 * @param integer $width
-	 * @param integer $height
-	 * @return Image
-	 */
-	public function cropResizeTo($width, $height) {
+	public function resizeCrop($width, $height) {
 		return $this->stretchResizeTo($width, $height);
 	}
 	
@@ -1088,12 +1086,21 @@ class Image extends File implements Renderable
 	 * <code>
 	 * $image->saveImage("../img/products/product_1.jpg", 100);
 	 * <code>
-	 * @param	string $filename Optional Parameter for saving the image in an other filename
-	 * @param	integer	$quality optional jpeg quality
+	 * 
+	 * Directories that do not exist will be created if possible using the
+	 * {@link Dir} class.
+	 * 
+	 * @param string $filename Optional Parameter for saving the image in an other filename
+	 * @param integer $quality optional image quality
+	 * @return boolean
 	 */
 	public function saveImage($filename = null, $quality = 60) {
 		if (is_null($filename)) {
 			$filename = $this->nodeName;
+		}
+		$dir = new Dir(dirname($filename));
+		if (!$dir->exists()) {
+			$dir->create();
 		}
 		switch ($this->type()) {
 			default :

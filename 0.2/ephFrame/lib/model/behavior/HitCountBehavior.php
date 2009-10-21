@@ -38,7 +38,11 @@
 class HitCountBehavior extends ModelBehavior
 {
 	public function hit($field, $i = 1) {
-		return $this->model->saveField($field, $this->model->get($field) + $i);
+		if ($this->model->hasField($field)) {
+			return $this->model->saveField($field, $this->model->get($field) + $i);
+		} else {
+			return false;
+		}
 	}
 	
 } // END HitCountBehavior class

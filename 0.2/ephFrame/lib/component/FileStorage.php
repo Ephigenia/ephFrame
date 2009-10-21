@@ -174,7 +174,7 @@ class FileStorageComponent extends AppComponent {
 			throw new FileStorageComponentRootNotFoundException($root);
 		}
 		$internalFileName = $this->translate($storageName);
-		$root->makeDir(dirname($internalFileName));
+		$root->create(dirname($internalFileName));
 		$file = new File($filename);
 		$internalFile = new File($this->root.$internalFileName);
 		if ($internalFile->exists()) {

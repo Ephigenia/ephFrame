@@ -424,12 +424,23 @@ class Model extends Object {
 	/**
 	 * Removes bindings with $modelName or multiple models
 	 * <code>
-	 * $user->unbindModel('Node', 'BlogPost');
+	 * $user->unbind('Node', 'BlogPost');
+	 * </code>
+	 * You can also unbind all models by calling
+	 * <code>
+	 * $user->unbind('all');
 	 * </code>
 	 * @param string|array(string) $modelName
 	 * @return boolean
 	 */
 	public function unbind($modelName) {
+		if ($modelName == 'all') {
+			$modelName = array_merge(
+				array_keys($this->hasOne),
+				array_keys($this->belongsTo),
+				array_keys($this->hasMany)
+			);
+		}
 		if (is_array($modelName)) {
 			$modelNames = $modelName;
 		} else {
@@ -463,7 +474,9 @@ class Model extends Object {
 	}
 	
 	/**
-	 *	Returns unique id string for a model entry
+	 * Returns unique id string for a model entry
+	 * @param integer $length
+	 * @return string
 	 */
 	public function uniqueId($length = 8) {
 		return substr(md5(SALT.$this->id), 0, $length);
@@ -549,11 +562,20 @@ class Model extends Object {
 	}
 	
 	/**
-	 * Returns the model data as array
+	 * Returns the model data as array or just the fields from the model
+	 * that you’ve named in $fieldNames
+	 * @param array(string) $fieldNames
 	 * @return array(mixed)
 	 */
-	public function toArray() {
-		return $this->data;
+	public function toArray(Array $fieldNames = array()) {
+		if (func_num_args() == 0) {
+			return $this->data;
+		}
+		$data = array();
+		foreach($fieldNames as $fieldname) {
+			$data[$fieldname] = $this->get($fieldname);
+		}
+		return $data;
 	}
 	
 	/**

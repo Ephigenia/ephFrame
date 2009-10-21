@@ -383,25 +383,14 @@ class File extends FileSystemNode {
 	}
 	
 	/**
-	 * Appends $string to a file
-	 * 
-	 * <code>
-	 * $log = new File('log.txt');
-	 * $log->append('someone logged something important');
-	 * </code>
-	 * 
-	 * @param string
+	 * Write $string to the end of the current file
+	 * @param string $string
 	 * @return File
 	 */
-	public function append($string, $glue = LF) {
+	public function append($string) {
 		if (!$this->exists()) $this->create();
 		if (!$this->readable()) throw new FileNotFoundException($this);
-		$fp = fopen($this->nodeName, 'a');
-		if (is_array($string)) {
-			$string = implode($glue, $string);
-		}
-		fputs($fp, $string);
-		fclose($fp);
+		file_put_contents($this->nodeName, $string, FILE_APPEND);
 		return $this;
 	}
 	

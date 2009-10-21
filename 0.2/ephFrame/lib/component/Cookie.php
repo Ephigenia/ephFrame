@@ -296,7 +296,7 @@ class Cookie extends AppComponent {
 	}
 	
 	public function __destruct() {
-		if ($this->autosave && count($this->saveData) > 0) {
+		if ($this->autosave && count($this->saveData) > 0 && !headers_sent()) {
 			$this->save();
 		}
 	}

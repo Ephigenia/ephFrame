@@ -247,19 +247,18 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	public function __toString() {
 		return $this->render();
 	}
-	
-	public function add($arr) {
-		return $this->append($arr);
+		
+	public function addRow($args) {
+		if (func_num_args() > 1) {
+			$args = func_get_args();
+		}
+		$this->data[] = $args;
+		return $this;
 	}
 
-	/**
-	 * Overwrites File Class Defined append Function
-	 * @see addRow
-	 */
-	public function append($arr, $glue = false) {
-		if (is_string($arr)) $arr = array($arr);
-		$this->data[] = $arr;
-		return $this;
+	public function append($string) {
+		$args = func_get_args();
+		return $this->callMethod('addRow', $args);
 	}
 
 	/**

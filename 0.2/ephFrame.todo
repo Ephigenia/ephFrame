@@ -15,6 +15,9 @@ HTMLTable Helper:
 - method for creating table cells
 - method for creating table headers
 
+Model:
+- make toModel accept filter arguments
+
 Paginator Helper:
 - make method for sorting links
 - method for a string with numbers of pages etc, item etc.

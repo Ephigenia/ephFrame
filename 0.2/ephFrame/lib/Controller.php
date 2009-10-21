@@ -760,6 +760,10 @@ abstract class Controller extends Object implements Renderable
 	 */
 	public function redirect($url, $status = 'p', $exit = true) {
 		$this->beforeRedirect($url, $status, $exit);
+		foreach($this->components as $componentName) {
+			$className = ClassPath::className($componentName);
+			$this->{$className}->beforeRedirect($url, $status, $exit);
+		}
 		if (!class_exists('HTTPStatusCode')) ephFrame::loadClass('ephFrame.lib.HTTPStatusCode');
 		if ($url !== null) {
 			header('Location: '.$url, true);

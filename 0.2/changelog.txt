@@ -1,186 +1,168 @@
-official changelog for ephFrame
-===========================================================================
+Official Changelog for ephFrame PHP Framework
+==============================================================================
 
-2009-10-08
-+	Fixed function call with reference in HTTPRequest and Cookie Class
-+	Added Paginator Helper that makes pagintion easier to use!
-+	Added and changed docu for HTML Helper
-+	Fixed String::prepend to use conditional string correctly
-+	moved ephFrame path decision from index.php ino ephFrame.php
-+	Added AppHelper class with various callbacks
-+	All basic components extend from AppComponent now
-+ 	Added /console/console.php script that loads console tasks
-+	Helpers now can access controller by $this->controller if set
-+	HTML Helper uses $theme from controller to link images right
+# 2009-10-21 #
+- added beforeRedirect callback that is called on every component before redirect headers are send in the controller, note that afterRender is _not_ called when a redirect is called
+- removed $glue parameter from File->append
+- Model->toArray accepts first parameter with fieldnames in it that will be used in array creation
 
-2009-09-17
-+	Dynamic Binding with bind() works again with aliases
-+	Some Email and CSV class related fixes
+# 2009-10-11 #
+* ->unbind('all') removes all bindings from a model
+* Directories can be created by simply calling ->create on them
+* Image->resizeTo renamed to resize and Image->stretchResizeTo will be renamed to resizeCrop
+* Dir->delete can delete directories recursivly
 
-2009-09-11
-+	now php 5.3 compatible
-	removed depreciated function calls (split -> explode)
-	set_magic_quotes_runtime
-+	fixed bug where email validation fails on emails like l.name@host.com
+# 2009-10-08 #
+* Fixed function call with reference in HTTPRequest and Cookie Class
+* Added Paginator Helper that makes pagintion easier to use!
+* Added and changed docu for HTML Helper
+* Fixed String::prepend to use conditional string correctly
+* moved ephFrame path decision from index.php ino ephFrame.php
+* Added AppHelper class with various callbacks
+* All basic components extend from AppComponent now
++ Added /console/console.php script that loads console tasks
+* Helpers now can access controller by $this->controller if set
+* HTML Helper uses $theme from controller to link images right
 
-2009-09-03
-+	Model COnditions like this array('User.id' => array('1','2','5')) will
-	create a IN (1,2,5) query (no properly quoting yet!)
-+	Added Email Component from ephFrame 0.1 refactored
-+	Email Component logs emails to log directory if $delivery is set to
- 	'debug' for testing
-+	Email can send UTF8 subjects now including german umlauts! (tested on
-	OSX Mail and Webmail mobileme.com and iPhone)
-+	Email Component attach files that are not there:
-	->attach($filename, $content)
+# 2009-09-17 #
+* Dynamic Binding with bind() works again with aliases
+* Some Email and CSV class related fixes
 
-2009-08-29
-+	added up and low as alias for upper and lower in String helper
+# 2009-09-11 #
+* now php 5.3 compatible
+  removed depreciated function calls (split -> explode)
+  set_magic_quotes_runtime
+* fixed bug where email validation fails on emails like l.name@host.com
 
-2009-08-21
-+	moves isEmpty to core.php file so that the method is available everywhere
-	also changed logic to it returns the first argument passed that is not
-	empty() and renamed it to coalesce (removed old coalesce method)
-+	added whitelist filter to Hash class that removes all keys that are not
-	in the whitelist of keys
-+	added uri and url method to router class
-+	added default HitCount Behavior to Behaviors that can increase single
-	model fields when used (very usefull for increasing view + 1 f.e.)
-+	added Time::nice and niceShort method to replace timeAgoInWords soon
-+	styles of simpletest changed a bit
+# 2009-09-03 #
+* Model COnditions like this array('User.id' => array('1','2','5')) will create a IN (1,2,5) query (no properly quoting yet!)
+* Added Email Component from ephFrame 0.1 refactored
+* Email Component logs emails to log directory if $delivery is set to 'debug' for testing
+* Email can send UTF8 subjects now including german umlauts! (tested on OSX Mail and Webmail mobileme.com and iPhone)
+* Email Component attach files that are not there:->attach($filename, $content)
 
-2009-08-13
-+	added Text Helper that replaces URLs and Emails in Text automatically with 
- 	links
-+	added Security Component that limits actions to specific HTTP Methods
-+	dramatically decreased memory and compile time usage in model class that
-	makes everything up to 50% faster
+# 2009-08-29 #
+* added up and low as alias for upper and lower in String helper
 
-2009-08-12
-+	fixed missing created update field when inserting new model entries with
-	multiple behaviors
-+	added theming, which includes js/css search in theme directory
-+	fixed js packer to append line-feed at end of packed js files
-+	added after[Action] and before[Action] callbacks in the controller
-+	added subversion keywords and new formatted copyright message on every
-	file
-+	SGMLAttributes don’t render attributes with empty values anymore
-+	DBDSN in db.php can be an array, enabling socket connections with it
-+	missing afterAction callback for controller added (called after
-	components)
-+	empty cookie values return false now
-+	fixed object->__mergeParentProperty to merge correctly using ->{$varname}
-+	File->basename(true) will return with extension and false without 
-	extension
-+	Dir->newFile can create new Files on the fly
-+	CSS/JS Packer use Dir class to create Packed files now
-+	added default view for missingtable error message
-+	form->configure uses varchar length from model fields as maxLength for 
-	input fields
-+	renamed Set class to IndexedArray!!!
-+	fixed issue with String::substr() on php 5.2.6
-+	imageconvolution added if missing in ImageSharpenFilter (needs high 
-	performance!)
-+	image uses imageantialias only if function exists
-+	replaced %1% placeholders to :[name] in string::substitute
-+	added alias for string::substitute - string::insert
-+	new formating for files skipping ?> in files and no tabs in PHPDocBlocks
-+	Sanitizer::filename sanitizes filenames
-+	Controller->redirect added optional beforeRedirect method
-+	added String::prepend / append to add optional parts to a string
-+	router can have theme, layout as parameter to change them in controller
-+	added error message for layout missing exception
-+	view adds http content-type header only if missing
-+	model supports uniqueId method now (custom length)
-+	model supports hasAny now that returns true if conditions met that are 
-	passed to it
-+	httprequest->hostname now optional (saving performance if not needed)
-+	before/afterAction will not get the action parameter anymore (can be read 	
-	by $this->controller->action or $this->action)
-+	form: renamed configureModel to configure
-+	form $configure can contain form fields
-+	httpheader parses status code now, httpresponse variable name fixed
-+	model query and DBConnectionManager usage bit optimized (saving some RAM)
-+	added error message for not writable directores in Dispatcher
-+	added String::ifEmpty for default echo
-+	model name which is alias used in every query possible
+# 2009-08-21 #
+* moves isEmpty to core.php file so that the method is available everywhere
+ also changed logic to it returns the first argument passed that is not empty() and renamed it to coalesce (removed old coalesce method)
+* added whitelist filter to Hash class that removes all keys that are not in the whitelist of keys
+* added uri and url method to router class
+* added default HitCount Behavior to Behaviors that can increase single model fields when used (very usefull for increasing view + 1 f.e.)
+* added Time::nice and niceShort method to replace timeAgoInWords soon
+* styles of simpletest changed a bit
 
-2009-05-25
-+	added model behaviors callable from every model
-+	controller actions can return false to render 404 page
-+	added NestedSetBehavior, FlagableBehavior and PositionableBehavior
-+	added Form Field Classes and Form with configure
-+	Log Levels now used correctly
-+	Model can return random sets
-+	Model can return simple list of fields from table
-+	Model->findBy supports depth parameter
-+	Model query class caches query and results
-+	Model can now unbind and bind other models on the fly
-+	Image->stretchResizeTo fixed
-+	javascript and css component can include files from http://...
-+	optimized model - bind, create methods
-+	added CURL and Scraper Class
-+	app/config/paths.php included before frameworks paths.php
-+	Routes reusable with their names and parameters
+# 2009-08-13 #
+* added Text Helper that replaces URLs and Emails in Text automatically with links
+* added Security Component that limits actions to specific HTTP Methods
+* dramatically decreased memory and compile time usage in model class that makes everything up to 50% faster
 
-2008-10-26
-+	changed the controller order actions to create components again
-+	created ModelStructureCache to handle the save and load stuff of a model 
-	(refactoring)
-+	modelfieldinfo now stores length (also float) and types correctly
-+	router copies same route names data from allready existing routes
-+	view renders all variables (to sad that the Hash seemes to have a bug on 
-	foreach sometimes?)
-+	added message to application default index if model cache dir does not 	
+# 2009-08-12 #
+* fixed missing created update field when inserting new model entries with multiple behaviors
+* added theming, which includes js/css search in theme directory
+* fixed js packer to append line-feed at end of packed js files
+* added after[Action] and before[Action] callbacks in the controller
+* added subversion keywords and new formatted copyright message on every file
+* SGMLAttributes don’t render attributes with empty values anymore
+* DBDSN in db.php can be an array, enabling socket connections with it
+* missing afterAction callback for controller added (called after components)
+* empty cookie values return false now
+* fixed object->__mergeParentProperty to merge correctly using ->{$varname}
+* File->basename(true) will return with extension and false without extension
+* Dir->newFile can create new Files on the fly
+* CSS/JS Packer use Dir class to create Packed files now
+* added default view for missingtable error message
+* form->configure uses varchar length from model fields as maxLength for input fields
+* renamed Set class to IndexedArray!!!
+* fixed issue with String::substr() on php 5.2.6
+* imageconvolution added if missing in ImageSharpenFilter (needs high  performance!)
+* image uses imageantialias only if function exists
+* replaced %1% placeholders to :[name] in string::substitute
+* added alias for string::substitute - string::insert
+* new formating for files skipping ?> in files and no tabs in PHPDocBlocks
+* Sanitizer::filename sanitizes filenames
+* Controller->redirect added optional beforeRedirect method
+* added String::prepend / append to add optional parts to a string
+* router can have theme, layout as parameter to change them in controller
+* added error message for layout missing exception
+* view adds http content-type header only if missing
+* model supports uniqueId method now (custom length)
+* model supports hasAny now that returns true if conditions met that are passed to it
+* httprequest->hostname now optional (saving performance if not needed)
+* before/afterAction will not get the action parameter anymore (can be read 	 by $this->controller->action or $this->action)
+* form: renamed configureModel to configure
+* form $configure can contain form fields
+* httpheader parses status code now, httpresponse variable name fixed
+* model query and DBConnectionManager usage bit optimized (saving some RAM)
+* added error message for not writable directores in Dispatcher
+* added String::ifEmpty for default echo
+* model name which is alias used in every query possible
+
+# 2009-05-25 #
+* added model behaviors callable from every model
+* controller actions can return false to render 404 page
+* added NestedSetBehavior, FlagableBehavior and PositionableBehavior
+* added Form Field Classes and Form with configure
+* Log Levels now used correctly
+* Model can return random sets
+* Model can return simple list of fields from table
+* Model->findBy supports depth parameter
+* Model query class caches query and results
+* Model can now unbind and bind other models on the fly
+* Image->stretchResizeTo fixed
+* javascript and css component can include files from http://...
+* optimized model - bind, create methods
+* added CURL and Scraper Class
+* app/config/paths.php included before frameworks paths.php
+* Routes reusable with their names and parameters
+
+# 2008-10-26 #
+* changed the controller order actions to create components again
+* created ModelStructureCache to handle the save and load stuff of a model (refactoring)
+* modelfieldinfo now stores length (also float) and types correctly
+* router copies same route names data from allready existing routes
+* view renders all variables (to sad that the Hash seemes to have a bug on foreach sometimes?)
+* added message to application default index if model cache dir does not 	
 	exists or not writable
-+	enabled Log again
-+	controller now loads all components, then the models and then startups all 
-	components
-+	removed some log messages from controller and component
-+	model saved structure files are now read correctly (still not very cool 
-	implementation)
-+	Session loads up correctly (removed double load in controller)
-+	query history now skips the results part if there was just one
+* enabled Log again
+* controller now loads all components, then the models and then startups all components
+* removed some log messages from controller and component
+* model saved structure files are now read correctly (still not very cool implementation)
+* Session loads up correctly (removed double load in controller)
+* query history now skips the results part if there was just one
 
-2008-10-24
-+	form adds default action now, WEBROOT+current url
-+	form fields now save their validate status (error message in 
-	formfield->error)
-+	added form field password 
-+	html helper now can create simple P-Elements
-+	new sequence of component, model init, controller sends startup to 
-	components now after model init and after all components are attached to 
-	controller
-+	validator can now replace some wilcard names (%name%) in the error 
-	messages
-+	set now supports isEmpty for checking if a index is empty or the hole set 
-	is "empty"
-+	missing view now renders the hole path to the missing view file
-+	introducing appForm standrad form class for applications
-+	javascript addFile now acts like addFiles with multiple arguments
+# 2008-10-24 #
+* form adds default action now, WEBROOT+current url
+* form fields now save their validate status (error message in formfield->error)
+* added form field password 
+* html helper now can create simple P-Elements
+* new sequence of component, model init, controller sends startup to components now after model init and after all components are attached to controller
+* validator can now replace some wilcard names (%name%) in the error messages
+* set now supports isEmpty for checking if a index is empty or the hole set is "empty"
+* missing view now renders the hole path to the missing view file
+* introducing appForm standrad form class for applications
+* javascript addFile now acts like addFiles with multiple arguments
 
-2008-10-23
-+	controller send now content type from view class
-+	added xml view class
-+	added simple rss action for controller
-+	Validator fixed access to $validatorObject callback
-+	db-query values now not escaped (should be done by model now)
-+	added readme.txt dummy file
-+	added absolute url to registry
+# 2008-10-23 #
+* controller send now content type from view class
+* added xml view class
+* added simple rss action for controller
+* Validator fixed access to $validatorObject callback
+* db-query values now not escaped (should be done by model now)
+* added readme.txt dummy file
+* added absolute url to registry
 
-2008-10-21
-+	started rewrite of Form and FormField classes (new validator class)
-+	model uses the new validator class now
-+	added structure.sql file to /app/config/ to store table structures
-+	changed url parameter to __url in /webroot/.htaccess
-+	changed HTTPRequest to handle POST / GET Vars depending on the 
-	Request-Method
-+	fixed bug in model cache loading
+# 2008-10-21 #
+* started rewrite of Form and FormField classes (new validator class)
+* model uses the new validator class now
+* added structure.sql file to /app/config/ to store table structures
+* changed url parameter to __url in /webroot/.htaccess
+* changed HTTPRequest to handle POST / GET Vars depending on the Request-Method
+* fixed bug in model cache loading
 
-2008-10-20
-+	added validation array that validates model data before saving
-+	added third parameter for save to save only specific fields of the model
-+	fixed/enhanced creation of resulting model set lists and single returns 
-	when retreiving model data
-+	added ModelBehavior to models that can act like plugins in model logic
-	supporting callbacks for beforeSave, afterSave ...
+# 2008-10-20 #
+* added validation array that validates model data before saving
+* added third parameter for save to save only specific fields of the model
+* fixed/enhanced creation of resulting model set lists and single returns when retreiving model data
+* added ModelBehavior to models that can act like plugins in model logic supporting callbacks for beforeSave, afterSave …

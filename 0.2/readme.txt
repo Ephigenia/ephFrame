@@ -1,7 +1,6 @@
-ephFrame simple readme file
---------------------------------------------------------------------------------
+ephFrame PHP Framework Readme File
+==============================================================================
 
-Installation:
--------------
+# Installation #
 
-	
+# Updates #

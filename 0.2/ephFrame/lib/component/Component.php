@@ -163,6 +163,15 @@ abstract class Component extends Object implements ephFrameComponent {
 	}
 	
 	/**
+	 * Called before beforeRedirect in the controller continues to send
+	 * redirection headers. The return values will do nothing in the controller
+	 * @return boolean
+	 */
+	public function beforeRedirect($url, $status = 'p', $exit = true) {
+		return true;
+	}
+	
+	/**
 	 * Callback that is calld after action was performed in the controller
 	 * @return boolean
 	 */
