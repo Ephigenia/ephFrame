@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * ephFrame: <http://code.marceleichner.de/project/ephFrame/>
  * Copyright (c) 2007+, Ephigenia M. Eichner
  *                      Kopernikusstr. 8
  *                      10245 Berlin
@@ -174,7 +174,7 @@ class JavaScript extends AppComponent implements Renderable {
 	public function render() {
 		if (!$this->beforeRender()) return '';
 		$rendered = '';
-		foreach(array_merge($this->files->toArray(), $this->urls->toArray()) as $filename) {
+		foreach(array_merge($this->urls->toArray(), $this->files->toArray()) as $filename) {
 			if (substr($filename, 0, 7) != 'http://') {
 				$filename = WEBROOT.$filename;
 			}

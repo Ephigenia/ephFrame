@@ -1,9 +1,8 @@
 <!-- this is an example view for the missinglayout message -->
-<h1>Layout <q><?= basename($layout) ?></q> not found!</h1>
+<h1>Theme <q><?= $theme ?></q> not found!</h1>
 <p class="error">
-	The layout file for the layout called <q><?= $layout ?></q> seemes to be missing.
-	Please create the file at:<br />
-	<q><?= $filename ?></q>
+	Sorry, ephFrame was not able to find the theme directory for the theme <q><?= $theme ?></q>. Please
+	create this directory in <q><?= VIEW_THEME_DIR ?></q>.
 </p>
 <p class="hint">
 	You can edit or create your own error message for missing views by editing

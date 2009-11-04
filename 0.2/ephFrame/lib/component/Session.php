@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * ephFrame: <http://code.marceleichner.de/project/ephFrame/>
  * Copyright (c) 2007+, Ephigenia M. Eichner
  *                      Kopernikusstr. 8
  *                      10245 Berlin
@@ -95,6 +95,9 @@ class Session extends Hash {
 		} else {
 			$this->name($this->name);
 		}
+		if (!empty($this->controller->request->data[$this->name])) {
+			$this->id($this->controller->request->data[$this->name]);
+		}
 		if (!isset($_SESSION)) {
 			if (!session_start()) {
 				throw new SessionStartException();
@@ -126,8 +129,8 @@ class Session extends Hash {
 	 */
 	public function name($name = null) {
 		if (func_num_args() > 0 && $name !== null) {
-			session_name((string) $name);
-			$this->name = $name;
+			$this->name = (string) $name;
+			session_name($this->name);
 		}
 		return session_name();
 	}

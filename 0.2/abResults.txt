@@ -3,7 +3,7 @@ Apache Bench result  2008-12-04
 
 Command:
 --------
-ab -c 10 -t 60 http://localhost/ephFrameNew/ephFrame/ephFrame/app/
+ab -c 10 -t 60 http://localhost/ephFrame/ephFrame/ephFrame/app/
 
 Summary:
 --------
@@ -14,12 +14,13 @@ Date		r/s		requests
 2009-05-07	55.75	3345
 2009-07-07  21.71	1304 (apache2/PHP 5.2.9)
 2009-09-03  512		32787
+2009-10-27  21.69	1304
 
 Single Tests:
 -------------
 
 2009-02-05
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 Finished 3102 requests
 
 Server Software:        Apache/2.0.59
@@ -61,7 +62,7 @@ Percentage of the requests served within a certain time (ms)
  100%  20631 (longest request)
 
 2009-01-16
---------------------------------------------------------------------------------
+------------------------------------------------------------------------------
 Finished 2907 requests
 
 Server Software:        Apache/2.0.59

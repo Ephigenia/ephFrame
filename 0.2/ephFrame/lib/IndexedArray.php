@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * ephFrame: <http://code.marceleichner.de/project/ephFrame/>
  * Copyright (c) 2007+, Ephigenia M. Eichner
  *                      Kopernikusstr. 8
  *                      10245 Berlin
@@ -46,8 +46,8 @@ class_exists('Component') or require dirname(__FILE__).'/component/Component.php
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 17.07.2008
  */
-class IndexedArray extends Component implements Countable, Renderable, Iterator, ArrayAccess {
-	
+class IndexedArray extends Component implements Countable, Renderable, Iterator, ArrayAccess
+{	
 	/**
 	 * Stores the data in the IndexedArray
 	 * @var string(mixed)
@@ -453,11 +453,17 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @return array(mixed)
 	 */
 	public function rand($count = 1) {
-		$r = array();
-		foreach (array_rand($this->data, (int) $count) as $int) {
-			$r[] = $this[$i];
+		$count = (int) ($count);
+		if ($count < 1) {
+			return array();
+		} elseif ($count == 1) {
+			return array($this->data[array_rand($this->data)]);
+		} else {
+			foreach (array_rand($this->data, (int) $count) as $index) {
+				$r[] = $this[$index];
+			}
+			return $r;
 		}
-		return $r;
 	}
 	
 	/**
@@ -1029,13 +1035,11 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 */
 	public function __toString() {
 		return $this->render();
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception 
  */
-class IndexedArrayException extends BasicException {
-}
+class IndexedArrayException extends BasicException { }

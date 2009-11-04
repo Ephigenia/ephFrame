@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * ephFrame: <http://code.marceleichner.de/project/ephFrame/>
  * Copyright (c) 2007+, Ephigenia M. Eichner
  *                      Kopernikusstr. 8
  *                      10245 Berlin
@@ -41,44 +41,36 @@ class_exists('Hash') or require dirname(__FILE__).'/Hash.php';
  * 
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 09.08.2007
- * @version 0.1
+ * @version 0.2
  * @package ephFrame
  * @subpackage ephFrame.lib.component
- * @uses Hash
- * @uses Element
  */
-abstract class View extends Hash implements Renderable {
-	
+abstract class View extends Hash implements Renderable
+{	
 	/**
 	 * Name of this view (this is used to get the
 	 * Directory name)
 	 * @var string
 	 */
-	protected $name;
+	protected $path;
 
 	/**
 	 * @var string
 	 */
-	private $action;
+	protected $name = 'index';
+	
+	/**
+	 * Optional name for a theme to use in the path
+	 * @var string
+	 */
+	public $theme = false;
 	
 	/**
 	 * Extension for layout and view files
 	 * this is some kind of security issue here not to use html
 	 * @var string
 	 */
-	protected $templateExtension = 'php';
-	
-	/**
-	 * Filename for this view, created in the __constructor
-	 * @var string
-	 */
-	public $filename;
-	
-	/**
-	 * Optional name for a theme to use in the path
-	 * @var string
-	 */
-	public $theme = '';
+	protected $extension = 'php';
 	
 	/**
 	 * Content type for this view that can be send to the client
@@ -86,56 +78,55 @@ abstract class View extends Hash implements Renderable {
 	 */
 	public $contentType = 'text/plain';
 	
-	public $dir = VIEW_DIR;
-	
 	/**
 	 * View constructor
 	 * @return View
 	 */
-	public function __construct($name, $action = 'index', $data = null) {
+	public function __construct($path, $name = 'index', $data = null) {
+		$this->path = $path;
+		$this->name = $name;
 		if (is_object($data)) {
 			$this->data = $data;
 		} else {
 			$this->data = new Hash($data);
 		}
-		if ($this->data->get('theme', false)) {
-			$this->theme = (string) $this->data->get('theme');
-		}
-		// sanitize name
-		$this->name = preg_replace('/([^-_\/a-z0-9]*)/i', '', preg_replace('@\.php$@i', '', $name));
-		// sanitize action name
-		$this->action = Sanitizer::panic($action);
 		return parent::__construct();
 	}
 	
-	/**
-	 * Returns the filename of this view
-	 * @return string
-	 */
-	protected function createViewFilename () {
-		$knownPart = lcfirst($this->name).DS.lcfirst($this->action).'.'.$this->templateExtension;
-		// add theme
-		if (!empty($this->theme)) {
-			if (!is_dir($this->dir.'theme'.DS.$this->theme)) {
-				throw new ThemeNotFoundException($this);
+	protected function templateFileBasename() {
+		return lcfirst($this->path).DS.preg_replace('@\.php$@', '', lcfirst($this->name)).'.'.$this->extension;
+	}
+	
+	protected function templateSearchPaths() {
+		if ($this->theme) {
+			$searchPaths[] = VIEW_THEME_DIR.$this->theme.DS;
+		}
+		$searchPaths[] = VIEW_DIR;
+		$searchPaths[] = FRAME_ROOT.'view'.DS;
+		return $searchPaths;
+	}
+	
+	protected function templateFilename() {
+		if ($this->theme && !is_readable(VIEW_THEME_DIR.$this->theme)) {
+			throw new ThemeNotFoundException($this, $this->theme);
+		}
+		$templateFileBasename = $this->templateFileBasename();
+		foreach($this->templateSearchPaths() as $searchPath) {
+			$templateFilename = $searchPath.$templateFileBasename;
+			if (file_exists($templateFilename)) {
+				if (!is_readable($templateFilename)) {
+					throw new ViewFileNotReadableException($this, $templateFilename);
+				}
+				return $templateFilename;
 			}
-			$filenames[] = $this->dir.'theme/'.$this->theme.DS.$knownPart;
 		}
-		$filenames[] = $this->dir.$knownPart;
-		$filenames[] = FRAME_ROOT.'view/'.$knownPart;
-		foreach($filenames as $this->filename) {
-			if (file_exists($this->filename)) { $found = true; break; }
+		if (preg_match('@/element/@', $templateFilename)) {
+			throw new ElementFileNotFoundException($this, $templateFilename);;
+		} elseif (preg_match('@/layout/@', $templateFilename)) {
+			throw new LayoutFileNotFoundException($this, $templateFilename);;
+		} else {
+			throw new ViewFileNotFoundException($this, $templateFilename);;
 		}
-		// view file not found
-		if (empty($found)) {
-			$this->filename = $filenames[0];
-			if ($this->name == 'layout') {
-				throw new LayoutFileNotFoundException($this);
-			} else {
-				throw new ViewFileNotFoundException($this);
-			}
-		}
-		return $this->filename;
 	}
 	
 	/**
@@ -146,19 +137,13 @@ abstract class View extends Hash implements Renderable {
 	 * @return string
 	 */
 	public function render() {
-		// viewfilename
-		$this->createViewFilename();
-		if (!$this->beforeRender()) return null;
-		ob_start();
+		if (!$this->beforeRender()) return false;
 		foreach($this->data->toArray() as $___key => $___val) {
 			${$___key} = $___val;
 		}
-		// prevent key and val from manipulation
-		unset($___key);
-		unset($___val);
-		require $this->filename;
-		$content = ob_get_clean();
-		return $this->afterRender($content);
+		ob_start();
+		require $this->templateFilename();
+		return $this->afterRender(ob_get_clean());
 	}
 	
 	/**
@@ -178,7 +163,7 @@ abstract class View extends Hash implements Renderable {
 	 * </code>
 	 * 
 	 * @param string $elementName
-	 * @param array $data
+	 * @param array|Hash $data
 	 * @param boolean $output
 	 * @return string
 	 */
@@ -194,36 +179,52 @@ abstract class View extends Hash implements Renderable {
 		// create element
 		$element = new Element($elementName, $data);
 		$element->theme = $this->theme;
+		try {
+			$content = $element->render();
+		} catch (ElementNotFoundException $e) { }
 		if ($output) {
-			echo $element->render();
-			unset($element);
+			echo $content;
 		} else {
-			return $element->render();
+			return $content;
 		}
 	}
-
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception 
  */
-class ViewException extends BasicException {
-	/**
-	 * @var View
-	 */
+class ViewException extends BasicException 
+{
 	public $view;
+	public function __construct(View $view, $message = null)
+	{
+		$this->view = $view;
+		parent::__construct($message);
+	}
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception 
  */
-class ViewFileNotFoundException extends ViewException {
-	public function __construct(View $view) {
-		$this->view = $view;
-		$message = sprintf('Unable to find view File \'%s\'', $this->view->filename);
-		parent::__construct($message);
+class ViewFileNotFoundException extends ViewException
+{
+	public $filename;
+	public function __construct(View $view, $filename)
+	{
+		$this->filename = $filename;
+		parent::__construct($view, sprintf('Unable to locate view file \'%s\'.', $this->filename));
+	}
+}
+
+class ViewFileNotReadableException extends ViewException
+{
+	public $filename;
+	public function __construct(View $view, View $filename)
+	{
+		$this->filename = $filename;
+		parent::__construct($view, sprintf('Unable to read view file: \'%s\'.', $this->filename));
 	}
 }
 
@@ -232,11 +233,13 @@ class ViewFileNotFoundException extends ViewException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception 
  */
-class ThemeNotFoundException extends ViewException {
-	public function __construct(View $view) {
-		$this->view = $view;
-		$message = sprintf('Unable to find layout directory: \'%s\'.', $this->view->dir.$this->view->theme);
-		parent::__construct($message);
+class ThemeNotFoundException extends ViewException
+{
+	public $theme;
+	public function __construct(View $view, $theme)
+	{
+		$this->theme = $theme;
+		parent::__construct($view, sprintf('Theme \'%s\' not found.', $this->theme));
 	}
 }
 
@@ -244,10 +247,12 @@ class ThemeNotFoundException extends ViewException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception 
  */
-class LayoutFileNotFoundException extends ViewException {
-	public function __construct(View $view) {
-		$this->view = $view;
-		$message = sprintf('Unable to find layout file: \'%s\'.', $this->view->filename);
-		parent::__construct($message);
+class LayoutFileNotFoundException extends ViewException
+{
+	public $filename;
+	public function __construct(View $view, $filename)
+	{
+		$this->filename = $filename;
+		parent::__construct($view, sprintf('The layout template file was not found at \'%s\'', $this->filename));
 	}
 }

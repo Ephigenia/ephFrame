@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * ephFrame: <http://code.marceleichner.de/project/ephFrame/>
  * Copyright (c) 2007+, Ephigenia M. Eichner
  *                      Kopernikusstr. 8
  *                      10245 Berlin
@@ -19,7 +19,8 @@
  */
 
 // load classed needed
-ephFrame::loadClass('ephFrame.lib.helper.Charset');
+class_exists('Charset') or require dirname(__FILE__).'/Charset.php';
+class_exists('Helper') or require dirname(__FILE__).'/Helper.php';
 
 /**
  * Manipulating / Analyzing Strings
@@ -38,8 +39,8 @@ ephFrame::loadClass('ephFrame.lib.helper.Charset');
  * @version 0.2.1
  * @uses Charset
  */
-class String extends Helper {
-	
+class String extends Helper
+{	
 	/**
 	 * Convert a $string to an url conform string by replacing space with
 	 * $spaceReplace Character and lowercase the string.
@@ -55,7 +56,8 @@ class String extends Helper {
 	 * @param boolean $noCase transform string to lowercase
 	 * @return string
 	 */
-	public static function toURL($string, $spaceReplace = '-', $noCase = true) {
+	public static function toURL($string, $spaceReplace = '-', $noCase = true)
+	{
 		$string = trim($string);
 		$string = strip_tags($string);
 		$string = Charset::toASCII($string);
@@ -91,7 +93,8 @@ class String extends Helper {
 	 * @param boolean $isEmpty
 	 * @return string
 	 */
-	public static function append($string, $append, $condString = null, $caseSensitive = false, $isEmpty = true) {
+	public static function append($string, $append, $condString = null, $caseSensitive = false, $isEmpty = true)
+	{
 		$string = (string) $string;
 		$append = (string) $append;
 		if (strlen($append) == 0) return $string;
@@ -120,7 +123,8 @@ class String extends Helper {
 	 * @param boolean $isEmpty prepends the string only if the input $string was not empty
 	 * @return string
 	 */
-	public static function prepend($string, $prepend, $condString = null, $caseSensitive = false, $isEmpty = true) {
+	public static function prepend($string, $prepend, $condString = null, $caseSensitive = false, $isEmpty = true)
+	{
 		$string = (string) $string;
 		$prepend = (string) $prepend;
 		if (strlen($prepend) == 0) return $string;
@@ -148,7 +152,8 @@ class String extends Helper {
 	 * @param integer $i number of characters to return
 	 * @return string
 	 */
-	public static function left($string, $i = 0) {
+	public static function left($string, $i = 0)
+	{
 		return self::substr($string, 0, $i);
 	}
 	
@@ -164,7 +169,8 @@ class String extends Helper {
 	 * @param integer $i number of characters to return
 	 * @return string
 	 */
-	public static function right($string, $i = 0) {
+	public static function right($string, $i = 0)
+	{
 		if ($i == 0) {
 			return '';
 		}
@@ -187,7 +193,8 @@ class String extends Helper {
 	 * @param integer $end
 	 * @return string
 	 */
-	public static function upper($string, $start = 0, $end = null, $charset = Charset::UTF_8) {
+	public static function upper($string, $start = 0, $end = null, $charset = Charset::UTF_8)
+	{
 		$string = (string) $string;
 		if (strlen($string) == 0) return $string;
 		if (Charset::isUTF8($string)) {
@@ -207,7 +214,8 @@ class String extends Helper {
 	 * alias for {@link upper}
 	 * @return string
 	 */
-	public function up($string, $start = 0, $end = null, $charset = Charset::UTF_8) {
+	public function up($string, $start = 0, $end = null, $charset = Charset::UTF_8)
+	{
 		return self::upper($string, $start, $end, $charset);
 	}
 	
@@ -225,7 +233,8 @@ class String extends Helper {
 	 * @return string
 	 * @static
 	 */
-	public static function ucFirst($string, $length = 1) {
+	public static function ucFirst($string, $length = 1)
+	{
 		return self::upper($string, 0, $length);
 	}
 	
@@ -237,7 +246,8 @@ class String extends Helper {
 	 * @param string $charset
 	 * @return string
 	 */
-	public static function lower($string, $start = 0, $end = null, $charset = Charset::UTF_8) {
+	public static function lower($string, $start = 0, $end = null, $charset = Charset::UTF_8)
+	{
 		$string = (string) $string;
 		if (strlen($string) == 0) return $string;
 		if (Charset::isUTF8($string)) {
@@ -257,7 +267,8 @@ class String extends Helper {
 	 * alias for {@link lower}
 	 * @return string
 	 */
-	public function low($string, $start = 0, $end = null, $charset = Charset::UTF_8) {
+	public function low($string, $start = 0, $end = null, $charset = Charset::UTF_8)
+	{
 		return self::lower($string, $start, $end, $charset);
 	}
 
@@ -269,7 +280,8 @@ class String extends Helper {
 	 * @param string $charset optional charset encoding string
 	 * @return string
 	 */
-	public static function lcFirst($string, $length = 1) {
+	public static function lcFirst($string, $length = 1)
+	{
 		return self::lower($string, 0, $length);
 	}
 	
@@ -302,10 +314,11 @@ class String extends Helper {
 	 * @param array(string)	$arr
 	 * @return string
 	 */
-	public static function substitute($template, $arr = array()) {
+	public static function substitute($template, $arr = array())
+	{
 		$template = (string) $template;
 		// if empty template or no marks found
-		if (empty($template) || !preg_match_all('/:([\p{L}0-9\.\-_]+)?/', $template, $found)) {
+		if (empty($template) || !preg_match_all('/:([a-z0-9\.\-_]+)?/i', $template, $found)) {
 			return $template;
 		}
 		// multiple arguments caled
@@ -331,7 +344,8 @@ class String extends Helper {
 	 * @param array(string) $arr
 	 * @return string
 	 */
-	public static function replace($template, $arr = array()) {
+	public static function replace($template, $arr = array())
+	{
 		if (func_num_args() > 2) {
 			$arr = func_get_args();
 			$arr = array_slice($arr, 1, count($arr)-1, true);
@@ -353,7 +367,8 @@ class String extends Helper {
 	 * @param integer $skiplines Optional number of lines that should be skipped
 	 * @return string	the indented string result
 	 */
-	public static function indent($in, $n = 1, $char = TAB, $skipLines = 0) {
+	public static function indent($in, $n = 1, $char = TAB, $skipLines = 0)
+	{
 		$lines = preg_split('/\n{1}/', $in);
 		$numberOfLines = self::numberOfLines($in);
 		foreach ($lines as $index => $line) {
@@ -370,7 +385,8 @@ class String extends Helper {
 	 * @return integer
 	 * @static
 	 */
-	public static function length($string) {
+	public static function length($string)
+	{
 		if (Charset::isUTF8($string)) {
 			return mb_strlen($string, 'UTF-8');
 		} else {
@@ -390,7 +406,8 @@ class String extends Helper {
 	 * @param integer $start
 	 * @param integer $length
 	 */
-	public static function substr($string, $start = null, $length = null) {
+	public static function substr($string, $start = null, $length = null)
+	{
 		$string = (string) $string;
 		if ($length === 0) {
 			return '';
@@ -428,7 +445,8 @@ class String extends Helper {
 	 * @param integer $minLenght Minimum length of words to be counted
 	 * @return array(mixed)
 	 */
-	public static function countWords($input, $minLength = null) {
+	public static function countWords($input, $minLength = null)
+	{
 		if (!is_string($input)) throw new StringExpectedException();
 		$string = self::stripTags($input);
 		if ($minLength === null) {
@@ -451,7 +469,8 @@ class String extends Helper {
 	 * @param string $string
 	 * @return integer
 	 */
-	public static function countSentences($string) {
+	public static function countSentences($string)
+	{
 		
 	}
 	
@@ -461,7 +480,8 @@ class String extends Helper {
 	 * @param string $string
 	 * @return integer Number of paragraphs found
 	 */
-	public static function countParagraphs($string) {
+	public static function countParagraphs($string)
+	{
 		if (!is_string($string)) return null;
 		return substr_count($string, LF);
 	}
@@ -484,7 +504,8 @@ class String extends Helper {
 	 * @param string	$end
 	 * @param boolean	$force
 	 */
-	public static function truncate($string, $length, $end = '', $force = false, $calculateWidths = true) {
+	public static function truncate($string, $length, $end = '', $force = false, $calculateWidths = true)
+	{
 		$strLength = self::length($string);
 		if ($strLength <= $length) return $string;
 		$endStrLength = self::length($end);
@@ -534,7 +555,8 @@ class String extends Helper {
 	 * @param boolean $calculateWidths dynamic calculate character widths
 	 * @return string
 	 */
-	public static function wrap($string, $maxLineLength, $calculateWidths = true) {
+	public static function wrap($string, $maxLineLength, $calculateWidths = true)
+	{
 		$strLength = self::length($string); 
 		if ($strLength <= $maxLineLength) return $string;
 		$intag = false;
@@ -572,7 +594,8 @@ class String extends Helper {
 	 * @param string $char
 	 * @return integer
 	 */
-	public static function charWidth($char) {
+	public static function charWidth($char)
+	{
 		// super wide characters
 		if (preg_match('/[©@®@—]/', $char)) {
 			return -1.2;
@@ -607,7 +630,8 @@ class String extends Helper {
 	 * @return string
 	 * // todo this method also needs to have a checkup
 	 */
-	public static function salt($string, $salt, $width = 1) {
+	public static function salt($string, $salt, $width = 1)
+	{
 		$stringLength = self::length($string);
 		$saltLength = self::length($salt);
 		if ($stringLength == 0) {
@@ -640,7 +664,8 @@ class String extends Helper {
 	 * @param 	string	$string Salt, Characters the password is created from
 	 * @return	string	generated string
 	 **/
-	public static function randomString($length = 8, $salt = null) {
+	public static function randomString($length = 8, $salt = null)
+	{
 		$length = (int) abs($length);
 		if (empty($salt)) $salt = 'A-Za-z0-9';
 		// custom salt with patterns
@@ -665,7 +690,8 @@ class String extends Helper {
 	 * Alias for {@link randomString}
 	 * @return string
 	 */
-	public static function random($length = 8, $salt = null) {
+	public static function random($length = 8, $salt = null)
+	{
 		return self::randomString($length, $salt);
 	}
 	
@@ -677,7 +703,8 @@ class String extends Helper {
 	 * @param string	$salt	Salt String, linke {@link randomString} or 'human'
 	 * @return string
 	 */
-	public static function generatePassword($length, $salt = null) {
+	public static function generatePassword($length, $salt = null)
+	{
 		if (in_array($salt, array('human', 'humanreadable', 'readable'))) {
 			return self::generateHumanReadablePassword();
 		} else {
@@ -695,7 +722,8 @@ class String extends Helper {
 	 * @param integer	$length
 	 * @return string
 	 */
-	public static function generateHumanReadablePassword($length = 8) {
+	public static function generateHumanReadablePassword($length = 8)
+	{
 		assert(is_int($length) && !empty($length));
 		$vocals = array('a', 'e', 'i', 'o', 'u', 'ae', 'ou', 'io', 'ea', 'ou', 'ia', 'ai');
 		$consonants = array('b', 'c', 'd', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p',
@@ -715,7 +743,8 @@ class String extends Helper {
 	 * @param string $string
 	 * @return integer
 	 */
-	public static function countLines($string) {
+	public static function countLines($string)
+	{
 		return substr_count($string, LF);
 	}
 	
@@ -724,7 +753,8 @@ class String extends Helper {
 	 * @param string $string
 	 * @return integer
 	 */
-	public static function numberOfLines($string) {
+	public static function numberOfLines($string)
+	{
 		assert(is_string($string));
 		preg_match_all('/\\n/', $string, $found);
 		if (empty($found[0])) return 0;
@@ -737,7 +767,8 @@ class String extends Helper {
 	 * @param boolean $ignoreEmpty ignore empty lines, 2 strips also totally empty lines
 	 * @return array(string)
 	 */
-	public static function eachLine($string, $ignoreEmpty = false) {
+	public static function eachLine($string, $ignoreEmpty = false)
+	{
 		assert(is_scalar($string));
 		$result = preg_split('/\n/', $string);
 		if (!$ignoreEmpty) {
@@ -762,7 +793,8 @@ class String extends Helper {
 	 * @param string $padString optional string that is added in front of lower numbers for spacing
 	 * @return string
 	 */
-	public static function addLineNumbers($in, $start = 1, $padString = '0') {
+	public static function addLineNumbers($in, $start = 1, $padString = '0')
+	{
 		$lines = preg_split('/\n{1}/', $in);
 		$numberOfLines = self::numberOfLines($in);
 		$padLength = strlen($numberOfLines); // no need for unicode, cause length is an integer
@@ -781,7 +813,8 @@ class String extends Helper {
 	 * @param integer	$breakAfterBytes number of bytes when a breaks comes
 	 * @return string
 	 */
-	public static function hex($string, $spacer = '', $breakAfterBytes = 0) {
+	public static function hex($string, $spacer = '', $breakAfterBytes = 0)
+	{
 		$strlen = self::length($string);
 		$return = '';
 		for ($i = 0; $i < $strlen; $i++) {
@@ -805,7 +838,8 @@ class String extends Helper {
 	 * @param string
 	 * @return string
 	 */
-	public static function toBase36($string) {
+	public static function toBase36($string)
+	{
 		return base_convert($string, 10, 36);
 	}
 	
@@ -814,7 +848,8 @@ class String extends Helper {
 	 * @param $string
 	 * @return string
 	 */
-	public static function fromBase36($string) {
+	public static function fromBase36($string)
+	{
 		return base_convert($string, 36, 10);
 	}
 	
@@ -825,7 +860,8 @@ class String extends Helper {
 	 * @see htmlOrdDecode
 	 * @return string
 	 */
-	public static function htmlOrdEncode($string) {
+	public static function htmlOrdEncode($string)
+	{
 		$encodedString = '';
 		if (Charset::isUTF8($string)) {
 			$len = mb_strlen($string, 'UTF-8');
@@ -859,7 +895,8 @@ class String extends Helper {
 	 * @param string $c
 	 * @return integer
 	 */
-	public static function ord($c) {
+	public static function ord($c)
+	{
 		$h = ord($c{0});
 		if ($h <= 0x7F) {
 			return $h;
@@ -885,7 +922,8 @@ class String extends Helper {
 	 * @param string	$string
 	 * @return string
 	 */
-	public static function htpasswdencode($string) {
+	public static function htpasswdencode($string)
+	{
 		return crypt($string, substr($string, 0, 2));
 	}
 	
@@ -898,7 +936,8 @@ class String extends Helper {
 	 * @param string $input
 	 * @return boolean
 	 */
-	public static function hasControlChars($input) {
+	public static function hasControlChars($input)
+	{
 		return preg_match(self::REGEXP_CONTROL_CHARS, $input);		
 	}
 	
@@ -907,7 +946,8 @@ class String extends Helper {
 	 * @param string	$input
 	 * @return string
 	 */
-	public static function stripControlChars($input) {
+	public static function stripControlChars($input)
+	{
 		return preg_replace(self::REGEXP_CONTROL_CHARS, '', $input);
 	}
 	
@@ -918,7 +958,8 @@ class String extends Helper {
 	 * @param string $string
 	 * @return boolean
 	 */
-	public static function hasTags($string) {
+	public static function hasTags($string)
+	{
 		$return = preg_match(self::REGEXP_HTML_TAGS, $return);
 	}
 	
@@ -928,7 +969,8 @@ class String extends Helper {
 	 * @param string $string
 	 * @return string
 	 */
-	public static function stripTags($string) {
+	public static function stripTags($string)
+	{
 		return preg_replace(self::REGEXP_HTML_TAGS, '', $string);
 	}
 	
@@ -938,7 +980,8 @@ class String extends Helper {
 	 * @param string	$string
 	 * @return string
 	 */
-	public static function stripComments($string) {
+	public static function stripComments($string)
+	{
 		return preg_replace('{
 				# multiline comments
 				(?<!")					# dont match comments in strings
@@ -955,7 +998,8 @@ class String extends Helper {
 	 * @param string	$string
 	 * @param string	$replace	Replace with this string
 	 */
-	public static function stripBrakes($string, $replace = '') {
+	public static function stripBrakes($string, $replace = '')
+	{
 		return preg_replace('/([\\r|\\n|\0|\x0B]|\\<br\\>|\\<br \\/\\>|\\<p\\>|\\<p \\/\\>)/', $replace, $string);
 	}
 	
@@ -964,7 +1008,8 @@ class String extends Helper {
 	 * @param string	$string
 	 * @return boolean
 	 */
-	public static function hasBrakes($string) {
+	public static function hasBrakes($string)
+	{
 		return (preg_match('@(\r|\n)+@', $string));
 	}
 	
@@ -977,7 +1022,8 @@ class String extends Helper {
 	 * @param string $string
 	 * @return string
 	 */
-	public static function stripMultipleWhiteSpace($target) {
+	public static function stripMultipleWhiteSpace($target)
+	{
 		return preg_replace('/([\s]+){1,}/', '$1', $target);
 	}
 	
@@ -991,7 +1037,8 @@ class String extends Helper {
 	 * @param string $string
 	 * @return string
 	 */
-	public static function trimEveryLine($string) {
+	public static function trimEveryLine($string)
+	{
 		$tmp = explode(LF, $string);
 		// cleaning string from spaces and other stuff like \n \r \t
 		for ($a = 0, $c = count($tmp); $a < $c; $a++) $tmp[$a] = trim($tmp[$a]);
@@ -1005,7 +1052,8 @@ class String extends Helper {
 	 * @param string	$string
 	 * @return string
 	 */
-	public static function normalizeBrakes($string) {
+	public static function normalizeBrakes($string)
+	{
 		return preg_replace('!(\r\n|\r)!', LF, $string);
 	}
 	
@@ -1014,8 +1062,9 @@ class String extends Helper {
 	 * @param string	$string
 	 * @return string
 	 */
-	public static function stripNonAlphaNumerical($string) {
-		return preg_replace('/[^\w]/', '', $string);
+	public static function stripNonAlphaNumerical($string)
+	{
+		return preg_replace('@[^\w]@', '', $string);
 	}
 	
 	/**
@@ -1023,8 +1072,9 @@ class String extends Helper {
 	 * @param string	$string
 	 * @return string
 	 */
-	public static function stripAlphaNumerical($string) {
-		return preg_replace('/([^\d)/', '', $string);
+	public static function stripAlphaNumerical($string)
+	{
+		return preg_replace('@([^\d)@', '', $string);
 	}
 	
 	/**
@@ -1033,7 +1083,8 @@ class String extends Helper {
 	 * @param string
 	 * @return string
 	 */
-	public static function squeeze($string) {
+	public static function squeeze($string)
+	{
 		return preg_replace('/(\p{L}|\s){1}(\1{1,})/i', '$1', $string);	
 	}
 	
@@ -1042,7 +1093,8 @@ class String extends Helper {
 	 * @return array(string)
 	 * @param string
 	 */
-	public static function splitLines($string) {
+	public static function splitLines($string)
+	{
 		return preg_split('/[\r\n]+/', $string);
 	}
 	
@@ -1052,7 +1104,8 @@ class String extends Helper {
 	 * @param string $string
 	 * @return string
 	 */
-	public static function swapCase($string) {
+	public static function swapCase($string)
+	{
 		return 'String::swapCase not finished yet.';
 	}
 	
@@ -1061,7 +1114,8 @@ class String extends Helper {
 	 * @param string $string
 	 * @return string
 	 */
-	public static function capitalize($string) {
+	public static function capitalize($string)
+	{
 		return ucwords($string);
 	}
 	
@@ -1077,7 +1131,8 @@ class String extends Helper {
 	 * @param string
 	 * @return array(string)
 	 */
-	public static function each($string) {
+	public static function each($string)
+	{
 		assert(is_scalar($string));
 		$splitted = array();
 		$multibyte = '';
@@ -1113,9 +1168,9 @@ class String extends Helper {
 	 * @param string $replaceWith
 	 * @return string
 	 */
-	public static function insert($string, $position, $replaceWith = '') {
+	public static function insert($string, $position, $replaceWith = '')
+	{
 		assert(is_scalar($string) && is_scalar($position) && is_scalar($replaceWith));
 		return self::substr($string, 0, $position).$replaceWith.self::substr($string, $position);
-	}
-	
+	}	
 }

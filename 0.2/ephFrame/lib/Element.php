@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * ephFrame: <http://code.marceleichner.de/project/ephFrame/>
  * Copyright (c) 2007+, Ephigenia M. Eichner
  *                      Kopernikusstr. 8
  *                      10245 Berlin
@@ -17,6 +17,8 @@
  * @lastmodified	$Date$
  * @filesource		$HeadURL$
  */
+
+class_exists('View') or require dirname(__FILE__).'/View.php';
 
 /**
  * A View Element
@@ -42,64 +44,48 @@
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class Element extends View {
-	
-	public function __construct($name, Array $data = array()) {
-		return parent::__construct($name, null, $data);
+class Element extends View
+{	
+	public function __construct($name, Array $data = array())
+	{	
+		return parent::__construct('element', $name, $data);
 	}
 	
-	protected function createViewFilename () {
-		$knownPart = $this->name.'.'.$this->templateExtension;
-		if (!empty($this->theme)) {
-			if (!is_dir($this->dir.'theme'.DS.$this->theme.DS)) {
-				throw new ThemeNotFoundException($this);
-			}
-			$filenames[] = $this->dir.'theme'.DS.$this->theme.DS.'element'.DS.$knownPart;
-		}
-		$filenames[] = $this->dir.'element'.DS.$knownPart;
-		$filenames[] = FRAME_ROOT.'view/element/'.$this->name.'.'.$this->templateExtension;
-		foreach($filenames as $this->filename) {
-			if (file_exists($this->filename)) { $found = true; break; }
-		}
-		if (empty($found)) {
-			$this->filename = $filenames[0];
-			throw new ElementFileNotFoundException($this);
-		}
-		if (!file_exists($this->filename)) throw new ElementFileNotFoundException($this);
-		return $this->filename;
-	}
-	
-	public function beforeRender() {
+	public function beforeRender()
+	{
 		$this->data['elementName'] = str_replace('/', '_', $this->name);
 		$this->data['elementBaseName'] = basename($this->name);
-		return true;
+		return parent::beforeRender();
 	}
 	
-	public function afterRender($rendered) {
+	public function afterRender($rendered)
+	{
 		// show element names if registry var is turned to on, note that you
 		// must have DEBUG > 1
 		if (Registry::get('debug.showElementName') && Registry::get('DEBUG') > DEBUG_PRODUCTION) {
 			$rendered = '<div class="elementName">'.$this->name.'</div><div class="element">'.$rendered.'</div>';
 		}
-		return $rendered;
+		return parent::afterRender($rendered);
 	}
-	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ElementException extends BasicException {}
-
+class ElementException extends ViewException
+{
+	public function __construct(View $element, $message) {
+		parent::__construct($element, $message);
+	}
+}
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ElementFileNotFoundException extends BasicException {
-	public function __construct(View $view) {
-		$this->view = $view;
-		$message = 'Unable to find element File in \''.$this->view->filename.'\'.';
-		parent::__construct($message);
+class ElementFileNotFoundException extends ElementException
+{
+	public function __construct(View $element, $filename) {
+		parent::__construct($element, sprintf('Unable to find element file \'%s\'.', $filename));
 	}
 }

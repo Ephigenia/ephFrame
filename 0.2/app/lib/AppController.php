@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * ephFrame: <http://code.marceleichner.de/project/ephFrame/>
  * Copyright (c) 2007+, Ephigenia M. Eichner
  *                      Kopernikusstr. 8
  *                      10245 Berlin
@@ -35,22 +35,16 @@ ephFrame::loadClass('ephFrame.lib.Controller');
 class AppController extends Controller
 {	
 	public $helpers = array(
-		'HTML'
+		'HTML',
 	);
 	
 	public $components = array(
-		'I18n',
 		'CSS',
 		'JavaScript',
 		'MetaTags',
 	);
 	
 	public function beforeRender() {
-		$this->CSS->addFiles(array(
-			'reset',
-			'app',
-			'form',
-		));
 		if (Registry::get('DEBUG') > DEBUG_PRODUCTION) {
 			$this->CSS->addFile('debug');
 		}

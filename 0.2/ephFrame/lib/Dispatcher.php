@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * ephFrame: <http://code.marceleichner.de/project/ephFrame/>
  * Copyright (c) 2007+, Ephigenia M. Eichner
  *                      Kopernikusstr. 8
  *                      10245 Berlin
@@ -31,6 +31,8 @@ class_exists('HTTPRequest') or require dirname(__FILE__).'/HTTPRequest.php';
  */
 class Dispatcher extends Object {
 	
+	protected $iteration = 0;
+	
 	/**
 	 * Dispatches a controller class, depending on the passed {@link HTTPRequest}
 	 * Object or given url
@@ -39,6 +41,7 @@ class Dispatcher extends Object {
 	 * @return Controller
 	 */
 	public function dispatch($requestObjectOrUrl = null, Array $params = array()) {
+		$this->itertation++;
 		// use original request
 		if (is_object($requestObjectOrUrl)) {
 			assert($requestObjectOrUrl instanceof HTTPRequest);
@@ -74,10 +77,12 @@ class Dispatcher extends Object {
 			$controller = new $controllerName($request);
 			$controller->action($router->action, $router->params);
 			echo $controller->render();
-		} catch (ViewFileNotFoundException $e) {
-			return $this->dispatch('Error/MissingView', array('missingController' => $router->controller, 'missingAction' => $router->action));
 		} catch (LayoutFileNotFoundException $e) {
-			return $this->dispatch('Error/MissingLayoutFile', array('missingLayoutFilename' => $e->view->filename));
+			return $this->dispatch('Error/MissingLayoutFile', array('filename' => $e->filename, 'layout' => $controller->layout));
+		} catch (ViewFileNotFoundException $e) {
+			return $this->dispatch('Error/MissingView', array('filename' => $e->filename, 'missingController' => $router->controller, 'missingAction' => $router->action));
+		} catch (ThemeNotFoundException $e) {
+			return $this->dispatch('Error/ThemeNotFound', array($e->theme));
 		// missing database tables
 		} catch (MySQLTableNotFoundException $e) {
 			if ($router->controller !== 'Error' && $router->action !== 'MissingTable') {

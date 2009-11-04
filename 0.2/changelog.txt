@@ -1,10 +1,19 @@
 Official Changelog for ephFrame PHP Framework
 ==============================================================================
 
+# 2009-11-04 #
+* String::substitue does not use \p{L} unicode class for replacement anymore
+* Rendering and View filename finding in View Class refactored
+* Elements that are missing throwing exceptions now
+* Removed Bug where view is rendered twice!
+* Changed code.moresleep.net back to code.marceleichner.de
+* Javascript helper loads external urls before local files
+* Fixed bug in IndexedArray->rand when returning 1 random element
+
 # 2009-10-21 #
-- added beforeRedirect callback that is called on every component before redirect headers are send in the controller, note that afterRender is _not_ called when a redirect is called
-- removed $glue parameter from File->append
-- Model->toArray accepts first parameter with fieldnames in it that will be used in array creation
+* added beforeRedirect callback that is called on every component before redirect headers are send in the controller, note that afterRender is _not_ called when a redirect is called
+* removed $glue parameter from File->append
+* Model->toArray accepts first parameter with fieldnames in it that will be used in array creation
 
 # 2009-10-11 #
 * ->unbind('all') removes all bindings from a model

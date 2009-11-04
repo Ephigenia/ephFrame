@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * ephFrame: <http://code.marceleichner.de/project/ephFrame/>
  * Copyright (c) 2007+, Ephigenia M. Eichner
  *                      Kopernikusstr. 8
  *                      10245 Berlin
@@ -279,7 +279,7 @@ class File extends FileSystemNode {
 	 */
 	public function mimeType() {
 		// try to guess mime type on image type
-		$imgInfo = getimagesize($this->nodeName);
+		$imgInfo = @getimagesize($this->nodeName);
 		$mimeTypes = array(1 => 'image/gif', 2 => 'image/jpg', 3 => 'image/png', 4 => 'image/swf');
 		if (isset($imgInfo[2]) && isset($mimeTypes[$imgInfo[2]])) {
 			return $mimeTypes[$imgInfo[2]];

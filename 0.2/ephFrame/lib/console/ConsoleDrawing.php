@@ -10,7 +10,7 @@ define('WACS_HLINE',	"\342\224\200");
 define('WACS_VLINE',	"\342\224\202");
 
 /**
- * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * ephFrame: <http://code.marceleichner.de/project/ephFrame/>
  * Copyright (c) 2007+, Ephigenia M. Eichner
  *                      Kopernikusstr. 8
  *                      10245 Berlin

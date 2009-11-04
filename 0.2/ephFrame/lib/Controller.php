@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ephFrame: http://code.moresleep.net/project/ephFrame/
+ * ephFrame: http://code.marceleichner.de/project/ephFrame/
  * Copyright 2007+, Ephigenia M. Eichner, Kopernikusstr. 8, 10245 Berlin
  *
  * Licensed under The MIT License
@@ -627,12 +627,12 @@ abstract class Controller extends Object implements Renderable
 			ephFrame::loadClass($this->viewClassName);
 		}
 		// render the view part
-		$this->data->set('theme', $this->theme);
 		$view = new $this->viewClassName($this->name, $this->action, $this->data->toArray());
+		$view->theme = $this->theme;
 		$content = $view->render();
 		// wrap layout around view
 		if (!empty($this->layout)) {
-			$this->data->set('content', $view->render());
+			$this->data->set('content', $content);
 			$layout = new $this->viewClassName('layout', $this->layout, $this->data->toArray());
 			$layout->theme = $this->theme;
 			$content = $layout->render();

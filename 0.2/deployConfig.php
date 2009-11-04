@@ -3,7 +3,7 @@
 $deployDir = '../deploy/';
 $exclude = array('*.project/*', '*.cache/*', '*.settings/*', '.DS_Store', '*.svn/*', '*.structure.json');
 $version = trim(file_get_contents(dirname(__FILE__).'/ephFrame/VERSION.txt'));
-$codeMoreSleepTarget = '/Users/Ephigenia/Sites/code.moresleep.net/trunc/html/ephFrame/';
+$codeMoreSleepTarget = '/Users/Ephigenia/Sites/code.marceleichner.de/trunc/html/ephFrame/';
 
 /**
  * This is the deploy configuration for ephFrame framwork using ephDeploy
@@ -23,9 +23,9 @@ $config = array(
 	'targets' => array(
 
 		'publish' => array(
-			'description' => 'Create a new release for code.moresleep.net',
+			'description' => 'Create a new release for code.marceleichner.de',
 			'tasks' => array(
-				// create zip for code.moresleep.net
+				// create zip for code.marceleichner.de
 				array('Zip', array(
 					'src'			=> './',
 					'target'		=> $codeMoreSleepTarget.'download/ephFrame_%date%.zip',

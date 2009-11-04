@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * ephFrame: <http://code.marceleichner.de/project/ephFrame/>
  * Copyright (c) 2007+, Ephigenia M. Eichner
  *                      Kopernikusstr. 8
  *                      10245 Berlin
@@ -53,6 +53,7 @@ if (file_exists(CONFIG_DIR.'paths.php')) require_once CONFIG_DIR.'paths.php';
 if (!defined('APP_LIB_DIR')) define('APP_LIB_DIR', APP_ROOT.'lib'.DS);
 if (!defined('APP_VENDOR_DIR')) define('APP_VENDOR_DIR', APP_LIB_DIR.'vendor'.DS);
 if (!defined('VIEW_DIR')) define ('VIEW_DIR', APP_ROOT.'view'.DS);
+if (!defined('VIEW_THEME_DIR')) define ('VIEW_THEME_DIR', APP_ROOT.'view'.DS.'theme/');
 if (!defined('TMP_DIR')) define ('TMP_DIR', APP_ROOT.'tmp'.DS);
 if (!defined('LOG_DIR')) define ('LOG_DIR', TMP_DIR.'log'.DS);
 if (!defined('CACHE_DIR')) define ('CACHE_DIR', TMP_DIR.'cache'.DS);

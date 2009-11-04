@@ -2,7 +2,7 @@
 <p>
 	You’ve made it! It seemes like you successfully installed and configured ephFrame on this server!<br />
 	<br />
-	If you need some help: <a href="http://code.moresleep.net/project/ephFrame" title="visit project page of ephFrame">code.moresleep.net/project/ephFrame/</a><br />
+	If you need some help: <a href="http://code.marceleichner.de/project/ephFrame" title="visit project page of ephFrame">code.marceleichner.de/project/ephFrame/</a><br />
 </p>
 
 <?php

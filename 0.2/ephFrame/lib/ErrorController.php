@@ -1,7 +1,7 @@
 <?php
 
 /**
- * ephFrame: <http://code.moresleep.net/project/ephFrame/>
+ * ephFrame: <http://code.marceleichner.de/project/ephFrame/>
  * Copyright (c) 2007+, Ephigenia M. Eichner
  *                      Kopernikusstr. 8
  *                      10245 Berlin
@@ -32,11 +32,12 @@ class_exists('AppController') or require APP_LIB_DIR.'AppController.php';
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 02.11.2007
  */
-class ErrorController extends AppController {
-	
+class ErrorController extends AppController
+{	
 	public $viewClassName = 'HTMLView';
 	
-	public function beforeRender() {
+	public function beforeRender()
+	{
 		if (Registry::get('DEBUG') < DEBUG_DEVELOPMENT) {
 			$this->action('404');
 			$this->set('url', $this->request->uri);
@@ -45,29 +46,31 @@ class ErrorController extends AppController {
 		return parent::beforeRender();
 	}
 	
-	public function directoryNotWritable() {
+	public function directoryNotWritable()
+	{
 		die(var_dump($this->params));
 	}
 	
-	public function missingController() {
-		if (isset($this->params['controllerName'])) {
-			$this->set('controllerName', $this->params['controllerName']);
-		} else {
-			$this->set('controllerName', '[unknownName]');
-		}
+	public function missingController($controller)
+	{
+		$this->set('controllerName', coalesce($controller, 'unknown'));
 	}
 	
-	public function missingLayoutFile() {
-		$filename = $this->params['missingLayoutFilename'];
-		$basename = basename($filename);
-		$layoutname = substr($basename, 0, -strrpos($basename,'.'));
-		$this->set('layoutname', $layoutname);
+	public function themeNotFound($theme)
+	{
+		$this->theme = false;
+		$this->set('theme', $theme);
+	}
+	
+	public function missingLayoutFile($filename, $layout)
+	{
+		$this->set('layout', $layout);
 		$this->set('filename', $filename);
+		$this->layout = 'default';
 	}
 	
-	public function missingView() {
-		$this->set('missingController', $this->params['missingController']);
-		$this->set('missingAction', $this->params['missingAction']);
+	public function missingView($filename) {
+		$this->set('filename', $filename);
 	}
 	
 	public function missingTable() {
@@ -92,5 +95,4 @@ class ErrorController extends AppController {
 			} 
 		}*/
 	}
-	
 }

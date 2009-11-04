@@ -4,7 +4,10 @@
 		<title><?= @$pageTitle ?></title>
 		<?php
 		if (isset($MetaTags)) echo String::indent($MetaTags->render(), 2, TAB, 1);
-		if (isset($CSS)) echo String::indent($CSS->render(), 2, TAB, 1);
+		if (isset($CSS)) {
+			$CSS->addFiles('reset', 'app', 'form');
+			echo String::indent($CSS->render(), 2, TAB, 1);
+		}
 		// Favicon
 		if (file_exists('./favicon.ico')) {
 			echo TAB.TAB.'<link rel="shortcut icon" type="image/ico" href="'.WEBROOT.'favicon.ico" />'.LF;
@@ -26,9 +29,7 @@
 				<?= @$content ?>
 			</div>
 			<div id="footer">
-				© 2008+
-				<a href="http://www.nomoresleep.net/" title="nomoresleep" rel="external">NMS</a> &amp;
-				<a href="http://www.ephigenia.de/" title="Marcel Eichner // Ephigenia" rel="external">Marcel Eichner // Ephigenia</a>,
+				© 2008+ <a href="http://www.ephigenia.de/" title="Marcel Eichner // Ephigenia" rel="external">Marcel Eichner // Ephigenia</a>,
 				licensed under <a href="http://www.opensource.org/licenses/mit-license.php" rel="external" title="MIT License">MIT License</a>
 			</div>
 		</div>

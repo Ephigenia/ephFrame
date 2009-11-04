@@ -1,14 +1,18 @@
 To-Do-List for ephFrame
-===========================================================================
+==============================================================================
 
 This file contains wishes from users, enhancements etc. for the ephFrame 
-framwork.
+framwork. This file is best read using the Tasks Bundle for TextMate
 
 General:
 - create file that stores enviorenments?
 - make config folder for host configs
 - make folder for user configs
 - make db table prefix config in db.php
+
+Enviornment:
+- make enviorenments possible, for configuration files for specific hosts and users
+- alternativly add /hosts and /users file to the config directory
 
 HTMLTable Helper:
 - create Helper
@@ -34,3 +38,10 @@ Set/IndexeArray:
 Email:
 - create email layout file that is used by the email component, this will make
   it easy to create email layout files with headers and footers and stuff
+
+Test:
+- make tests available in the console
+
+Console:
+- Create a application / ephFrame console handler
+- create docu for ephFrame console
