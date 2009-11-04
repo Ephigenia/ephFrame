@@ -2,6 +2,7 @@ Official Changelog for ephFrame PHP Framework
 ==============================================================================
 
 # 2009-11-04 #
+* Form->addField accepts label = false in the attributes to disable label usage
 * String::substitue does not use \p{L} unicode class for replacement anymore
 * Rendering and View filename finding in View Class refactored
 * Elements that are missing throwing exceptions now

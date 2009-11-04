@@ -256,7 +256,7 @@ class Form extends HTMLTag {
 		if (!empty($attributes['options'])) {
 			$field->addOptions($attributes['options']);
 		}
-		if (!empty($attributes['label'])) {
+		if (isset($attributes['label'])) {
 			$field->label($attributes['label']);
 		}
 		if (!empty($attributes['mandatory'])) {
