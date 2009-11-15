@@ -11,7 +11,7 @@
  * 
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
- * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @link        http://code.marceleichner.de/projects/ephFrame/
  * @version		$Revision: 241 $
  * @modifiedby		$LastChangedBy: moresleep.net $
  * @lastmodified	$Date: 2009-08-05 14:01:22 +0200 (Wed, 05 Aug 2009) $
@@ -37,12 +37,11 @@
  */
 class HitCountBehavior extends ModelBehavior
 {
-	public function hit($field, $i = 1) {
-		if ($this->model->hasField($field)) {
-			return $this->model->saveField($field, $this->model->get($field) + $i);
-		} else {
+	public function hit($field, $i = 1)
+	{
+		if (!$this->model->hasField($field)) {
 			return false;
 		}
+		return $this->model->saveField($field, $this->model->get($field) + $i);
 	}
-	
 } // END HitCountBehavior class

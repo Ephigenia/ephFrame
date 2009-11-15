@@ -11,7 +11,7 @@
  * 
  * @license		http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright	copyright 2007+, Ephigenia M. Eichner
- * @link		http://code.ephigenia.de/projects/ephFrame/
+ * @link		http://code.marceleichner.de/projects/ephFrame/
  * @version		$Revision$
  * @filesource
  **/

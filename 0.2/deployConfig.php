@@ -7,7 +7,7 @@ $codeMoreSleepTarget = '/Users/Ephigenia/Sites/code.marceleichner.de/trunc/html/
 
 /**
  * This is the deploy configuration for ephFrame framwork using ephDeploy
- * {@link http://code.ephigenia.de/projects/ephDeploy/}
+ * {@link http://code.marceleichner.de/projects/ephDeploy/}
  *
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 06.09.2008

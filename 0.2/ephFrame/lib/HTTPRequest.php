@@ -11,7 +11,7 @@
  * 
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
- * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @link        http://code.marceleichner.de/projects/ephFrame/
  * @version		$Revision$
  * @modifiedby		$LastChangedBy$
  * @lastmodified	$Date$
@@ -48,7 +48,7 @@ class_exists('Charset') or require dirname(__FILE__).'/helper/Charset.php';
  * Use HTTP Request class for reading a website
  * <code>
  * $request = new HTTPRequest();
- * $response = $request->send('http://code.ephigenia.de');
+ * $response = $request->send('http://code.marceleichner.de');
  * // map it to __toString();
  * echo $response;
  * </code>

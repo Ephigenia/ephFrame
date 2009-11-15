@@ -8,7 +8,7 @@
  * Redistributions of files must retain the above copyright notice.
  * @license http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright Copyright 2007+, Ephigenia M. Eichner
- * @link http://code.ephigenia.de/projects/ephFrame/
+ * @link http://code.marceleichner.de/projects/ephFrame/
  * @filesource
  */
 

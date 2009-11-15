@@ -11,7 +11,7 @@
  * 
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
- * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @link        http://code.marceleichner.de/projects/ephFrame/
  * @version		$Revision: 234 $
  * @modifiedby		$LastChangedBy: moresleep.net $
  * @lastmodified	$Date: 2009-07-09 20:58:41 +0200 (Thu, 09 Jul 2009) $

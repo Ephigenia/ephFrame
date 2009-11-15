@@ -11,7 +11,7 @@
  * 
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
- * @link        http://code.ephigenia.de/projects/ephFrame/
+ * @link        http://code.marceleichner.de/projects/ephFrame/
  * @version		$Revision$
  * @modifiedby		$LastChangedBy$
  * @lastmodified	$Date$
@@ -23,7 +23,7 @@ class_exists('CURL') or require(dirname(__FILE__).'/../CURL.php');
 /**
  * Simple Twitter API Integration
  * 
- * See the Twitter API Documentation: http://apiwiki.twitter.com/REST+API+Documentation#TheEasiestWaytoPlayAroundwiththeTwitterAPI<br />
+ * See the Twitter API Documentation: http://apiwiki.twitter.com/Twitter-API-Documentation<br />
  * <br />
  * This should be a simple Twitter API Integration. It does not support the 
  * hole set of methods that Twitter offers to it's users, but it implements
@@ -95,9 +95,10 @@ class Twitter extends CURL {
 	 * @return array(StdObj)
 	 */
 	public function timeline($id = null, $count = null, $since = null, $since_id = null, $page = null) {
+		$this->method = CURL::METHOD_GET;
 		$this->url	= $this->baseUrl.'statuses/user_timeline.json';
 		$this->data = array(
-			'id' 	=> (int) $id,
+			'id' 	=> empty($id) ? $this->username : $id,
 			'count' => $count,
 			'since' => $since,
 			'since_id' => $since_id,

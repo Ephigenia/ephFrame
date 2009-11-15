@@ -1,6 +1,10 @@
 Official Changelog for ephFrame PHP Framework
 ==============================================================================
 
+# 2009-11-15 #
+* changed code.ephigeniad.de to code.marceleichner.de
+* CURL uses CONNECTTIMEOUT now
+
 # 2009-11-04 #
 * Form->addField accepts label = false in the attributes to disable label usage
 * String::substitue does not use \p{L} unicode class for replacement anymore
