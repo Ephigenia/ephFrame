@@ -37,7 +37,7 @@ class PositionableBehavior extends ModelBehavior {
 	const MOVE_DIRECTION_UP = 'up';
 	const MOVE_DIRECTION_TOP = 'top';
 	const MOVE_DIRECTION_DOWN = 'down';
-	const MOVE_DIRECTION_BOTTOM = 'borrom';
+	const MOVE_DIRECTION_BOTTOM = 'bottom';
 	
 	/**
 	 * Name of the field that stores the current position

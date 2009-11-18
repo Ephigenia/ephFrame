@@ -39,9 +39,9 @@ class ErrorController extends AppController
 	public function beforeRender()
 	{
 		if (Registry::get('DEBUG') < DEBUG_DEVELOPMENT) {
-			$this->action('404');
 			$this->set('url', $this->request->uri);
 			$this->response->header->statusCode = 404;
+			$this->action('404');
 		}
 		return parent::beforeRender();
 	}
