@@ -74,11 +74,13 @@ class I18n extends AppComponent {
 	 * @param string $locale
 	 * @return I18n|string
 	 */
-	public static function locale($locale = null, $type = LC_ALL) {
+	public static function locale($locale = null, $types = array(LC_MESSAGES, LC_COLLATE, LC_TIME)) {
 		if (func_num_args() == 0) return self::$locale;
 		self::$locale = substr($locale, 0, 2);
-		setlocale(LC_ALL, self::$locale.'_'.self::$locale);
-		logg(Log::VERBOSE_SILENT, 'ephFrame: Component '.__CLASS__.' setting locale \''.$type.'\' to \''.$locale.'\'');
+		foreach((array) $types as $type) {
+			setlocale($type, self::$locale.'_'.self::$locale);
+			logg(Log::VERBOSE_SILENT, 'ephFrame: Component '.__CLASS__.' setting locale \''.$type.'\' to \''.$locale.'\'');
+		}
 		return true;	
 	}
 	
