@@ -78,10 +78,10 @@ class I18n extends AppComponent {
 		if (func_num_args() == 0) return self::$locale;
 		self::$locale = substr($locale, 0, 2);
 		foreach((array) $types as $type) {
-			setlocale($type, self::$locale.'_'.self::$locale);
+			setlocale($type, self::$locale.'_'.strtoupper(self::$locale));
 			logg(Log::VERBOSE_SILENT, 'ephFrame: Component '.__CLASS__.' setting locale \''.$type.'\' to \''.$locale.'\'');
 		}
-		return true;	
+		return true;
 	}
 	
 	public function domain($location, $name, $encoding = null) {
