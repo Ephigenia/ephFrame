@@ -55,11 +55,12 @@ class I18n extends AppComponent {
 	public $domainName = 'default';
 	
 	public function startup() {
+		// get language from requested client header
 		if ($acceptLanguage = $this->controller->request->header->get('accept_language')) {
 			self::$locale = strtolower(substr($acceptLanguage, 0, 2));
-		}
-		if (!preg_match('@\w{2}@', self::$locale) && defined('DEFAULT_LANGUAGE')) {
-			self::$locale = DEFAULT_LANGUAGE;
+		// default language defined in the /app/config/config.php
+		} elseif ($defaultLanguage = Registry::read('I18n.language')) {
+			self::$locale = $defaultLanguage;
 		}
 		$this->domainLocation = APP_ROOT.'/locale/';
 		$this->controller->data->set(get_class($this), $this);
@@ -69,19 +70,15 @@ class I18n extends AppComponent {
 	}
 	
 	/**
-	 * Change the locale string
+	 * Change the locale string or return it
 	 * @param string $locale
-	 * @return I18n
+	 * @return I18n|string
 	 */
-	public static function locale($locale = null) {
-		if ($locale === null || func_num_args() == 0) {
-			return self::$locale;
-		}
-		assert(is_string($locale) && !empty($locale));
-		$localeType = LC_MESSAGES;
-		self::$locale = $locale;
-		setlocale($localeType, self::$locale);
-		logg(Log::VERBOSE_SILENT, 'ephFrame: Component '.__CLASS__.' setting locale \''.$localeType.'\' to \''.$locale.'\'');
+	public static function locale($locale = null, $type = LC_ALL) {
+		if (func_num_args() == 0) return self::$locale;
+		self::$locale = substr($locale, 0, 2);
+		setlocale(LC_ALL, self::$locale.'_'.self::$locale);
+		logg(Log::VERBOSE_SILENT, 'ephFrame: Component '.__CLASS__.' setting locale \''.$type.'\' to \''.$locale.'\'');
 		return true;	
 	}
 	

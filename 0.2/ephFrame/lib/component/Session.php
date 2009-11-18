@@ -35,18 +35,17 @@ class_exists('Hash') or require dirname(__FILE__).'/../Hash.php';
  * @since 02.05.2007
  * @package ephFrame
  * @subpackage ephFrame.lib.helper
+ * @uses PHPINI
  * @version 0.1
  */
 class Session extends Hash {
 	
 	/**
-	 * Session Name that is Used, use
-	 * the setter function {@link name} for setting
-	 * a new name or pass the session name to the {@link __construct}
-	 *
+	 * Default session name, usually overwritten by Session.name in the
+	 * application config
 	 * @var string
 	 */
-	public $name = SESSION_NAME;
+	private $name = 'sessionId';
 	
 	/**
 	 * Stores the time to live for a session in seconds. You can set
@@ -60,7 +59,7 @@ class Session extends Hash {
 	 * @var array(string)
 	 */
 	public $components = array(
-		'Cookie'
+		'Cookie',
 	);
 	
 	/**
@@ -73,10 +72,13 @@ class Session extends Hash {
 	public function init(Controller $controller) {
 		$this->start();
 		$this->data = &$_SESSION;
+		if ($sessionName = Registry::get('Session.name')) {
+			$this->name = $sessionName;
+		}
 		if (!$this->ttl) {
-			$this->ttl = (int) ini_get('session.gc_maxlifetime');
+			$this->ttl = PHPINI::get('session.gc_maxlifetime');
 		} else {
-			ini_set('session.gc_maxlifetime', $this->ttl);
+			PHPINI::set('session.gc_maxlifetime', $this->ttl);
 		}
 		// register session save
 		// todo use session_set_save_handler to register current session class
@@ -98,10 +100,8 @@ class Session extends Hash {
 		if (!empty($this->controller->request->data[$this->name])) {
 			$this->id($this->controller->request->data[$this->name]);
 		}
-		if (!isset($_SESSION)) {
-			if (!session_start()) {
-				throw new SessionStartException();
-			}
+		if (!isset($_SESSION) && !session_start()) {
+			throw new SessionStartException();
 		}
 		return true;
 	}

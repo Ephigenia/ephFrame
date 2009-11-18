@@ -28,18 +28,18 @@ define('SALT', 'priotaseloukeadotraeuocrailaejot');
  * Session Name (also the name for the session cookie)
  * change this if you need to
  */
-define('SESSION_NAME', 'app');
+Registry::set('Session.name', 'app');
+
+/**
+ *	Set default language, automatically used when I18n Component is used
+ */
+Registry::set('I18n.language', 'de_DE');
 
 /**
  * TimeZone Setting
  * This Setting influences alle location based methods of php
  */ 
 date_default_timezone_set('Europe/Berlin');
-
-/**
- *	Set default language for I18n Component
- */
-Registry::set('DEFAULT_LANGUAGE', 'de_de');
 
 /**
  * Optional default logging level, this is also affected by setting DEBUG,

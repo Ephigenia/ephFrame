@@ -1,9 +1,13 @@
 Official Changelog for ephFrame PHP Framework
 ==============================================================================
 
-# 2009-11-15 #
+# 2009-11-18 #
 * changed code.ephigeniad.de to code.marceleichner.de
 * CURL uses CONNECTTIMEOUT now
+* I18n sets locale for usage in dates with LC_ALL as default
+* I18n default language is now defined with I18n.language
+* Session name is also stored in Session.name in config now
+* Model->findAllby adds modelname to fieldname if field is column of model
 
 # 2009-11-04 #
 * Form->addField accepts label = false in the attributes to disable label usage

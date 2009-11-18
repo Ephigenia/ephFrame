@@ -1365,6 +1365,9 @@ class Model extends Object {
 	public function findAllBy($fieldname, $value = null, $order = null, $offset = 0, $count = null, $depth = null) {
 		if ($this->hasField($fieldname)) {
 			$value = DBQuery::quote($value, $this->structure[$fieldname]->quoting);
+			if (strchr($fieldname, '.') == false) {
+				$fieldname = $this->name.'.'.$fieldname;
+			}
 		} else {
 			$value = DBQuery::quote($value);
 		}
