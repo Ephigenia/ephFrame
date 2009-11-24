@@ -1,6 +1,14 @@
 Official Changelog for ephFrame PHP Framework
 ==============================================================================
 
+# 2009-11-24
+* Form Fields that are mandatory have 'mandatory' as class
+* Form not having name="[classname]" anymore because was invalid
+
+# 2009-11-22 #
+* View and layout use contentType set in controller
+* HTTPHeader renders array of headers when passed to send
+
 # 2009-11-18 #
 * changed code.ephigeniad.de to code.marceleichner.de
 * CURL uses CONNECTTIMEOUT now

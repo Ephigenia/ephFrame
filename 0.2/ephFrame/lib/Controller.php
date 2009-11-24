@@ -627,14 +627,18 @@ abstract class Controller extends Object implements Renderable
 			ephFrame::loadClass($this->viewClassName);
 		}
 		// render the view part
-		$view = new $this->viewClassName($this->name, $this->action, $this->data->toArray());
+		$view = new $this->viewClassName($this->name, $this->action, $this->data);
 		$view->theme = $this->theme;
+		if (!$this->response->header->isEmpty('Content-Type')) {
+			$view->contentType = $this->response->header->get('Content-Type');
+		}
 		$content = $view->render();
 		// wrap layout around view
 		if (!empty($this->layout)) {
 			$this->data->set('content', $content);
 			$layout = new $this->viewClassName('layout', $this->layout, $this->data->toArray());
 			$layout->theme = $this->theme;
+			$layout->contentType = $view->contentType;
 			$content = $layout->render();
 		}
 		// send content to each component

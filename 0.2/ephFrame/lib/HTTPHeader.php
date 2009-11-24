@@ -81,7 +81,7 @@ class HTTPHeader extends Hash {
 	 * Overwrite {@link Hash}s add method for enabling cool value parsind.
 	 * So you can set the expire date by passing a timestamp:
 	 * <code>
-	 * $HTTPHeader->add('Expires', time() + 3600 * 24);
+	 * $HTTPHeader->add('Expires', time() + DAY * 7);
 	 * </code>
 	 *
 	 * @param string $key
@@ -132,9 +132,9 @@ class HTTPHeader extends Hash {
 	 */
 	public function send($headerData = null) {
 		if (func_num_args() == 0) {
-			$headerDatas = $this;
+			$headerData = $this;
 		}
-		foreach($this as $key => $value) {
+		foreach($headerData as $key => $value) {
 			$rendered = $this->renderKey($key, $value);
 			if (!empty($rendered)) {
 				header($rendered, null, $this->statusCode);
@@ -154,7 +154,8 @@ class HTTPHeader extends Hash {
 	 * @param string $key
 	 * @param string|mixed $value
 	 */
-	public function renderKey($key, $value = null) {
+	public function renderKey($key, $value = null)
+	{
 		switch($key) {
 			case 'ETag':
 				$value = '"'.$value.'"';
@@ -168,7 +169,8 @@ class HTTPHeader extends Hash {
 		return $rendered; 
 	}
 	
-	public function render($headerData = null) {
+	public function render($headerData = null)
+	{
 		// if this class is used in direct use, use the internal data
 		if ($headerData === null) {
 			$headerData = $this->data;
@@ -191,5 +193,4 @@ class HTTPHeader extends Hash {
 		}
 		return $this->afterRender(implode($this->delimeter, $rendered));
 	}
-	
 }

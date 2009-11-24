@@ -91,9 +91,6 @@ class Form extends HTMLTag {
 		if ($action != null) {
 			$this->action = $action;
 		}
-		if (!isset($attributes['name'])) {
-			$attributes['name'] = get_class($this);
-		}
 		$this->fieldset = new HTMLTag('fieldset');
 		$this->addChild($this->fieldset);
 		$attributes = array_merge(array('action' => &$this->action, 'method' => 'post', 'accept-charset' => 'UTF-8', 'id' => get_class($this)), $attributes);
