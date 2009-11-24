@@ -256,7 +256,7 @@ class Form extends HTMLTag {
 		if (isset($attributes['label'])) {
 			$field->label($attributes['label']);
 		}
-		if (!empty($attributes['mandatory'])) {
+		if (isset($attributes['mandatory'])) {
 			$field->mandatory = $attributes['mandatory'];
 		}
 		if (!empty($attributes['validate'])) {
