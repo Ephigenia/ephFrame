@@ -1,9 +1,14 @@
 Official Changelog for ephFrame PHP Framework
 ==============================================================================
 
+This file should record some kind of change history of the ephFrame Framework
+Please check this file for hints after you updated the framework via svn to 
+check some deprecated methods or new features.
+
 # 2009-12-09
 * Session.ttl can change session cookielifetime with ease now
 * removed js-libs from js directory
+* removed createapp.sh file and wrote a hint on how to create new apps into the README.txt file
 
 # 2009-11-29
 * Elements are called by ->element($name) instead of renderElement

@@ -1,6 +1,8 @@
 # system and eclipse files
 *.DS_Store
 *.svn
+*.git
+*.cvs
 *.buildpath
 *.project
 *.settings
@@ -11,7 +13,3 @@
 cache/*
 p_*.css
 p_*.js
-# project specific files
-deploy*
-abResults.txt
-crateApp.sh

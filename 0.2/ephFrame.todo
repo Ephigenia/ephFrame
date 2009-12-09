@@ -10,12 +10,21 @@ General:
 - make folder for user configs
 - make db table prefix config in db.php
 
+Documentation:
+- Check Documentation and refresh todo-list
+
 Performance:
 - Test if autoload increases Performance
 
 Enviornment:
 - make enviorenments possible, for configuration files for specific hosts and users
 - alternativly add /hosts and /users file to the config directory
+
+Console:
+- Create createApp Task as console job (Shell script?)
+- Create Console Controller that reads all jobs from ephFrame and the app folder
+- Create a application / ephFrame console handler
+- create docu for ephFrame console
 
 HTMLTable Helper:
 - create Helper
@@ -44,7 +53,3 @@ Email:
 
 Test:
 - make tests available in the console
-
-Console:
-- Create a application / ephFrame console handler
-- create docu for ephFrame console
