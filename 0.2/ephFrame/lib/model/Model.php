@@ -1221,7 +1221,7 @@ class Model extends Object {
 	 * @param $conditions
 	 * @return array(string)
 	 */
-	public function listAll($fieldname, $conditions = array(), $order = array(), $offset = 0, $count = null, $depth = 1) {
+	public function listAll($fieldname, $conditions = array(), $order = array(), $offset = 0, $count = null, $depth = 0) {
 		$list = array();
 		if (!($r = $this->query($this->createSelectQuery($conditions, $order, $offset, $count, $depth), $depth))) {
 			return $list;

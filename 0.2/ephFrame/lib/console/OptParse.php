@@ -53,7 +53,7 @@ class OptParse extends Object
 		self::TYPE_CALLBACK,
 		self::TYPE_FLOAT,
 		self::TYPE_INTEGER,
-		self::TYPE_STRING
+		self::TYPE_STRING,
 	);
 	
 	/**

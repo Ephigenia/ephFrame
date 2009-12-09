@@ -1,6 +1,13 @@
 Official Changelog for ephFrame PHP Framework
 ==============================================================================
 
+# 2009-12-09
+* Session.ttl can change session cookielifetime with ease now
+* removed js-libs from js directory
+
+# 2009-11-29
+* Elements are called by ->element($name) instead of renderElement
+
 # 2009-11-24
 * Form Fields that are mandatory have 'mandatory' as class
 * Form not having name="[classname]" anymore because was invalid

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Application Configuration File
+ * Application-Wide Configuration File
  *
  * This file is loaded right after the framework setup and bevor any controller
  * is loaded. You can completely overwrite and change configurationv vars here.
@@ -31,7 +31,14 @@ define('SALT', 'priotaseloukeadotraeuocrailaejot');
 Registry::set('Session.name', 'app');
 
 /**
- *	Set default language, automatically used when I18n Component is used
+ * Override PHPs default session lifetime when sessions are saved in cookies
+ */
+Registry::set('Session.ttl', WEEK);
+
+/**
+ * Only used when the {@link I18NComponent} is used in the application. Change
+ * this to your default language setting. See the internationalization-part
+ * in the ephFrame documentation: {@todo add link here}
  */
 Registry::set('I18n.language', 'de_DE');
 

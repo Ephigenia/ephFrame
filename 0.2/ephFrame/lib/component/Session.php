@@ -75,10 +75,13 @@ class Session extends Hash {
 		if ($sessionName = Registry::get('Session.name')) {
 			$this->name = $sessionName;
 		}
-		if (!$this->ttl) {
-			$this->ttl = PHPINI::get('session.gc_maxlifetime');
-		} else {
+		// get sesion lifetime from config
+		if ($sessionLifetime = Registry::get('Session.lifetime')) {
+			$this->ttl = $sesionLifetime;
+			PHPINI::set('session.cookie_lifetime', $this->ttl);
 			PHPINI::set('session.gc_maxlifetime', $this->ttl);
+		} else {
+			$this->ttl = PHPINI::get('session.gc_maxlifetime');
 		}
 		// register session save
 		// todo use session_set_save_handler to register current session class
@@ -92,11 +95,8 @@ class Session extends Hash {
 	 * @return boolean
 	 */
 	public function start($sessionName = null) {
-		if (!empty($sessionName)) {
-			$this->name($sessionName);
-		} else {
-			$this->name($this->name);
-		}
+		session_write_close();
+		$this->name($this->name);
 		if (!empty($this->controller->request->data[$this->name])) {
 			$this->id($this->controller->request->data[$this->name]);
 		}

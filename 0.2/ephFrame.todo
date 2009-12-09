@@ -10,6 +10,9 @@ General:
 - make folder for user configs
 - make db table prefix config in db.php
 
+Performance:
+- Test if autoload increases Performance
+
 Enviornment:
 - make enviorenments possible, for configuration files for specific hosts and users
 - alternativly add /hosts and /users file to the config directory

@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title><?= @$pageTitle ?></title>
+		<!--[if IE 8]><meta http-equiv="X-UA-Compatible" content="IE=7" /><![endif]-->
 		<?php
 		if (isset($MetaTags)) echo String::indent($MetaTags->render(), 2, TAB, 1);
 		if (isset($CSS)) {
@@ -17,7 +18,6 @@
 			echo TAB.TAB.'<link rel="apple-touch-icon" type="image/x-icon" href="'.WEBROOT.'apple-touch-icon.png" />'.LF;
 		}
         ?>
-		<!--[if IE 8]><meta http-equiv="X-UA-Compatible" content="IE=7" /><![endif]-->
 	</head>
 	<body>
 		<div id="app">

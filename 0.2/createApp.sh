@@ -18,7 +18,7 @@ displayHelp() {
 	echo 'based application by exporting the current stable release from ephFrame app to'
 	echo 'the target you have speicified.'
 	echo ''
-	echo 'usage: ./createApp.sh targetDir/'
+	echo 'usage: ./createApp.sh [target]'
 	echo ''
 	echo 'Arguments: '
 	echo ''

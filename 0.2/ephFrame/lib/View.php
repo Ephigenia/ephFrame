@@ -149,25 +149,25 @@ abstract class View extends Hash implements Renderable
 	/**
 	 * Echoes or returns the content of an {@link Element}.
 	 * 
-	 * This will try to render an element with the $elementName with the given	
-	 * $data (data from the current controller is added automatically).
-	 * If you want to disable the direct output of the element, pass $output
-	 * as false.
+	 * Render a page element in a view. This is usually called within a View.
+	 * It accepts the name of the element or the path to it and some variables
+	 * as associated array.
+	 * Variables from the current view are overwritten by the elements data
+	 * array!
 	 * 
 	 * Code from a view:
 	 * <code>
-	 * $this->renderElement('mainMenu', array('menuEntries' => array(
+	 * $this->element('mainMenu', array('menuEntries' => array(
 	 * 	'main' => '/',
 	 * 	'users' => '/users/'
 	 * ));
 	 * </code>
 	 * 
 	 * @param string $elementName
-	 * @param array|Hash $data
-	 * @param boolean $output
+	 * @param array $data array of variables available in the element
 	 * @return string
 	 */
-	public function renderElement($elementName, $data = array(), $output = true) {
+	public function element($name, Array $data = array()) {
 		// load Element class
 		class_exists('Element') or require dirname(__FILE__).'/Element.php';
 		// merge view data with element’s data
@@ -177,16 +177,23 @@ abstract class View extends Hash implements Renderable
 			$data = array_merge($this->data, $data);
 		}
 		// create element
-		$element = new Element($elementName, $data);
+		$element = new Element($name, $data);
 		$element->theme = $this->theme;
+		// render element but ignore not found messages
 		try {
 			$content = $element->render();
 		} catch (ElementNotFoundException $e) { }
-		if ($output) {
-			echo $content;
-		} else {
-			return $content;
-		}
+		return $content;
+	}
+	
+	/**
+	 * Alias for {@link render}
+	 * @deprecated 2009-11-29
+	 * @deprecated revision: 0.2.232
+	 */
+	public function renderElement($elementName, $data = array(), $output = true)
+	{
+		return $this->element($elementName, $data, $output);
 	}
 }
 
