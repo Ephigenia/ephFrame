@@ -49,7 +49,7 @@ final class ephFrame {
 			self::checkRegisterGlobals();
 			require (FRAME_ROOT.'config/constants.php');
 			require (FRAME_ROOT.'config/paths.php');
-			require (FRAME_ROOT.'Object.php');
+			require (FRAME_LIB_DIR.'Object.php');
 			require (FRAME_ROOT.'core.php');
 			require (FRAME_LIB_DIR.'PHPINI.php');
 			require (FRAME_LIB_DIR.'component/Component.php');

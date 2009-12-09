@@ -73,11 +73,12 @@ function loadInterface($interfacePath) {
 }
 
 
-/**
- * Returns the first argument that is not empty
- * @return mixed
- */
 if (!function_exists('isEmpty')) {
+	/**
+	 * Return the first argument that is not empty
+	 * @param mixed
+	 * @return mixed
+	 */
 	function coalesce() {
 		foreach(func_get_args() as $arg) {
 			if (!empty($arg)) return $arg;
@@ -86,26 +87,12 @@ if (!function_exists('isEmpty')) {
 	}
 }
 
-
-/**
- * Like {@link coalesce} but checking for empty arguments
- * @return mixed
- */
-if (!function_exists('coalesceEmpty')) {
-	function coalesceEmpty() {
-		foreach(func_get_args() as $arg) {
-			if (!empty($arg)) return $arg;
-		}
-		return null;
-	}
-}
-
-/**
- * This is a shortcut for the {@link Log} class to log messages into files
- * @param integer $level
- * @param string $message
- */
 function logg($level, $message) {
+	/**
+	 * This is a shortcut for the {@link Log} class to log messages into files
+	 * @param integer $level
+	 * @param string $message
+	 */
 	if (!class_exists('Log')) {
 		loadClass('ephFrame.lib.component.Log');
 	}
