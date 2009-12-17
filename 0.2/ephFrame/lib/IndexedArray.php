@@ -459,10 +459,14 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 		} elseif ($count == 1) {
 			return array($this->data[array_rand($this->data)]);
 		} else {
-			foreach (array_rand($this->data, (int) $count) as $index) {
-				$r[] = $this[$index];
+			if (min($count, $this->length()) == 1) {
+				return $this->rand(1);
+			} else {
+				foreach (array_rand($this->data, min($count, $this->length())) as $index) {
+					$r[] = $this[$index];
+				}
+				return $r;				
 			}
-			return $r;
 		}
 	}
 	
