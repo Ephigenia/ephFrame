@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 class_exists('HTMLTag') or require dirname(__FILE__).'/../../HTMLTag.php';
@@ -81,19 +78,20 @@ class Form extends HTMLTag {
 	 */
 	public function __construct($action = null, Array $attributes = array()) {
 		$this->request = new HTTPRequest(true);
-//		foreach($this->__parentClasses($this) as $class) {
-//			$classVars = get_class_vars($class);
-//			if (isset($classVars['configureModel'])) {
-//				foreach($classVars['configu'])
-//			}
-//		}
-		//$this->configureModel = $this->__mergeParentProperty('configureModel');
 		if ($action != null) {
 			$this->action = $action;
 		}
 		$this->fieldset = new HTMLTag('fieldset');
 		$this->addChild($this->fieldset);
-		$attributes = array_merge(array('action' => &$this->action, 'method' => 'post', 'accept-charset' => 'UTF-8', 'id' => get_class($this)), $attributes);
+		$attributes = array_merge(
+			array(
+				'action' => &$this->action,
+				'method' => 'post',
+				'accept-charset' => 'UTF-8',
+				'id' => get_class($this)
+			),
+			$attributes
+		);
 		return parent::__construct('form', $attributes);
 	}
 	
@@ -106,8 +104,7 @@ class Form extends HTMLTag {
 		// set form variable for view
 		if (isset($this->controller)) {
 			$this->controller->data->set(get_class($this), $this);
-			// set default action of form to the current url
-			$this->attributes->action = WEBROOT.$this->controller->request->get('__url'); 
+			$this->attributes->action = Router::uri();
 		}
 		return $this;
 	}
@@ -378,11 +375,16 @@ class Form extends HTMLTag {
 			}
 			// parse every model definition array for the form
 			foreach($this->config as $modelName => $config) {
-				
 				// $configure = array(array('type' => 'submit', label => 'save')) notation
 				if (is_int($modelName) && is_array($config)) {
-					if (!isset($config['type'])) $config['type'] = 'text';
-					if (!isset($config['name'])) $config['name'] = $config['type'];
+					// merge with default values
+					$config = array_merge(
+						array(
+							'type' => 'text',
+							'name' => $config['type'],
+						),
+						$config
+					);
 					$field = $this->newField($config['type'], @$config['name'], null, $config);
 					$this->addField($field);
 				// $configure = array([modelname] => config) notation
@@ -401,14 +403,9 @@ class Form extends HTMLTag {
 						Log::write(Log::VERBOSE, get_class($this).': missing model to configure in controller: '.$modelName);
 					}
 				} // if
-				
 			} // foreach
 		} // if
 		$this->afterConfig();
-		// add missing submit field if missing
-		if (!$this->fieldset->childWithAttribute('type', 'submit')) {
-			$this->add($this->newField('submit', 'submit', 'submit'));
-		}
 		return true;
 	}
 	
@@ -417,6 +414,10 @@ class Form extends HTMLTag {
 	 *	@return boolean
 	 */
 	public function afterConfig() {
+		// add missing submit field if missing
+		if (!$this->fieldset->childWithAttribute('type', 'submit')) {
+			$this->add($this->newField('submit', 'submit', 'submit'));
+		}
 		return true;
 	}
 	
@@ -510,17 +511,9 @@ class Form extends HTMLTag {
 			}
 			if (!empty($fieldInfo['type']) && !empty($fieldInfo['name'])) {
 				// copy validation rules from model to form field if possible
-				$field = $this->newField($fieldInfo['type'], $fieldInfo['name'], @$fieldInfo['value']);
-				if (isset($fieldInfo['label'])) {
-					$field->label($fieldInfo['label']);
-				}
-				if (isset($fieldInfo['mandatory'])) {
-					$field->mandatory = $fieldInfo['mandatory'];
-				}
-				if (isset($fieldInfo['maxLength'])) {
-					$field->attributes->set('maxLength', (int) $fieldInfo['maxLength']);
-				}
-				if (isset($model->validate[$fieldInfo['name']])) {				
+				unset($fieldInfo['modelFieldInfo']);
+				$field = $this->newField($fieldInfo['type'], $fieldInfo['name'], @$fieldInfo['value'], $fieldInfo);
+				if (isset($model->validate[$fieldInfo['name']])) {
 					$field->addValidationRule($model->validate[$fieldInfo['name']]);
 				}
 				if (isset($fieldInfo['options'])) {

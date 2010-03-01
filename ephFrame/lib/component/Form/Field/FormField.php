@@ -13,10 +13,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 /**
@@ -198,7 +195,11 @@ abstract class FormField extends HTMLTag {
 		}
 		if (empty($value)) {
 			if ($this->mandatory && empty($this->error)) {
-				$this->error = 'The form field '.$this->attributes->name.' is not optional.';
+				if (function_exists('__')) {
+					$this->error = __('The form field :1 is not optional.', $this->attributes->name);
+				} else {
+					$this->error = 'The form field '.$this->attributes->name.' is not optional.';
+				}
 			}
 		} else {
 			$validator = new Validator($this->validate, $this);
@@ -238,7 +239,7 @@ abstract class FormField extends HTMLTag {
 		}
 		// @todo encapsulate <p> decorator into decorator class or element
 		if (strtolower($this->type) !== 'hidden') {
-			$rendered = '<p class="'.lcFirst(substr(get_class($this), 9)).'">'.$rendered.'</p>'.LF;
+			$rendered = '<p class="'.lcFirst(substr(get_class($this), 9)).' '.$this->attributes->name.'">'.$rendered.'</p>'.LF;
 		}
 		return ($this->afterRender($rendered));
 	}

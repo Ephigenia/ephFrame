@@ -5,6 +5,56 @@ This file should record some kind of change history of the ephFrame Framework
 Please check this file for hints after you updated the framework via svn to 
 check some deprecated methods or new features.
 
+# 2010-02-28
+
+## Notes
+* created GIT-Repository to track little changes, hope to get a real GIT repo soon
+
+## Enhancements
+* Added Sluggable Behavior that can create slugs for every model with a various line of configuration vars. Check it out!
+* I18n can translate plurals with __n, also substitution changed and bit refactored
+* I18n works with real locale strings now, pass de_DE not only de
+* ObjectSet now support findByProperty to search objects in Set that have a specific property value
+* Model HABTM can have additional data in the join table
+* Model also includes HABTM Models into default queries if field or conditions contain their name
+* Router::uri() with no params returns current uri, same as url returns the whole current url
+* Router replaces <P> notations as regexps too
+* Controller->before[Action] now called with controllers parameters array
+* Controller, Order of `beforeAction` calls changed
+* Controller, before[ActionName] returns `false`, gets to 404 error page
+* ArrayHelper::map maps a callback recursivly on every element
+
+## Bugs
+* Session start now just returns false and does not throw an error anymore (especially on Domainfactory Servers)
+* Session.ttl now used in Session component (misspelling of config var)
+* HTTPRequest now build correctly
+* HTTPRequest - buildQuery now returns string including leading `?`
+* Email Component can work with empty email attachments and uses theme correctly from controller
+* InsertQuery quotes key names with `` (backticks)
+* Model unbinds hasAndBelongsToMany Associated Models too
+* Model returns also fields that have value = null not throwing an error anymore
+* Model insert won't use `primaryKey = 0` if empty anymore, always insert if primary key is not set or empty
+* Model fixed HABTM foreign key autocomplete when . is missing
+* NestedSetBehavior won’t try to clean up children if lft and rgt are empty
+* NestedSetBehavior level can be 0 and still works
+* JS and CSS-Packer now create directories if they don't exist and also chmod them to 777 if not writable
+* Form now consumes the row and cols attributes from model config
+* Form afterConfig adds Submit button to form if missing, so it can be disabled by overwriting afterConfig in apps form classes
+* HTTPRequests uses ArrayHelper::map to convert passed values to utf8 using recursive method, so form field with names like `note[23][de]` are possible
+* ObjectSet could not benifit from reversed from IndexedArray because used wrong constructor, now works through copy method
+
+## Deprecated
+* I18n dropped __html method from translation, use Sanitize or own methods for this in your projects
+
+
+# 2009-12-14
+* Fixed usage of tablenamePrefix when using HABTM relations
+* Router::uri and Router::uri merge default route config with passed $params array now
+* Router: can use prefix for action
+* Router: can use controllerPrefix for controller name parsed
+* Router: parse action refactored
+* Removed $debug var from Router::parse
+
 # 2009-12-09
 * Session.ttl can change session cookielifetime with ease now
 * removed js-libs from js directory

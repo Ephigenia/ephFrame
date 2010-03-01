@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 // load parent class
@@ -114,7 +111,7 @@ class MySQL extends DB implements DBInterface {
 	 * @return QueryResult
 	 * @throws MySQLException
 	 */
-	public function query($query, $cached = true) {
+	public function query($query, $cached = false) {
 		if (!($query = $this->beforeQuery($query))) {
 			return false;	
 		}

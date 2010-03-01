@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 class_exists('ArrayHelper') or require dirname(__FILE__).'/helper/ArrayHelper.php';
@@ -72,7 +69,7 @@ class HTTPRequest extends Component {
 	 * Concrete Request Method
 	 * @var string
 	 */
-	public $method;
+	public $method = HTTPRequest::METHOD_GET;
 	
 	public $uri;
 	public $hostname;
@@ -154,12 +151,12 @@ class HTTPRequest extends Component {
 			$this->data = array_merge($_GET, $this->data);
 		}
 		// fix wrong decoded utf8 entities
-		$this->data = array_map(array('Charset', 'toUtf8'), $this->data);
+		$this->data = ArrayHelper::map(array('Charset', 'toUtf8'), $this->data);
 	
 		// strip slashes from all values if magic quotes are on
-		if (function_exists('get_magic_quotes_gpc') && !get_magic_quotes_gpc()) {
+		if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {
 			if (!defined('ephFrameHTTPRequestAddSlashesOk')) {
-				$this->data = array_map('addslashes', $this->data);
+				$this->data = ArrayHelper::map('stripslashes', $this->data);
 				define('ephFrameHTTPRequestAddSlashesOk', true);
 			}
 		}
@@ -243,18 +240,15 @@ class HTTPRequest extends Component {
 		if (empty($uri)) {
 			$uri = '/';
 		}
-		$requestRaw = 'GET '.$uri.$query.' HTTP/1.1'.RT.LF;
-		$defaultRequestArr = array(
+		// merge with the header from the request initially set
+		$this->header->merge(array(
 			'Host' => $host,
 			'Connection' => 'Close'
-		);
-		// merge with the header from the request initially set
-		$reqArr = array_merge($defaultRequestArr, $this->header);
-		// render request
-		foreach ($reqArr as $key => $value) {
-			$requestRaw .= $key.': '.$value.RT.LF;
-		}
-		return $requestRaw.LF.RT.LF;
+		), false);
+		$requestRaw =
+			$this->method.' '.$uri.$query.' HTTP/1.1'.RT.LF.
+			$this->header->render().LF.RT.LF;
+		return $requestRaw;
 	}
 	
 	private function FSockOpenRead($host, $port, $timeout) {
@@ -297,7 +291,7 @@ class HTTPRequest extends Component {
 		if (!is_array($data)) {
 			return $data;
 		}
-		return http_build_query($data);
+		return '?'.http_build_query($data);
 	}
 	
 	/**

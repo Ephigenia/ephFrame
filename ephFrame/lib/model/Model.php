@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 $___d = dirname(__FILE__);
@@ -213,7 +210,7 @@ class Model extends Object {
 	 * @var ModelBehaviorHandler
 	 */
 	public $behaviors = array(
-		'Model'
+		'Model',
 	);
 	
 	/**
@@ -257,12 +254,15 @@ class Model extends Object {
 		$this->__mergeParentProperty('behaviors');
 		$this->__mergeParentProperty('uses');
 		
+		// call afterconstruct on model and behaviors
+		$this->afterConstruct();
+		
 		// initialize model bindings
 		$this->initAssociations($id);
 		
 		// initialize model behaviors
 		$this->behaviors = new ModelBehaviorHandler($this, $this->behaviors);
-		
+		$this->behaviors->call('afterConstruct');
 		// load inital data from array data or primary id
 		if (is_array($id)) {
 			$this->fromArray($id, is_array($fieldNames) ? $fieldNames : array());
@@ -271,10 +271,6 @@ class Model extends Object {
 				return false;
 			}
 		}
-		
-		// call afterconstruct on model and behaviors
-		$this->afterConstruct();
-		$this->behaviors->call('afterConstruct');
 		return $this;
 	}
 	
@@ -351,7 +347,13 @@ class Model extends Object {
 			}
 		}
 		// prevent unlimited nesting
-		if (is_object($bind) && (get_class($bind) == $modelAlias || $bind->name == $modelAlias || isset($this->{$modelAlias}) || isset($bind->{$modelAlias}))) {
+		if (is_object($bind)
+			&& (
+				get_class($bind) == $modelAlias
+				|| $bind->name == $modelAlias
+				|| isset($this->{$modelAlias})
+				|| isset($bind->{$modelAlias})
+			)) {
 			$this->{$modelAlias} = $bind;
 		} else {
 			$this->{$modelAlias} = new $classname($this, $modelAlias);
@@ -368,13 +370,18 @@ class Model extends Object {
 			'associationKey' => null,
 			'joinTable' => null,
 			'dependent' => false,
-			'class' => $classname
+			'class' => $classname,
+			'with' => false,
 		), $config);
 		// has and belongsToMany
 		switch($associationType) {
 			case 'hasAndBelongsToMany':
 				if (!isset($config['joinTable'])) {
 					$config['joinTable'] = $this->tablename.'_'.Inflector::underscore(Inflector::plural($this->{$modelAlias}->name), true);
+				}
+				$config['joinTable'] = String::prepend($config['joinTable'], $this->tablenamePrefix, true);
+				if (empty($config['with'])) {
+					$config['with'] = $this->name.$modelAlias;
 				}
 				break;
 		}
@@ -391,11 +398,11 @@ class Model extends Object {
 					$config['foreignKey'] = ucFirst($this->name).'.'.$this->primaryKeyName;
 					break;
 				case 'hasAndBelongsToMany':
-					$config['foreignKey'] = $config['joinTable'].'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName);
+					$config['foreignKey'] = Inflector::underscore($this->name.'_'.$this->primaryKeyName);
 					break;
 			}
 		// add model name to foreignkeys with no model name like user_id
-		} elseif (strpos($config['foreignKey'], '.') === false) {
+		} elseif (strpos($config['foreignKey'], '.') === false && $associationType !== 'hasAndBelongsToMany') {
 			$config['foreignKey'] = $modelAlias.'.'.$config['foreignKey'];
 		}
 		// my side of the join
@@ -405,11 +412,13 @@ class Model extends Object {
 					$config['associationKey'] = $this->name.'.'.Inflector::underscore($modelAlias.'_'.$this->{$modelAlias}->primaryKeyName);
 					break;
 				case 'hasOne':
+					$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
+					break;
 				case 'hasAndBelongsToMany':
 					$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
 					break;
 				case 'hasMany':
-					$config['associationKey'] = $this->{$modelAlias}->name.'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName);
+					$config['associationKey'] = Inflector::underscore($this->name.'_'.$this->primaryKeyName);
 					break;
 			}
 		} elseif (strpos($config['associationKey'], '.') === false) {
@@ -438,7 +447,8 @@ class Model extends Object {
 			$modelName = array_merge(
 				array_keys($this->hasOne),
 				array_keys($this->belongsTo),
-				array_keys($this->hasMany)
+				array_keys($this->hasMany),
+				array_keys($this->hasAndBelongsToMany)
 			);
 		}
 		if (is_array($modelName)) {
@@ -447,12 +457,12 @@ class Model extends Object {
 			$modelNames = func_get_args();
 		}
 		foreach($modelNames as $modelName) {
-			if (isset($this->{$modelName})) {
-				unset($this->{$modelName});
-				unset($this->belongsTo[$modelName]);
-				unset($this->hasMany[$modelName]);
-				unset($this->hasOne[$modelName]);	
-			}
+			if (!property_exists($this, $modelName)) continue;
+			unset($this->{$modelName});
+			unset($this->belongsTo[$modelName]);
+			unset($this->hasMany[$modelName]);
+			unset($this->hasOne[$modelName]);
+			unset($this->hasAndBelongsToMany[$modelName]);
 		}
 		return true;
 	}
@@ -510,9 +520,8 @@ class Model extends Object {
 		if (empty($this->tablename) && $this->tablename !== false) {
 			$this->tablename = strtolower(Inflector::underscore(Inflector::pluralize($this->name)));
 		}
-		if (substr($this->tablename, 0, strlen($this->tablenamePrefix)) !== $this->tablenamePrefix) {
-			$this->tablename = strtolower($this->tablenamePrefix.$this->tablename);
-		}
+		// add table prefix name
+		$this->tablename = String::prepend($this->tablename, $this->tablenamePrefix, true);
 		return $this->tablename;
 	}
 	
@@ -609,7 +618,7 @@ class Model extends Object {
 	 * @return boolean
 	 */
 	public function save($validate = true, Array $fieldNames = array()) {
-		if (!($this->beforeSave() && $this->behaviors->call('beforeSave'))) {
+		if (!($this->beforeSave($this) && $this->behaviors->call('beforeSave', array($this)))) {
 			return false;
 		}
 		// validate model data first
@@ -627,6 +636,36 @@ class Model extends Object {
 		return $this;
 	}
 	
+	public function saveAll($validate = true, Array $fieldNames = array())
+	{
+		$this->save($validate, $fieldNames);
+		// save HABTM associated models
+		if (is_array($this->hasAndBelongsToMany) && $this->depth > 0) {
+			foreach($this->hasAndBelongsToMany as $modelName => $config) {
+				$pluralName = Inflector::plural($modelName);
+				// remove previosly saved
+				$this->query(new DeleteQuery($config['joinTable'].' '.$config['with'], array($config['foreignKey'] => $this->get($this->primaryKeyName))));
+				// add new data
+				foreach($this->{$pluralName} as $model) {
+					if (!($model instanceof Model)) continue;
+					$model->save();
+					$values = array(
+						$config['foreignKey'] => $this->get($this->primaryKeyName),
+						Inflector::underscore($model->name, true).'_'.$model->primaryKeyName => $model->get($model->primaryKeyName)
+					);
+					// get join data from join table
+					if (isset($model->data[$this->name.$modelName])) {
+						$values = array_merge($values, $model->{$this->name.$modelName});
+					}
+					$q = new InsertQuery($config['joinTable'], $values);
+					$q->verb = 'REPLACE';
+					$this->query($q);
+				}	
+			}
+		}
+		return true;
+	}
+	
 	/**
 	 * Called before insert or update action takes places
 	 * @return boolean
@@ -638,40 +677,20 @@ class Model extends Object {
 				continue;
 			}
 			$model = $this->{$modelName};
-			if ($model instanceof Model && !$this->{$modelName}->isEmpty($this->{$modelName}->primaryKeyName)) {
-				$this->set(Inflector::delimeterSeperate($modelName.'_'.$this->{$modelName}->primaryKeyName, '_', true), $this->{$modelName}->get($this->{$modelName}->primaryKeyName));
+			if ($model instanceof Model && !$model->isEmpty($this->{$modelName}->primaryKeyName)) {
+				$this->set(Inflector::delimeterSeperate($modelName.'_'.$model->primaryKeyName, '_', true), $model->get($model->primaryKeyName));
 			}
 		}
 		return true;
 	}
 	
 	public function afterSave() {
-		// save HABTM associated models
-		if (is_array($this->hasAndBelongsToMany)) {
-			foreach($this->hasAndBelongsToMany as $modelName => $config) {
-				$pluralName = Inflector::plural($modelName);
-				if (!$this->{$pluralName} instanceof IndexedArray) continue;
-				foreach($this->{$pluralName} as $model) {
-					if (!($model instanceof Model)) continue;
-					// if model does not exists add to associatedTable
-					$insert = !$model->exists();
-					$model->save();
-					if ($insert) {
-						$values = array(
-							Inflector::underscore($this->name, true).'_'.$this->primaryKeyName => $this->get($this->primaryKeyName),
-							Inflector::underscore($model->name, true).'_'.$model->primaryKeyName => $model->get($model->primaryKeyName)
-						);
-						$q = new InsertQuery($config['joinTable'], $values);
-						$this->query($q);
-					}
-				}	
-			}
-		}
 		return true;
 	}
 	
 	/**
-	 * Insert Action
+	 * Insert model data into model database table
+	 * 
 	 * @param array(string) $data
 	 * @return boolean
 	 */
@@ -681,8 +700,16 @@ class Model extends Object {
 		}
 		$quotedData = array();
 		foreach($this->structure as $key => $value) {
-			if (!isset($this->data[$key])) continue;
-			$quotedData[$key] = DBQuery::quote($this->data[$key], $this->structure[$key]->quoting);
+			// if key not set
+			if (!isset($this->data[$key])) {
+				continue;
+			}
+			// empty primary key value not use
+			if ($key == $this->primaryKeyName && $this->isEmpty($key)) {
+				$quotedData[$key] = 'NULL';
+			} else {
+				$quotedData[$key] = DBQuery::quote($this->data[$key], $this->structure[$key]->quoting);
+			}
 		}
 		$q = new InsertQuery($this->tablename, $quotedData);
 		$db = DBConnectionManager::getInstance()->get($this->useDBConfig);
@@ -971,7 +998,6 @@ class Model extends Object {
 				}
 				$query->orderBy($orderRule);
 			}
-			
 		}
 		// count and limit
 		if ($count !== null) {
@@ -985,14 +1011,26 @@ class Model extends Object {
 			foreach($this->belongsTo as $modelAlias => $config) {
 				$this->belongsTo[$modelAlias]['associationKey'] = $this->name.strrchr($config['associationKey'], '.');
 			}
-			$joinStuff = $this->hasOne + $this->belongsTo;
-			foreach($joinStuff as $modelName => $config) {
+			foreach($this->hasOne + $this->belongsTo as $modelName => $config) {
 				foreach($this->{$modelName}->structure as $fieldInfo) {
 					$query->select($modelName.'.'.$fieldInfo->name, $modelName.'.'.$fieldInfo->name);
 				}
 				$joinConditions = $config['conditions'];
 				$joinConditions[$config['associationKey']] = $config['foreignKey'];
 				$query->join($this->{$modelName}->tablename, ucFirst($modelName), DBQuery::JOIN_LEFT, $joinConditions);
+			}
+			// HABTM
+			$tmpR = $query->render();
+			foreach($this->hasAndBelongsToMany as $modelName => $config) {
+				if (!preg_match('@'.$modelName.'\.@i', $tmpR)) continue;
+				$query->groupBy($this->name.'.'.$this->primaryKeyName);
+				// die(var_dump($config));
+				$query->join($config['joinTable'], null, DBQuery::JOIN_LEFT, array(
+					$config['foreignKey'] => $config['associationKey']
+				));
+				$query->join($this->{$modelName}->tablename, ucFirst($modelName), DBQuery::JOIN_LEFT, array(
+					$config['joinTable'].'.'.Inflector::underscore($modelName).'_'.$this->{$modelName}->primaryKeyName => $modelName.'.'.$this->{$modelName}->primaryKeyName
+				));
 			}
 		}
 		return $query;
@@ -1013,7 +1051,7 @@ class Model extends Object {
 		if ($result->numRows() == 0) {
 			return false;
 		}
-		$return = new IndexedArray();
+		$return = new ObjectSet(get_class($this));
 		$classname = get_class($this);
 		while($modelData = $result->fetchAssoc()) {
 			$modelClassName = $classname;
@@ -1053,34 +1091,30 @@ class Model extends Object {
 						$associatedData = $this->{$modelName}->findAll($joinConditions, null, 0, $config['count'], $depth - 1);
 					}
 					if (empty($associatedData)) {
-						$associatedData = new IndexedArray();
+						$associatedData = new ObjectSet($config['class']);
 					}
 					$model->{$associatedModelNamePlural}->{$this->name} = $this;
 					$model->{$associatedModelNamePlural} = $associatedData;
 				}
-				// fetch HMBTM associated models
+				// fetch HABTM associated models
 				foreach($this->hasAndBelongsToMany as $modelName => $config) {
-					$primaryKeyValue = $model->get($model->primaryKeyName);
-					if (empty($primaryKeyValue)) continue;
-					$associatedModelNamePlural = Inflector::plural($modelName);
-					$joinConditions = array_merge($config['conditions'], array(
-						$config['foreignKey'] => $primaryKeyValue,
-						$config['joinTable'].'.tag_id' => $modelName.'.id'
+					// include habtm model if primary key not empty
+					if ($model->isEmpty($model->primaryKeyName)) continue;
+					// add maybe missing tableprefix @todo clean this tableprefix usage everywhere
+				 	$conditions = array_merge($config['conditions'], array(
+						$config['foreignKey'] => $model->get($model->primaryKeyName),
+						$config['with'].'.'.$modelName.'_'.$this->{$modelName}->primaryKeyName => $modelName.'.id'
 					));
-					$q = $this->{$modelName}->createSelectQuery(null, $config['order']);
-					$q->join($config['joinTable'], null, DBQuery::JOIN, $joinConditions);
-					if (is_array($config['order'])) {
-						$q->order($config['order']);
+					$query = $this->{$modelName}->createSelectQuery(null, $config['order']);
+					$query->select->prepend($this->name.$modelName.'.*');
+					$query->join($config['joinTable'], $this->name.$modelName, DBQuery::JOIN, $conditions);
+					$query->orderBy->add($config['order']);
+					$query->count($config['count']);
+					$modelNamePlural = Inflector::plural($modelName);
+					$model->{$modelNamePlural} = new ObjectSet($modelName);
+					if ($r = $this->{$modelName}->query($query)) {
+						$model->{$modelNamePlural} = $r;
 					}
-					$q->count($config['count']);
-					if ($this->{$modelName} instanceof Model) {
-						if ($r = $this->{$modelName}->query($q)) {
-							$model->{$associatedModelNamePlural} = $r;
-						} else {
-							$model->{$associatedModelNamePlural} = new IndexedArray();
-						}
-						//$model->{$associatedModelNamePlural}->{$this->name} = $this;
-					};
 				}
 			}
 			$return->add($model);
@@ -1301,7 +1335,7 @@ class Model extends Object {
 	 * @return integer
 	 */
 	public function countAll($conditions = null, $offset = null, $count = null) {
-		$query = $this->createSelectQuery($conditions, array(), $offset, $count);
+		$query = $this->createSelectQuery($conditions, array(), $offset, $count, null, null);
 		$query->select = new Hash(array('COUNT(*)' => 'count'));
 		if (!($result = $this->query($query))) {
 			return false;
@@ -1471,9 +1505,9 @@ class Model extends Object {
 			}
 			if (empty($this->data[$fieldname]) && func_num_args() > 1) {
 				return $default;
-			} elseif (isset($this->data[$fieldname])) {
+			} elseif (array_key_exists($fieldname, $this->data)) {
 				return $this->data[$fieldname];
-			} elseif (isset($this->structure[$fieldname])) {
+			} elseif (array_key_exists($fieldname, $this->structure)) {
 				return null;
 			}
 		}

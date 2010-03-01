@@ -12,7 +12,6 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision: 247 $
  * @modifiedby		$LastChangedBy: moresleep.net $
  * @lastmodified	$Date: 2009-08-21 13:24:05 +0200 (Fri, 21 Aug 2009) $
  * @filesource		$HeadURL: svn+ssh://moresleep.net/home/51916/data/ephFrame/0.2/ephFrame/lib/helper/Time.php $

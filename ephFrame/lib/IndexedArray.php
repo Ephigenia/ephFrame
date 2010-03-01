@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 class_exists('Component') or require dirname(__FILE__).'/component/Component.php';
@@ -93,6 +90,15 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 			}
 		}
 		return $this;
+	}
+	
+	protected function copy($data = array())
+	{
+		$classname = get_class($this);
+		if (func_num_args() >= 1) {
+			return new $classname($data);
+		}
+		return new $classname($this->data);
 	}
 	
 	public function reset() {
@@ -404,8 +410,7 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 				$a[] = $v;
 			}
 		}
-		$classname = get_class($this);
-		return new $classname($a);
+		return $this->copy($a);
 	}
 	
 	/**
@@ -459,14 +464,10 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 		} elseif ($count == 1) {
 			return array($this->data[array_rand($this->data)]);
 		} else {
-			if (min($count, $this->length()) == 1) {
-				return $this->rand(1);
-			} else {
-				foreach (array_rand($this->data, min($count, $this->length())) as $index) {
-					$r[] = $this[$index];
-				}
-				return $r;				
+			foreach (array_rand($this->data, (int) $count) as $index) {
+				$r[] = $this[$index];
 			}
+			return $r;
 		}
 	}
 	
@@ -526,9 +527,9 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param boolean $preserveKeys
 	 * @return array(mixed)
 	 */
-	public function slice($offset, $length = null, $preserveKeys = false) {
-		$classname = get_class($this);
-		return new $classname(array_slice($this->data, (int) $offset, (int) $length, (bool) $preserveKeys));
+	public function slice($offset, $length = null, $preserveKeys = false)
+	{
+		return $this->copy(array_slice($this->data, (int) $offset, (int) $length, (bool) $preserveKeys));
 	}
 	
 	/**
@@ -638,9 +639,7 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 				$cpy->delAll($minimum);
 				$minimums[] = $minimum;
 			}
-			
-			$classname = get_class($this);
-			return new $classname($minimums);
+			return $this->copy($minimums);
 		}
 	}
 	
@@ -664,8 +663,7 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 				$cpy->delAll($maximum);
 				$maximums[] = $maximum;
 			}
-			$classname = get_class($this);
-			return new $classname($maximums);
+			return $this->copy($maximums);
 		}
 	}
 	
@@ -686,8 +684,9 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @return IndexedArray
 	 */
 	public function reversed($preserveKeys = true) {
-		$classname = get_class($this);
-		return new $classname(array_reverse($this->data, $preserveKeys));
+		$new = clone $this;
+		$new->fromArray(array_reverse($this->data, $preserveKeys));
+		return $new;
 	}
 	
 	/**

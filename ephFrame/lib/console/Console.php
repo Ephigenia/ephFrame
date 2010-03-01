@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 class_exists('Object') or require dirname(__FILE__).'/../../Object.phpFormFieldText.php';
@@ -66,7 +63,7 @@ class Console extends Object
 	public function __construct($textColor = null, $backgroundColor = null) {
 		$this->textFormat = array_merge($this->textFormat, array(
 			'color' => $textColor == null ? self::COL_DEFAULT : $textColor,
-			'backgroundColor' = $backgroundColor == null ? self::COL_DEFAULT : $backgroundColor,
+			'backgroundColor' => $backgroundColor == null ? self::COL_DEFAULT : $backgroundColor,
 		));
 		$this->os();
 		return true;
@@ -166,7 +163,8 @@ class Console extends Object
 	 * @param string $str
 	 * @return Console
 	 */
-	public function out($str) {
+	public function out($str, $newline = true) {
+		if ($newline) $str .= LF;
 		fputs(STDOUT, $str);
 		return $this;
 	}

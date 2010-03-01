@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 /**
@@ -82,19 +79,18 @@ abstract class FileSystemNode extends Object {
 	 * Chmods a file or returns the current chmod of file
 	 * @param integer	$chmod
 	 * @return File|integer
-	 * @throws FileNotChmodableException
+	 * @throws FileSystemNodeNotChmodableException
 	 */
 	public function chmod($chmod = null) {
 		$this->checkExistence();
-		if (func_num_args() > 0) {
-			assert (in_array(strlen($chmod), array(3,4)));	
-			if (!@chmod($this->nodeName, $chmod)) {
-				throw new FileSystemNodeNotChmodableException($this);
-			}
-			return $this;
-		} else {
+		if (func_num_args() == 0) {
 			return fileperms($this->nodeName);
 		}
+		assert(in_array(strlen($chmod), array(3,4)));	
+		if (!@chmod($this->nodeName, $chmod)) {
+			throw new FileSystemNodeNotChmodableException($this);
+		}
+		return $this;
 	}
 	
 	/**
@@ -105,15 +101,14 @@ abstract class FileSystemNode extends Object {
 	 */
 	public function chown($user = null) {
 		$this->checkExistence();
-		if (func_num_args() > 0 || $user !== null) {
-			if (empty($user)) throw new StringExpectedException();	
-			if (!@chown($this->nodeName, $user)) {
-				throw new FileSystemNodeNotChmodableException($this);
-			}
-			return $this;
-		} else {
-			return fileowner($this->filename);
+		if (func_num_args() == 0) {
+			return fileowner($this->filename);	
 		}
+		if (empty($user)) throw new StringExpectedException();	
+		if (!@chown($this->nodeName, $user)) {
+			throw new FileSystemNodeNotChmodableException($this);
+		}
+		return $this;
 	}
 	
 	/**

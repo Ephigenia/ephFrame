@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 // PHP Version Check, ephFrame would need 5.1.6!
@@ -29,6 +26,7 @@ define('DS', DIRECTORY_SEPARATOR);
 if (!defined('FRAME_ROOT')) {
 	define('FRAME_ROOT', dirname(realpath(__FILE__)).'/');
 }
+
 // find ephFrame.php in the ephFrame lib dir, if fail die
 if(!file_exists(FRAME_ROOT.'ephFrame.php')) {
 	die ('Unable to find ephFrame, please set FRAME_ROOT to the ephFrame directory.');

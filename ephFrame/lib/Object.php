@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 
@@ -45,8 +42,8 @@
  * @subpackage ephFrame.lib
  * @version 0.201
  */
-abstract class Object {
-	
+abstract class Object
+{	
 	/**
 	 * Get (if second parameter is != null) or set a class variable
 	 * on get action (second parameter is null) you can set a default
@@ -57,7 +54,8 @@ abstract class Object {
 	 * @param mixed $defaultReturn something that should be returned if get found nothin'
 	 * @return Object|mixed
 	 */
-	public function __getOrSet($varName, $varValue = null, $defaultReturn = null) {
+	public function __getOrSet($varName, $varValue = null, $defaultReturn = null)
+	{
 		// reading values
 		if ($varValue === null) {
 			if (isset($this->{$varName})) return $this->{$varName};
@@ -75,7 +73,8 @@ abstract class Object {
 	 * @param array(mixed) $args
 	 * @return mixed
 	 */
-	public function callMethod($name, &$args = null) {
+	public function callMethod($name, &$args = null)
+	{
 		return call_user_func_array(array(&$this, $name), $args);
 	}
 	
@@ -94,7 +93,8 @@ abstract class Object {
 	 * @param object $obj
 	 * @return array(string)
 	 */
-	public function __parentClasses($obj = null) {
+	public function __parentClasses($obj = null)
+	{
 		global $parentClassesCache;
 		if (func_num_args() == 0) {
 			$obj = $this;
@@ -117,7 +117,8 @@ abstract class Object {
 	 * @param string $varname name of parent classes
 	 * @return Object
 	 */
-	public function __mergeParentProperty($varname, $cached = true) {
+	public function __mergeParentProperty($varname, $cached = true)
+	{
 		global $mergeParentProperty;
 		// do nothing if var not defined
 		$className = get_class($this);
@@ -145,10 +146,10 @@ abstract class Object {
 		return $mergeParentProperty[$className.$varname];
 	}
 	
-	public function __toString() {
+	public function __toString()
+	{
 		return 'Object (class: '.get_class($this).')';
 	}
-	
 }
 
 /**

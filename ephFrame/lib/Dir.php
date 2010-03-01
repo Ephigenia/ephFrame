@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 // load classes needed for this class
@@ -78,7 +75,11 @@ class Dir extends FileSystemNode {
 	public function newFile($filename, $content = null, $class = 'File') {
 		$newFilename = $this->nodeName.$filename;
 		if (!$this->writable()) {
-			throw new DirNotWritableException($this);
+			try {
+				$this->chmod(0777);
+			} catch (FileSystemNodeNotChmodableException $e) {
+				throw new DirNotWritableException($this);
+			}
 		}
 		file_put_contents($newFilename, $content);
 		return new $class($newFilename);
@@ -257,7 +258,7 @@ class Dir extends FileSystemNode {
 		} else {
 			$dir = new Dir($path);
 		}
-		if ($dir->exists()) return false;
+		if (!$dir->exists()) return false;
 		$dir->listHiddenFiles = true;
 		foreach(array_merge($dir->listFiles(), $dir->listDirectories()) as $Obj) {
 			$Obj->delete();

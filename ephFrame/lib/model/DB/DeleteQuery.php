@@ -11,10 +11,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 class_exists('DBQuery') or require dirname(__FILE__).'/DBQuery.php';
@@ -32,7 +29,7 @@ class DeleteQuery extends DBQuery {
 	
 	public $verb = 'DELETE';
 	
-	public $renderTemplate = '%verb %flags FROM %tables %where %orderBy %limit';
+	public $renderTemplate = '%verb %flags %tables FROM %tables %where %orderBy %limit';
 	
 	public function __construct($table, $conditions = array()) {
 		parent::__construct($this->verb, $table, $conditions);

@@ -56,7 +56,7 @@ class Email extends AppComponent implements Renderable
 	
 	public function attach($filename, $content = null) {
 		if (!in_array($filename, $this->attachments)) {
-			if (!empty($content)) {
+			if (func_num_args() == 2) {
 				$this->attachments[$filename] = $content;
 			} else {
 				$this->attachments[] = $filename;

@@ -12,10 +12,7 @@
  * @license		http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright		copyright 2007+, Ephigenia M. Eichner
  * @link			http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 /**
@@ -27,8 +24,8 @@
  * @author Ephigenia // Marcel Eichner <love@ephigenia.de>
  * @since 29.01.2009
  */
-class FlagableBehavior extends ModelBehavior {
-	
+class FlagableBehavior extends ModelBehavior
+{	
 	/**
 	 * Name of the field that stores the flags
 	 * @var string
@@ -46,7 +43,8 @@ class FlagableBehavior extends ModelBehavior {
 	 * @param array(integer) $flag
 	 * @return boolean
 	 */
-	public function hasFlags($flag) {
+	public function hasFlags($flag)
+	{
 		if (!is_array($flag)) {
 			$flags = (func_num_args() > 1) ? func_get_args() : array($flag);
 		} else {
@@ -66,7 +64,8 @@ class FlagableBehavior extends ModelBehavior {
 	 * @param integer $flag
 	 * @return boolean
 	 */
-	public function hasFlag($flag) {
+	public function hasFlag($flag)
+	{
 		if ($flag == 0 && $this->model->isEmpty($this->flagFieldname)) {
 			return true;
 		}
@@ -82,7 +81,8 @@ class FlagableBehavior extends ModelBehavior {
 	 * @param integer $flag
 	 * @return Model
 	 */
-	public function addFlag($flag) {
+	public function addFlag($flag)
+	{
 		if (func_num_args() > 1) {
 			$args = func_get_args();
 			return $this->callMethod('addFlags', $args); 
@@ -95,7 +95,8 @@ class FlagableBehavior extends ModelBehavior {
 	 * Set multiple flags in one method call
 	 * @return Model
 	 */
-	public function addFlags() {
+	public function addFlags()
+	{
 		$args = func_get_args();
 		foreach($args as $flag) $this->addFlag($flag);
 		return $this->model;
@@ -106,7 +107,8 @@ class FlagableBehavior extends ModelBehavior {
 	 * @param integer $flag
 	 * @return Model
 	 */
-	public function removeFlag($flag) {
+	public function removeFlag($flag)
+	{
 		(int) $this->model->{$this->flagFieldname} &= ~(int) $flag;
 		return $this->model;
 	}
@@ -116,7 +118,8 @@ class FlagableBehavior extends ModelBehavior {
 	 * @param $flag
 	 * @return Model
 	 */
-	public function deleteFlag($flag) {
+	public function deleteFlag($flag)
+	{
 		return $this->removeFlag($flag);
 	}
 	
@@ -126,7 +129,8 @@ class FlagableBehavior extends ModelBehavior {
 	 * @param boolean $value
 	 * @return Model
 	 */
-	public function setFlag($flag, $value) {
+	public function setFlag($flag, $value)
+	{
 		if ((bool) $value) {
 			$this->addFlag($flag);
 		} else {
@@ -140,9 +144,9 @@ class FlagableBehavior extends ModelBehavior {
 	 * @param integer $flag
 	 * @return Model
 	 */
-	public function toggleFlag($flag) {
+	public function toggleFlag($flag)
+	{
 		(int) $this->model->{$this->flagFieldname} ^= (int) $flag;
 		return $this->model;
 	}
-	
 }

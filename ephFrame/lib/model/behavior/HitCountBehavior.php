@@ -12,7 +12,6 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision: 241 $
  * @modifiedby		$LastChangedBy: moresleep.net $
  * @lastmodified	$Date: 2009-08-05 14:01:22 +0200 (Wed, 05 Aug 2009) $
  * @filesource		$HeadURL: svn+ssh://moresleep.net/home/51916/data/ephFrame/0.2/ephFrame/lib/model/behavior/PositionableBehavior.php $

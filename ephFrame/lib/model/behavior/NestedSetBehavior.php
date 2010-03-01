@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 /**
@@ -28,23 +25,26 @@
  * @package ephFrame
  * @subpackage ephFrame.lib.models.behaviors
  */
-class NestedSetBehavior extends ModelBehavior {
-	
+class NestedSetBehavior extends ModelBehavior
+{	
 	const MOVE_UP = 'previous';
 	const MOVE_DOWN = 'next';
 	
-	public function isRoot() {
+	public function isRoot()
+	{
 		return ($this->model->lft == 1);
 	}
 	
-	public function isChild() {
+	public function isChild()
+	{
 		return !$this_>isRoot();
 	}
 	
 	/**
 	 * @return integer
 	 */
-	public function distance() {
+	public function distance()
+	{
 		return (int) ($this->model->rgt - $this->model->lft);
 	}
 	
@@ -52,7 +52,8 @@ class NestedSetBehavior extends ModelBehavior {
 	 * Returns the number of children in the subtree of this node.
 	 * @return integer
 	 */
-	public function numChildren() {
+	public function numChildren()
+	{
 		return (int) floor(($this->distance() - 1) / 2);
 	}
 	
@@ -60,7 +61,8 @@ class NestedSetBehavior extends ModelBehavior {
 	 * Alias for {@link numChildren}
 	 * @return unknown_type
 	 */
-	public function childrenCount() {
+	public function childrenCount()
+	{
 		return $this->numChildren();
 	}
 	
@@ -68,7 +70,8 @@ class NestedSetBehavior extends ModelBehavior {
 	 * Determine level of depth of the current node and return it (cached)
 	 * @return integer
 	 */
-	public function level() {
+	public function level()
+	{
 		if (!isset($this->model->data['level'])) {
 			$this->model->set('level', count($this->path(false, 0)));
 		}
@@ -79,26 +82,30 @@ class NestedSetBehavior extends ModelBehavior {
 	 * Does the current node has children?
 	 * @return boolean
 	 */
-	public function hasChildren() {
+	public function hasChildren()
+	{
 		return $this->numChildren() > 0;
 	}
 	
 	/**
 	 * Before Save callback
+	 * @param Model $model
 	 * @return boolean
 	 */
-	public function beforeSave() {
-		if (isset($this->model->Parent)) {
-			$this->model->parent_id = $this->model->Parent->id;
+	public function beforeSave(Model $Model)
+	{
+		if (isset($Model->Parent)) {
+			$Model->parent_id = $Model->Parent->id;
 			// increase level
-			if ($this->model->hasField('level')) {
-				$this->model->set('level', $this->model->Parent->get('level', 0) + 1);
+			if ($Model->hasField('level')) {
+				$Model->set('level', $Model->Parent->get('level', 0) + 1);
 			}
 		}
 		return true;
 	}
 	
-	public function beforeInsert() {
+	public function beforeInsert()
+	{
 		if (isset($this->model->Parent)) {
 			$this->model->query('UPDATE '.$this->model->tablename.' SET rgt = rgt + 2 WHERE rgt >= '.$this->model->Parent->rgt);
 			$this->model->query('UPDATE '.$this->model->tablename.' SET lft = lft + 2 WHERE lft > '.$this->model->Parent->rgt);
@@ -113,20 +120,24 @@ class NestedSetBehavior extends ModelBehavior {
 	 * @var Model $child
 	 * @return Model|boolean
 	 */
-	public function addChild(Model $child) {
+	public function addChild(Model $child)
+	{
 		$child->Parent = $this->model;
 		return $child->save();
 	}
 	
-	public function afterDelete() {
+	public function afterDelete()
+	{
+		if ($this->model->isEmpty('lft') || $this->model->isEmpty('rgt')) return true;
+		// remove children
+		$children = $this->children();
 		$this->model->query(new DeleteQuery($this->model->tablename, array('lft >= '.$this->model->lft, 'rgt <= '.$this->model->rgt)));
 		//$this->model->query(new DeleteQuery($this->model->tablename, array('id' => $this->model->id)));
 		$width = $this->model->rgt - $this->model->lft + 1;
 		$this->model->query('UPDATE '.$this->model->tablename.' SET rgt = rgt - '.$width.' WHERE rgt > ' . $this->model->rgt);
 		$this->model->query('UPDATE '.$this->model->tablename.' SET lft = lft - '.$width.' WHERE lft > ' . $this->model->rgt);
-		if ($children = $this->children()) {
+		if ($children) {
 			foreach($children as $child) {
-				$child->behaviors->removeBehavior('NestedSet');
 				$child->delete();
 			}
 		}
@@ -138,7 +149,8 @@ class NestedSetBehavior extends ModelBehavior {
 	 * @param $depth
 	 * @return IndexedArray
 	 */
-	public function children($depth = null, $depthModel = null) {
+	public function children($depth = null, $depthModel = null)
+	{
 		return $this->tree($depth, $depthModel);
 	}
 	
@@ -149,7 +161,8 @@ class NestedSetBehavior extends ModelBehavior {
 	 * @param integer			$depthModel	association depth of models that are found, pass null for default model depth
 	 * @return array(Model)
 	 */
-	public function tree($depth = null, $depthModel = null) {
+	public function tree($depth = null, $depthModel = null)
+	{
 		if ($this->model->exists() && !$this->hasChildren()) return new IndexedArray();
 		$q = $this->model->createSelectQuery(null, null, null, null, $depthModel);
 		$q->addComment($this->model->name.'->'.get_class($this).'->depth(depth: '.$depth.', depthModel: '.$depthModel.')');
@@ -171,7 +184,7 @@ class NestedSetBehavior extends ModelBehavior {
 		// optimize query by using level field if possible
 		if ($this->model->hasField('level')) {
 			if ($depth > 0) {
-				$q->where($this->model->name.'.level BETWEEN '.$this->model->level.' AND '.($this->model->level + $depth));
+				$q->where($this->model->name.'.level BETWEEN '.(int) $this->model->level.' AND '.($this->model->level + $depth));
 			} elseif ($this->model->level > 0) {
 				$q->where($this->model->name.'.level > '.$this->model->level);
 			}
@@ -202,7 +215,8 @@ class NestedSetBehavior extends ModelBehavior {
 	 * @param integer $modelDepth optional model association depth when parent is found
 	 * @return Model|boolean
 	 */
-	public function parent($modelDepth = null) {
+	public function parent($modelDepth = null)
+	{
 		if (!$this->model->exists() || $this->isRoot()) {
 			return false;
 		}
@@ -232,7 +246,8 @@ class NestedSetBehavior extends ModelBehavior {
 	 * @param	integer	$modelDepth		Model association depth of found nodes, deault is 0
 	 * @return array(Node)|false
 	 */
-	public function path($includeCurrent = true, $modelDepth = 0) {
+	public function path($includeCurrent = true, $modelDepth = 0)
+	{
 		if (!$this->model->exists()) {
 			return false;
 		}
@@ -257,7 +272,8 @@ class NestedSetBehavior extends ModelBehavior {
 	 * Returns the node thas is on the left of the current node.
 	 * @return Model|boolean
 	 */
-	public function previous() {
+	public function previous()
+	{
 		if ($this->isRoot()) return false;
 		if ($previousLeaf = $this->model->findBy('rgt', $this->model->lft - 1)) {
 			return $previousLeaf;
@@ -269,7 +285,8 @@ class NestedSetBehavior extends ModelBehavior {
 	 * Returns the node to the right of the current node.
 	 * @return Model|boolean
 	 */
-	public function next() {
+	public function next()
+	{
 		if ($this->isRoot()) return false;
 		if ($nextLeaf = $this->model->findBy('lft', $this->model->rgt + 1)) {
 			return $nextLeaf;
@@ -282,7 +299,8 @@ class NestedSetBehavior extends ModelBehavior {
 	 * @param $model
 	 * @return model
 	 */
-	public function moveTo(Model $model) {
+	public function moveTo(Model $model)
+	{
 		
 	}
 	
@@ -291,7 +309,8 @@ class NestedSetBehavior extends ModelBehavior {
 	 * @param string $direction
 	 * @return Model
 	 */
-	public function move($direction) {
+	public function move($direction)
+	{
 		switch(String::lower((string) $direction)) {
 			case self::MOVE_DOWN:
 				$this->moveToNext();
@@ -324,28 +343,31 @@ class NestedSetBehavior extends ModelBehavior {
 	 * Move Node on down on the same level
 	 * @return Model
 	 */
-	public function moveToNext() {
+	public function moveToNext()
+	{
 		if ($next = $this->next()) {
 			
 			$this->move($next->rgt+1);
 		}
 	}
 	
-	public function moveToPrevious() {
+	public function moveToPrevious()
+	{
 		if ($prev = $this->previous()) {
 			$this->move($prev->lft);
 		}
 	}
 	
-	public function _shiftRLValues($first, $delta) {
+	public function _shiftRLValues($first, $delta)
+	{
 		$this->model->query('UPDATE '.$this->model->tablename.' SET lft = lft + '.$delta.' WHERE lft >= '.$first);
 		$this->model->query('UPDATE '.$this->model->tablename.' SET rgt = rgt + '.$delta.' WHERE rgt >= '.$first);
 	}
 	
-	public function _shiftRLRange($first, $last, $delta) {
+	public function _shiftRLRange($first, $last, $delta)
+	{
 		$this->model->query('UPDATE '.$this->model->tablename.' SET lft = lft + '.$delta.' WHERE lft >= '.$first.' AND lft <= '.$last);
 		$this->model->query('UPDATE '.$this->model->tablename.' SET rgt = rgt + '.$delta.' WHERE rgt >= '.$first.' AND rgt <= '.$last);
 		return array('l' => $first+$delta, 'r' => $last+$delta);
 	}
-	
 }

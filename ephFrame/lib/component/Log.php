@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 // load classes that are used
@@ -122,13 +119,13 @@ class Log extends AppComponent {
 	 * @var array(string)
 	 */
 	public static $levels = array(
-		 self::ERROR => 'error'
-		,self::WARNING => 'warning'
-		,self::NOTICE => 'notice'
-		,self::DEBUG => 'debug'
-		,self::INFO => 'info'
-		,self::VERBOSE => 'verbose'
-		,self::VERBOSE_SILENT => 'verbose'
+		self::ERROR => 'error',
+		self::WARNING => 'warning',
+		self::NOTICE => 'notice',
+		self::DEBUG => 'debug',
+		self::INFO => 'info',
+		self::VERBOSE => 'verbose',
+		self::VERBOSE_SILENT => 'verbose',
 	);
 
 	/**

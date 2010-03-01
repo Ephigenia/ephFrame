@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 class_exists('HTTPRequest') or require dirname(__FILE__).'/../HTTPRequest.php';
@@ -73,7 +70,7 @@ class GoogleMapsCoordinatesSearch extends AppComponent {
 	 * @param string $zip
 	 * @return array(string) set of n arrays holding lat and lng values
 	 */
-	public function getLngLat($street, $city, $zip = null) {
+	public function getLngLat($street, $city = null, $zip = null) {
 		// build the search string
 		$q = $street.', '.$zip.' '.$city;
 		// prepare request
@@ -85,7 +82,7 @@ class GoogleMapsCoordinatesSearch extends AppComponent {
 		// parse the answer csv code, the list comes from google
 		// statuscode, accuracy, latitude, longitude
 		$return = array();
-		if (preg_match_all('/(\d+),([+-]?\d+),([+-]?\d+(?:.\d+)?),([+-]?\d+(?:.\d+)?)/i', $answer->content, $found, PREG_SET_ORDER)) {
+		if (preg_match_all('/(\d+),([+-]?\d+),([+-]?\d+(?:.\d+)?),([+-]?\d+(?:.\d+)?)/i', $answer->body, $found, PREG_SET_ORDER)) {
 			foreach($found as $index => $data) {
 				$return[] = array('status' => $data[1], 'accuracy' => $data[2], 'lat' => $data[3], 'lng' => $data[4]);
 			}

@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 /**
@@ -38,7 +35,7 @@ class I18n extends AppComponent {
 	 * Current locale used
 	 * @var string
 	 */
-	public static $locale = 'de';
+	public static $locale = 'de_DE';
 	
 	/**
 	 * Location of locale files
@@ -52,12 +49,22 @@ class I18n extends AppComponent {
 	 */
 	protected $domainEncoding = 'UTF-8';
 	
+	/**
+	 * Try to detect client language on sended accept_language request header
+	 * @var boolean
+	 */
+	public $autoDetect = true;
+	
+	/**
+	 * Default Domain Name that is used
+	 * @var string
+	 */
 	public $domainName = 'default';
 	
 	public function startup() {
 		// get language from requested client header
-		if ($acceptLanguage = $this->controller->request->header->get('accept_language')) {
-			self::$locale = strtolower(substr($acceptLanguage, 0, 2));
+		if ($this->autoDetect && $acceptLanguage = $this->controller->request->header->get('accept_language')) {
+			self::$locale = $acceptLanguage;
 		// default language defined in the /app/config/config.php
 		} elseif ($defaultLanguage = Registry::read('I18n.language')) {
 			self::$locale = $defaultLanguage;
@@ -76,20 +83,20 @@ class I18n extends AppComponent {
 	 */
 	public static function locale($locale = null, $types = array(LC_MESSAGES, LC_COLLATE, LC_TIME)) {
 		if (func_num_args() == 0) return self::$locale;
-		self::$locale = substr($locale, 0, 2);
+		self::$locale = strtolower(substr($locale, 0, 2)).'_'.strtoupper(substr($locale, 3, 5));
 		foreach((array) $types as $type) {
-			setlocale($type, self::$locale.'_'.strtoupper(self::$locale));
+			putenv('LC_ALL='.self::$locale);
+			setlocale($type, self::$locale);
 			logg(Log::VERBOSE_SILENT, 'ephFrame: Component '.__CLASS__.' setting locale \''.$type.'\' to \''.$locale.'\'');
 		}
 		return true;
 	}
 	
-	public function domain($location, $name, $encoding = null) {
-		assert(is_string($location) && is_string($name));
-		if (!empty($location) && substr($location, -1, 1) !== DS) {
-			$location .= DS;
+	public function domain($location, $name, $encoding = null)
+	{
+		if (!empty($location)) {
+			$this->domainLocation = rtrim($location, DS).DS;
 		}
-		$this->domainLocation = $location;
 		$this->domainName = $name;
 		// bind textdomain
 		$result = bindtextdomain($this->domainName, $this->domainLocation);
@@ -142,21 +149,20 @@ class I18n extends AppComponent {
 }
 
 /**
- * Alias for _ or gettext with more fancy features
+ * Alias for _ or gettext with substitution
+ * 
  * @param string $string
- * @param mixed $additional
  * @return string
  */
-function __($string) {
+function __($string)
+{
 	$translated = _($string);
 	if (empty($translated)) {
 		return $translated;
-	}
-	if (func_num_args() > 1) {
-		$args = func_get_args(1);
-		// second params was array of substitution chars
-		if (count($args) == 2 && is_array($args[1])) {
-			$args = $args[1];
+	} elseif (func_num_args() > 1) {
+		$args = func_get_args();
+		if (is_array($args[0])) {
+			$args = $args[0];
 		}
 		return String::substitute($translated, $args);
 	}
@@ -164,18 +170,45 @@ function __($string) {
 }
 
 /**
- * Works just like {@link __} but creating html save content, with line brakes
- * and & encoded
+ * @param string $domain
  * @param string $string
+ */
+function __d($domain, $string)
+{
+	$translated = dcgettext($domain, $string);
+	if (empty($translated)) {
+		return $translated;
+	} elseif (func_num_args() > 1) {
+		$args = func_get_args();
+		if (is_array($args[0])) {
+			$args = $args[0];
+		}
+		return String::substitute($translated, $args);
+	}
+	return $translated;
+}
+
+/**
+ * Alias for ngettext with replacement capabilities
+ * 
+ * @param string $singular
+ * @param string $plural
+ * @param integer $count
  * @return string
  */
-function __html($string) {
-	$args = func_get_args();
-	$translated = call_user_func_array('__', $args);
-	$translated = preg_replace('/[\r\n]/', '<br />', $translated);
-	// @todo find a better regular expression to replace & with amp;
-	$translated = preg_replace('@&(?!(amp;|#\d{2,}))@i', ' &amp; ', $translated);
-	return $translated;
+function __n($singular, $plural, $count)
+{
+	$translated = ngettext($singular, $plural, $count);
+	if (empty($translated)) {
+		return $translated;
+	}
+	$args = array_slice(func_get_args(), 2);
+	if (is_array($args[0])) {
+		$args = $args[0];
+	} else {
+		array_unshift($args, $translated); // add translation as first index of array
+	}
+	return String::substitute($translated, $args);
 }
 
 /**

@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 class_exists('Hash') or require dirname(__FILE__).'/../Hash.php';
@@ -76,8 +73,8 @@ class Session extends Hash {
 			$this->name = $sessionName;
 		}
 		// get sesion lifetime from config
-		if ($sessionLifetime = Registry::get('Session.lifetime')) {
-			$this->ttl = $sesionLifetime;
+		if ($sessionLifetime = Registry::get('Session.ttl')) {
+			$this->ttl = $sessionLifetime;
 			PHPINI::set('session.cookie_lifetime', $this->ttl);
 			PHPINI::set('session.gc_maxlifetime', $this->ttl);
 		} else {
@@ -100,7 +97,7 @@ class Session extends Hash {
 		if (!empty($this->controller->request->data[$this->name])) {
 			$this->id($this->controller->request->data[$this->name]);
 		}
-		if (!isset($_SESSION) && !session_start()) {
+		if (!isset($_SESSION) && !@session_start()) {
 			throw new SessionStartException();
 		}
 		return true;

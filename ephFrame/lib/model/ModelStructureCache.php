@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 /**
@@ -28,8 +25,8 @@
  * @package ephFrame
  * @subpackage ephFrame.lib.model
  */
-class ModelStructureCache extends Object {
-	
+class ModelStructureCache extends Object
+{	
 	public static $cache = array();
 	
 	protected $structure = array();

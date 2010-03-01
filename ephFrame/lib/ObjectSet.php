@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 class_exists('IndexedArray') or require dirname(__FILE__).'/IndexedArray.php';
@@ -63,6 +60,29 @@ class ObjectSet extends IndexedArray {
 			$data = array_slice($args, 2);
 		}
 		return parent::__construct($data);
+	}
+	
+	protected function copy($data = array())
+	{
+		$classname = get_class($this);
+		if (func_num_args() >= 1) {
+			return new $classname($this->classname, $data);
+		}
+		return new $classname($this->classname, $this->data);
+	}
+	
+	/**
+	 * Searches for a object with the $property = $value and returns it
+	 * @param string $property
+	 * @param mixed $value
+	 * @return Object|false
+	 */
+	public function findByProperty($property, $value)
+	{
+		foreach($this->data as $object) {
+			if ($object->{$property} == $value) return $object;
+		}
+		return false;
 	}
 	
 	/**
@@ -114,7 +134,8 @@ class ObjectSet extends IndexedArray {
 		return parent::prepend($val);
 	}
 	
-	public function offsetSet($index, $value) {
+	public function offsetSet($index, $value)
+	{
 		$this->canBeAdded($value);
 		if ($index === null) {
 			$index = $this->count();
@@ -122,7 +143,6 @@ class ObjectSet extends IndexedArray {
 		$this->data[$index] = $value;
 		return $this;
 	}
-	
 }
 
 /**

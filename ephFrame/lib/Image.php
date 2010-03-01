@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 class_exists('File') or require dirname(__FILE__).'/File.php';
@@ -439,7 +436,6 @@ class Image extends File implements Renderable
 	 * Returns image informations, like getimagesize does with caching
 	 * @return array()
 	 * @throws FileNotFoundException if the file was not found
-	 * @throws FileEmptyException if the file is empty, length zero
 	 */
 	private function getImageInfo() {
 		if (empty($this->imgInfo)) {
@@ -447,7 +443,9 @@ class Image extends File implements Renderable
 			if (!$this->readable()) {
 				throw new FileNotReadableException($this);
 			}
-			$this->imgInfo = getimagesize($this->nodeName);
+			if (!$this->imgInfo = getimagesize($this->nodeName)) {
+				throw new ImageIndeterminateFormat();
+			}
 			if(!isset($this->imgInfo['channels'])) {
 				$this->imgInfo['channels'] = 8;
 			}
@@ -854,7 +852,9 @@ class Image extends File implements Renderable
 			return $this;
 		} elseif ($this->exists()) {
 			$imgInfo = $this->getImageInfo();
-			if (!isset($imgInfo[2])) throw new ImageIndeterminateFormat($this);
+			if (!isset($imgInfo[2])) {
+				throw new ImageIndeterminateFormat($this);
+			}
 			$this->type = $imgInfo[2];
 		}
 		return $this->type;
@@ -1371,6 +1371,13 @@ class ImageToLargeToLoadException extends ImageException {
 		parent::__construct('Unable to create image handle because image is to large.');
 	}
 }
+
+/**
+ * Thrown if image class constructed on non-valid image
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
+ */
+class ImageIndeterminateFormat extends ImageException {}
 
 /**
  * Thrown if the image type could not be determined

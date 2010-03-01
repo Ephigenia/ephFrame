@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 /**
@@ -25,17 +22,28 @@
  * ephFrame. This included defualt created, updated time stamp setting in
  * beforeInsert and beforeUpdate.
  * 
+ * You can create your own {@link Model} Behaviors by extending from this
+ * class. See the examples allready there like {@link HitCountBehavior}, 
+ * {@link FlagableBehavior}, {@link NestedSetBehavior} etc.
+ * 
  * @package ephFrame
- * @subpackage ephFrame.lib.model
+ * @subpackage ephFrame.lib.model.behavior
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 15.10.2008
  */
-class ModelBehavior extends Object {
-	
+class ModelBehavior extends Object
+{	
 	/**
+	 * Place where configuration is stored
 	 * @var array(string)
 	 */
 	protected $config = array();
+	
+	/**
+	 * Default configuration, is merged with incoming configuration
+	 * @var array(string)
+	 */
+	protected $defaultConfig = array();
 	
 	/**
 	 * @var Model
@@ -51,23 +59,27 @@ class ModelBehavior extends Object {
 	 * @param array(string) 	$config
 	 * @return ModelBehavior
 	 */
-	public function __construct(Model $model, Array $config = array()) {
+	public function __construct(Model $model, Array $config = array())
+	{
 		$this->model = $model;
-		if (is_array($config)) {
-			$this->config = $config;
+		if (is_array($config) && $this->defaultConfig) {
+			$this->config[$model->name] = array_merge($this->defaultConfig, $config);
 		}
 		return $this;
 	}
 	
-	public function afterConstruct() {
+	public function afterConstruct()
+	{
 		return true;
 	}
 	
-	public function beforeDelete() {
+	public function beforeDelete()
+	{
 		return true;
 	}
 	
-	public function afterDelete() {
+	public function afterDelete()
+	{
 		return true;
 	}
 	
@@ -79,7 +91,8 @@ class ModelBehavior extends Object {
 	 * 
 	 * @return boolean
 	 */
-	public function beforeInsert() {
+	public function beforeInsert()
+	{
 		if ($this->model->hasField('created')
 			&& $this->model->created <= 0
 			&& in_array($this->model->structure['created']->quoting, array(ModelFieldInfo::QUOTE_STRING, ModelFieldInfo::QUOTE_INTEGER))
@@ -89,15 +102,18 @@ class ModelBehavior extends Object {
 		return true;
 	}
 	
-	public function afterInsert() {
+	public function afterInsert()
+	{
 		return true;
 	}
 	
-	public function beforeSave() {
+	public function beforeSave(Model $Model)
+	{
 		return true;
 	}
 	
-	public function afterSave() {
+	public function afterSave()
+	{
 		return true;
 	}
 	
@@ -106,7 +122,8 @@ class ModelBehavior extends Object {
 	 * 
 	 * @return boolean
 	 */
-	public function beforeUpdate() {
+	public function beforeUpdate()
+	{
 		if ($this->model->hasField('updated')
 			&& in_array($this->model->structure['updated']->quoting, array(ModelFieldInfo::QUOTE_STRING, ModelFieldInfo::QUOTE_INTEGER))
 			) {
@@ -115,8 +132,8 @@ class ModelBehavior extends Object {
 		return true;
 	}
 	
-	public function afterUpdate() {
+	public function afterUpdate()
+	{
 		return true;
-	}
-	
+	}	
 }

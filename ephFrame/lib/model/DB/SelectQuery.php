@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 ephFrame::loadClass('ephFrame.lib.model.DB.DBQuery');
@@ -33,11 +30,8 @@ class SelectQuery extends DBQuery
 {	
 	public $verb = 'SELECT';
 	
-	public function __construct() {
-		return parent::__construct();
-	}
-	
-	public function from($tablename, $alias = null) {
+	public function from($tablename, $alias = null)
+	{
 		return parent::table($tablename, $alias);
 	}
 
@@ -46,13 +40,14 @@ class SelectQuery extends DBQuery
 	 * <code>
 	 * // select id, created
 	 * $query->select(array('id', 'created'));
-	 * // select id but with the alias User.id
+	 * // select id with alias 'User.id'
 	 * $query->select('id', 'User.id');
 	 * </code>
 	 * @param string|array(string) Single Select name or multiple
 	 * @return DBQuery
 	 */
-	public function select($fieldname, $alias = null) {
+	public function select($fieldname, $alias = null)
+	{
 		if (func_num_args() == 0) return $this->select;
 		if (is_array($fieldname)) {
 			foreach($fieldname as $v) {
@@ -63,7 +58,6 @@ class SelectQuery extends DBQuery
 		}
 		return $this;
 	}
-	
 }
 
 /**

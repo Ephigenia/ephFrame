@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 /**
@@ -30,10 +27,10 @@
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 03.12.2008
  * @package ephFrame
- * @subpackage ephFrame.lib.models.behaviors
+ * @subpackage ephFrame.lib.model.behavior
  */
-class PositionableBehavior extends ModelBehavior {
-	
+class PositionableBehavior extends ModelBehavior
+{	
 	const MOVE_DIRECTION_UP = 'up';
 	const MOVE_DIRECTION_TOP = 'top';
 	const MOVE_DIRECTION_DOWN = 'down';
@@ -50,7 +47,8 @@ class PositionableBehavior extends ModelBehavior {
 	 * its position by one
 	 * @return boolean
 	 */
-	public function beforeInsert() {
+	public function beforeInsert()
+	{
 		$newPosition = 0;
 		if ($lastModel = $this->model->findOne(null, array($this->model->name.'.position DESC'))) {
 			$newPosition = (int) $lastModel->get($this->positionFieldName) + 1;
@@ -64,7 +62,8 @@ class PositionableBehavior extends ModelBehavior {
 	 * higher positioned items and returns them.
 	 * @return Hash
 	 */
-	protected function collectModelConditions() {
+	protected function collectModelConditions()
+	{
 		$conditions = array();
 		foreach($this->model->belongsTo as $config) {
 			$conditions[$config['associationKey']] = $this->model->get(substr(strchr($config['associationKey'], '.'), 1));
@@ -78,7 +77,8 @@ class PositionableBehavior extends ModelBehavior {
 	 * @param boolean $looped begin at the first element when model is last element, double linked
 	 * @return boolean|Model
 	 */
-	public function next($additionalConditions = array(), $looped = false) {
+	public function next($additionalConditions = array(), $looped = false)
+	{
 		if (!$this->model->exists()) return false;
 		$conditions = $this->collectModelConditions();
 		$conditions->push($this->model->name.'.'.$this->positionFieldName.' > '.$this->model->position);
@@ -97,7 +97,8 @@ class PositionableBehavior extends ModelBehavior {
 	 * @param boolean $looped return the last element if your in the first element (double linked)
 	 * @return boolean|Model
 	 */
-	public function previous($additionalConditions = array(), $looped = false) {
+	public function previous($additionalConditions = array(), $looped = false)
+	{
 		if (!$this->model->exists()) return false;
 		$conditions = $this->collectModelConditions();
 		$conditions->push($this->model->name.'.'.$this->positionFieldName.' < '.$this->model->position);
@@ -116,7 +117,8 @@ class PositionableBehavior extends ModelBehavior {
 	 * @param array(string) additional conditions to use
 	 * @return boolean|Model
 	 */
-	public function first($additionalConditions = array()) {
+	public function first($additionalConditions = array())
+	{
 		if (!$this->model->exists()) return false;
 		$conditions = $this->collectModelConditions();
 		$conditions->push($this->model->name.'.'.$this->positionFieldName.' < '.$this->model->position);
@@ -130,7 +132,8 @@ class PositionableBehavior extends ModelBehavior {
 	 * @param array(string) additional conditions to use
 	 * @return boolean|Model
 	 */
-	public function last($additionalConditions = array()) {
+	public function last($additionalConditions = array())
+	{
 		if (!$this->model->exists()) return false;
 		$conditions = $this->collectModelConditions();
 		$conditions->push($this->model->name.'.'.$this->positionFieldName.' > '.$this->model->position);
@@ -142,7 +145,8 @@ class PositionableBehavior extends ModelBehavior {
 	 * Tests if this model entry is the last element in the list
 	 * @return boolean
 	 */
-	public function isLast() {
+	public function isLast()
+	{
 		return (!$this->next(null, false));
 	}
 	
@@ -150,11 +154,13 @@ class PositionableBehavior extends ModelBehavior {
 	 * Tests if this model entry is the first element in the list
 	 * @return boolean
 	 */
-	public function isFirst() {
+	public function isFirst()
+	{
 		return (!$this->previous(null, false));
 	}
 	
-	public function move($direction, $additionalConditions = array()) {	
+	public function move($direction, $additionalConditions = array())
+	{	
 		if (!($this->model->exists())) {
 			return false;
 		}
@@ -188,6 +194,5 @@ class PositionableBehavior extends ModelBehavior {
 				break;
 		}
 		return true;
-	}
-	
+	}	
 }

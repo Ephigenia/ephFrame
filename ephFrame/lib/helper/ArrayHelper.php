@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 /**
@@ -28,6 +25,27 @@
  * @subpackage ephFrame.lib.helper
  */
 class ArrayHelper extends Helper {
+	
+	/**
+	 * array_map with recursion
+	 * @param array(mixed) $array
+	 * @param callback $callback
+	 * @return array
+	 */
+	public static function map($callback, $data)
+	{
+		if (!is_array($data)) {
+			return call_user_func($callback, $data);
+		}
+		foreach($data as $key => $val) {
+			if (is_array($val)) {
+				$data[$key] = self::map($callback, $val);
+			} else {
+				$data[$key] = call_user_func($callback, $val);
+			}
+		}
+		return $data;
+	}
 	
 	/**
 	 * Appends values from $append to $array

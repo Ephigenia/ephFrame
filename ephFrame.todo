@@ -1,24 +1,27 @@
 To-Do-List for ephFrame
 ==============================================================================
 
-This file contains wishes from users, enhancements etc. for the ephFrame 
-framwork. This file is best read using the Tasks Bundle for TextMate
-
-General:
-- create file that stores enviorenments?
-- make config folder for host configs
-- make folder for user configs
-- make db table prefix config in db.php
+Bugs:
+- when using bind() in afterConstruct in model the tablename used in the query gets wrong, it's some other models tablename not the one assinged to it (hasOne)
 
 Documentation:
 - Check Documentation and refresh todo-list
 
-Performance:
-- Test if autoload increases Performance
+General:
+- make db table prefix config in db.php
+- make beforeRender etc callbacks for helpers and components?
+- Create GeneratePassword class - move string::generatePass to this class
 
-Enviornment:
-- make enviorenments possible, for configuration files for specific hosts and users
-- alternativly add /hosts and /users file to the config directory
+Behaviors:
+✓ Add Sluggable Behavior
+- Add UniqueID Behavior
+
+Configuration:
+- create Enviorenment usages that include hosts, user names, system and php version to create configs that are valid in an automaticall detected environment
+
+Model:
+- make toModel accept filter arguments
+- include transactional model
 
 Console:
 - Create createApp Task as console job (Shell script?)
@@ -31,13 +34,13 @@ HTMLTable Helper:
 - method for creating table cells
 - method for creating table headers
 
-Model:
-- make toModel accept filter arguments
-
 Paginator Helper:
 - make method for sorting links
 - method for a string with numbers of pages etc, item etc.
 - make multi-model
+
+Performance:
+- Test if autoload increases Performance
 
 I18N:
 ✓ enable gettext module usage from php
@@ -48,8 +51,7 @@ Set/IndexeArray:
 - implement cakephp-like merge
 
 Email:
-- create email layout file that is used by the email component, this will make
-  it easy to create email layout files with headers and footers and stuff
+- create email layout file that is used by the email component, this will make it easy to create email layout files with headers and footers and stuff
 
 Test:
 - make tests available in the console

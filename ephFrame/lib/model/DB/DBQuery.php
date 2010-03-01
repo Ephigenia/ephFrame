@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 ephFrame::loadClass('ephFrame.lib.Collection');
@@ -252,9 +249,6 @@ abstract class DBQuery extends Object implements Renderable
 				}
 			}
 		}
-//		echo '<pre>';
-//		echo (string) $rendered.LF.LF;
-//		echo '</pre>';
 		return $this->afterRender($rendered);
 	}
 	
@@ -534,9 +528,13 @@ abstract class DBQuery extends Object implements Renderable
 		}
 		$rendered = '';
 		foreach($this->select as $fieldname => $alias) {
-			$rendered .= $fieldname;
-			if (!empty($alias)) {
-				$rendered .= ' as \''.$alias.'\'';
+			if (empty($fieldname)) {
+				$rendered .= $alias;
+			} else {
+				$rendered .= $fieldname;
+				if (!empty($alias)) {
+					$rendered .= ' as \''.$alias.'\'';
+				}
 			}
 			$rendered .= ', ';
 		}
@@ -547,10 +545,12 @@ abstract class DBQuery extends Object implements Renderable
 	 * @return string
 	 */
 	protected function renderOrderBy() {
-		if (!count($this->orderBy)) {
-			return null;
+		$rendered = $this->orderBy->implode(', ');
+		if (!empty($rendered)) {
+			return ' ORDER BY '.LF.TAB.$rendered;
+		} else {
+			return false;
 		}
-		return 'ORDER BY '.$this->orderBy->implode(',');
 	}
 	
 	/**

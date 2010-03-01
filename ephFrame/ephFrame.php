@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 /**
@@ -31,7 +28,7 @@ final class ephFrame {
 	 * Stores the ephFrame version
 	 * @var integer
 	 */
-	const VERSION = '0.2a ($Revision$)';
+	const VERSION = '0.2';
 	
 	/**
 	 * Stores the instance of {@link ephFrame} as soon
@@ -100,8 +97,10 @@ final class ephFrame {
 	 */
 	public static function setErrorReporting() {
 		if (Registry::get('DEBUG') > DEBUG_PRODUCTION) {
-			if (Registry::get('DEBUG') >= DEBUG_VERBOSE) {
+			if (Registry::get('DEBUG') == DEBUG_VERBOSE) {
 				Log::$level = Log::VERBOSE;
+			} elseif (Registry::get('DEBUG') > DEBUG_VERBOSE) {
+				Log::$level = Log::VERBOSE_SILENT;
 			}
 			if (Registry::defined('ERROR_REPORTING')) {
 				error_reporting(Registry::get('ERROR_REPORTING'));

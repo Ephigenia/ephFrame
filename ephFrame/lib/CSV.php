@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 class_exists('File') or require dirname(__FILE__).'/File.php';
@@ -252,6 +249,9 @@ class CSV extends File implements Renderable, Iterator, Countable {
 		if (func_num_args() > 1) {
 			$args = func_get_args();
 		}
+		if (!is_array($args)) {
+			$args = array($args);
+		}
 		$this->data[] = $args;
 		return $this;
 	}
@@ -284,30 +284,30 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	 * @return integer
 	 */
 	public function count() {
-		if (empty($this->data)) $this->read();
+		// if (empty($this->data)) $this->read();
 		return count($this->data);
 	}
 
 	public function rewind() {
 		$this->iteratorPosition = 0;
-		if (empty($this->data)) $this->read();
+		// if (empty($this->data)) $this->read();
 		reset($this->data);
 		return true;
 	}
 
 	public function next() {
-		if (empty($this->data)) $this->read();
+		// if (empty($this->data)) $this->read();
 		$this->iteratorPosition++;
 		next($this->data);
 	}
 
 	public function key() {
-		if (empty($this->data)) $this->read();
+		// if (empty($this->data)) $this->read();
 		return key($this->data);
 	}
 
 	public function current() {
-		if (empty($this->data)) $this->read();
+		if (empty($this->data)) return false;
 		return current($this->data);
 	}
 

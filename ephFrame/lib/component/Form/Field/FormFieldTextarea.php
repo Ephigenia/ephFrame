@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 class_exists('FormField') or require dirname(__FILE__).'/FormField.php';
@@ -37,7 +34,8 @@ class FormFieldTextarea extends FormField {
 	 * @var array(string)
 	 */
 	public $attributes = array(
-		'rows' => 5, 'cols' => 55
+		'rows' => 5,
+		'cols' => 55,
 	);
 
 	public function __construct($name, $value = null, Array $attributes = array()) {

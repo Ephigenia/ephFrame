@@ -12,10 +12,7 @@
  * @license     http://www.opensource.org/licenses/mit-license.php The MIT License
  * @copyright   copyright 2007+, Ephigenia M. Eichner
  * @link        http://code.marceleichner.de/projects/ephFrame/
- * @version		$Revision$
- * @modifiedby		$LastChangedBy$
- * @lastmodified	$Date$
- * @filesource		$HeadURL$
+ * @filesource
  */
 
 class_exists('DBQuery') or require dirname(__FILE__).'/DBQuery.php';
@@ -38,36 +35,35 @@ class_exists('DBQuery') or require dirname(__FILE__).'/DBQuery.php';
  * @since 09.03.2008
  * @version 0.2
  */
-class InsertQuery extends DBQuery {
-	
+class InsertQuery extends DBQuery
+{	
 	public $verb = 'INSERT';
 	
 	public $renderTemplate = '%verb %flags INTO %tables ( %keys ) VALUES ( %values )';
 		
-	public function __construct($table = null, $values = array(), $conditions = array()) {
+	public function __construct($table = null, $values = array(), $conditions = array())
+	{
 		return parent::__construct($this->verb, $table, $conditions, $values);
 	}
 	
-	public function renderKeys() {
-		$rendered = '';
+	public function renderKeys()
+	{
+		$pairs = new IndexedArray();
 		foreach($this->values->keys() as $key) {
-			$rendered .= $key.', ';
+			$pairs[] = '`'.str_replace('.', '`.`', $key).'`';
 		}
-		return substr($rendered, 0, -2);
+		return $pairs->implode(', ');
 	}
 	
-	public function renderValues() {
-		$rendered = '';
-		foreach($this->values->values() as $value) {
-			$rendered .= $value.', ';
-		}
-		return substr($rendered, 0, -2);
+	public function renderValues()
+	{
+		return $this->values->values()->implode(', ');
 	}
 	
-	public function into($tablename, $alias = null) {
+	public function into($tablename, $alias = null)
+	{
 		return parent::table($tablename, $alias);
 	}
-	
 }
 
 /**

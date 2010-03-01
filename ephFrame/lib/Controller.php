@@ -112,7 +112,7 @@ abstract class Controller extends Object implements Renderable
 	 * @param HTTPRequest $request
 	 * @return Controller
 	 */
-	final public function __construct(HTTPRequest $request) {
+	final public function __construct(HTTPRequest $request = null) {
 		// get component list from parent class and merge them with this
 		// controllers components and models ...
 		foreach ($this->__parentClasses() as $parentClass) {
@@ -125,7 +125,7 @@ abstract class Controller extends Object implements Renderable
 		}
 		$this->beforeConstruct();
 		$this->data = new Hash($this->data);
-		$this->request = $request;
+		$this->request = !empty($request) ? $request : new HTTPRequest;
 		$this->response = new HTTPResponse();
 		$this->response->enableRenderHeaders = false;
 		if (empty($this->name)) {
@@ -158,7 +158,7 @@ abstract class Controller extends Object implements Renderable
 	 * @param integer $id
 	 */
 	public function delete($id = null) {
-		$id = ($id === null) ? (int) @$this->params['id'] : $id;
+		$id = (int) coalesce(@$this->params['id'], $id);
 		if ($id > 0 && isset($this->{$this->name})) {
 			if (!$entry = $this->{$this->name}->findById($id)) {
 				$this->name = 'error';
@@ -174,7 +174,7 @@ abstract class Controller extends Object implements Renderable
 	 * @param integer $id
 	 */
 	public function edit($id = null) {
-		$id = (int) ($id === null) ? $this->params['id'] : $id;
+		$id = (int) coalesce(@$this->params['id'], $id);
 		if (!empty($id) && isset($this->{$this->name})) {
 			if (!($model = $this->{$this->name}->findById($id))) {
 				return false;
@@ -193,7 +193,7 @@ abstract class Controller extends Object implements Renderable
 	 * @param integer $id
 	 */
 	public function view($id = null) {
-		$id = (int) ($id === null) ? $this->params['id'] : $id;
+		$id = (int) coalesce(@$this->params['id'], $id);
 		if (!empty($id) && isset($this->{$this->name})) {
 			if (!($this->{$this->name} = $this->{$this->name}->findById($id))) {
 				return false;
@@ -232,7 +232,7 @@ abstract class Controller extends Object implements Renderable
 	/**
 	 * Default RSS Action tries to provide a Set of entries of the associated
 	 * model from this controller in the view.
-	 * 
+	 * @deprecated
 	 * @return boolean
 	 */
 	public function rss() {
@@ -251,7 +251,7 @@ abstract class Controller extends Object implements Renderable
 	/**
 	 * Standard search action, searches for a $key $keyword match and lists
 	 * all matches
-	 *
+	 * @deprecated move this to component
 	 * @param string $keyword
 	 */
 	public function search($keyword = null, $fields = array()) {
@@ -534,7 +534,7 @@ abstract class Controller extends Object implements Renderable
 	 */
 	public function action($action, Array $params = array()) {
 		assert(is_string($action) && !empty($action));
-		logg(Log::VERBOSE, 'ephFrame: '.get_class($this).' changed action from \''.$this->action.'\' to \''.$action.'\'');
+		logg(Log::VERBOSE, 'ephFrame: '.get_class($this).' set action to \''.$action.'\'');
 		$this->action = $action;
 		$this->set('action', $this->action);
 		$this->params = $params;
@@ -543,27 +543,30 @@ abstract class Controller extends Object implements Renderable
 			if (isset($this->params[$v])) $this->{$v} = $this->params[$v];
 		}
 		if (method_exists($this, $action)) {
-			// call beforeaction on every component
+			// call beforeaction on every component and helpers
+			$beforeActionResult = true;
 			foreach($this->components as $componentName) {
-				$this->{$componentName}->beforeAction($action);
+				$beforeActionResult &= $this->{$componentName}->beforeAction($action);
 			}
 			foreach($this->helpers as $helperName) {
 				$className = ClassPath::className($helperName);
-				$this->data->get($className)->beforeAction($action);
-			}
-			// call controller before[ActionName] if possible
-			if (method_exists($this,'before'.ucFirst($action))) {
-				$this->callMethod('before'.ucFirst($action));
+				$beforeActionResult &= $this->data->get($className)->beforeAction($action);
 			}
 			// call beforeAction on every form
 			foreach($this->forms as $FormName) {
-				$this->{$FormName}->beforeAction();
+				$beforeActionResult &= $this->{$FormName}->beforeAction($action);
 			}
-			if ($this->beforeAction() === false) {
+			if ($beforeActionResult) {
+				$beforeActionResult &= $this->beforeAction();
+			}
+			if ($beforeActionResult && method_exists($this, 'before'.ucFirst($action))) {
+				$beforeActionResult &= $this->callMethod('before'.ucFirst($action), $this->params);
+			}
+			if (!$beforeActionResult) {
 				$this->name = 'error';
 				$this->action('404', array());
 			} else {
-				$arguments = array_diff_key($params, array('controller' => 0, 'action' => 0, 'path' => 0));
+				$arguments = array_diff_key($params, array('controller' => 0, 'action' => 0, 'path' => 0, 'controllerPrefix' => 0, 'prefix' => 0));
 				if ($this->callMethod($action, $arguments) === false) {
 					$this->name = 'error';
 					$this->action('404', array());
@@ -573,9 +576,8 @@ abstract class Controller extends Object implements Renderable
 			if (method_exists($this,'after'.ucFirst($action))) {
 				$this->callMethod('after'.ucFirst($action));
 			}
-			// call genereal afterAction
-			$this->afterAction();
-			// call afteraction on components
+			// Call 'afterAction' on controller, components, helpers and forms
+			$this->afterAction($action);
 			foreach($this->components as $componentName) {
 				$this->{$componentName}->afterAction($action);
 			}
@@ -584,22 +586,6 @@ abstract class Controller extends Object implements Renderable
 				$this->data->get($className)->afterAction($action);
 			}
 		}
-		return true;
-	}
-	
-	/**
-	 * Disables browser cache for this controller by sending not caching
-	 * header commands to the client
-	 * // todo set the headers in the response object instead of sending directly
-	 * @return boolean true
-	 */
-	public function disableCache() {
-		logg(Log::VERBOSE_SILENT, 'Controller disableCache called in \''.get_class($this).'\'');
-		header('Expires: Mon, 26 Jul 1997 05:00:00 GMT');
-		header('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT');
-		header('Cache-Control: no-store, no-cache, must-revalidate');
-		header('Cache-Control: post-check=0, pre-check=0', false);
-		header('Pragma: no-cache');
 		return true;
 	}
 	
