@@ -49,14 +49,13 @@ class TestString extends UnitTestCase {
 		
 	public function testRight() {
 		$this->assertEqual(String::right('Scheiß', 2), 'iß');
-		$this->assertEqual(String::right('Scheiß', 2), 'iß');
 	}
 	
 	public function testToURL() {
 		$this->assertEqual(String::toURL('bätmän'), 'baetmaen');
 		$this->assertEqual(String::toURL('bätmän\'s mobile is cool'), 'baetmaens-mobile-is-cool');
-		$this->assertEqual(String::toURL('bätmän\'s mobile is cool', '_'), 'baetmaens_mobile_is_cool');
-		$this->assertEqual(String::toURL('bätmän\'s mobile is cool', ''), 'baetmaensmobileiscool');
+		$this->assertEqual(String::toURL('bätmän\'s mobile is __cool', '_'), 'baetmaens_mobile_is_cool');
+		$this->assertEqual(String::toURL('bätmän\'s mobile is  cool', ''), 'baetmaensmobileiscool');
 		$this->assertEqual(String::toURL('bätmän\'s mobile'.LF.' is cool', '_'), 'baetmaens_mobile_is_cool');
 	}
 	
@@ -74,6 +73,49 @@ class TestString extends UnitTestCase {
 	
 	public function testLcFirst() {
 		$this->assertEqual(String::lcFirst('Ähdrescher'), 'ähdrescher');
+	}
+	
+	public function testTruncate()
+	{
+		$tests = array(
+			array(
+				array('This is a test', 4),
+				'This',
+			),
+			// test if html tags are closed again
+			array(
+				array('This <strong>Bold Text</strong> is short', 18),
+				'This <strong>Bold</strong>',
+			),
+		);
+		foreach($tests as $test) {
+			$this->assertEqual(call_user_func_array('String::truncate', $test[0]), $test[1]);
+		}
+	}
+	
+	public function testCloseTags()
+	{
+		$tests = array(
+			array(
+				array('This is a test'),
+				'This is a test',
+			),
+			array(
+				array('This <strong>Bold'),
+				'This <strong>Bold</strong>',
+			),
+			array(
+				array('This <a href="http://www.marceleichner.de" target="_blank">Bold'),
+				'This <a href="http://www.marceleichner.de" target="_blank">Bold</a>',
+			),
+			array(
+				array('This <strong><a href="http://www.marceleichner.de" target="_blank">Bold</strong>'),
+				'This <strong><a href="http://www.marceleichner.de" target="_blank">Bold</strong></a>',
+			),
+		);
+		foreach($tests as $test) {
+			$this->assertEqual(call_user_func_array('String::closeTags', $test[0]), $test[1]);
+		}
 	}
 	
 	public function testSubstitute() {

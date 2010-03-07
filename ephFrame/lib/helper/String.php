@@ -496,12 +496,13 @@ class String extends Helper
 	 * // prints 'LongUse...' 
 	 * </code>
 	 * 
+	 * @todo make this ignore html tags
 	 * @param string	$string
 	 * @param integer	$length
 	 * @param string	$end
 	 * @param boolean	$force
 	 */
-	public static function truncate($string, $length, $end = '', $force = false, $calculateWidths = true)
+	public static function truncate($string, $length, $end = '', $force = false, $calculateWidths = false)
 	{
 		$strLength = self::length($string);
 		if ($strLength <= $length) return $string;
@@ -526,11 +527,48 @@ class String extends Helper
 			}
 		}
 		if ($lastSpace == 0 || $force) {
-			$truncated = mb_substr($string, 0, $lengthToCut, 'UTF-8');
+			$truncated = String::substr($string, 0, $lengthToCut);
 		} else {
-			$truncated = mb_substr($string, 0, $lastSpace, 'UTF-8');	
+			$truncated = String::substr($string, 0, $lastSpace);
 		}
-		return $truncated.$end;
+		// clean up tags
+		return self::closeTags($truncated.$end);
+	}
+	
+	/**
+	 * Closes all opened tags in the string
+	 * taken from here http://milianw.de/code-snippets/close-html-tags
+	 * 
+	 * It does not take care of the order of the tags!
+	 * 
+	 * @param string $html
+	 * @return string
+	 * @author Milian Wolff <mail@milianw.de> 
+	 */
+	public static function closeTags($html)
+	{
+		#put all opened tags into an array
+		  preg_match_all('#<([a-z]+)(?: .*)?(?<![/|/ ])>#iU', $html, $result);
+		  $openedtags = $result[1];
+
+		  #put all closed tags into an array
+		  preg_match_all('#</([a-z]+)>#iU', $html, $result);
+		  $closedtags = $result[1];
+		  $len_opened = count($openedtags);
+		  # all tags are closed
+		  if (count($closedtags) == $len_opened) {
+		    return $html;
+		  }
+		  $openedtags = array_reverse($openedtags);
+		  # close tags
+		  for ($i=0; $i < $len_opened; $i++) {
+		    if (!in_array($openedtags[$i], $closedtags)){
+		      $html .= '</'.$openedtags[$i].'>';
+		    } else {
+		      unset($closedtags[array_search($openedtags[$i], $closedtags)]);
+		    }
+		  }
+		  return $html;
 	}
 	
 	/**
