@@ -57,8 +57,8 @@
  * @subpackage app.config
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  */
-class DBConfig {
-	
+class DBConfig
+{	
 	/**
 	 * Default database connection string, see {@link DBDSN} 
 	 * @var string
@@ -80,7 +80,8 @@ class DBConfig {
 	);
 	*/
 
-	public function __construct() {
+	public function __construct()
+	{
 		// switch DB Configs depending on user name (example how to switch)
 		$username = strtolower(@get_current_user());
 		switch($username) {
@@ -88,6 +89,5 @@ class DBConfig {
 				$this->default = 'mysql://';
 				break;
 		}
-	}
-	
+	}	
 }

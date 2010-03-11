@@ -49,12 +49,6 @@ Registry::set('I18n.language', 'de_DE');
 date_default_timezone_set('Europe/Berlin');
 
 /**
- * Optional default logging level, this is also affected by setting DEBUG,
- * so you usually won’t need to set this yourself.
- */
-// Log::$level = Log::INFO;
-
-/**
  * Enable this to render the element names before element itsself,
  * debug.css must be included as well DEBUG > DEBUG_PRODUCTION
  */
