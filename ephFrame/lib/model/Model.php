@@ -1260,17 +1260,16 @@ class Model extends Object {
 		if (!($r = $this->query($this->createSelectQuery($conditions, $order, $offset, $count, $depth), $depth))) {
 			return $list;
 		}
-		if (is_string($fieldname) && !strpos($fieldname, '.')) {
-			$fieldname = $this->name.'.'.$fieldname;
+		if (is_array($fieldname)) {
+			$fieldname = ArrayHelper::implodef($fieldname, ' ', ':%2$s');
 		}
 		foreach ($r as $obj) {
-			$entry = '';
-			if (is_array($fieldname)) {
-				foreach($fieldname as $name) {
-					$entry .= $obj->get($name).' ';
+			if (strpos($fieldname, ':') !== false) {
+				$arr = $obj->toArray();
+				foreach($obj->belongsTo + $obj->hasOne + $obj->hasMany as $modelName => $config) foreach($obj->{$modelName}->toArray() as $k => $v) {
+					$arr[$modelName.'.'.$k] = $v;
 				}
-			} elseif (strpos($fieldname, ':') !== false) {
-				$entry = String::substitute($fieldname, $obj->toArray());
+				$entry = String::substitute($fieldname, $arr);
 			} else {
 				$entry = $obj->get($fieldname);
 			}

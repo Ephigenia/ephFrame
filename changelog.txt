@@ -5,9 +5,10 @@ This file should record some kind of change history of the ephFrame Framework
 Please check this file for hints after you updated the framework via svn to 
 check some deprecated methods or new features.
 
-# 2010-03-07
+# 2010-03-11
 
 * Added closeTags to String Helper that closes all opened tags in a string
+* model->listAll now can have [modelName].[fieldname] as fieldname and also accepts array as first argument
 
 # 2010-02-28
 
