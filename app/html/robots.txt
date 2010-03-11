@@ -1,6 +1,5 @@
 User-agent: *
 Allow: /
-Disallow: /admin/
 Request-rate: 1/5
 Crawl-delay: 3
 Visit-time: 0000-1000
