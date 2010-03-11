@@ -468,7 +468,7 @@ class Form extends HTMLTag {
  		if (count($ignore) > 0) {
  			foreach($ignore as $ignoredFieldName) unset($fieldInfos[$ignoredFieldName]);
  		}
- 		
+
  		// parse field infos and create form fields for them
 		foreach($fieldInfos as $fieldInfo) {
 			$modelFieldInfo = $fieldInfo['modelFieldInfo'];

@@ -1260,15 +1260,21 @@ class Model extends Object {
 		if (!($r = $this->query($this->createSelectQuery($conditions, $order, $offset, $count, $depth), $depth))) {
 			return $list;
 		}
-		if (!strpos($fieldname, '.')) {
+		if (is_string($fieldname) && !strpos($fieldname, '.')) {
 			$fieldname = $this->name.'.'.$fieldname;
 		}
 		foreach ($r as $obj) {
-			if (strpos($fieldname, ':') !== false) {
-				$list[$obj->id] = String::substitute($fieldname, $obj->toArray());
+			$entry = '';
+			if (is_array($fieldname)) {
+				foreach($fieldname as $name) {
+					$entry .= $obj->get($name).' ';
+				}
+			} elseif (strpos($fieldname, ':') !== false) {
+				$entry = String::substitute($fieldname, $obj->toArray());
 			} else {
-				$list[$obj->id] = $obj->get($fieldname);
+				$entry = $obj->get($fieldname);
 			}
+			$list[$obj->id] = $entry;
 		}
 		return $list;
 	}
@@ -1509,6 +1515,8 @@ class Model extends Object {
 				return $this->data[$fieldname];
 			} elseif (array_key_exists($fieldname, $this->structure)) {
 				return null;
+			} elseif ($pointPos = strpos($fieldname, '.')) {
+				return $this->{substr($fieldname, 0, $pointPos)}->get(substr($fieldname, $pointPos+1));
 			}
 		}
 		trigger_error(get_class($this).'->'.$fieldname.' undefined variable name', E_USER_ERROR);
