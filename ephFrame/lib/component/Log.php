@@ -223,7 +223,8 @@ class Log extends AppComponent {
 	 * @param integer $level
 	 * @return string
 	 */
-	public static function logFileName($level) {
+	public static function logFileName($level)
+	{
 		if (!isset(self::$filenameCache[$level])) {
 			if (in_array($level, array(self::ERROR, self::WARNING))) {
 				$filename = 'error';
@@ -241,10 +242,9 @@ class Log extends AppComponent {
 			}
 			// return the resulting path to the logfile
 			self::$filenameCache[$level] = realpath(self::$path).DS.$filename.self::$extension;
-		} 
+		}
 		return self::$filenameCache[$level];
 	}
-	
 }
 
 /**
