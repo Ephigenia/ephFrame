@@ -988,8 +988,13 @@ class Model extends Object {
 		if (count($order) > 0) {
 			foreach($order as $fieldname => $direction) {
 				if (is_numeric($fieldname)) {
-					$fieldname = substr($direction, 0, strrpos($direction, ' '));
-					$direction = trim(substr($direction, strrpos($direction, ' ')));
+					if ($spacePos = strrpos($direction, ' ')) {
+						$fieldname = substr($direction, 0, $spacePos);
+						$direction = trim(substr($direction, $spacePos));
+					} else {
+						$fieldname = $direction;
+						$direction = null;
+					}
 				}
 				// prepend thi smodel name if missing in fieldname
 				if (!strpos($fieldname, '.') && $this->hasField($fieldname)) {
