@@ -981,20 +981,19 @@ class Model extends Object {
 			$order = array();
 		}
 		if (!is_array($order) && !empty($order)) {
-			$order = array($order);
+			$order = array($orderder);
 		}
 		$order = array_merge($order, $this->order);
 		// add this models
 		if (count($order) > 0) {
 			foreach($order as $fieldname => $direction) {
 				if (is_numeric($fieldname)) {
-					$query->orderBy($fieldname);
-				} else {
-					// prepend thi smodel name if missing in fieldname
-					if (!strpos($fieldname, '.') && $this->hasField($fieldname)) {
-						$fieldname = $this->name.'.'.$fieldname;
-					}
-					$query->orderBy($fieldname, $direction);
+					$fieldname = substr($direction, 0, strrpos($direction, ' '));
+					$direction = trim(substr($direction, strrpos($direction, ' ')));
+				}
+				// prepend thi smodel name if missing in fieldname
+				if (!strpos($fieldname, '.') && $this->hasField($fieldname)) {
+					$fieldname = $this->name.'.'.$fieldname;
 				}
 				$query->orderBy($fieldname, $direction);
 			}

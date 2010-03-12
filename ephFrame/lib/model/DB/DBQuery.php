@@ -409,6 +409,7 @@ abstract class DBQuery extends Object implements Renderable
 	 */
 	public function orderBy($fieldname, $direction = null) {
 		$fieldname = trim($fieldname);
+		$direction = trim($direction);
 		assert(is_string($fieldname) && !empty($fieldname));
 		$this->orderBy->add($fieldname.($direction !== null ? ' '.$direction : ''));
 		return $this;
