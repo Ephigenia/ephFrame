@@ -189,30 +189,31 @@ abstract class FormField extends HTMLTag {
 	 * @param string|mixed $value
 	 * @return string|boolean
 	 */
-	public function validate($value = null) {
+	public function validate($value = null)
+	{
 		if (func_num_args() == 0) {
 			$value = $this->value();
 		}
-		if (empty($value) && $this->mandatory && empty($this->error)) {
+		if (empty($value) && $this->mandatory) {
 			if (function_exists('__')) {
-				$this->error = __('The form field <q>:1</q> is not optional.', coalesce($this->attributes->label, $this->attributes->name));
+				$this->error = __('<q>:1</q> is not optional.', coalesce($this->attributes->label, $this->attributes->name));
 			} else {
-				$this->error = 'The form field '.coalesce($this->attributes->label, $this->attributes->name).' is empty.';
+				$this->error = coalesce($this->attributes->label, $this->attributes->name).' is not optional.';
 			}
 		} else {
 			$validator = new Validator($this->validate, $this);
 			if (($result = $validator->validate($value)) !== true) {
-				if ($result === false) {
-					$this->error = true;
-				} else {
-					$this->error = $result;
+				$this->error = $result;
+				if ($this->error === false) {
+					$this->error = $this->attributes->name.' invalid';
 				}
 			}
 		}
 		return (empty($this->error) && $this->error !== true);
 	}
 	
-	public function beforeRender() {
+	public function beforeRender()
+	{
 		if (!$this->attributes->get('class') || !strpos($this->attributes->get('class'), $this->attributes->name)) {
 			$this->attributes->appendTo('class', ' '.$this->attributes->name);
 		}

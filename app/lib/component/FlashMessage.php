@@ -3,17 +3,31 @@
 require_once dirname(__FILE__).'/AppComponent.php';
 
 /**
+ * Flash Message Types
+ * 
+ * @package nms.update
+ * @subpackage nms.update.lib.component
+ * @since 2009-10-10
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ */
+class FlashMessageType
+{	
+	const ERROR = 'error';
+	const HINT = 'hint';
+}
+
+/**
  * Component to manage little flashing message for views
  * 
  * Example Controller code:
  * <code>
  * if (!$this->User->save()) {
- * 	$this->FlashMessage->set('Error while saving', FlashMessage::TYPE_ERROR);
+ * 	$this->FlashMessage->set('Error while saving', FlashMessageType::ERROR);
  * }
  * </code>
  * 
- * @package app
- * @subpackage app.lib.component
+ * @package nms.update
+ * @subpackage nms.update.lib.component
  * @author Ephigenia // Marcel Eichner <love@ephigenia.de>
  * @since 09.03.2009
  */
@@ -22,22 +36,11 @@ class FlashMessage extends AppComponent
 	public $components = array(
 		'Session',
 	);
-	
-	/**
-	 * Different Flash Message types that can be used
-	 * @var string
-	 */
-	const TYPE_ERROR 	= 'error';
-	const TYPE_HINT 	= 'hint';
-	const TYPE_DEFAULT 	= self::TYPE_HINT;
-	
-	/**
-	 * Name of session variable that stores the flash message
-	 * @var string
-	 */
+
 	public $sessionVarname = 'flashMessage';
 	
-	public function beforeRender() {
+	public function beforeRender()
+	{
 		if (!$this->Session->isEmpty($this->sessionVarname)) {
 			$this->controller->data->set('flashMessage', $this->Session->get($this->sessionVarname));
 			$this->reset();
@@ -45,11 +48,8 @@ class FlashMessage extends AppComponent
 		return parent::beforeRender();
 	}
 	
-	public function hasMessage() {
-		return $this->Session->read($this->sessionVarname);
-	}
-	
-	public function set($message, $type = self::TYPE_DEFAULT) {
+	public function set($message, $type = FlashMessageType::HINT)
+	{
 		$this->Session->set($this->sessionVarname, array(
 			'message'	=> $message,
 			'type'		=> $type
@@ -57,13 +57,14 @@ class FlashMessage extends AppComponent
 		return $this;	
 	}
 	
-	public function delete() {
+	public function delete()
+	{
 		$this->reset();
 	}
 	
-	public function reset() {
+	public function reset()
+	{
 		$this->Session->set($this->sessionVarname, false);
 		return $this;
 	}
-	
-} // END FlashMessage class
+}
