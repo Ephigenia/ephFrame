@@ -267,15 +267,11 @@ class Model extends Object
 		// load inital data from array data or primary id
 		if (is_array($id)) {
 			$this->fromArray($id, is_array($fieldNames) ? $fieldNames : array());
-		} elseif (is_int($id)) {
-			if (!$this->fromId($id)) {
-				return false;
-			}
+		} elseif (is_int($id) && !$this->fromId($id)) {
+			return false;
 		}
 		return $this;
 	}
-	
-	public static $associationCache = array();
 	
 	/**
 	 * callback called after model finished constructing and init

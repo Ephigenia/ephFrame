@@ -21,6 +21,19 @@ class_exists('HTTPHeader') or require dirname(__FILE__).'/HTTPHeader.php';
 class_exists('Charset') or require dirname(__FILE__).'/helper/Charset.php';
 
 /**
+ * Different Constants for HTTP Request Methods
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 2010-03-12
+ */
+class HTTPRequestMethod
+{
+	const GET = 'GET';
+	const POST = 'POST';
+	const PUT = 'PUT';
+	const DELETE = 'DELETE';
+}
+
+/**
  * Http Request Class
  * 
  * A Class that can handle the current HTTP Request (with __construct(true))
@@ -60,16 +73,11 @@ class_exists('Charset') or require dirname(__FILE__).'/helper/Charset.php';
  */
 class HTTPRequest extends Component 
 {
-{	const METHOD_GET = 'GET';
-	const METHOD_POST = 'POST';
-	const METHOD_PUT = 'PUT';
-	const METHOD_DELETE = 'DELETE';
-	
 	/**
 	 * Concrete Request Method
 	 * @var string
 	 */
-	public $method = HTTPRequest::METHOD_GET;
+	public $method = HTTPRequestMethod::GET;
 	
 	public $uri;
 	public $hostname;
@@ -111,14 +119,28 @@ class HTTPRequest extends Component
 		return $this;
 	}
 	
+	public function isMethod($method) {
+		return $this->method == $method;
+	}
+	
 	public function isPost() 
 	{
-		return $this->method == self::METHOD_POST;
+		return $this->isMethod(HTTPRequestMethod::POST);
 	}
 	
 	public function isGet() 
 	{
-		return $this->method == self::METHOD_GET;
+		return $this->isMethod(HTTPRequestMethod::GET);
+	}
+	
+	public function isPut()
+	{
+		return $this->isMethod(HTTPRequestMethod::PUT);
+	}
+	
+	public function isDelete()
+	{
+		return $this->isMethod(HTTPRequestMethod::DELETE);
 	}
 	
 	/**
@@ -134,7 +156,8 @@ class HTTPRequest extends Component
 		return $this->hostname;
 	}
 	
-	private function autofill() {
+	private function autofill()
+	{
 		if (isset($_SERVER)) {
 			$this->method = $_SERVER['REQUEST_METHOD'];
 			$this->uri = $_SERVER['REQUEST_URI'];
@@ -243,7 +266,8 @@ class HTTPRequest extends Component
 	 * @param unknown_type $query
 	 * @return unknown
 	 */
-	private function buildRequest($host, $uri = '/', $query = '') {
+	private function buildRequest($host, $uri = '/', $query = '')
+	{
 		if (empty($uri)) {
 			$uri = '/';
 		}
@@ -258,7 +282,8 @@ class HTTPRequest extends Component
 		return $requestRaw;
 	}
 	
-	private function FSockOpenRead($host, $port, $timeout) {
+	private function FSockOpenRead($host, $port, $timeout)
+	{
 		$fp = fsockopen($host, $port, $errno, $errostr);
 		if (!$fp) {
 			throw new HTTPRequestFSockError($errno.': '.$errorstr);
@@ -314,7 +339,6 @@ class HTTPRequest extends Component
 		}
 		return $rendered;
 	}
-
 }
 
 /**
@@ -329,5 +353,4 @@ class HTTPRequestException extends BasicException
  * @subpackage ephFrame.lib.exception
  */
 class HTTPRequestFSockError extends HTTPRequestException 
-{
-}
+{}

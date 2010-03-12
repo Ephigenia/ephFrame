@@ -65,11 +65,6 @@ class Cache extends Object
 	{
 		
 	}
-	
-	public function garbageCollect()
-	{
-		
-	}
 }
 
 /**
