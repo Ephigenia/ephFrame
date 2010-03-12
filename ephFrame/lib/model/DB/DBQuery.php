@@ -180,35 +180,37 @@ abstract class DBQuery extends Object implements Renderable
 		if ($type === null) {
 			$type = gettype($val);
 		}
-		switch($type) {
-			case 'NULL':
-				$quoted = 'NULL';
-				break;
-			case 'integer':
-				$quoted = (int) $val;
-				break;
-			case 'float':
-			case 'double':
-				$quoted = (float) $val;
-				break;
-			case 'boolean':
-				if ($val) {
-					$quoted = 1;
-				} else {
-					$quoted = 0;
-				}
-				break;
-			case 'string':
-				if ($val == 'NULL') {
+		// do not quot mysql NOW() and NULL
+		if (preg_match('@^(NOW\(\)|NULL)$@i', $val))  {
+			$quoted = $val;
+		// quote everything else
+		} else {
+			switch($type) {
+				case 'NULL':
 					$quoted = 'NULL';
-				} else {
+					break;
+				case 'integer':
+					$quoted = (int) $val;
+					break;
+				case 'float':
+				case 'double':
+					$quoted = (float) $val;
+					break;
+				case 'boolean':
+					if ($val) {
+						$quoted = 1;
+					} else {
+						$quoted = 0;
+					}
+					break;
+				case 'string':
 					$quoted = '\''.mysql_real_escape_string(stripslashes($val)).'\'';
-				}
-				break;
-			// non scalar values are not added, but their variable type
-			default:
-				$quoted = '\''.mysql_real_escape_string(gettype($val)).'\'';
-				break;
+					break;
+				// non scalar values are not added, but their variable type
+				default:
+					$quoted = '\''.mysql_real_escape_string(gettype($val)).'\'';
+					break;
+			}
 		}
 		return $quoted;
 	}

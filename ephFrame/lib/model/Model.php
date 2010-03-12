@@ -211,6 +211,7 @@ class Model extends Object {
 	 */
 	public $behaviors = array(
 		'Model',
+		'Timestampable',
 	);
 	
 	/**
@@ -711,7 +712,7 @@ class Model extends Object {
 				$quotedData[$key] = DBQuery::quote($this->data[$key], $this->structure[$key]->quoting);
 			}
 		}
-		$q = new InsertQuery($this->tablename, $quotedData);
+		$q = new InsertQuery($this->tablename, $quotedData);		
 		$db = DBConnectionManager::getInstance()->get($this->useDBConfig);
 		$db->query($q);
 		$this->set($this->primaryKeyName, $db->lastInsertId());

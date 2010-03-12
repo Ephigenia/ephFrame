@@ -82,23 +82,9 @@ class ModelBehavior extends Object
 	{
 		return true;
 	}
-	
-	/**
-	 * Default beforeInsert callback
-	 *
-	 * You don’t need to call this with parent::beforeInsert from child classes
-	 * because all models include the ModelBehavior by default.
-	 * 
-	 * @return boolean
-	 */
+
 	public function beforeInsert()
 	{
-		if ($this->model->hasField('created')
-			&& $this->model->created <= 0
-			&& in_array($this->model->structure['created']->quoting, array(ModelFieldInfo::QUOTE_STRING, ModelFieldInfo::QUOTE_INTEGER))
-			) {
-			$this->model->set('created', time());
-		}
 		return true;
 	}
 	
@@ -117,18 +103,8 @@ class ModelBehavior extends Object
 		return true;
 	}
 	
-	/**
-	 * Default beforeUpdate callback
-	 * 
-	 * @return boolean
-	 */
 	public function beforeUpdate()
 	{
-		if ($this->model->hasField('updated')
-			&& in_array($this->model->structure['updated']->quoting, array(ModelFieldInfo::QUOTE_STRING, ModelFieldInfo::QUOTE_INTEGER))
-			) {
-			$this->model->set('updated', time());
-		}
 		return true;
 	}
 	

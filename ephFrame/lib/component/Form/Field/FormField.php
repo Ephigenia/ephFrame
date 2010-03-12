@@ -193,19 +193,20 @@ abstract class FormField extends HTMLTag {
 		if (func_num_args() == 0) {
 			$value = $this->value();
 		}
-		if (empty($value)) {
-			if ($this->mandatory && empty($this->error)) {
-				if (function_exists('__')) {
-					$this->error = __('The form field :1 is not optional.', $this->attributes->name);
-				} else {
-					$this->error = 'The form field '.$this->attributes->name.' is not optional.';
-				}
+		if (empty($value) && $this->mandatory && empty($this->error)) {
+			if (function_exists('__')) {
+				$this->error = __('The form field <q>:1</q> is not optional.', coalesce($this->attributes->label, $this->attributes->name));
+			} else {
+				$this->error = 'The form field '.coalesce($this->attributes->label, $this->attributes->name).' is empty.';
 			}
 		} else {
 			$validator = new Validator($this->validate, $this);
-			$result = $validator->validate($value);
-			if ($result !== true) {
-				$this->error = $result;
+			if (($result = $validator->validate($value)) !== true) {
+				if ($result === false) {
+					$this->error = true;
+				} else {
+					$this->error = $result;
+				}
 			}
 		}
 		return (empty($this->error) && $this->error !== true);
