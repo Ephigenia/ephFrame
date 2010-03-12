@@ -32,5 +32,4 @@ class TestLog extends UnitTestCase
 	{
 		Log::write(Log::ERROR, 'test log error message from TestLog');
 	}
-	
 }

@@ -53,6 +53,5 @@ class TestHash extends UnitTestCase
 		$test = new Hash();
 		$test->append('Name', 'Hossa');
 		$this->assertEqual((string) $test, 'NameHossa');
-	}
-	
+	}	
 }

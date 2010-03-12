@@ -57,7 +57,5 @@ class testCSV extends UnitTestCase
 		$csv = new CSV();
 		$csv->add(array('1', 2, 'test', 'CSV rendering', '"Party hard'));
 		$this->assertEqual($csv->render(), '"1";"2";"test";"CSV rendering";"""Party hard"');
-	}
-	
-	
+	}	
 }

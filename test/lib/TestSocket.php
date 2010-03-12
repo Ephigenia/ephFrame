@@ -28,7 +28,6 @@ require_once dirname(__FILE__).'/../autorun.php';
  */
 class TestSocket extends UnitTestCase 
 {
-	
 	/**
 	 * @var Socket
 	 */
@@ -50,6 +49,5 @@ class TestSocket extends UnitTestCase
 	{
 		$this->socket->write('GET /'.LF.LF);
 		$this->assertTrue(strlen($this->socket->read()) > 0);
-	}
-	
+	}	
 }

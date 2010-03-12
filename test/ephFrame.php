@@ -31,12 +31,14 @@ require_once dirname(__FILE__).'/autorun.php';
 $helperTests = new GroupTest('ephFrame Framework Unit Test');
 
 // ephFrame Helper Tests
-$helperTests->addTestFile('lib/helper/TestString.php');
-$helperTests->addTestFile('lib/helper/TestTime.php');
 $helperTests->addTestFile('lib/helper/TestCharset.php');
 $helperTests->addTestFile('lib/helper/TestHTML.php');
-$helperTests->addTestFile('lib/helper/TestValidator.php');
 $helperTests->addTestFile('lib/helper/TestSanitizer.php');
+$helperTests->addTestFile('lib/helper/TestString.php');
+$helperTests->addTestFile('lib/helper/TestTime.php');
+$helperTests->addTestFile('lib/helper/TestTimer.php');
+$helperTests->addTestFile('lib/helper/TestValidator.php');
+
 
 // ephFrame basic classes
 $helperTests->addTestFile('lib/TestFile.php');

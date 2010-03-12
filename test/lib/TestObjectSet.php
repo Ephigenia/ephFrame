@@ -28,7 +28,6 @@ require_once dirname(__FILE__).'/../autorun.php';
  */
 class TestObjectSet extends UnitTestCase 
 {
-	
 	public function setUp() 
 	{
 		ephFrame::loadClass('ephFrame.lib.ObjectSet');
@@ -42,6 +41,5 @@ class TestObjectSet extends UnitTestCase
 		$set->add(new IndexedArray(1));
 		$set->sort();
 		$this->assertEqual((string) $set, 'testzero1');
-	}
-	
+	}	
 }

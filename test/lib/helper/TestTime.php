@@ -28,7 +28,6 @@ require_once dirname(__FILE__).'/../../autorun.php';
  */
 class TestTime extends UnitTestCase 
 {
-	
 	public function setUp() 
 	{
 		ephFrame::loadClass('ephFrame.lib.helper.Time');
@@ -86,5 +85,4 @@ class TestTime extends UnitTestCase
 		$this->assertEqual(Time::isYesterday(time()), false);
 		$this->assertEqual(Time::isYesterday(time()-DAY), true);
 	}
-	
-} // END TestTime class
+}

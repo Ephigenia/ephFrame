@@ -32,7 +32,6 @@ require_once dirname(__FILE__).'/../autorun.php';
  */
 class TestIndexedArray extends UnitTestCase 
 {
-	
 	public function setUp() 
 	{
 		ephFrame::loadClass('ephFrame.lib.IndexedArray');
@@ -76,6 +75,5 @@ class TestIndexedArray extends UnitTestCase
 		$this->assertEqual($t->max(), 5);
 		$this->assertEqual($t->max(0), null);
 		$this->assertEqual($t->max(2), new IndexedArray(array(5, 4)));
-	}
-	
+	}	
 }

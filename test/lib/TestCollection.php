@@ -28,7 +28,6 @@ require_once dirname(__FILE__).'/../autorun.php';
  */
 class TestCollection extends UnitTestCase 
 {
-	
 	public function setUp() 
 	{
 		ephFrame::loadClass('ephFrame.lib.Collection');
@@ -44,6 +43,5 @@ class TestCollection extends UnitTestCase
 		// test adding of an element that is allready there
 		$c->add('A');
 		$this->assertEqual((string) $c->implode(','), 'A,B,C');
-	}
-	
+	}	
 }

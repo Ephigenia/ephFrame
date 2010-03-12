@@ -9,22 +9,15 @@
 			$CSS->addFiles('reset', 'app', 'form');
 			echo String::indent($CSS->render(), 2, TAB, 1);
 		}
-		// Favicon
-		if (file_exists('./favicon.ico')) {
-			echo TAB.TAB.'<link rel="shortcut icon" type="image/ico" href="'.WEBROOT.'favicon.ico" />'.LF;
-		}
-		// iPod-Touch, iPhone Icons
-		if (file_exists('./apple-touch-icon.png')) {
-			echo TAB.TAB.'<link rel="apple-touch-icon" type="image/x-icon" href="'.WEBROOT.'apple-touch-icon.png" />'.LF;
-		}
         ?>
+		<link rel="shortcut icon" type="image/ico" href="<?= WEBROOT ?>favicon.ico" />
 	</head>
 	<body>
 		<div id="app">
 			<div id="header">
 				<h1><a href="<?= WEBROOT ?>">ephFrame <?= ephFrame::VERSION ?></a></h1>
 			</div>
-			<?= $this->renderElement('flashMessage') ?>
+			<?= $this->element('flashMessage') ?>
 			<div id="content">
 				<?= @$content ?>
 			</div>

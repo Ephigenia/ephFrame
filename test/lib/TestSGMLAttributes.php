@@ -26,9 +26,9 @@ require_once dirname(__FILE__).'/../autorun.php';
  * @package ephFrame
  * @subpackage ephFrame.test
  */
-class TestSGMLAttributes extends UnitTestCase 
+class TestSGMLAttributes extends UnitTestCase
 {
-{	public function setUp() 
+	public function setUp() 
 	{
 		ephFrame::loadClass('ephFrame.lib.SGMLAttributes');
 	}
@@ -37,6 +37,5 @@ class TestSGMLAttributes extends UnitTestCase
 	{
 		$attr = new SGMLAttributes(array('class' => 'main'));
 		$this->assertEqual((string) $attr, 'class="main"');
-	}
-	
+	}	
 }

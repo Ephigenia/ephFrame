@@ -23,9 +23,7 @@
  * @subpackage app.lib.component
  */
 class AppComponent extends Component
-{
-	
-} // End AppComponent Class
+{}
 
 /**
  * @package app

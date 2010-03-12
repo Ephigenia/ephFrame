@@ -28,7 +28,6 @@ require_once dirname(__FILE__).'/../../autorun.php';
  */
 class TestString extends UnitTestCase 
 {
-	
 	public function testAppend() 
 	{
 		$this->assertEqual(String::append('A', 'B'), 'AB');
@@ -180,12 +179,6 @@ class TestString extends UnitTestCase
 		$this->assertEqual(String::substr($t, 0, 0), '');
 		$this->assertEqual(String::substr($t, 1, 0), '');
 	}
-	/*
-	public function testCountWords() 
-	{
-		$this->assertEqual(String::countWords('Hallo'), array('Hallo' => 1));
-	}
-	*/
 	
 	// todo add all multiline power here
 	public function testIndent() 
@@ -220,7 +213,7 @@ class TestString extends UnitTestCase
 		$this->assertEqual($result, 'You\'re seeing page 1 of 100 pages');
 	}
 	
-	public function testEach() 
+	public function testEach()
 	{
 		// test simple each
 		$this->assertEqual(String::each('Test'), array('T', 'e', 's', 't'));
@@ -234,7 +227,6 @@ class TestString extends UnitTestCase
 		$this->assertEqual(String::addLineNumbers($text), '1 HALLO'.LF.'2 MY name is'.LF.'3 earl');
 	}
 
-	/*
 	public function testHex() 
 	{
 		// simple testing
@@ -246,5 +238,4 @@ class TestString extends UnitTestCase
 		// testing line break
 		$this->assertEqual(String::hex('ABCDEFG', 'X', 3), '01'.LF.'42');
 	}
-	*/
 }

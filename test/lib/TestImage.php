@@ -28,7 +28,6 @@ require_once dirname(__FILE__).'/../autorun.php';
  */
 class TestImage extends UnitTestCase 
 {
-	
 	/**
 	 * @var Image
 	 */
@@ -88,6 +87,5 @@ class TestImage extends UnitTestCase
 	public function testIsPanelFormat() 
 	{
 		$this->assertEqual($this->testImage->isPanelFormat(), false);
-	}
-	
+	}	
 }

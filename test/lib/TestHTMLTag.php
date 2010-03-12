@@ -28,7 +28,6 @@ require_once dirname(__FILE__).'/../autorun.php';
  */
 class TestHTMLTag extends UnitTestCase 
 {
-	
 	public function setUp() 
 	{
 		loadClass('ephFrame.lib.HTMLTag');
@@ -44,6 +43,5 @@ class TestHTMLTag extends UnitTestCase
 	{
 		$tag = new HTMLTag('img', array('src' => 'test.jpg', 'alt' => '"Hallo" - he said'));
 		$this->assertEqual((string) $tag, '<img src="test.jpg" alt="&quot;Hallo&quot; - he said" />');
-	}
-	
+	}	
 }

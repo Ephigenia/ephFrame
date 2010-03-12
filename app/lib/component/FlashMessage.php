@@ -51,18 +51,13 @@ class FlashMessage extends AppComponent
 	public function set($message, $type = FlashMessageType::HINT)
 	{
 		$this->Session->set($this->sessionVarname, array(
-			'message'	=> $message,
-			'type'		=> $type
+			'message' => $message,
+			'type' => $type
 		));
 		return $this;	
 	}
 	
 	public function delete()
-	{
-		$this->reset();
-	}
-	
-	public function reset()
 	{
 		$this->Session->set($this->sessionVarname, false);
 		return $this;

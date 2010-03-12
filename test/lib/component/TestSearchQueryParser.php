@@ -43,6 +43,5 @@ class TestSeachQueryParser extends UnitTestCase
 		foreach($testArray as $input => $output) {
 			$parser = new SearchQueryParser($input);
 		}
-	}
-	
+	}	
 }

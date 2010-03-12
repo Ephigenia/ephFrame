@@ -28,7 +28,6 @@ require_once dirname(__FILE__).'/../autorun.php';
  */
 class TestInflector extends UnitTestCase 
 {
-	
 	public function setUp() 
 	{
 		ephFrame::loadClass('ephFrame.lib.Inflector');
@@ -75,6 +74,5 @@ class TestInflector extends UnitTestCase
 			$this->assertEqual(Inflector::delimeterSeperate($input), $output);
 		}
 		$this->assertEqual(Inflector::delimeterSeperate(' space is good'.LF, '-'), 'space-is-good');
-	}
-	
+	}	
 }

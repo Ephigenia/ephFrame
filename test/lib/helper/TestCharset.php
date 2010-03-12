@@ -44,6 +44,5 @@ class TestCharset extends UnitTestCase
 		$this->assertEqual(Charset::toSingleBytes('Bär'), 'Baer');
 		$this->assertEqual(Charset::toSingleBytes('Ègalité'), 'Egalite');
 		$this->assertEqual(Charset::toSingleBytes('ÄÜÖß'), 'AEUEOEss');
-	}
-	
+	}	
 }

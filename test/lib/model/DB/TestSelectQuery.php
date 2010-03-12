@@ -50,6 +50,5 @@ class TestSelectQuery extends UnitTestCase
 		$q->autoNewLine = false;
 		$q->from('testtable');
 		$this->assertEqual((string) $q, 'SELECT FROM testtable');
-	}
-	
+	}	
 }

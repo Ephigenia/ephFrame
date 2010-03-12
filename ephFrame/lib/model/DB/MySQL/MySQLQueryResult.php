@@ -85,5 +85,10 @@ class MySQLQueryResult extends QueryResult
 			$this->numRows = mysql_num_rows($this->result);
 		}
 		return $this->numRows;
-	}	
+	}
+	
+	public function __destruct()
+	{
+		die('OK');
+	}
 }

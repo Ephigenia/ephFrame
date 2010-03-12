@@ -40,6 +40,5 @@ class TestValidator extends UnitTestCase
 		foreach($emails as $email) {
 			$this->assertEqual(Validator::email($email), true);
 		}
-	}
-	
-} // END TestValidtor Class
+	}	
+}

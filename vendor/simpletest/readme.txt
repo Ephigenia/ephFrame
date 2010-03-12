@@ -1,1 +1,0 @@
-put simple test sources into this directory

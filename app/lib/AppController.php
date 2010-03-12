@@ -50,8 +50,7 @@ class AppController extends Controller
 		}
 		return parent::beforeRender();
 	}
-	
-} // END AppController class
+}
 
 /**
  * @package app

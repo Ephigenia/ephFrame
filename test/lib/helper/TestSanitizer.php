@@ -29,7 +29,6 @@ require_once dirname(__FILE__).'/../../autorun.php';
  */
 class TestSanitizer extends UnitTestCase 
 {
-	
 	public function setUp() 
 	{
 		ephFrame::loadClass('ephFrame.lib.helper.Sanitizer');
@@ -47,6 +46,5 @@ class TestSanitizer extends UnitTestCase
 			$this->assertEqual(Sanitizer::filename($test), $result);
 		}
 		exit;
-	}
-	
+	}	
 }

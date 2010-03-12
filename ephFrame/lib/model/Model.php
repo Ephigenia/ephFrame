@@ -229,7 +229,7 @@ class Model extends Object
 	 */
 	public function __construct($id = null, $fieldNames = array()) 
 	{
-{		if ($this->tablename !== false) {
+		if ($this->tablename !== false) {
 			if (empty($this->name)) {
 				$this->name = get_class($this);
 			}

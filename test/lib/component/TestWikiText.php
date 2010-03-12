@@ -28,7 +28,6 @@ require_once dirname(__FILE__).'/../../autorun.php';
  */
 class TestWikiText extends UnitTestCase 
 {
-	
 	/**
 	 * @var WikiText
 	 */

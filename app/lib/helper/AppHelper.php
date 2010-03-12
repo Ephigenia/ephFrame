@@ -27,6 +27,4 @@
  * @since 2009-09-28
  */
 class AppHelper extends Helper
-{
-	
-} // END AppHelper class
+{}

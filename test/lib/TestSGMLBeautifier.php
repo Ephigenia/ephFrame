@@ -29,7 +29,6 @@ require_once dirname(__FILE__).'/../autorun.php';
  */
 class TestSGMLBeautifier extends UnitTestCase 
 {
-	
 	public function setUp() 
 	{
 		ephFrame::loadClass('ephFrame.lib.SGMLBeautifierFilter');
@@ -48,6 +47,5 @@ class TestSGMLBeautifier extends UnitTestCase
 		</h1>
 	</body>
 </html>');
-	}
-	
+	}	
 }

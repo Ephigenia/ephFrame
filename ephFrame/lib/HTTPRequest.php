@@ -170,7 +170,7 @@ class HTTPRequest extends Component
 		if (isset($_SERVER['HTTP_REFERER'])) {
 			$this->referer = $_SERVER['HTTP_REFERER'];
 		}
-		if ($this->method == self::METHOD_GET) {
+		if ($this->method == HTTPRequestMethod::GET) {
 			$this->data = &$_GET;
 			$this->data = array_merge($_POST, $this->data);
 		} else {
