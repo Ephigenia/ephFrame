@@ -544,7 +544,8 @@ abstract class DBQuery extends Object implements Renderable
 	/**
 	 * @return string
 	 */
-	protected function renderOrderBy() {
+	protected function renderOrderBy()
+	{
 		$rendered = $this->orderBy->implode(', ');
 		if (!empty($rendered)) {
 			return ' ORDER BY '.LF.TAB.$rendered;
@@ -558,7 +559,8 @@ abstract class DBQuery extends Object implements Renderable
 	 * @param array(string) $tables
 	 * @return string
 	 */
-	protected function renderTables($tables = array()) {
+	protected function renderTables($tables = array())
+	{
 		if (func_num_args() == 0) {
 			$tables = $this->tables;
 		}

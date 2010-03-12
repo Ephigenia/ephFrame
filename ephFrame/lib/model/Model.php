@@ -986,17 +986,17 @@ class Model extends Object {
 		$order = array_merge($order, $this->order);
 		// add this models
 		if (count($order) > 0) {
-			foreach($order as $orderRule) {
-				// trim ASC / DESC
-				if (strpos($orderRule, ' ')) {
-					$fieldname = substr($orderRule, 0, strpos($orderRule, ' '));
+			foreach($order as $fieldname => $direction) {
+				if (is_numeric($fieldname)) {
+					$query->orderBy($fieldname);
 				} else {
-					$fieldname = $orderRule;
+					// prepend thi smodel name if missing in fieldname
+					if (!strpos($fieldname, '.') && $this->hasField($fieldname)) {
+						$fieldname = $this->name.'.'.$fieldname;
+					}
+					$query->orderBy($fieldname, $direction);
 				}
-				if (!strpos($fieldname, '.') && $this->hasField($fieldname)) {
-					$orderRule = $this->name.'.'.$orderRule;
-				}
-				$query->orderBy($orderRule);
+				$query->orderBy($fieldname, $direction);
 			}
 		}
 		// count and limit
