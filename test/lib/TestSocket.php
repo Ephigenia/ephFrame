@@ -26,24 +26,28 @@ require_once dirname(__FILE__).'/../autorun.php';
  * @package ephFrame
  * @subpackage ephFrame.test
  */
-class TestSocket extends UnitTestCase {
+class TestSocket extends UnitTestCase 
+{
 	
 	/**
 	 * @var Socket
 	 */
 	public $socket;
 	
-	public function setUp() {
+	public function setUp() 
+	{
 		loadClass('ephFrame.lib.Socket');
 		$this->socket = new Socket('localhost', 80);
 		$this->assertTrue($this->socket->connect());
 	}
 	
-	public function testConnect() {
+	public function testConnect() 
+	{
 		$this->assertTrue($this->socket->connected());
 	}
 	
-	public function testSend() {
+	public function testSend() 
+	{
 		$this->socket->write('GET /'.LF.LF);
 		$this->assertTrue(strlen($this->socket->read()) > 0);
 	}

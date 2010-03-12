@@ -39,8 +39,8 @@ loadHelper('Sanitize');
  * @package ephFrame
  * @subpackage ephFrame.lib.component
  */
-class Browser extends AppComponent implements Renderable {
-	
+class Browser extends AppComponent implements Renderable 
+{
 	public $name;
 	
 	public $version;
@@ -96,14 +96,16 @@ class Browser extends AppComponent implements Renderable {
 	 * Enter description here...
 	 * @return Browser
 	 */
-	public function startup() {
+	public function startup() 
+	{
 		if (isset($_SERVER['HTTP_USER_AGENT'])) {
 			$this->fromUserAgent($_SERVER['HTTP_USER_AGENT']);
 		}
 		return $this;
 	}
 	
-	public function render() {
+	public function render() 
+	{
 		if (!$this->beforeRender()) return false;
 		return $this->afterRender(trim($this->name.' '.$this->version));
 	}
@@ -179,9 +181,8 @@ class Browser extends AppComponent implements Renderable {
 				$version = '1.0';
 			}
 		}
-	}
-	
-} // END Browser class
+	}	
+}
 
 /**
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de
@@ -189,7 +190,8 @@ class Browser extends AppComponent implements Renderable {
  * @package ephFrame
  * @subpackage ephFrame.lib.component
  */
-class BrowserTypes {
+class BrowserTypes 
+{
 	
 	const DEFAULT = BrowserTypes::BROWSER;
 	
@@ -206,14 +208,17 @@ class BrowserTypes {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class BrowserException extends BasicException {}
+class BrowserException extends BasicException 
+{}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class BrowserNotFoundException extends BrowserException {
-	public function __construct($id) {
+class BrowserNotFoundException extends BrowserException 
+{
+	public function __construct($id) 
+	{
 		parent::__construct('No Browser found with the given id');	
 	}
 }

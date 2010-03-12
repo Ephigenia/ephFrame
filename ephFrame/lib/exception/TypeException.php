@@ -28,15 +28,18 @@
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ArgumentExpectedException extends BasicException {}
+class ArgumentExpectedException extends BasicException 
+{}
 
 /**
  * Thrown if an invalid variable type was detected
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class TypeException extends BasicException {
-	public function __construct($expectedtype = null) {
+class TypeException extends BasicException 
+{
+	public function __construct($expectedtype = null) 
+	{
 		if ($expectedtype !== null) {
 			$message = 'Invalid type detected. The expected type was \''.$expectedtype.'\'.'; 
 		}
@@ -49,8 +52,10 @@ class TypeException extends BasicException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class StringExpectedException extends TypeException {
-	public function __construct() {
+class StringExpectedException extends TypeException 
+{
+	public function __construct() 
+	{
 		parent::__construct('String');
 	}
 }
@@ -60,8 +65,10 @@ class StringExpectedException extends TypeException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class NumericExpectedException extends TypeException {
-	public function __construct() {
+class NumericExpectedException extends TypeException 
+{
+	public function __construct() 
+	{
 		parent::__construct('Numeric');
 	}
 }
@@ -71,8 +78,10 @@ class NumericExpectedException extends TypeException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class IntegerExpectedException extends NumericExpectedException {
-	public function __construct() {
+class IntegerExpectedException extends NumericExpectedException 
+{
+	public function __construct() 
+	{
 		parent::__construct('Integer');
 	}
 }
@@ -81,8 +90,10 @@ class IntegerExpectedException extends NumericExpectedException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class FloatExpectedException extends NumericExpectedException {
-	public function __construct() {
+class FloatExpectedException extends NumericExpectedException 
+{
+	public function __construct() 
+	{
 		parent::__construct('Float');
 	}
 }
@@ -92,11 +103,13 @@ class FloatExpectedException extends NumericExpectedException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ObjectExpectedException extends TypeException {
+class ObjectExpectedException extends TypeException 
+{
 	/**
 	 * @param string $objectType Originally expected object class name
 	 */
-	public function __construct($objectType = 'Object') {
+	public function __construct($objectType = 'Object') 
+	{
 		parent::__construct($objectType);
 	}
 }
@@ -106,8 +119,10 @@ class ObjectExpectedException extends TypeException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ObjectIsNotChildOfException extends ObjectExpectedException {
-	public function __construct($grandfatherClassName = '') {
+class ObjectIsNotChildOfException extends ObjectExpectedException 
+{
+	public function __construct($grandfatherClassName = '') 
+	{
 		$this->message = 'The object passed was not a child of the expected parent class called \''.$grandfatherClassName.'\'';
 		parent::__construct();
 	}
@@ -118,8 +133,10 @@ class ObjectIsNotChildOfException extends ObjectExpectedException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ArrayExpectedException extends TypeException {
-	public function __construct() {
+class ArrayExpectedException extends TypeException 
+{
+	public function __construct() 
+	{
 		parent::__construct('Array');
 	}
 }

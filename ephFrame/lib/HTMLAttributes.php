@@ -25,6 +25,7 @@ class_exists('SGMLAttributes') or require dirname(__FILE__).'/SGMLAttributes.php
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 12.07.2007
  */
-class HTMLAttributes extends SGMLAttributes {
+class HTMLAttributes extends SGMLAttributes 
+{
 	
 }

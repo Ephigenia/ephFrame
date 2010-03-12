@@ -25,8 +25,7 @@ ephFrame::loadClass('ephFrame.lib.model.DB.DBQuery');
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 03.10.2007
  */
-class DBDeleteQuery extends DBQuery {
-	
-	private $verb = 'DELETE';
-	
+class DBDeleteQuery extends DBQuery 
+{
+	private $verb = 'DELETE';	
 }

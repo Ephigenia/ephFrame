@@ -95,7 +95,8 @@ class ConsoleWindow extends ConsoleDrawing
 	 * @param integer $height
 	 * @param string $content initial content of the box
 	 */
-	public function __construct($x, $y, $width, $height, $content = '', $drawBorder = null, $background = null) {
+	public function __construct($x, $y, $width, $height, $content = '', $drawBorder = null, $background = null) 
+	{
 		$this->x = $x;
 		$this->y = $y;
 		$this->width = $width;
@@ -118,7 +119,8 @@ class ConsoleWindow extends ConsoleDrawing
 	 * @param boolean $append
 	 * @return ConsoleBox
 	 */
-	public function content($content, $append = false) {
+	public function content($content, $append = false) 
+	{
 		if ($append) {
 			$this->content .= $content;
 		} else {
@@ -134,7 +136,8 @@ class ConsoleWindow extends ConsoleDrawing
 	 * @param string $title
 	 * @return ConsoleWindow
 	 */
-	public function title($title) {
+	public function title($title) 
+	{
 		$this->title = $title;
 		$this->redraw();
 		return $this;
@@ -144,7 +147,8 @@ class ConsoleWindow extends ConsoleDrawing
 	 * Redraw the hole box including border and content
 	 * @return ConsoleBox
 	 */
-	public function redraw() {
+	public function redraw() 
+	{
 		if ($this->drawBorder) {
 			$this->drawBorder();
 		}
@@ -153,7 +157,8 @@ class ConsoleWindow extends ConsoleDrawing
 		return $this;
 	}
 	
-	private function redrawContent() {		
+	private function redrawContent()
+	{		
 		if ($this->drawBorder) {
 			$width = $this->width - 4;
 			$height = $this->height - 2;
@@ -197,7 +202,8 @@ class ConsoleWindow extends ConsoleDrawing
 		return $this;
 	}
 	
-	private function redrawTitle() {
+	private function redrawTitle()
+	{
 		// do nothing if the title is empty
 		if (empty($this->title)) {
 			return $this;
@@ -227,7 +233,8 @@ class ConsoleWindow extends ConsoleDrawing
 		return $this;
 	}
 	
-	private function drawBorder() {
+	private function drawBorder()
+	{
 		$x1 = $this->x;
 		$y1 = $this->y;
 		$x2 = $this->x + $this->width - 1;
@@ -254,7 +261,6 @@ class ConsoleWindow extends ConsoleDrawing
 		$this->out($this->boxChars[5]);
 		return true;
 	}
-
 }
 
 

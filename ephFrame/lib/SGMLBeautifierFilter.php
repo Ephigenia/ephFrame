@@ -29,8 +29,8 @@ interface_exists('StringFilter') or require dirname(__FILE__).'/StringFilter.php
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class SGMLBeautifierFilter extends Object implements StringFilter {
-
+class SGMLBeautifierFilter extends Object implements StringFilter 
+{
 	public $indentString = TAB;
 	
 	/**
@@ -86,5 +86,4 @@ class SGMLBeautifierFilter extends Object implements StringFilter {
 		}
 		return trim(join(LF, $tmp));
 	}
-
 }

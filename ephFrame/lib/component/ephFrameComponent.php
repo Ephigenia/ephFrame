@@ -23,8 +23,8 @@
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-interface ephFrameComponent {
-
+interface ephFrameComponent
+{
 	public function startup();
 	
 	public function init(Controller $controller);
@@ -32,5 +32,4 @@ interface ephFrameComponent {
 	public function beforeRender();
 	
 	public function beforeAction();
-
 }

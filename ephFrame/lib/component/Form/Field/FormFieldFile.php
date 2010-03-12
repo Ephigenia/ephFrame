@@ -27,8 +27,8 @@ class_exists('PHPINI') or require(dirname(__FILE__).'/../../../PHPINI.php');
  * @package ephFrame
  * @subpackage ephFrame.lib.component.Form.Field
  */
-class FormFieldFile extends FormField {
-	
+class FormFieldFile extends FormField 
+{
 	/**
 	 * Name of the class that should be returned by {@link value}
 	 * Usually this class is an extension of {@link File}
@@ -47,14 +47,16 @@ class FormFieldFile extends FormField {
 	 * an instance of $fileClassName class if field was submitted with a file
 	 * @return File.
 	 */
-	public function value($value = null) {
+	public function value($value = null) 
+	{
 		if (func_num_args() == 0 && $this->isUploaded() && !empty($_FILES[$this->attributes->name]['tmp_name'])) {
 			return new $this->fileClassName($_FILES[$this->attributes->name]['tmp_name']);
 		}
 		return false;
 	}
 	
-	public function validate($value = null) {
+	public function validate($value = null) 
+	{
 		// check for uploading errors
 		if (func_num_args() == 0 && $this->isUploaded()) {
 			switch(@$_FILES[$this->attributes->name]['error']) {
@@ -105,11 +107,11 @@ class FormFieldFile extends FormField {
 	 * Returns the name of the file uploaded if any file was uploaded.
 	 * @return string
 	 */
-	public function originalFilename() {
+	public function originalFilename() 
+	{
 		if (!$this->isUploaded()) return false;
 		return $_FILES[$this->attributes->name]['name'];
-	}
-	
+	}	
 }
 
 /**
@@ -117,6 +119,6 @@ class FormFieldFile extends FormField {
  * @author Ephigenia // Marcel Eichner <love@ephigenia.de>
  * @since 26.05.2009
  */
-class FormFieldFileException extends FormFieldException {
-	
+class FormFieldFileException extends FormFieldException 
+{
 }

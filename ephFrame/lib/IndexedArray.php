@@ -76,7 +76,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param array(string)|mixed $data
 	 * @return IndexedArray
 	 */
-	public function __construct($data = null) {
+	public function __construct($data = null) 
+	{
 		if (func_num_args() > 1) {
 			$data = func_get_args();
 		}
@@ -101,7 +102,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 		return new $classname($this->data);
 	}
 	
-	public function reset() {
+	public function reset() 
+	{
 		$this->data = array();
 		return $this;
 	}
@@ -119,7 +121,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param string $val
 	 * @return IndexedArray
 	 */
-	public function add($val) {
+	public function add($val) 
+	{
 		if (func_num_args() > 1) {
 			$args = func_get_args();
 			foreach($args as $v) {
@@ -144,7 +147,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param string $val
 	 * @return IndexedArray
 	 */
-	public function push($val) {
+	public function push($val) 
+	{
 		$args = func_get_args();
 		return $this->callMethod('add', $args);
 	}
@@ -155,7 +159,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param string $val
 	 * @return IndexedArray
 	 */
-	public function append($val) {
+	public function append($val) 
+	{
 		$args = func_get_args();
 		return $this->callMethod('add', $args);
 	}
@@ -165,7 +170,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param integer|string $key
 	 * @param mixed $value
 	 */
-	public function appendTo($key, $value) {
+	public function appendTo($key, $value) 
+	{
 		if ($this->hasKey($key)) {
 			if (is_array($this->data[$key])) {
 				$this->data[$key][] = $value;	
@@ -178,7 +184,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 		return $this;
 	}
 	
-	public function prependTo($key, $value) {
+	public function prependTo($key, $value) 
+	{
 		if ($this->hasKey($key)) {
 			if (is_array($this->data[$key])) {
 				$this->data[$key] = array_unshift($this->data[$key], $value);
@@ -204,7 +211,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param array(mixed) $array
 	 * @return string
 	 */
-	public function appendFromArray(Array $array) {
+	public function appendFromArray(Array $array) 
+	{
 		foreach($array as $v) $this->append($v);
 		return $this;
 	}
@@ -215,7 +223,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param array(mixed) $array
 	 * @return IndexedArray
 	 */
-	public function prependFromArray(Array $array) {
+	public function prependFromArray(Array $array) 
+	{
 		foreach(array_reverse($array) as $v) $this->prepend($v);
 		return $this;
 	}
@@ -233,7 +242,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param mixed $val
 	 * @return IndexedArray
 	 */
-	public function setValue($index, $val) {
+	public function setValue($index, $val) 
+	{
 		$this->data[(int) $index] = $val;
 		return $this;
 	}
@@ -245,7 +255,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param mixed $value
 	 * @return Hash
 	 */
-	public function set($key, $value = null) {
+	public function set($key, $value = null) 
+	{
 		return $this->setValue($key, $value);
 	}
 	
@@ -256,7 +267,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param integer $mode
 	 * @return IndexedArray
 	 */
-	public function sort($mode = self::SORTMODE_DEFAULT) {
+	public function sort($mode = self::SORTMODE_DEFAULT) 
+	{
 		switch ($mode) {
 			case self::SORTMODE_KEYS:
 				ksort($this->data);
@@ -286,7 +298,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param integer $stepSize
 	 * @return IndexedArray
 	 */
-	public function range($start, $end, $stepSize = 1) {
+	public function range($start, $end, $stepSize = 1) 
+	{
 		$rangeArray = range((int) $start, (int) $end, (int) $stepSize);
 		if ($this->count() == 0) {
 			$this->data = $rangeArray;
@@ -312,7 +325,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param string $devider optional devider, that is used to split the string
 	 * @return IndexedArray
 	 */
-	public function fromString($string, $devider = null) {
+	public function fromString($string, $devider = null) 
+	{
 		if ($devider !== null) {
 			$this->fromArray(explode($devider, $string));
 		} else {
@@ -325,7 +339,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * Returns the IndexedArray as array
 	 * @return array(mixed)
 	 */
-	public function toArray() {
+	public function toArray() 
+	{
 		return $this->data;
 	}
 	
@@ -334,7 +349,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param array(mixed) $data
 	 * @return IndexedArray
 	 */
-	public function fromArray(Array $data) {
+	public function fromArray(Array $data) 
+	{
 		$this->data = array_values($data);
 		return $this;
 	}
@@ -346,7 +362,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param mixed $val
 	 * @return IndexedArray
 	 */
-	public function prepend($val) {
+	public function prepend($val) 
+	{
 		array_unshift($this->data, $val);
 		return $this;
 	}
@@ -359,7 +376,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param mixed $default returned if $index was not found as index in IndexedArray
 	 * @return mixed
 	 */
-	public function get($index, $default = null) {
+	public function get($index, $default = null) 
+	{
 		if (func_num_args() == 1) {
 			return $this->offsetGet($index);
 		} else {
@@ -373,7 +391,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param mixed $default
 	 * @return mixed
 	 */
-	public function read($index, $default = null) {
+	public function read($index, $default = null) 
+	{
 		return $this->get($index, $default);
 	}
 	
@@ -384,7 +403,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param mixed $default returned if $index was not found as index in IndexedArray
 	 * @return mixed
 	 */
-	public function lookup($index, $default = null) {
+	public function lookup($index, $default = null) 
+	{
 		if (func_num_args() == 1) {
 			return $this->get($index);
 		} else {
@@ -403,7 +423,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param boolean $invert inverts the logic of the method, returning every value that does not match
 	 * @return IndexedArray
 	 */
-	public function match($regexp, $invert = false) {
+	public function match($regexp, $invert = false) 
+	{
 		$a = array();
 		foreach($this->data as $v) {
 			if (preg_match($regexp, $v) != $invert) {
@@ -419,7 +440,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param mixed $v
 	 * @return integer
 	 */
-	public function search($v) {
+	public function search($v) 
+	{
 		return array_search($v, $this->data);
 	}
 	
@@ -429,7 +451,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param mixed $v
 	 * @return integer
 	 */
-	public function contains($v) {
+	public function contains($v) 
+	{
 		return $this->search($v);
 	}
 	
@@ -439,7 +462,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param mixed $v
 	 * @return integer
 	 */
-	public function indexOf($v) {
+	public function indexOf($v) 
+	{
 		return $this->search($v);
 	}
 	
@@ -448,7 +472,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param mixed $value
 	 * @return boolean
 	 */
-	public function hasValue($value) {
+	public function hasValue($value) 
+	{
 		return in_array($value, $this->data);
 	}
 	
@@ -457,7 +482,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param integer $count
 	 * @return array(mixed)
 	 */
-	public function rand($count = 1) {
+	public function rand($count = 1) 
+	{
 		$count = (int) ($count);
 		if ($count < 1) {
 			return array();
@@ -477,7 +503,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param string|integer $index
 	 * @return boolean
 	 */
-	public function isEmpty($index = null) {
+	public function isEmpty($index = null) 
+	{
 		// check if value of $index is empty
 		if ($index !== null) {
 			$val = $this->get($index);
@@ -495,7 +522,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * Shuffle the values in the set and returns it
 	 * @return IndexedArray
 	 */
-	public function shuffle() {
+	public function shuffle() 
+	{
 		shuffle($this->data);
 		return $this;
 	}
@@ -506,7 +534,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param boolean $overwrite
 	 * @return IndexedArray
 	 */
-	public function merge($array, $overwrite = true) {
+	public function merge($array, $overwrite = true) 
+	{
 		if ($array instanceof IndexedArray) {
 			$array = $array->toArray();
 		}
@@ -537,7 +566,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * does. If the IndexedArray is empty null is returned
 	 * @return mixed
 	 */
-	public function first() {
+	public function first() 
+	{
 		if (count($this) == 0) return null;
 		$keys = array_keys($this->data);
 		return $this->data[$keys[0]];
@@ -547,7 +577,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * Returns the first element from the IndexedArray and pops it off
 	 * @return mixed
 	 */
-	public function shift() {
+	public function shift() 
+	{
 		return array_shift($this->data);
 	}
 	
@@ -556,7 +587,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * If the IndexedArray is empty null is returned
 	 * @return mixed
 	 */
-	public function last() {
+	public function last() 
+	{
 		if (count($this) == 0) return null;
 		return $this->data[$this->count()-1];
 	}
@@ -565,7 +597,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * Removes the first element from the IndexedArray and cuts it from the IndexedArray
 	 * @return mixed
 	 */
-	public function pop() {
+	public function pop() 
+	{
 		return array_pop($this->data);
 	}
 	
@@ -574,7 +607,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param array(string)|string $callback
 	 * @return IndexedArray
 	 */
-	public function map($callback) {
+	public function map($callback) 
+	{
 		$this->data = array_map($callback, $this->data);
 		return $this;
 	}
@@ -585,7 +619,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param array(string) $callback Valid method call or function call callback
 	 * @return IndexedArray
 	 */
-	public function walk($callback) {
+	public function walk($callback) 
+	{
 		$this->data = array_walk($this->data, $callback);
 		return $this;
 	}
@@ -595,7 +630,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param integer optional precision if you have some floats around there
 	 * @return integer|float
 	 */
-	public function sum($precision = 0) {
+	public function sum($precision = 0) 
+	{
 		return round(array_sum($this->data), $precision);
 	}
 	
@@ -605,7 +641,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param integer optional precision if you have some floats around there
 	 * @return integer|float
 	 */
-	public function product() {
+	public function product() 
+	{
 		return array_product($this->data);
 	}
 	
@@ -614,7 +651,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param string $salt
 	 * @return string
 	 */
-	public function hash($salt = '') {
+	public function hash($salt = '') 
+	{
 		return md5($this->implode('').$salt);
 	}
 	
@@ -624,7 +662,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param integer $count Number of minimum values that should be returned
 	 * @return int|float|string|IndexedArray
 	 */
-	public function min($count = 1) {
+	public function min($count = 1) 
+	{
 		if ($count <= 0) {
 			return null;
 		} elseif ($count == 1) {
@@ -648,7 +687,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param integer $count Number of maximum values that should be returned
 	 * @return int|float|string|IndexedArray
 	 */
-	public function max($count = 1) {
+	public function max($count = 1) 
+	{
 		if ($count <= 0) {
 			return null;
 		} elseif ($count == 1) {
@@ -673,7 +713,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param boolean $preserveKeys
 	 * @return IndexedArray
 	 */
-	public function reverse($preserveKeys = true) {
+	public function reverse($preserveKeys = true) 
+	{
 		$this->data = $this->reversed($preserveKeys);
 		return $this;
 	}
@@ -683,7 +724,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param boolean $preserveKeys 
 	 * @return IndexedArray
 	 */
-	public function reversed($preserveKeys = true) {
+	public function reversed($preserveKeys = true) 
+	{
 		$new = clone $this;
 		$new->fromArray(array_reverse($this->data, $preserveKeys));
 		return $new;
@@ -693,7 +735,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * Makes every value in the Set unique and returns the IndexedArray as array
 	 * @return IndexedArray
 	 */
-	public function unique() {
+	public function unique() 
+	{
 		$new = array();
 		foreach($this->data as $key => $value) {
 			if (!in_array($value, $new)) $new[$key] = $value;
@@ -707,7 +750,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 *
 	 * @return integer
 	 */
-	public function count() {
+	public function count() 
+	{
 		return count($this->data);
 	}
 	
@@ -716,7 +760,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 *
 	 * @return integer
 	 */
-	public function size() {
+	public function size() 
+	{
 		return $this->count();
 	}
 	
@@ -724,7 +769,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * Alias for {@link count}
 	 * @return integer
 	 */
-	public function len() {
+	public function len() 
+	{
 		return $this->count();
 	}
 	
@@ -732,7 +778,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * Alias for {@link count}
 	 * @return integer
 	 */
-	public function length() {
+	public function length() 
+	{
 		return $this->count();
 	}
 	
@@ -740,7 +787,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * Returns the current index
 	 * @return integer
 	 */
-	public function key() {
+	public function key() 
+	{
 		return key($this->data);
 	}
 	
@@ -748,7 +796,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * Returns current element from the IndexedArray
 	 * @return mixed
 	 */
-	public function current() {
+	public function current() 
+	{
 		return current($this->data);
 	}
 	
@@ -774,7 +823,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * 
 	 * @return mixed
 	 */
-	public function cycle() {
+	public function cycle() 
+	{
 		$r = $this->current();
 		if (!$r) {
 			$this->rewind();
@@ -784,35 +834,43 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 		return $r;
 	}
 	
-	public function next() {
+	public function next() 
+	{
 		return next($this->data);
 	}
 	
-	public function rewind() {
+	public function rewind() 
+	{
 		return reset($this->data);
 	}
 	
-	public function valid() {
+	public function valid() 
+	{
 		return FALSE !== $this->current();
 	}
 	
-	public function offsetExists($index) {
+	public function offsetExists($index) 
+	{
 		return isset($this->data[$index]);
 	}
 	
-	public function hasIndex($index) {
+	public function hasIndex($index) 
+	{
 		return $this->offsetExists($index);
 	}
 	
-	public function defined($index) {
+	public function defined($index) 
+	{
 		return $this->offsetExists($index);
 	}
 	
-	public function hasKey($index) {
+	public function hasKey($index) 
+	{
 		return $this->hasIndex($index);
 	}
 	
-	public function offsetGet($index) {
+	public function offsetGet($index) 
+	{
 		if (isset($this->data[$index])) {
 			return $this->data[$index];
 		} else {
@@ -820,7 +878,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 		}
 	}
 	
-	public function offsetSet($index, $value) {
+	public function offsetSet($index, $value) 
+	{
 		if ($index === null) {
 			$index = $this->count();
 		}
@@ -828,7 +887,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 		return $this;
 	}
 	
-	public function offsetUnset($index) {
+	public function offsetUnset($index) 
+	{
 		if (isset($this->data[$index])) {
 			if (is_int($index)) {
 				array_splice($this->data, $index, 1);
@@ -845,7 +905,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param integer $index
 	 * @return boolean success if the index was found and successfully deleted
 	 */
-	public function del($index) {
+	public function del($index) 
+	{
 		return $this->delete($index);
 	}
 	
@@ -854,7 +915,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param integer $index
 	 * @return IndexedArray
 	 */
-	public function delete($index = null) {
+	public function delete($index = null) 
+	{
 		return $this->offsetUnset($index);
 	}
 	
@@ -863,7 +925,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param integer $index
 	 * @return IndexedArray
 	 */
-	public function remove($index) {
+	public function remove($index) 
+	{
 		return $this->del($index);
 	}
 	
@@ -873,7 +936,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param integer $index
 	 * @return IndexedArray
 	 */
-	public function deleteKey($index) {
+	public function deleteKey($index) 
+	{
 		return $this->del($index);
 	}
 	
@@ -883,7 +947,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param integer $index
 	 * @return IndexedArray
 	 */
-	public function deleteIndex($index) {
+	public function deleteIndex($index) 
+	{
 		return $this->del($index);
 	}
 	
@@ -897,7 +962,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param mixed
 	 * @return boolean
 	 */
-	public function delAll($value) {
+	public function delAll($value) 
+	{
 		while (($index = $this->indexOf($value)) !== false) {
 			$this->del($index);
 		}
@@ -909,7 +975,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param mixed
 	 * @return boolean
 	 */
-	public function removeAll($value) {
+	public function removeAll($value) 
+	{
 		return $this->delAll($value);
 	}
 	
@@ -918,7 +985,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param mixed
 	 * @return boolean
 	 */
-	public function deleteAll($value) {
+	public function deleteAll($value) 
+	{
 		return $this->delAll($value);
 	}
 	
@@ -927,7 +995,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param mixed
 	 * @return boolean
 	 */
-	public function deleteValue($value) {
+	public function deleteValue($value) 
+	{
 		return $this->delAll($value);
 	}
 	
@@ -935,7 +1004,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * Cleares the hole IndexedArray, removing all items. Always returns an empty IndexedArray.
 	 * @return IndexedArray
 	 */
-	public function clear() {
+	public function clear() 
+	{
 		$this->data = array();
 		return $this;
 	}
@@ -945,7 +1015,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param string $glue
 	 * @return string
 	 */
-	public function implode($glue = '') {
+	public function implode($glue = '') 
+	{
 		return implode($glue, $this->data);
 	}
 	
@@ -953,7 +1024,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * Returns an array of Keys set in this set
 	 * @return IndexedArray
 	 */
-	public function keys() {
+	public function keys() 
+	{
 		$class = get_class($this);
 		return new $class(array_keys($this->data));
 	}
@@ -962,7 +1034,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * Returns all values in the set as Array.
 	 * @return IndexedArray
 	 */
-	public function values() {
+	public function values() 
+	{
 		$class = get_class($this);
 		return new $class(array_values($this->data));
 	}
@@ -981,7 +1054,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * </code>
 	 * @return array(array(mixed))
 	 */
-	public function items() {
+	public function items() 
+	{
 		$r = array();
 		foreach($this as $k => $v) {
 			$r[] = array($k, $v);
@@ -999,7 +1073,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param string|array(string) $valueCallback
 	 * @return string
 	 */
-	public function implodef($glue = '', $format = '', $keyCallback = null, $valueCallback = null) {
+	public function implodef($glue = '', $format = '', $keyCallback = null, $valueCallback = null) 
+	{
 		return ArrayHelper::implodef($this->data, $glue, $format, $keyCallback, $valueCallback);
 	}
 	
@@ -1008,7 +1083,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * will do nothing. You can use this for implement pre-rendering logic.
 	 * @return string
 	 */
-	public function beforeRender() {
+	public function beforeRender() 
+	{
 		return true;
 	}
 	
@@ -1019,7 +1095,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * @param string $rendered
 	 * @return string
 	 */
-	public function afterRender($rendered) {
+	public function afterRender($rendered) 
+	{
 		return $rendered;
 	}
 	
@@ -1027,7 +1104,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * Renders the IndexedArray and returns the result
 	 * @return string
 	 */
-	public function render() {
+	public function render() 
+	{
 		if (!$this->beforeRender()) return '';
 		return $this->afterRender($this->implode($this->glue));
 	}
@@ -1036,7 +1114,8 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
 	 * magic overloading for string casting of this class directed to {@link render}
 	 * @return string
 	 */
-	public function __toString() {
+	public function __toString() 
+	{
 		return $this->render();
 	}	
 }
@@ -1045,4 +1124,5 @@ class IndexedArray extends Component implements Countable, Renderable, Iterator,
  * @package ephFrame
  * @subpackage ephFrame.lib.exception 
  */
-class IndexedArrayException extends BasicException { }
+class IndexedArrayException extends BasicException 
+{ }

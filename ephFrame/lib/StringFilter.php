@@ -25,8 +25,7 @@
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de
  * @since 18.03.2008
  */
-interface StringFilter {
-	
-	public function apply($string);
-	
+interface StringFilter 
+{	
+	public function apply($string);	
 }

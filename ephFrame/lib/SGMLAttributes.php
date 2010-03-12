@@ -37,11 +37,13 @@ class_exists('String') or require dirname(__FILE__).'/helper/String.php';
  */
 class SGMLAttributes extends Hash
 {	
-	public function __get($name) {
+	public function __get($name) 
+	{
 		return $this->get($name);
 	}
 	
-	public function __set($name, $value) {
+	public function __set($name, $value) 
+	{
 		$this->set($name, $value);
 		return $this;
 	}
@@ -54,7 +56,8 @@ class SGMLAttributes extends Hash
 	 * @param string|integer|float $value
 	 * @return SGMLAttributes|string|integer|float
 	 */
-	public function attribute($name, $value = null) {
+	public function attribute($name, $value = null) 
+	{
 		if (func_num_args() == 1) {
 			return $this->get($name);
 		} else {
@@ -69,7 +72,8 @@ class SGMLAttributes extends Hash
 	 * @param string|integer $name
 	 * @return SGMLAttributes
 	 */
-	public function set($name, $value = null) {
+	public function set($name, $value = null) 
+	{
 		// disallow empty names
 		if (empty($name)) throw new StringExpectedException();
 		// check for invalid SGML attribute name
@@ -84,7 +88,8 @@ class SGMLAttributes extends Hash
 	 * @param string $name
 	 * @return boolean
 	 */
-	protected function validSGMLAttributeName($name) {
+	protected function validSGMLAttributeName($name)
+	{
 		return (!String::hasControlChars($name) && !preg_match('/^[^a-z]{1}.*$/', $name));
 	}
 	
@@ -92,12 +97,14 @@ class SGMLAttributes extends Hash
 	 * Don't render attributes if no attributes set
 	 * @return boolean
 	 */
-	public function beforeRender() {
+	public function beforeRender() 
+	{
 		if (count($this) == 0) return false;
 		return true;
 	}
 	
-	public function __toString() {
+	public function __toString() 
+	{
 		return $this->render();
 	}
 	
@@ -106,7 +113,8 @@ class SGMLAttributes extends Hash
 	 * attributes set false is returned
 	 * @return boolean|string
 	 */
-	public function render() {
+	public function render() 
+	{
 		$rendered = '';
 		if (!$this->beforeRender()) return $rendered;
 		foreach ($this->toArray() as $attributeName => $attributeValue) {
@@ -125,7 +133,8 @@ class SGMLAttributes extends Hash
 	 * @param string|array $input
 	 * @return string
 	 */
-	public function renderAttributeValue($input) {
+	public function renderAttributeValue($input) 
+	{
 		$rendered = (is_array($input)) ? implode(' ',$input) : $input;
 		// encode entities
 		$rendered = preg_replace('@&(?!(amp;|#\d{2,}))@i', '&amp;', $rendered);
@@ -139,7 +148,8 @@ class SGMLAttributes extends Hash
 	 * @param string $name
 	 * @return string 
 	 */
-	public function renderAttributeName($name) {
+	public function renderAttributeName($name) 
+	{
 		return $name;
 	}
 	

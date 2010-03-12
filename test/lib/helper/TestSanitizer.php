@@ -27,13 +27,16 @@ require_once dirname(__FILE__).'/../../autorun.php';
  * @package ephFrame
  * @subpackage ephFrame.test
  */
-class TestSanitizer extends UnitTestCase {
+class TestSanitizer extends UnitTestCase 
+{
 	
-	public function setUp() {
+	public function setUp() 
+	{
 		ephFrame::loadClass('ephFrame.lib.helper.Sanitizer');
 	}
 	
-	public function testFilename() {
+	public function testFilename() 
+	{
 		$filenames = array(
 			'simplename.txt'	=> 'simplename.txt',
 			'../simple.txt'		=> 'simple.txt',

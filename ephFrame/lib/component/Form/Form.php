@@ -27,8 +27,8 @@ class_exists('HTMLTag') or require dirname(__FILE__).'/../../HTMLTag.php';
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 04.11.2008
  */
-class Form extends HTMLTag {
-	
+class Form extends HTMLTag 
+{
 	/**
 	 * Instance of Controller if Form is used as component
 	 * @var Controller
@@ -76,7 +76,8 @@ class Form extends HTMLTag {
 	 * @param string $action
 	 * @return Form
 	 */
-	public function __construct($action = null, Array $attributes = array()) {
+	public function __construct($action = null, Array $attributes = array()) 
+	{
 		$this->request = new HTTPRequest(true);
 		if ($action != null) {
 			$this->action = $action;
@@ -100,7 +101,8 @@ class Form extends HTMLTag {
 	 * in {@link Component}.
 	 * @return boolean
 	 */
-	public function startup() {
+	public function startup() 
+	{
 		// set form variable for view
 		if (isset($this->controller)) {
 			$this->controller->data->set(get_class($this), $this);
@@ -113,7 +115,8 @@ class Form extends HTMLTag {
 	 * Callback that is called right before controller calls his action
 	 * @return true
 	 */
-	public function beforeAction() {
+	public function beforeAction() 
+	{
 		return true;
 	}
 	
@@ -121,12 +124,14 @@ class Form extends HTMLTag {
 	 * Manual inherit Component init method, see docu in {@link Component}.
 	 * @return boolean
 	 */
-	public function init(Controller $controller) {
+	public function init(Controller $controller) 
+	{
 		$this->controller = $controller;
 		return $this;
 	}
 	
-	public function beforeRender() {
+	public function beforeRender() 
+	{
 		// add multipart form data if file field in the form
 		if (!($this->attributes->hasKey('enctype'))) {
 			// add mulitpart if there are any files in the form
@@ -153,7 +158,8 @@ class Form extends HTMLTag {
 		return parent::beforeRender();
 	}
 	
-	public function __get($fieldname) {
+	public function __get($fieldname) 
+	{
 		if ($field = $this->fieldset->childWithAttribute('name', $fieldname)) {
 			return $field;
 		}
@@ -166,7 +172,8 @@ class Form extends HTMLTag {
 	 * @param $fieldname
 	 * @return boolean
 	 */
-	public function delete($fieldname = null) {
+	public function delete($fieldname = null) 
+	{
 		if ($field = $this->fieldset->childWithAttribute('name', $fieldname)) {
 			$field->delete();
 			return true;
@@ -185,7 +192,8 @@ class Form extends HTMLTag {
 	 * @param FormField $field
 	 * @return Form
 	 */
-	public function add(FormField $field) {
+	public function add(FormField $field) 
+	{
 		if (func_num_args() > 1) {
 			foreach(func_get_args() as $field) $this->add($field);
 		} else {
@@ -200,7 +208,8 @@ class Form extends HTMLTag {
 	 * @param FormField $field
 	 * @return Form
 	 */
-	public function addField(FormField $field) {
+	public function addField(FormField $field) 
+	{
 		return $this->add($field);
 	}
 	
@@ -216,7 +225,8 @@ class Form extends HTMLTag {
 	 * @param string $name name of userfield to search for
 	 * @return boolean
 	 */
-	public function hasField($name) {
+	public function hasField($name) 
+	{
 		return $this->fieldset->childWithAttribute('name', $name);
 	}
 	
@@ -228,7 +238,8 @@ class Form extends HTMLTag {
 	 * @param array(string) $attributes
 	 * @return FormField
 	 */
-	public function newField($type, $name, $value = null, Array $attributes = array()) {
+	public function newField($type, $name, $value = null, Array $attributes = array()) 
+	{
 		// load form field class
 		if (strpos($type, '.') == false) {
 			$classname = 'FormField'.ucFirst($type);
@@ -269,7 +280,8 @@ class Form extends HTMLTag {
 	 * filled or the single element of a form is filled and submitted.
 	 * @return boolean
 	 */
-	public function submitted() {
+	public function submitted() 
+	{
 		// test if a form was submitted by checking every field of the form
 		// for content
 		$formFieldCount = 0;
@@ -306,7 +318,8 @@ class Form extends HTMLTag {
 	 * not submitted or errors
 	 * @return boolean
 	 */
-	public function ok() {
+	public function ok() 
+	{
 		return ($this->submitted() && $this->validate());
 	}
 	
@@ -315,7 +328,8 @@ class Form extends HTMLTag {
 	 * @param $fieldNames
 	 * @return boolean
 	 */
-	public function validate(Array $fieldNames = array()) {
+	public function validate(Array $fieldNames = array()) 
+	{
 		if (!is_array($this->errors)) {
 			$this->errors = array($this->errors);
 		}
@@ -354,7 +368,8 @@ class Form extends HTMLTag {
 	 * 
 	 * @return true
 	 */
-	public function configure() {
+	public function configure() 
+	{
 		// backwards compatibility when configure was named configureMOdel
 		// @DEPRECIATED & @OLD
 		if (isset($this->configureModel)) {
@@ -413,7 +428,8 @@ class Form extends HTMLTag {
 	 *	Callback called after {@link config} was called
 	 *	@return boolean
 	 */
-	public function afterConfig() {
+	public function afterConfig() 
+	{
 		// add missing submit field if missing
 		if (!$this->fieldset->childWithAttribute('type', 'submit')) {
 			$this->add($this->newField('submit', 'submit', 'submit'));
@@ -441,7 +457,8 @@ class Form extends HTMLTag {
 	 * @param array(string) $ignore
 	 * @return Form
 	 */
-	public function configureModel(Model $model, Array $ignore = array(), Array $fields = array()) {
+	public function configureModel(Model $model, Array $ignore = array(), Array $fields = array()) 
+	{
 		if (empty($ignore)) {
 			$ignore = array('id');
 		}
@@ -534,7 +551,8 @@ class Form extends HTMLTag {
 	 * Fills the form fields with data from a model
 	 * @return Form
 	 */
-	public function fillModel(Model $model) {
+	public function fillModel(Model $model) 
+	{
 		if (!$this->submitted()) {
 			// only fill with model data if form was not submitted
 			foreach($model->structure as $fieldInfo) {
@@ -560,7 +578,8 @@ class Form extends HTMLTag {
 	 * @param $model
 	 * @return unknown_type
 	 */
-	public function fromModel(Model $model) {
+	public function fromModel(Model $model) 
+	{
 		return $this->fillModel($model);
 	}
 	
@@ -577,7 +596,8 @@ class Form extends HTMLTag {
 	 * @param array(string) $ignore name of form fields to ignore
 	 * @return Model
 	 */
-	public function toModel(Model $model, $fields = array(), $ignore = array()) {
+	public function toModel(Model $model, $fields = array(), $ignore = array()) 
+	{
 		foreach($this->fieldset->children() as $formField) {
 			if (!$formField instanceof FormField) continue;
 			$fieldname = $formField->attributes->name;
@@ -606,19 +626,20 @@ class Form extends HTMLTag {
 	 * Returns all names of all form fields in the form
 	 * @return array(string)
 	 */
-	public function fieldNames() {
+	public function fieldNames() 
+	{
 		$fieldNames = array();
 		foreach($this->fieldset->children() as $formField) {
 			if (!$formField instanceof FormField) continue;
 			$fieldNames[] = $formField->attributes->name;
 		}
 		return $fieldNames;
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exceptions
  */
-class FormException extends ObjectException {}
+class FormException extends ObjectException 
+{}

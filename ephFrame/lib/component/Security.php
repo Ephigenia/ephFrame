@@ -33,7 +33,8 @@ class Security extends AppComponent
 	 */
 	public $requirePost = array();
 	
-	public function requirePost($actions) {
+	public function requirePost($actions) 
+	{
 		if (is_array($actions)) { 
 			$this->requirePost = $actions;
 		} else {
@@ -42,7 +43,8 @@ class Security extends AppComponent
 		return $this;
 	}
 	
-	public function beforeAction() {
+	public function beforeAction() 
+	{
 		if (!empty($requirePost) &&
 			!$this->controller->request->isPost() &&
 			($this->requirePost == 'all' || is_array($this->requirePost) && in_array($this->controller->action, $this->requirePost)
@@ -51,5 +53,4 @@ class Security extends AppComponent
 		}
 		return parent::beforeAction();
 	}
-	
-} // END Security class 
+}

@@ -79,7 +79,8 @@ abstract class View extends Hash implements Renderable
 	 * View constructor
 	 * @return View
 	 */
-	public function __construct($path, $name = 'index', $data = null) {
+	public function __construct($path, $name = 'index', $data = null) 
+	{
 		$this->path = $path;
 		$this->name = $name;
 		if (is_object($data)) {
@@ -133,7 +134,8 @@ abstract class View extends Hash implements Renderable
 	 * @throws LayoutFileNotFoundException
 	 * @return string
 	 */
-	public function render() {
+	public function render() 
+	{
 		if (!$this->beforeRender()) return false;
 		foreach($this->data->toArray() as $___key => $___val) {
 			${$___key} = $___val;
@@ -164,7 +166,8 @@ abstract class View extends Hash implements Renderable
 	 * @param array $data array of variables available in the element
 	 * @return string
 	 */
-	public function element($name, Array $data = array()) {
+	public function element($name, Array $data = array()) 
+	{
 		// load Element class
 		class_exists('Element') or require dirname(__FILE__).'/Element.php';
 		// merge view data with element’s data

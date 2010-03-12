@@ -25,13 +25,14 @@ class_exists('FormField') or require(dirname(__FILE__).'/FormField.php');
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 04.11.2008
  */
-class FormFieldCheckbox extends FormField {
-	
+class FormFieldCheckbox extends FormField 
+{
 	public $mandatory = false;
 	
 	public $type = 'checkbox';
 	
-	public function checked($bool) {
+	public function checked($bool) 
+	{
 		if ($bool) {
 			$this->attributes->checked = 'checked';
 		} else {
@@ -40,15 +41,18 @@ class FormFieldCheckbox extends FormField {
 		return $this;
 	}
 	
-	public function check() {
+	public function check() 
+	{
 		return $this->checked(true);
 	}
 	
-	public function uncheck() {
+	public function uncheck() 
+	{
 		return $this->checked(false);
 	}
 	
-	public function value($value = null) {
+	public function value($value = null) 
+	{
 		if (func_num_args() == 0) {
 			if ($this->form->submitted() && !empty($this->form->request->data[$this->attributes->name])) {
 				if (!empty($this->attributes->value)) {
@@ -61,6 +65,5 @@ class FormFieldCheckbox extends FormField {
 			$this->attributes->value = $value;
 		}
 		return $this;
-	}
-	
+	}	
 }

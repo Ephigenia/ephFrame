@@ -28,15 +28,16 @@
  * @subpackage ephFrame.lib.helper
  * @version 0.1
  */
-class MimeTypes extends Helper {
-
+class MimeTypes extends Helper 
+{
 	/**
 	 * Returns the MIME-Type for the given $filename or file extension.
 	 * If no MIME-Type was found false is returned.
 	 * @param string $filenameOrExtension Filename or Extension
 	 * @return string|boolean
 	 */
-	public static function mimeType($filenameOrExtension) {
+	public static function mimeType($filenameOrExtension)
+	{
 		if (strpos($filenameOrExtension, '.') !== false) {
 			$extension = strtolower(substr(strrchr(basename($filenameOrExtension), '.'), 1));
 		} else {
@@ -48,7 +49,8 @@ class MimeTypes extends Helper {
 		return false;
 	}
 	
-	public static function get($filenameOrExtension) {
+	public static function get($filenameOrExtension)
+	{
 		return self::mimeType($filenameOrExtension);
 	}
 
@@ -57,7 +59,8 @@ class MimeTypes extends Helper {
 	 * @param string $filenameOrExtension
 	 * @return string|boolean
 	 */
-	public static function type($filenameOrExtension) {
+	public static function type($filenameOrExtension)
+	{
 		return self::mimeType($filenameOrExtension);
 	}
 
@@ -204,6 +207,5 @@ class MimeTypes extends Helper {
 		'asr'	=> 'video/x-ms-asf',
 		'asf'	=> 'video/x-ms-asf'
 		
-	);	
-
+	);
 }

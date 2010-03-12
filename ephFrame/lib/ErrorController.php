@@ -66,30 +66,18 @@ class ErrorController extends AppController
 		$this->layout = 'default';
 	}
 	
-	public function missingView($filename) {
+	public function missingView($filename) 
+	{
 		$this->set('filename', $filename);
 	}
 	
-	public function missingTable() {
+	public function missingTable() 
+	{
 		$this->set('tablename', $this->params['tablename']);
 	}
 	
-	public function missingDB() {
+	public function missingDB() 
+	{
 		$this->set('databaseName', $this->params['databaseName']);
-	}
-
-	/**
-	 * 
-	 */
-	public function index() {
-		/*
-		$exception = $this->data->exception;
-		if (Registry::get('DEBUG') != DEBUG_PRODUCTION) {
-			$this->action = 'exception';
-			// add custom exception pages here
-			switch (get_class($exception)) {
-				
-			} 
-		}*/
 	}
 }

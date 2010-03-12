@@ -30,8 +30,8 @@
  * @author Marcel Eichner // Ephiagenia <love@ephigenia.de>
  * @since 20.05.2008
  */
-class SearchQueryParser extends AppComponent {
-	
+class SearchQueryParser extends AppComponent 
+{
 	/**
 	 * @var string
 	 */
@@ -73,7 +73,8 @@ class SearchQueryParser extends AppComponent {
 	 * Pass the query string this method
 	 * @param string $queryString
 	 */
-	public function __construct($queryString) {
+	public function __construct($queryString) 
+	{
 		assert(is_string($queryString));
 		$this->query = $this->cleanUp($queryString);
 		$this->terms = $this->parse($this->query);
@@ -124,6 +125,5 @@ class SearchQueryParser extends AppComponent {
 	 */
 	private function cleanUp($queryString) {
 		return urldecode($queryString);
-	}
-	
+	}	
 }

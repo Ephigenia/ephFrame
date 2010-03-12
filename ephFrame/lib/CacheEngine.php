@@ -22,10 +22,11 @@
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-interface CacheEngine {
+interface CacheEngine 
+{
+	public function write($name, $value, $expire) 
+	{}
 	
-	public function write($name, $value, $expire) {}
-	
-	public function read($name) {}
-	
+	public function read($name) 
+	{}	
 }

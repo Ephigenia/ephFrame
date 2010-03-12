@@ -25,8 +25,7 @@ class_exists('FormField') or require dirname(__FILE__).'/FormField.php';
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 04.11.2008
  */
-class FormFieldText extends FormField {
-	
-	public $type = 'text';
-	
+class FormFieldText extends FormField 
+{
+	public $type = 'text';	
 }

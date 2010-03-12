@@ -28,8 +28,8 @@ class ConsoleStatusBar extends ConsoleWindow
 {	
 	public $drawBorder = false;
 	
-	public function __construct($x, $y, $width, $background) {
+	public function __construct($x, $y, $width, $background) 
+	{
 		return parent::__construct($x, $y, $width, 1, null, null, $background);
 	}
-
 }

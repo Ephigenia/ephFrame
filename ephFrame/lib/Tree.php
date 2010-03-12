@@ -70,7 +70,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * @param string|array	$valueOrInitialArray
 	 * @return Tree
 	 */
-	public function __construct($valueOrInitialArray = null) {
+	public function __construct($valueOrInitialArray = null) 
+	{
 		if (is_array($valueOrInitialArray)) {
 			$this->fromArray($valueOrInitialArray);
 		} elseif (!empty($valueOrInitialArray)) {
@@ -83,7 +84,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * Creates a new Child Instance and returns it
 	 * @return Tree
 	 */
-	public function newChild() {
+	public function newChild() 
+	{
 		$className = get_class($this);
 		$newChild = new $className();
 		$newChild->level = $this->level + 1;
@@ -95,7 +97,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * @param Tree $child
 	 * @return Tree
 	 */
-	public function addChild(Tree $child) {
+	public function addChild(Tree $child) 
+	{
 		$child->parent($this);
 		$child->index = count($this);
 		$this->children[] = &$child;
@@ -107,7 +110,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * @param Tree
 	 * @return Tree
 	 */
-	public function append(Tree $child) {
+	public function append(Tree $child) 
+	{
 		return $this->addChild($child);
 	}
 	
@@ -116,7 +120,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * @param Tree
 	 * @return Tree
 	 */
-	public function prepend(Tree $child) {
+	public function prepend(Tree $child) 
+	{
 		$child->parent($this);
 		array_unshift($this->children, $child);
 		// renumber children indexes
@@ -132,7 +137,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * @param Tree
 	 * @return Tree
 	 */
-	public function insertBefore(Tree $tree) {
+	public function insertBefore(Tree $tree) 
+	{
 		$tree->parent($this->parent);
 		$newChildren = array_slice($this->parent->children, 0, $this->index);
 		$newChildren[] = $tree;
@@ -149,7 +155,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * @param Tree
 	 * @return Tree
 	 */
-	public function insertAfter(Tree $tree) {
+	public function insertAfter(Tree $tree) 
+	{
 		$tree->parent($this->parent);
 		$newChildren = array_slice($this->parent->children, 0, $this->index+1);
 		$newChildren[] = $tree;
@@ -166,7 +173,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * node has no parent or could not be deleted.
 	 * @return boolean
 	 */
-	public function delete() {
+	public function delete() 
+	{
 		if (!$this->parent) return false;
 		foreach($this->parent->children as $index => $child) {
 			if ($child->index != $this->index) continue;
@@ -193,7 +201,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * @param Array(mixed) $input
 	 * @return Tree
 	 */
-	public function fromArray(Array $input) {
+	public function fromArray(Array $input) 
+	{
 		$className = get_class($this);
 		foreach ($input as $key => $value) {
 			$newChild = new $className($value);
@@ -242,7 +251,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * @param Tree	$parent
 	 * @return Tree
 	 */
-	final public function parent(Tree $parent = null) {
+	final public function parent(Tree $parent = null) 
+	{
 		if (func_num_args() == 0) return $this->parent;
 		$this->parent = $parent;
 		$this->updateLevel();
@@ -253,7 +263,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * Returns the Root Tree Element for this Tree Element
 	 * @return Tree
 	 */
-	final public function root(Tree $treeBranch = null) {
+	final public function root(Tree $treeBranch = null) 
+	{
 		if ($treeBranch === null) $treeBranch = $this;
 		if ($treeBranch->isRoot()) return $treeBranch;
 		return $this->root($this->getParent());
@@ -263,7 +274,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * Alias for {@link root}
 	 * @return Tree
 	 */
-	final public function getRoot() {
+	final public function getRoot() 
+	{
 		return $this->root();	
 	}
 	
@@ -273,7 +285,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * is returned
 	 * @param string $path
 	 */
-	final public function extract($path) {
+	final public function extract($path) 
+	{
 		class_exists('ArrayHelper') or require dirname(__FILE__).'helper/ArrayHelper.php';
 		return ArrayHelper::extract($this->hash, $path);
 	}
@@ -282,7 +295,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * Checks if this Tree Element is the Root Element
 	 * @return boolean
 	 */
-	final public function isRoot() {
+	final public function isRoot() 
+	{
 		return ($this->level === 0);
 	}
 	
@@ -291,7 +305,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * is the last one
 	 * @return boolean
 	 */
-	final public function isLast() {
+	final public function isLast() 
+	{
 		if ($this->isRoot()) return false;
 		if (empty($this->parent)) return false;
 		return (count($this->parent)-1) == $this->index;
@@ -302,7 +317,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 *
 	 * @return array(Tree)
 	 */
-	final public function children() {
+	final public function children() 
+	{
 		return $this->children;
 	}
 	
@@ -310,15 +326,18 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * Test if this Branch has Children
 	 * @return boolean
 	 */
-	final public function hasChildren() {
+	final public function hasChildren() 
+	{
 		return count($this->children()) !== 0;
 	}
 	
-	final public function isChild() {
+	final public function isChild() 
+	{
 		return ($this->level > 0 && !empty($this->parent));
 	}
 	
-	final public function isParent() {
+	final public function isParent() 
+	{
 		return ($this->level === 0 && empty($this->parent));
 	}
 	
@@ -326,7 +345,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * Returns the first Child if found
 	 * @return Tree|boolean
 	 */
-	final public function firstChild() {
+	final public function firstChild() 
+	{
 		if (count($this) > 0) {
 			return $this->children[0];	
 		}
@@ -337,7 +357,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * Returns the child by index of the child
 	 * @param integer	$index
 	 */
-	final public function getByIndex($index) {
+	final public function getByIndex($index) 
+	{
 		if (!is_integer()) throw new IntegerExpectedException();
 		if (count($this) != $index) {
 			throw new TreeIndexNotFoundException($this, $index);
@@ -349,7 +370,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * Returns the Path to this child
 	 * @return string
 	 */
-	public function path() {
+	public function path() 
+	{
 		$path = '';
 		if ($this->parent()) {
 			$path .= $this->parent()->path().' > ';
@@ -363,7 +385,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * you need the very first child
 	 * @return Tree
 	 */
-	final public function lastChild() {
+	final public function lastChild() 
+	{
 		if (count($this) > 0) {
 			return $this->children(count($this)-1);
 		}
@@ -374,7 +397,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * Returns the rendered Tree as a string
 	 * @return string
 	 */
-	public function render() {
+	public function render() 
+	{
 		if (!$this->beforeRender()) return false;
 		$rendered = '';
 		if (!$this->isRoot()) {
@@ -396,11 +420,13 @@ class Tree extends Object implements Countable, Iterator, Renderable
 		return $this->afterRender($rendered);
 	}
 	
-	public function beforeRender() {
+	public function beforeRender() 
+	{
 		return true;
 	}
 	
-	public function afterRender($rendered) {
+	public function afterRender($rendered) 
+	{
 		return $rendered;
 	}
 	
@@ -408,7 +434,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * Returns the Tree rendered
 	 * @return string
 	 */
-	public function __toString() {
+	public function __toString() 
+	{
 		return $this->render();
 	}
 	
@@ -418,7 +445,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * not counted!
 	 * @return integer
 	 */
-	public function count() {
+	public function count() 
+	{
 		return count($this->children);
 	}
 
@@ -426,7 +454,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * Part of countable interface integration
 	 * @return boolean
 	 */
-	public function rewind() {
+	public function rewind() 
+	{
 		$this->iteratorPosition = 0;
 		reset($this->children);
 		return true;
@@ -436,7 +465,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * Part of countable interface integration
 	 * @return Tree
 	 */
-	public function next() {
+	public function next() 
+	{
 		$this->iteratorPosition++;
 		next($this->children);
 	}
@@ -444,7 +474,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	/**
 	 * @return integer
 	 */
-	public function key() {
+	public function key() 
+	{
 		return key($this->children);
 	}
 
@@ -452,7 +483,8 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * Part of countable interface integration
 	 * @return Tree
 	 */
-	public function current() {
+	public function current() 
+	{
 		return current($this->children);
 	}
 
@@ -460,10 +492,10 @@ class Tree extends Object implements Countable, Iterator, Renderable
 	 * Part of countable interface integration
 	 * @return boolean
 	 */
-	public function valid() {
+	public function valid() 
+	{
 		return ($this->iteratorPosition < $this->count());
-	}
-	
+	}	
 }
 
 /**
@@ -479,7 +511,8 @@ class TreeException extends ComponentException
  */
 class TreeIndexNotFoundException extends TreeException
 {
-	public function __construct(Tree $tree, $index) {
+	public function __construct(Tree $tree, $index) 
+	{
 		$this->message = 'There was no index like '.var_export($index, true).' in this Tree.';
 		parent::__construct();
 	}

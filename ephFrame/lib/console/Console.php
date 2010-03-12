@@ -60,7 +60,8 @@ class Console extends Object
 	 * @param integer $backgroundColor
 	 * @return boolean
 	 */
-	public function __construct($textColor = null, $backgroundColor = null) {
+	public function __construct($textColor = null, $backgroundColor = null) 
+	{
 		$this->textFormat = array_merge($this->textFormat, array(
 			'color' => $textColor == null ? self::COL_DEFAULT : $textColor,
 			'backgroundColor' => $backgroundColor == null ? self::COL_DEFAULT : $backgroundColor,
@@ -153,7 +154,8 @@ class Console extends Object
 	 * @param string $str
 	 * @return Console
 	 */
-	public function error($str) {
+	public function error($str) 
+	{
 		fputs(STDERR, $str);
 		return $this;
 	}
@@ -163,7 +165,8 @@ class Console extends Object
 	 * @param string $str
 	 * @return Console
 	 */
-	public function out($str, $newline = true) {
+	public function out($str, $newline = true) 
+	{
 		if ($newline) $str .= LF;
 		fputs(STDOUT, $str);
 		return $this;
@@ -176,7 +179,8 @@ class Console extends Object
 	 * @param integer $length Length of the line
 	 * @param string $character
 	 */
-	public function line($color = null, $backgroundColor = null, $length = 80, $character = '-') {
+	public function line($color = null, $backgroundColor = null, $length = 80, $character = '-') 
+	{
 		return $this->write(str_repeat($character, $length), $color, $backgroundColor);
 	}
 	
@@ -254,4 +258,5 @@ class Console extends Object
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ConsoleException extends Exception {}
+class ConsoleException extends Exception 
+{}

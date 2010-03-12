@@ -30,8 +30,8 @@ interface_exists('CacheEngine') or require dirname(__FILE__).'/CacheEngine.php';
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class Cache extends Object {
-	
+class Cache extends Object 
+{
 	/**
 	 * Stores instance of cache writers
 	 * @var CacheEngine
@@ -44,32 +44,37 @@ class Cache extends Object {
 	 * create a new cache
 	 * @return Cache
 	 */
-	public function __construct($enginename) {
+	public function __construct($enginename) 
+	{
 		parent::__construct();
 		$this->engine($enginename);
 		return $this;
 	}
 	
-	public function engine(CacheEngine $engine) {
+	public function engine(CacheEngine $engine) 
+	{
 		
 	}
 	
-	public function read($name) {
+	public function read($name) 
+	{
 		return $this->engine->read($name);
 	}
 	
-	public function write($name, $data, $expire) {
+	public function write($name, $data, $expire)
+	{
 		
 	}
 	
-	public function garbageCollect() {
+	public function garbageCollect()
+	{
 		
 	}
-	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class CacheException extends BasicException {}
+class CacheException extends BasicException 
+{}

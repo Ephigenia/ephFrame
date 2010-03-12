@@ -23,10 +23,10 @@
  * @package ephFrame
  * @subpackage ephFrame.lib.model.DB
  */
-interface DBInterface {
-	
+interface DBInterface 
+{	
 	public function query($query);
-	
+		
 	public function errorNo();
 	
 	public function errorMessage();
@@ -36,5 +36,4 @@ interface DBInterface {
 	public function beforeConnect();
 	
 	public function afterConnect();
-	
 }

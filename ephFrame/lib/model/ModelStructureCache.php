@@ -39,7 +39,8 @@ class ModelStructureCache extends Object
 	
 	protected $fileExtension = 'structure.json';
 	
-	public function __construct($model, $ttl = HOUR) {
+	public function __construct($model, $ttl = HOUR) 
+	{
 		$this->model = $model;
 		$this->ttl = $ttl;
 		$this->filename = MODELCACHE_DIR.$this->model->tablename.'.'.$this->fileExtension;
@@ -50,7 +51,8 @@ class ModelStructureCache extends Object
 		return (filemtime($this->filename) + $this->ttl) > time();
 	}
 	
-	public function load() {
+	public function load() 
+	{
 		if (isset(self::$cache[$this->model->name])) {
 			return self::$cache[$this->model->name];
 		}
@@ -66,7 +68,8 @@ class ModelStructureCache extends Object
 		return false;
 	}
 	
-	public function save(Array $structure = array()) {
+	public function save(Array $structure = array()) 
+	{
 		if (!file_exists(MODELCACHE_DIR) || !is_dir(MODELCACHE_DIR)) {
 			throw new ModelStructureCacheDirNotFoundException(MODELCACHE_DIR);
 		} elseif (!is_writable(MODELCACHE_DIR)) {
@@ -79,21 +82,22 @@ class ModelStructureCache extends Object
 		Log::write(Log::VERBOSE, 'ephFrame: '.get_class($this).' structure stored in model cache.');
 		self::$cache[$this->model->name] = $structure;
 		return true;
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ModelStructureCacheException extends ObjectException {}
+class ModelStructureCacheException extends ObjectException 
+{}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ModelStructureCacheDirException extends ModelStructureCacheException {
+class ModelStructureCacheDirException extends ModelStructureCacheException 
+{
 	public $dir;
 }
 
@@ -101,8 +105,10 @@ class ModelStructureCacheDirException extends ModelStructureCacheException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ModelStructureCacheDirNotFoundException extends ModelStructureCacheDirException {
-	public function __construct($dir) {
+class ModelStructureCacheDirNotFoundException extends ModelStructureCacheDirException 
+{
+	public function __construct($dir) 
+	{
 		$this->dir = $dir;
 		parent::__construct('Model cache directory could not be found \''.$dir.'\'.');
 	}
@@ -112,8 +118,10 @@ class ModelStructureCacheDirNotFoundException extends ModelStructureCacheDirExce
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ModelStructureCacheDirNotWritableException extends ModelStructureCacheDirException {
-	public function __construct($dir) {
+class ModelStructureCacheDirNotWritableException extends ModelStructureCacheDirException 
+{
+	public function __construct($dir) 
+	{
 		$this->dir = $dir;
 		parent::__construct('Model cache directory is not writable \''.$dir.'\'.');
 	}

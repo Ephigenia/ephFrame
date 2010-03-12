@@ -25,8 +25,8 @@ class_exists('FormField') or require(dirname(__FILE__).'/FormField.php');
  * @package ephFrame
  * @subpackage ephFrame.lib.component.Form.Field
  */
-class FormFieldDropDown extends FormField {
-	
+class FormFieldDropDown extends FormField 
+{
 	public $type = 'dropDown';
 	
 	public $multiple = false;
@@ -37,7 +37,8 @@ class FormFieldDropDown extends FormField {
 	
 	public $size = 1;
 	
-	public function __construct($name, $value = null, Array $attributes = array()) {
+	public function __construct($name, $value = null, Array $attributes = array()) 
+	{
 		if (!isset($attributes['size'])) {
 			$attributes['size'] = &$this->size;
 		} else {
@@ -50,7 +51,8 @@ class FormFieldDropDown extends FormField {
 		return $this;
 	}
 	
-	public function addOption($value = null, $label = null) {
+	public function addOption($value = null, $label = null) 
+	{
 		if ($value == null) {
 			$value = $label;
 		}
@@ -62,14 +64,16 @@ class FormFieldDropDown extends FormField {
 		return $this;
 	}
 	
-	public function beforeRender() {
+	public function beforeRender() 
+	{
 		if ($this->attributes->multiple && substr($this->attributes->name, -2) != '[]') {
 			$this->attributes->name .= '[]';
 		}
 		return parent::beforeRender();
 	}
 	
-	public function value($value = null) {
+	public function value($value = null) 
+	{
 		if (func_num_args() == 1) {
 			if (is_array($value)) {
 				foreach($value as $key => $val) {
@@ -95,11 +99,13 @@ class FormFieldDropDown extends FormField {
 		return parent::value();
 	}
 	
-	public function select($value) {
+	public function select($value) 
+	{
 		return $this->value($value);
 	}
 	
-	public function options(Array $options = array()) {
+	public function options(Array $options = array()) 
+	{
 		$this->options = array();
 		foreach($options as $value => $label) {
 			$this->addOption($value, $label);
@@ -107,8 +113,8 @@ class FormFieldDropDown extends FormField {
 		return $this;
 	}
 	
-	public function addOptions(Array $options = array()) {
+	public function addOptions(Array $options = array()) 
+	{
 		return $this->options($options);
-	}
-	
+	}	
 }

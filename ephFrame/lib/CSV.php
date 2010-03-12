@@ -55,8 +55,8 @@ class_exists('File') or require dirname(__FILE__).'/File.php';
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class CSV extends File implements Renderable, Iterator, Countable {
-
+class CSV extends File implements Renderable, Iterator, Countable 
+{
 	/**
 	 * CSV File Content, Don't touch
 	 * @var array(array(string))
@@ -88,7 +88,8 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	 * @param string|array	$seperator
 	 * @return CSV
 	 */
-	public function __construct($filename = null, $seperator = null) {
+	public function __construct($filename = null, $seperator = null) 
+	{
 		$this->recreateLineRegExp();
 		if (is_array($filename)) {
 			$this->data = $filename;
@@ -109,7 +110,8 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	 * @param array|string
 	 * @return array
 	 */
-	public function seperator($seperator = null) {
+	public function seperator($seperator = null) 
+	{
 		if (func_num_args() == 0) return $this->seperators;
 		if (func_num_args() > 1) {
 			$args = func_get_args();
@@ -187,11 +189,13 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	 * is reached
 	 * @return array(array(string))
 	 */
-	public function read() {
+	public function read() 
+	{
 		return $this->parseLine(parent::read());
 	}
 	
-	public function toArray() {
+	public function toArray() 
+	{
 		$r = array();
 		while($d = $this->read()) {
 			$r[] = $d;
@@ -199,7 +203,8 @@ class CSV extends File implements Renderable, Iterator, Countable {
 		return $r;
 	}
 	
-	public function toCSV() {
+	public function toCSV() 
+	{
 		return $this->render();
 	}
 	
@@ -207,7 +212,8 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	 * {@link render} callback
 	 * @return boolean
 	 */
-	public function beforeRender() {
+	public function beforeRender() 
+	{
 		return true;
 	}
 	
@@ -216,7 +222,8 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	 * @param string $rendered
 	 * @return string
 	 */
-	public function afterRender($rendered) {
+	public function afterRender($rendered) 
+	{
 		return $rendered;
 	}
 
@@ -226,7 +233,8 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	 * the first from the {@link seperators} array
 	 * @return string
 	 */
-	public function render() {
+	public function render() 
+	{
 		$rendered = '';
 		if (!$this->beforeRender()) return $rendered;
 		$firstSeperator = reset($this->seperators);
@@ -241,11 +249,13 @@ class CSV extends File implements Renderable, Iterator, Countable {
 		return $this->afterRender($rendered);
 	}
 	
-	public function __toString() {
+	public function __toString() 
+	{
 		return $this->render();
 	}
 		
-	public function addRow($args) {
+	public function addRow($args) 
+	{
 		if (func_num_args() > 1) {
 			$args = func_get_args();
 		}
@@ -256,7 +266,8 @@ class CSV extends File implements Renderable, Iterator, Countable {
 		return $this;
 	}
 
-	public function append($string) {
+	public function append($string) 
+	{
 		$args = func_get_args();
 		return $this->callMethod('addRow', $args);
 	}
@@ -264,7 +275,8 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	/**
 	 * Saves the contents to the filename set
 	 */
-	public function save() {
+	public function save() 
+	{
 		return parent::write($this->render());
 	}
 
@@ -272,7 +284,8 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	 * Saves conents in the given File
 	 * @param string	$filename
 	 */
-	public function saveAs($filename) {
+	public function saveAs($filename) 
+	{
 		$classname = get_class($this);
 		$newFile = new $classname($filename);
 		$newFile->write($this->render());
@@ -283,42 +296,48 @@ class CSV extends File implements Renderable, Iterator, Countable {
 	 * Returns the number of lines 
 	 * @return integer
 	 */
-	public function count() {
+	public function count() 
+	{
 		// if (empty($this->data)) $this->read();
 		return count($this->data);
 	}
 
-	public function rewind() {
+	public function rewind() 
+	{
 		$this->iteratorPosition = 0;
 		// if (empty($this->data)) $this->read();
 		reset($this->data);
 		return true;
 	}
 
-	public function next() {
+	public function next() 
+	{
 		// if (empty($this->data)) $this->read();
 		$this->iteratorPosition++;
 		next($this->data);
 	}
 
-	public function key() {
+	public function key() 
+	{
 		// if (empty($this->data)) $this->read();
 		return key($this->data);
 	}
 
-	public function current() {
+	public function current() 
+	{
 		if (empty($this->data)) return false;
 		return current($this->data);
 	}
 
-	public function valid() {
+	public function valid() 
+	{
 		return ($this->iteratorPosition < count($this));
 	}
-
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class CSVException extends BasicException {}
+class CSVException extends BasicException 
+{}

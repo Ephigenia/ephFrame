@@ -95,14 +95,16 @@ class CSS extends AppComponent implements Renderable
 	 */
 	public $dirs = array('static/css/');
 	
-	public function clear() {
+	public function clear() 
+	{
 		$this->files = new Collection();
 		$this->urls = new Collection();
 		$this->plain = array();
 		return $this;
 	}
 	
-	public function startup() {
+	public function startup() 
+	{
 		$this->clear();
 		$this->controller->set('CSS', $this);
 		return parent::startup();
@@ -116,7 +118,8 @@ class CSS extends AppComponent implements Renderable
 	 * @param string $css
 	 * @return CSS
 	 */
-	public function add($css) {
+	public function add($css) 
+	{
 		if (!in_array($css, $this->plain)) {
 			$this->plain[] = $css;
 		}
@@ -134,7 +137,8 @@ class CSS extends AppComponent implements Renderable
 	 * @param string $filename
 	 * @return JavaScript
 	 */
-	public function addFile($filename) {
+	public function addFile($filename) 
+	{
 		$args = func_get_args();
 		if (is_array($filename)) {
 			$args = $filename;
@@ -158,7 +162,8 @@ class CSS extends AppComponent implements Renderable
 	 * @param $files
 	 * @return JavaScript
 	 */
-	public function addFiles($files) {
+	public function addFiles($files) 
+	{
 		$args = func_get_args();
 		return $this->callMethod('addFile', $args);
 	}
@@ -168,12 +173,14 @@ class CSS extends AppComponent implements Renderable
 	 * @param $files
 	 * @return JavaScript
 	 */
-	public function link($filename) {
+	public function link($filename) 
+	{
 		$args = func_get_args();
 		return $this->callMethod('addFile', $args);
 	}
 	
-	public function render() {
+	public function render() 
+	{
 		if (!$this->beforeRender()) return false;
 		$rendered = '';
 		// render include tags for css files
@@ -202,7 +209,8 @@ class CSS extends AppComponent implements Renderable
 		return $this->afterRender($rendered);
 	}
 	
-	public function beforeRender(Controller $controller = null) {
+	public function beforeRender(Controller $controller = null) 
+	{
 		if ($controller instanceof Controller) return parent::beforeRender($controller);
 		// add themed dir if theme is set in controller
 		if (!empty($this->controller->theme)) {
@@ -227,5 +235,4 @@ class CSS extends AppComponent implements Renderable
 		}
 		return parent::beforeRender($controller);
 	}
-
 }

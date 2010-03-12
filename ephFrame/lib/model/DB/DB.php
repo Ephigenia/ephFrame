@@ -32,8 +32,8 @@ ephFrame::loadInterface('ephFrame.lib.model.DB.DBInterface');
  * @subpackage ephFrame.lib.model.DB
  * @version 0.2
  */
-abstract class DB extends Object implements DBInterface {
-	
+abstract class DB extends Object implements DBInterface
+{	
 	/**
 	 * Stores the current {@link DBDSN} for this DAO
 	 * @var DBDSN
@@ -59,7 +59,8 @@ abstract class DB extends Object implements DBInterface {
 	 * their performance.
 	 * @return DAO
 	 */
-	final public function __construct() {
+	final public function __construct() 
+	{
 		$this->DBDSN = new DBDSN('');
 		$this->queries = new QueryHistory();
 		return $this;
@@ -69,7 +70,8 @@ abstract class DB extends Object implements DBInterface {
 	 * Tests if the DAO has established a connection
 	 * @return boolean
 	 */
-	public function connected() {
+	public function connected() 
+	{
 		return is_resource($this->connectionHandle);
 	}
 	
@@ -78,7 +80,8 @@ abstract class DB extends Object implements DBInterface {
 	 * if not.
 	 * @throws DBNotConnectedException
 	 */
-	public function checkConnection() {
+	public function checkConnection() 
+	{
 		if (!$this->connected()) {
 			throw new DBNotConnectedException();
 		}
@@ -90,7 +93,8 @@ abstract class DB extends Object implements DBInterface {
 	 * @param DBDSN $dbdsn
 	 * @return DAO
 	 */
-	public function connect(DBDSN $dbdsn) {
+	public function connect(DBDSN $dbdsn) 
+	{
 		$this->DBDSN = $dbdsn;
 		if (!$this->beforeConnect()) return false;
 		return $this;
@@ -102,7 +106,8 @@ abstract class DB extends Object implements DBInterface {
 	 * returns false.
 	 * @return boolean
 	 */
-	public function beforeConnect() {
+	public function beforeConnect() 
+	{
 		return true;	
 	}
 	
@@ -111,7 +116,8 @@ abstract class DB extends Object implements DBInterface {
 	 * in your subclasses.
 	 * @return DAO
 	 */
-	public function afterConnect() {
+	public function afterConnect() 
+	{
 		if ($this->DBDSN->db()) {
 			$this->selectDB($this->DBDSN->db());
 		}
@@ -126,7 +132,8 @@ abstract class DB extends Object implements DBInterface {
 	 * @param DBDSN $dbdsn
 	 * @return DBDSN
 	 */
-	public function DBDSN(DBDSN $dbdsn = null) {
+	public function DBDSN(DBDSN $dbdsn = null) 
+	{
 		return $this->__getOrSet('DBDSN', $dbdsn);
 	}
 	
@@ -134,7 +141,8 @@ abstract class DB extends Object implements DBInterface {
 	 * Callback called before Query is send to the database
 	 * @param string
 	 */
-	public function beforeQuery($query) {
+	public function beforeQuery($query) 
+	{
 		$this->checkConnection();
 		if (!empty($query)) return $query;
 		return false;
@@ -145,7 +153,8 @@ abstract class DB extends Object implements DBInterface {
 	 * @param string|DBQuery $query
 	 * @return QueryResult
 	 */
-	public function query($query) { }
+	public function query($query) 
+	{ }
 	
 	/**
 	 * Locks a table
@@ -153,7 +162,8 @@ abstract class DB extends Object implements DBInterface {
 	 * @param string $tablename
 	 * @return boolean
 	 */
-	public function lockTable($tablename) {
+	public function lockTable($tablename) 
+	{
 		$this->query('LOCK TABLE '.$tablename.';');
 		return true;
 	}
@@ -164,7 +174,8 @@ abstract class DB extends Object implements DBInterface {
 	 * @param string $tablename
 	 * @return boolean
 	 */
-	public function unlockTable($tablename) {
+	public function unlockTable($tablename) 
+	{
 		$this->query('UNLOCK TABLE '.$tablename.';');
 		return true;
 	}
@@ -173,34 +184,40 @@ abstract class DB extends Object implements DBInterface {
 	 * Returns the last id of the item that was inserted
 	 * @return integer
 	 */
-	public function lastInsertId() {}
+	public function lastInsertId() 
+	{}
 	
 	/**
 	 * Select a specific database
 	 * @param string $dbname
 	 * @return boolean
 	 */
-	public function selectDB($dbname = null) { }
+	public function selectDB($dbname = null) 
+	{ }
 	
 	/**
 	 * Returns the code for the last error that occured
 	 * @return integer|boolean
 	 */
-	public function errorNo() { }
+	public function errorNo() 
+	{ }
 	
 	/**
 	 * Returns the message of the last error occured
 	 * @return string
 	 */
-	public function errorMessage() { }
+	public function errorMessage() 
+	{ }
 	
-	public function disconnect() { }
+	public function disconnect() 
+	{ }
 	
 	/**
 	 * Returns a {@link Hash} with all table columns and information about them
 	 * @return Hash
 	 */
-	public function describe($tablename) {
+	public function describe($tablename) 
+	{
 		if (!class_exists('DBDescribeQuery')) {
 			ephFrame::loadClass('ephFrame.lib.model.DB.DBDescribeQuery');
 		}
@@ -213,26 +230,29 @@ abstract class DB extends Object implements DBInterface {
 	 * Returns the last query performed
 	 * @return DBQuery
 	 */
-	final public function lastQuery() {
+	final public function lastQuery() 
+	{
 		return $this->queries->last();
 	}
 	
-	public function __destroy() {
+	public function __destroy() 
+	{
 		if ($this->connected()) {
 			$this->disconnect();
 		}
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class DBException extends BasicException { }
+class DBException extends BasicException 
+{ }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class DBNotConnectedException extends DBException {}
+class DBNotConnectedException extends DBException 
+{}

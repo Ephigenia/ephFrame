@@ -110,7 +110,8 @@ class OptParse extends Object
 	 * @param array(string)
 	 * @return OptParse
 	 */
-	public function __construct(Array $args = array()) {
+	public function __construct(Array $args = array()) 
+	{
 		if (func_num_args() == 1) {
 			$this->rawArgs = $args;
 		} else {
@@ -128,7 +129,8 @@ class OptParse extends Object
 	 * @var array(string)
 	 * @return OptParse
 	 */
-	public function addOption(Array $optionInfo) {
+	public function addOption(Array $optionInfo) 
+	{
 		if (isset($optionInfo) && !in_array($optionInfo['type'], $this->validTypes)) {
 			throw new OptParseInvalidTypeException($this, $optionInfo['type']);
 		}
@@ -180,7 +182,8 @@ class OptParse extends Object
 	 * Returns a usage Message for this ArgParser Options
 	 * @param integer $width
 	 */
-	public function usage($width = 80) {
+	public function usage($width = 80) 
+	{
 		$r = 'Usage: '.basename($_SERVER['PHP_SELF']);
 		if ($this->usage) {
 			$r .= ' '.$this->usage;
@@ -199,7 +202,8 @@ class OptParse extends Object
 	 * Parses the arguments and returns an array of options and arguments
 	 * @return array(mixed)
 	 */
-	public function parse() {
+	public function parse() 
+	{
 		// parse all arguments from the rawArguments array
 		for($i = 0; $i < count($this->rawArgs); $i++) {
 			// --[argumentname]=[value]
@@ -268,7 +272,8 @@ class OptParse extends Object
 		return false;
 	}
 	
-	public function setOption($name, $value = null) {
+	public function setOption($name, $value = null) 
+	{
 		// try to find the arguments name in the options array
 		if ($optionInfo = $this->getOptionDefinition($name)) {
 			// special type of args, defined in the {@link options}
@@ -347,26 +352,29 @@ class OptParse extends Object
 	 * Flushes the info stored in the ArgParser
 	 * @return ArgParser
 	 */
-	public function flush() {
+	public function flush() 
+	{
 		$this->arguments = array();
 		$this->rawArgs = array();
 		return $this;
 	}
-	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class OptParseException extends Exception {}
+class OptParseException extends Exception 
+{}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class OptParseInvalidTypeException extends OptParseException {
-	public function __construct(OptParse $optParse, $optionType) {
+class OptParseInvalidTypeException extends OptParseException 
+{
+	public function __construct(OptParse $optParse, $optionType) 
+	{
 		$message = sprintf('Invalid type of option passed in option info array. \'%s\' is not a valid OptParse option type', $optionType);
 		parent::__construct($message);
 	}

@@ -84,8 +84,8 @@ class_exists('String') or require dirname(__FILE__).'/../helper/String.php';
  * @uses Dir
  * @uses String
  */
-class FileStorageComponent extends AppComponent {
-	
+class FileStorageComponent extends AppComponent 
+{
 	/**
 	 * Root directory the store stores the files
 	 * @var string
@@ -124,7 +124,8 @@ class FileStorageComponent extends AppComponent {
 	 * @param string $storageName
 	 * @return FileComponent
 	 */
-	public function get($storageName) {
+	public function get($storageName) 
+	{
 		return new File($this->translate($storageName));
 	}
 	
@@ -133,7 +134,8 @@ class FileStorageComponent extends AppComponent {
 	 * @param string $storageName
 	 * @return boolean
 	 */
-	public function isStored($storageName) {
+	public function isStored($storageName) 
+	{
 		$internalFileName = $this->root.$this->translate($storageName);
 		if (file_exists($internalFileName) && is_file($internalFileName)) {
 			return true;
@@ -147,7 +149,8 @@ class FileStorageComponent extends AppComponent {
 	 * @param string $storeName
 	 * @return boolean
 	 */
-	public function exists($storageName) {
+	public function exists($storageName) 
+	{
 		return file_exists($this->root.$this->translate($storageName));
 	}
 	
@@ -161,7 +164,8 @@ class FileStorageComponent extends AppComponent {
 	 * @param boolean $copy copy the file instead of moving
 	 * @return string new filename in the storage
 	 */
-	public function store($filename, $storageName, $overwrite = false, $copy = false) {
+	public function store($filename, $storageName, $overwrite = false, $copy = false) 
+	{
 		assert(is_string($filename) && is_string($storageName));
 		if (!$this->beforeStore($filename)) {
 			return false;
@@ -196,7 +200,8 @@ class FileStorageComponent extends AppComponent {
 	 * @param string $filename
 	 * @return boolean
 	 */
-	public function beforeStore($filename) {
+	public function beforeStore($filename) 
+	{
 		return true;
 	}
 	
@@ -205,7 +210,8 @@ class FileStorageComponent extends AppComponent {
 	 * @param string $filename
 	 * @return string
 	 */
-	public function translate($externalFilename) {
+	public function translate($externalFilename) 
+	{
 		// preparations
 		if (substr($this->root, -1, 1) != DS) {
 			$this->root .= DS;
@@ -274,7 +280,8 @@ class FileStorageComponent extends AppComponent {
 	 * @param string
 	 * @return boolean
 	 */
-	public function delete($storeName) {
+	public function delete($storeName) 
+	{
 		@unlink($this->root.$this->translate($storeName));
 	}
 	
@@ -283,24 +290,27 @@ class FileStorageComponent extends AppComponent {
 	 * @param string
 	 * @return boolean
 	 */
-	public function remove($filename) {
+	public function remove($filename) 
+	{
 		return $this->delete($filename);
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class FileStorageComponentException extends ComponentException {}
+class FileStorageComponentException extends ComponentException 
+{}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class FileStorageComponentRootNotFoundException extends FileStorageComponentException {
-	public function __construct(Directory $root) {
+class FileStorageComponentRootNotFoundException extends FileStorageComponentException 
+{
+	public function __construct(Directory $root) 
+	{
 		parent::__construct('Unable to find root of file storage component \''.$root->nodeName.'\'');
 	}
 }
@@ -309,8 +319,10 @@ class FileStorageComponentRootNotFoundException extends FileStorageComponentExce
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class FileStorageComponentFileAllreadyStoredException extends FileStorageComponentException {
-	public function __construct($filepath) {
+class FileStorageComponentFileAllreadyStoredException extends FileStorageComponentException 
+{
+	public function __construct($filepath) 
+	{
 		parent::__construct('There\'s allready a file stored with this name: \''.$filepath.'\'.');
 	}
 }
@@ -319,4 +331,5 @@ class FileStorageComponentFileAllreadyStoredException extends FileStorageCompone
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class FileStorageComponentTranslationException extends FileStorageComponentException {}
+class FileStorageComponentTranslationException extends FileStorageComponentException 
+{}

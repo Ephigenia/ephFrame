@@ -25,8 +25,8 @@
  * @package ephFrame
  * @subpackage ephFrame.lib.helper
  */
-abstract class Helper extends Object {
-
+abstract class Helper extends Object
+{	
 	protected $controller;
 	
 	/**
@@ -35,19 +35,22 @@ abstract class Helper extends Object {
 	 */
 	public $helpers = array();
 
-	public function __construct($controller = null) {
+	public function __construct($controller = null) 
+	{
 		if (is_object($controller))	$this->controller = $controller;
 		$this->__mergeParentProperty('helpers');
 		$this->init();
 		return $this;
 	}
 	
-	public function init() {
+	public function init() 
+	{
 		$this->initHelpers();
 		return true;
 	}
 	
-	public function startup() {
+	public function startup() 
+	{
 		return true;
 	}
 	
@@ -62,20 +65,23 @@ abstract class Helper extends Object {
 		return true;
 	}
 	
-	public function beforeAction() {
+	public function beforeAction() 
+	{
 		return true;
 	}
 	
-	public function afterAction() {
+	public function afterAction() 
+	{
 		return true;
 	}
 	
-	public function beforeRender() {
+	public function beforeRender() 
+	{
 		return true;
 	}
 	
-	public function afterRender($content = null) {
+	public function afterRender($content = null) 
+	{
 		return $content;
 	}
-	
-} // END Helper class
+}

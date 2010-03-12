@@ -28,8 +28,8 @@
  * @abstract 
  * @subpackage ephFrame.lib
  */
-abstract class FileSystemNode extends Object {
-	
+abstract class FileSystemNode extends Object
+{	
 	/**
 	 * Stores the name of this FileSystemNode
 	 * @var string
@@ -45,7 +45,8 @@ abstract class FileSystemNode extends Object {
 	/**
 	 * 
 	 */
-	public function __construct($nodeName) {
+	public function __construct($nodeName) 
+	{
 		$nodeName = trim($nodeName);
 		if (empty($nodeName)) throw new StringExpectedException();
 		$this->nodeName = $nodeName;
@@ -59,7 +60,8 @@ abstract class FileSystemNode extends Object {
 	 * @param string $name
 	 * @return boolean
 	 */
-	public function isHidden($name = null) {
+	public function isHidden($name = null) 
+	{
 		if ($name === null) {
 			$name = $this->nodeName;
 		}
@@ -71,7 +73,8 @@ abstract class FileSystemNode extends Object {
 		return false;
 	}
 	
-	public function __toString() {
+	public function __toString() 
+	{
 		return $this->nodeName;
 	}
 	
@@ -81,7 +84,8 @@ abstract class FileSystemNode extends Object {
 	 * @return File|integer
 	 * @throws FileSystemNodeNotChmodableException
 	 */
-	public function chmod($chmod = null) {
+	public function chmod($chmod = null) 
+	{
 		$this->checkExistence();
 		if (func_num_args() == 0) {
 			return fileperms($this->nodeName);
@@ -99,7 +103,8 @@ abstract class FileSystemNode extends Object {
 	 * @return FileSystemNode|string
 	 * @throws FileNotChownableException if chown does not work
 	 */
-	public function chown($user = null) {
+	public function chown($user = null) 
+	{
 		$this->checkExistence();
 		if (func_num_args() == 0) {
 			return fileowner($this->filename);	
@@ -116,7 +121,8 @@ abstract class FileSystemNode extends Object {
 	 * @param string $owner
 	 * @return File|string
 	 */
-	public function owner($owner = null) {
+	public function owner($owner = null) 
+	{
 		return $this->chown($owner);
 	}
 	
@@ -124,7 +130,8 @@ abstract class FileSystemNode extends Object {
 	 * Checks if the file is readable
 	 * @return boolean
 	 */
-	public function readable() {
+	public function readable() 
+	{
 		if (!$this->exists()) return false;
 		return is_readable($this->nodeName);
 	}
@@ -133,7 +140,8 @@ abstract class FileSystemNode extends Object {
 	 * Checks if a file is writables
 	 * @return boolean
 	 */
-	public function writable() {
+	public function writable() 
+	{
 		return is_writable($this->nodeName);
 	}
 	
@@ -141,11 +149,13 @@ abstract class FileSystemNode extends Object {
 	 * Checks if th file exists
 	 * @return boolean
 	 */
-	public function exists() {
+	public function exists() 
+	{
 		return (file_exists($this->nodeName));
 	}
 	
-	public function checkExistence() {
+	public function checkExistence() 
+	{
 		if (!$this->exists()) {
 			throw new FileSystemNodeNotFoundException($this);
 			return false;
@@ -158,7 +168,8 @@ abstract class FileSystemNode extends Object {
 	 * @return integer Timestamp of last modification
 	 * @throws FileNotFoundException
 	 */
-	public function lastModified() {
+	public function lastModified() 
+	{
 		return filemtime($this->nodeName);
 	}
 	
@@ -167,30 +178,34 @@ abstract class FileSystemNode extends Object {
 	 * @return integer	Timestamp
 	 * @throws FileNotFoundException
 	 */
-	public function created() {
+	public function created() 
+	{
 		return filectime($this->nodeName);
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class FileSystemNodeException extends BasicException {}
+class FileSystemNodeException extends BasicException 
+{}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class FileSystemNodeNotFoundException extends FileSystemNodeException {}
+class FileSystemNodeNotFoundException extends FileSystemNodeException 
+{}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class FileSystemNodeNotChmodableException extends FileSystemNodeException  {
-	public function __construct(FileSystemNode $node) {
+class FileSystemNodeNotChmodableException extends FileSystemNodeException  
+{
+	public function __construct(FileSystemNode $node) 
+	{
 		$this->message = 'Unable to chmod \''.$node->nodeName.'\'.';
 		parent::__construct();
 	}
@@ -200,8 +215,10 @@ class FileSystemNodeNotChmodableException extends FileSystemNodeException  {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class FileSystemNodeNotChownableException extends FileSystemNodeException {
-	public function __construct(FileSystemNode $node) {
+class FileSystemNodeNotChownableException extends FileSystemNodeException 
+{
+	public function __construct(FileSystemNode $node) 
+	{
 		$this->message = 'Unable to chown \''.$node->nodeName.'\'.';
 		parent::__construct();
 	}

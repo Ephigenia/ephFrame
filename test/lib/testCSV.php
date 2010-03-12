@@ -28,27 +28,32 @@ require_once dirname(__FILE__).'/../autorun.php';
  */
 class testCSV extends UnitTestCase
 {
-	public function setUp() {
+	public function setUp() 
+	{
 		ephFrame::loadClass('ephFrame.lib.CSV');
 	}
 	
-	public function testCreate() {
+	public function testCreate() 
+	{
 		$csv = new CSV(array('test' => 'test'));
 	}
 	
-	public function testRead() {
+	public function testRead() 
+	{
 		$csv = new CSV(dirname(__FILE__).'/../tmp/csvfile.csv');
 		while($data = $csv->read()) {
 			$this->assertTrue(is_array($data));
 		}
 	}
 	
-	public function testFromArray() {
+	public function testFromArray() 
+	{
 		$csv = new CSV(array(array('1', 2, 'test', 'CSV rendering', '"Party hard')));
 		$this->assertEqual($csv->render(), '"1";"2";"test";"CSV rendering";"""Party hard"');
 	}
 	
-	public function testRender() {
+	public function testRender() 
+	{
 		$csv = new CSV();
 		$csv->add(array('1', 2, 'test', 'CSV rendering', '"Party hard'));
 		$this->assertEqual($csv->render(), '"1";"2";"test";"CSV rendering";"""Party hard"');

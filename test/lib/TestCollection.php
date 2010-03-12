@@ -26,13 +26,16 @@ require_once dirname(__FILE__).'/../autorun.php';
  * @package ephFrame
  * @subpackage ephFrame.test
  */
-class TestCollection extends UnitTestCase {
+class TestCollection extends UnitTestCase 
+{
 	
-	public function setUp() {
+	public function setUp() 
+	{
 		ephFrame::loadClass('ephFrame.lib.Collection');
 	}
 	
-	public function testCollectionUnique() {
+	public function testCollectionUnique() 
+	{
 		$c = new Collection();
 		$c->add('A');
 		$c->add('B');

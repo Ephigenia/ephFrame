@@ -30,8 +30,7 @@
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-interface ImageFilter {
-	
-	function apply(Image $image);
-	
+interface ImageFilter 
+{
+	function apply(Image $image);	
 }

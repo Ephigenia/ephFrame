@@ -35,8 +35,8 @@ class_exists('HTTPStatusCode') or require dirname(__FILE__).'/HTTPStatusCode.php
  * @subpackage ephFrame.lib
  * @uses HTTPStatusCode
  */
-class HTTPHeader extends Hash {
-	
+class HTTPHeader extends Hash 
+{
 	/**
 	 * HTTP Response Code
 	 * @var integer
@@ -65,7 +65,8 @@ class HTTPHeader extends Hash {
 	 * @param string|array(string) $initialHeaderDataOrString
 	 * @return HTTPHeader
 	 */
-	public function __construct($initialHeaderDataOrString = null) {
+	public function __construct($initialHeaderDataOrString = null) 
+	{
 		if (is_array($initialHeaderDataOrString)) {
 			parent::__construct($initialHeaderDataOrString);
 		} elseif (is_string($initialHeaderDataOrString)) {
@@ -84,7 +85,8 @@ class HTTPHeader extends Hash {
 	 * @param string $key
 	 * @param string|integer $value
 	 */
-	public function add($key, $value = null) {
+	public function add($key, $value = null) 
+	{
 		if (in_array(strtolower($key), array('expires', 'last-modified')) && is_numeric($value)) {
 			$value = gmdate('D, d M Y H:i:s', $value).' GMT';
 		}
@@ -102,7 +104,8 @@ class HTTPHeader extends Hash {
 	 * @param string $rawHeader
 	 * @return array|boolean
 	 */
-	public function parse($rawHeader) {
+	public function parse($rawHeader) 
+	{
 		if (!is_string($rawHeader)) return false;
 		// extract status and response code
 		if (preg_match('@HTTP/1.\d\s(\d{1,3})\s([^\n]+)@', $rawHeader, $found)) {
@@ -127,7 +130,8 @@ class HTTPHeader extends Hash {
 	 * @param array(string) $headerData
 	 * @return boolean always true
 	 */
-	public function send($headerData = null) {
+	public function send($headerData = null) 
+	{
 		if (func_num_args() == 0) {
 			$headerData = $this;
 		}

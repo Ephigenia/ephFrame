@@ -27,11 +27,13 @@ require_once dirname(__FILE__).'/../autorun.php';
  */
 class TestEmail extends UnitTestCase
 {	
-	public function setUp() {
+	public function setUp() 
+	{
 		ephFrame::loadClass('ephFrame.lib.Email');
 	}
 	
-	public function testConstructor() {
+	public function testConstructor() 
+	{
 	
 	}
 	

@@ -44,8 +44,8 @@
  * @uses File
  * @todo normalize File Packer to not beeing a component and JS and CSS Packer inherit from the new create class
  */
-class JSPacker extends AppComponent {
-	
+class JSPacker extends AppComponent 
+{
 	/**
 	 * Boolean value to enable JS Compression
 	 * @var unknown_type
@@ -80,7 +80,8 @@ class JSPacker extends AppComponent {
 	/**
 	 * @return JSPacker
 	 */
-	public function __construct() {
+	public function __construct() 
+	{
 		loadComponent($this->compressorClassname);
 		$this->compressor = new $this->compressorClassname();
 		return $this;
@@ -94,7 +95,8 @@ class JSPacker extends AppComponent {
 	 * @param array(string) $files
 	 * @param string $targetDir
 	 */
-	public function packAndStore(Array $files, $targetDir) {
+	public function packAndStore(Array $files, $targetDir) 
+	{
 		assert(!empty($targetDir));
 		$dir = new Dir($targetDir);
 		if (!$dir->exists()) {
@@ -109,7 +111,8 @@ class JSPacker extends AppComponent {
 	 * @param array $files
 	 * @return string
 	 */
-	public function pack(Array $files) {
+	public function pack(Array $files) 
+	{
 		if (!$this->compress) {
 			ephFrame::loadClass('ephFrame.lib.File');
 		}
@@ -131,17 +134,18 @@ class JSPacker extends AppComponent {
 	 * @param array $files
 	 * @return string
 	 */
-	public function packedFilename(Array $files) {
+	public function packedFilename(Array $files) 
+	{
 		$md5Filenames = substr(md5(implode('', array_map('basename', $files))), 0, 8);
 		$compressedFileName = $this->packedPrefix.$md5Filenames.'.'.$this->packedExtension;
 		$compressedFileName = str_replace('/[^-_A-Za-z0-9\./', '', $compressedFileName);
 		return $compressedFileName;
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class JSPackerException extends ComponentException {}
+class JSPackerException extends ComponentException 
+{}

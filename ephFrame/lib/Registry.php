@@ -41,8 +41,8 @@
  * @subpackage ephFrame.lib
  * @version 0.2
  */
-class Registry extends Object implements Countable {
-	
+class Registry extends Object implements Countable 
+{
 	/**
 	 * stores the properties that have been set in a associative array
 	 * The Variables are stored like that:
@@ -55,7 +55,8 @@ class Registry extends Object implements Countable {
 	 * Returns number of registered domains
 	 * @return integer
 	 */
-	public function count() {
+	public function count() 
+	{
 		return count($this->data);
 	}
 	
@@ -157,21 +158,23 @@ class Registry extends Object implements Countable {
 	public static function clear() {
 		self::$data = array();
 		return true;
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class RegistryException extends BasicException {}
+class RegistryException extends BasicException 
+{}
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class RegistryVarNotFoundException extends RegistryException {
-	public function __construct($varname) {
+class RegistryVarNotFoundException extends RegistryException 
+{
+	public function __construct($varname) 
+	{
 		parent::__construct(sprintf('Registry var \'%s\' was\'t found in the Registry.', $varname));
 	}
 }
@@ -179,8 +182,10 @@ class RegistryVarNotFoundException extends RegistryException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class RegistryVarAlreadySetException extends RegistryException {
-	public function __construct($varname) {
+class RegistryVarAlreadySetException extends RegistryException 
+{
+	public function __construct($varname) 
+	{
 		parent::__construct(sprintf('Registry var \'%s\' was allready registered.', $varname));
 	}
 }

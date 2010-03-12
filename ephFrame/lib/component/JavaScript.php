@@ -42,8 +42,8 @@ class_exists('String') or require dirname(__FILE__).'/../helper/String.php';
  * @uses JSCompressor
  * @uses JSPacker
  */
-class JavaScript extends AppComponent implements Renderable {
-	
+class JavaScript extends AppComponent implements Renderable 
+{
 	/**
 	 * Collection that stores the name of js files added
 	 * @var Collection
@@ -86,7 +86,8 @@ class JavaScript extends AppComponent implements Renderable {
 	 */
 	public $dirs = array('static/js/');
 
-	public function clear() {
+	public function clear() 
+	{
 		$this->files = new Collection();
 		$this->urls = new Collection();
 		$this->plain = array();
@@ -94,24 +95,28 @@ class JavaScript extends AppComponent implements Renderable {
 		return $this;
 	}
 	
-	public function startup() {
+	public function startup() 
+	{
 		$this->clear();
 		$this->controller->set('JavaScript', $this);
 		return parent::startup();	
 	}
 	
-	public function add($script) {
+	public function add($script) 
+	{
 		return $this->addScript($script);
 	}
 	
-	public function addScript($script) {
+	public function addScript($script) 
+	{
 		if (!in_array($script, $this->plain)) {
 			$this->plain[] = $script;
 		}
 		return $this;
 	}
 	
-	public function jQuery($script) {
+	public function jQuery($script) 
+	{
 		if (!in_array($script, $this->jQuery)) {
 			$this->jQuery[] = $script;
 		}
@@ -129,7 +134,8 @@ class JavaScript extends AppComponent implements Renderable {
 	 * @param string $filename
 	 * @return JavaScript
 	 */
-	public function addFile($filename) {
+	public function addFile($filename) 
+	{
 		$args = func_get_args();
 		if (is_array($filename)) {
 			$args = $filename;
@@ -153,7 +159,8 @@ class JavaScript extends AppComponent implements Renderable {
 	 * @param $files
 	 * @return JavaScript
 	 */
-	public function addFiles($files) {
+	public function addFiles($files) 
+	{
 		$args = func_get_args();
 		return $this->callMethod('addFile', $args);
 	}
@@ -163,12 +170,14 @@ class JavaScript extends AppComponent implements Renderable {
 	 * @param $files
 	 * @return JavaScript
 	 */
-	public function link($filename) {
+	public function link($filename) 
+	{
 		$args = func_get_args();
 		return $this->callMethod('addFile', $args);
 	}
 	
-	public function render() {
+	public function render() 
+	{
 		if (!$this->beforeRender()) return '';
 		$rendered = '';
 		foreach(array_merge($this->urls->toArray(), $this->files->toArray()) as $filename) {
@@ -203,7 +212,8 @@ class JavaScript extends AppComponent implements Renderable {
 		return $this->afterRender($rendered);
 	}
 	
-	public function beforeRender(Controller $controller = null) {
+	public function beforeRender(Controller $controller = null) 
+	{
 		if ($controller instanceof Controller) return true;
 		// add themed dir if theme is set in controller
 		if (!empty($this->controller->theme)) {
@@ -227,12 +237,12 @@ class JavaScript extends AppComponent implements Renderable {
 			$this->files = new Collection($compressedFilename);
 		}
 		return true;
-	}
-		
+	}		
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class JavaScriptException extends ComponentException {}
+class JavaScriptException extends ComponentException 
+{}

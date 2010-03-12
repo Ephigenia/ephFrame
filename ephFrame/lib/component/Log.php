@@ -69,8 +69,8 @@ class_exists('File') or require dirname(__FILE__).'/../File.php';
  * @uses Charset
  * @uses ArrayHelper
  */
-class Log extends AppComponent {
-	
+class Log extends AppComponent 
+{
 	/**
 	 * Base path were log files are stored
 	 * @var string
@@ -177,7 +177,8 @@ class Log extends AppComponent {
 	 * @param mixed $message
 	 * @return string
 	 */
-	public function createLogMessage($message) {
+	public function createLogMessage($message) 
+	{
 		// render the mesage if object or array if neede
 		switch(gettype($message)) {
 			case 'array':
@@ -251,4 +252,5 @@ class Log extends AppComponent {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class LogException extends ComponentException {}
+class LogException extends ComponentException 
+{}

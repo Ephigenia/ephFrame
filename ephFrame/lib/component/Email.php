@@ -41,20 +41,23 @@ class Email extends AppComponent implements Renderable
 	
 	public $charset = 'UTF-8';
 	
-	public function __construct() {
+	public function __construct() 
+	{
 		$this->boundary = md5(time());
     	$this->boundaryAlt = md5(time().'alternative');
 		return parent::__construct();
 	}
 	
-	public function reset() {
+	public function reset() 
+	{
 		$this->header = $this->attachments = array();
 		$this->cc = $this->bcc = array();
 		$this->message = $this->htmlMessage = '';
 		return $this;
 	}
 	
-	public function attach($filename, $content = null) {
+	public function attach($filename, $content = null) 
+	{
 		if (!in_array($filename, $this->attachments)) {
 			if (func_num_args() == 2) {
 				$this->attachments[$filename] = $content;
@@ -65,17 +68,20 @@ class Email extends AppComponent implements Renderable
 		return $this;
 	}
 	
-	public function from($email, $name = null) {
+	public function from($email, $name = null) 
+	{
 		$this->from = $this->formatEmail($email, $name);
 		return $this;
 	}
 	
-	public function to($email, $name = null) {
+	public function to($email, $name = null) 
+	{
 		$this->from = $this->formatEmail($email, $name);
 		return $this;
 	}
 	
-	public function messageType() {
+	public function messageType() 
+	{
 		if (count($this->attachments) > 0) {
 			return 'alt_attach';
 		}
@@ -88,7 +94,8 @@ class Email extends AppComponent implements Renderable
 		return 'plain';
 	}
 	
-	public function beforeSend() {
+	public function beforeSend() 
+	{
 		$this->subject = $this->stripInjections($this->subject);
 		$this->to = $this->stripInjections($this->to);
 		$this->from = $this->stripInjections($this->from);
@@ -102,7 +109,8 @@ class Email extends AppComponent implements Renderable
 		return true;
 	}
 	
-	public function send($to = null, $subject = null, $message = null, Array $header = array(), $additionalParameters = null) {
+	public function send($to = null, $subject = null, $message = null, Array $header = array(), $additionalParameters = null) 
+	{
 		// set last-minute variables
 		if (!empty($to)) $this->to = $to;
 		if (!empty($subject)) $this->subject = $subject;
@@ -122,7 +130,8 @@ class Email extends AppComponent implements Renderable
 		return false;
 	}
 	
-	public function smtp() {
+	public function smtp() 
+	{
 		trigger_error('smtp delivery not finished yet', E_USER_WARNING);
 		return false;
 		class_exists('Socket') or require dirname(__FILE__).'/../Socket.php';
@@ -133,7 +142,8 @@ class Email extends AppComponent implements Renderable
 		flush();
 	}
 	
-	public function header() {
+	public function header() 
+	{
     	// FROM and TO
 		if ($this->delivery == 'smtp') {
 			$header[] = 'To: '.$this->formatEmail($this->to);
@@ -261,7 +271,8 @@ class Email extends AppComponent implements Renderable
 	/**
 	 * http://www.erich-kachel.de/?p=26
 	*/
-	public function stripInjections($string, $brakes = false) {
+	public function stripInjections($string, $brakes = false) 
+	{
 		$regexp = '%0a|%0d|Content-(?:Type|Transfer-Encoding)\:|charset\=|mime-version\:|multipart/mixed|(?:[^a-z]to|b?cc)\:.*';
 		if ($brakes) {
 			$regexp .= '|\r|\n';
@@ -273,7 +284,8 @@ class Email extends AppComponent implements Renderable
 		return $string;
 	}
 	
-	public function formatEmail($email, $name = null) {
+	public function formatEmail($email, $name = null) 
+	{
 		$email = mb_encode_mimeheader($this->stripInjections($email, true), $this->charset, 'B', RTLF);
 		if (empty($name)) {
 			return $email;
@@ -282,33 +294,38 @@ class Email extends AppComponent implements Renderable
 		return sprintf('%s <%s>', $name, $email);
 	}
 	
-	public function render() {
+	public function render() 
+	{
 		if (!$this->beforeRender()) return false;
 		return $this->afterRender($this->header().RTLF.$this->body());
 	}
 	
-	public function beforeRender() {
+	public function beforeRender() 
+	{
 		return true;
 	}
 	
-	public function afterRender($content) {
+	public function afterRender($content) 
+	{
 		return $content;
-	}
-	
-} // END Email class
+	}	
+}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class EmailException extends ComponentException {}
+class EmailException extends ComponentException 
+{}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class EmailEmptyToException extends EmailException {
-	public function __construct() {
+class EmailEmptyToException extends EmailException 
+{
+	public function __construct() 
+	{
 		$this->message = 'Unable to deliver mail because recipient was empty.';
 		return parent::__construct();
 	}

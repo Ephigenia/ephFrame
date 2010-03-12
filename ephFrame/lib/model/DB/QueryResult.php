@@ -23,8 +23,8 @@
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 30.08.2007
  */
-class QueryResult extends IndexedArray implements Iterator, Countable {
-	
+class QueryResult extends IndexedArray implements Iterator, Countable 
+{
 	const FETCH_ASSOC = 'assoc';
 	const FETCH_OBJECT = 'object';
 	const FETCH_INDEXED = 'indexed';
@@ -69,7 +69,8 @@ class QueryResult extends IndexedArray implements Iterator, Countable {
 	 * @param ressource $result
 	 * @return DAOQueryResult
 	 */
-	public function __construct($result) {
+	public function __construct($result) 
+	{
 		parent::__construct();
 		$this->result = $result;
 		return $this;
@@ -82,7 +83,8 @@ class QueryResult extends IndexedArray implements Iterator, Countable {
 	 * @param string $fetchMethod
 	 * @return DAOQueryResult
 	 */
-	public function fetchMethod($fetchMethod = null) {
+	public function fetchMethod($fetchMethod = null) 
+	{
 		if (func_num_args() == 0 || $fetchMethod == null) return $this->fetchMethod();
 		if (!$this->isValidFetchMethod($fetchMethod)) throw new DBInvalidFetchMethod($this, $fetchMethod);
 		$this->fetchMethod = $fetchMethod;
@@ -93,7 +95,8 @@ class QueryResult extends IndexedArray implements Iterator, Countable {
 		return in_array($fetchMethod, $this->validFetchMethods);
 	}
 	
-	public function fetchAll($fetchMethod = null) {
+	public function fetchAll($fetchMethod = null) 
+	{
 		if (count($this->data) != $this->numRows()) {
 			$this->data = array();
 			while($d = $this->fetch($fetchMethod)) {}
@@ -101,13 +104,15 @@ class QueryResult extends IndexedArray implements Iterator, Countable {
 		return $this->data;
 	}
 	
-	public function seek($dataIndex) {
+	public function seek($dataIndex) 
+	{
 		if ($dataIndex > $this->count()) return false;
 		$this->iteratorPosition = $dataIndex;
 		return $this;
 	}
 	
-	public function fetch($fetchMethod = null) {
+	public function fetch($fetchMethod = null) 
+	{
 		if ($fetchMethod !== null) $this->fetchMethod($fetchMethod);
 		if ($row = $this->{'fetch'.ucFirst($this->fetchMethod)}()) {
 			$this->data[] = $row;
@@ -116,44 +121,54 @@ class QueryResult extends IndexedArray implements Iterator, Countable {
 		return $row;
 	}
 	
-	public function fetchObject() {}
-	public function fetchAssoc() {}
-	public function fetchIndexed() {}
+	public function fetchObject() 
+	{}
+	public function fetchAssoc() 
+	{}
+	public function fetchIndexed() 
+	{}
 	
-	public function numRows() {}
+	public function numRows() 
+	{}
 	
 	/**
 	 * Alias for {@link numRows}
 	 * @return integer
 	 */
-	public function count() {
+	public function count() 
+	{
 		return $this->numRows();
 	}
 
-	public function rewind() {
+	public function rewind() 
+	{
 		$this->seek(self::SEEK_START);
 		return parent::rewind();
 	}
 
-	public function next() {
+	public function next() 
+	{
 		return $this->fetch();
 	}
 
 	/**
 	 * @return integer|string
 	 */
-	public function key() {
+	public function key() 
+	{
 		return key($this->set);
 	}
 
 	/**
 	 * @return mixed
 	 */
-	public function current() {
+	public function current() 
+	{
 		return current($this->data);
 	}
 
-	public function valid() {
+	public function valid() 
+	{
 		return ($this->iteratorPosition < count($this));
 	}
 	
@@ -161,11 +176,13 @@ class QueryResult extends IndexedArray implements Iterator, Countable {
 	 * Returns the dumped contents of this Result
 	 * @return string
 	 */
-	public function dump() {
+	public function dump() 
+	{
 		return $this->__toString();
 	}
 	
-	public function __toString() {
+	public function __toString() 
+	{
 		$return = '';
 		$i = 0;
 		while ($a = $this->fetchAssoc()) {
@@ -176,22 +193,24 @@ class QueryResult extends IndexedArray implements Iterator, Countable {
 			$i++;
 		}
 		return $return;
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class DBQueryResultException extends DBException {}
+class DBQueryResultException extends DBException 
+{}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class DBInvalidFetchMethod extends DBQueryResultException {
-	public function __construct($fetchMethod) {
+class DBInvalidFetchMethod extends DBQueryResultException 
+{
+	public function __construct($fetchMethod) 
+	{
 		parent::__construct('Invalid fetch method given \''.$fetchMethod.'\'.');
 	}
 }

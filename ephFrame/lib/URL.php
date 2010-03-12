@@ -48,8 +48,8 @@ interface_exists('Renderable') or require dirname(__FILE__).'/Renderable.php';
  * @subpackage ephFrame.lib
  * @version 0.1
  */
-class URL extends Object implements Renderable {
-	
+class URL extends Object implements Renderable 
+{
 	/**
 	 * @var string
 	 */
@@ -75,7 +75,8 @@ class URL extends Object implements Renderable {
 	 * Url Constructor
 	 * @param string	$url
 	 */
-    public function __construct($url = null) {
+    public function __construct($url = null) 
+	{
 	    return $this->_url($url);
     }
     
@@ -113,7 +114,8 @@ class URL extends Object implements Renderable {
      * get or set method, internally used
      * @param 
      */
-	public function __call($method, $params) {
+	public function __call($method, $params) 
+	{
 		// overwriting this du to php 5.1.6 thinks that url function is the constructor
 		if ($method == 'url') {
 			return $this->_url($params[0]);
@@ -136,7 +138,8 @@ class URL extends Object implements Renderable {
 	 * Returns the builded url
 	 * @return string
 	 */
-	public function __toString() {
+	public function __toString() 
+	{
 		return $this->render();
 	}
 	
@@ -145,7 +148,8 @@ class URL extends Object implements Renderable {
 	 * you can overwrite this method in subclasses to avoid rendering
 	 * @return boolean
 	 */
-	public function beforeRender() {
+	public function beforeRender() 
+	{
 		return true;
 	}
 	
@@ -153,7 +157,8 @@ class URL extends Object implements Renderable {
 	 * @param string $url
 	 * @return string
 	 */
-	public function afterRender($url) {
+	public function afterRender($url) 
+	{
 		return $url;
 	}
 	
@@ -163,7 +168,8 @@ class URL extends Object implements Renderable {
 	 * @param boolean $asArray
 	 * @return string
 	 */
-	public function path($path = null, $asArray = false) {
+	public function path($path = null, $asArray = false) 
+	{
 		$argCount = func_num_args();
 		if ($argCount == 0) {
 			return $this->parsedUrl['path'];
@@ -193,7 +199,8 @@ class URL extends Object implements Renderable {
 	 * Builds a URL with the parsed date in {@link parsedUrl}
 	 * @return builded url 
 	 */
-    public function render() {
+    public function render() 
+	{
     	// drop if beforeRender fucks it off
     	if (!$this->beforeRender()) return null;
     	$url = '';
@@ -237,8 +244,7 @@ class URL extends Object implements Renderable {
 	    }
 	    $rendered = strtr($template, $replaceArray);;
 	    return $this->afterRender($rendered);
-    }
-	
+    }	
 }
 
 /**
@@ -246,4 +252,5 @@ class URL extends Object implements Renderable {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class UrlException extends ComponentException {}
+class UrlException extends ComponentException 
+{}

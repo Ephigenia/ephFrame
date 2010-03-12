@@ -46,8 +46,8 @@ interface_exists('ephFrameComponent') or require(dirname(__FILE__).'/ephFrameCom
  * @package ephFrame
  * @subpackage ephFrame.lib.component
  */
-abstract class Component extends Object implements ephFrameComponent {
-	
+abstract class Component extends Object implements ephFrameComponent
+{	
 	/**
 	 * List of components that are used by this component. Each of them
 	 * is attachd to the controller as well.
@@ -73,7 +73,8 @@ abstract class Component extends Object implements ephFrameComponent {
 	 * to the Component
 	 * @return Component
 	 */
-	public function __construct() {
+	public function __construct() 
+	{
 		$this->__mergeParentProperty('components');
 		$this->__mergeParentProperty('helpers');
 		return $this;
@@ -85,7 +86,8 @@ abstract class Component extends Object implements ephFrameComponent {
 	 * @return Component
 	 * @final 
 	 */
-	public function init(Controller $controller) {
+	public function init(Controller $controller) 
+	{
 		$this->controller = $controller;
 		$this->initComponents();
 		$this->initHelpers();
@@ -128,7 +130,8 @@ abstract class Component extends Object implements ephFrameComponent {
 	 * on everyone, this method is called.
 	 * @return Controller
 	 */
-	public function startup() {
+	public function startup() 
+	{
 		return $this;
 	}
 	
@@ -136,7 +139,8 @@ abstract class Component extends Object implements ephFrameComponent {
 	 * Called by the controller before he renders
 	 * @return true
 	 */
-	public function beforeRender() {
+	public function beforeRender() 
+	{
 		return true;
 	}
 	
@@ -147,7 +151,8 @@ abstract class Component extends Object implements ephFrameComponent {
 	 * @param string $rendered
 	 * @return string
 	 */
-	public function afterRender($rendered) {
+	public function afterRender($rendered) 
+	{
 		return $rendered;
 	}
 	
@@ -155,7 +160,8 @@ abstract class Component extends Object implements ephFrameComponent {
 	 * Callback that is called right before controller calls his action
 	 * @return boolean
 	 */
-	public function beforeAction() {
+	public function beforeAction() 
+	{
 		return true;
 	}
 	
@@ -164,7 +170,8 @@ abstract class Component extends Object implements ephFrameComponent {
 	 * redirection headers. The return values will do nothing in the controller
 	 * @return boolean
 	 */
-	public function beforeRedirect($url, $status = 'p', $exit = true) {
+	public function beforeRedirect($url, $status = 'p', $exit = true) 
+	{
 		return true;
 	}
 	
@@ -172,14 +179,15 @@ abstract class Component extends Object implements ephFrameComponent {
 	 * Callback that is calld after action was performed in the controller
 	 * @return boolean
 	 */
-	public function afterAction() {
+	public function afterAction() 
+	{
 		return true;
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception 
  */
-class ComponentException extends BasicException {}
+class ComponentException extends BasicException 
+{}

@@ -47,7 +47,8 @@ class ConsoleDigits extends ConsoleWindow
 	public $background = '.';
 	public $drawBorder = false;
 	
-	public function __construct($x, $y, $value) {
+	public function __construct($x, $y, $value) 
+	{
 		parent::__construct($x, $y, strlen($value) * $this->digitWidth, $this->digitHeight);
 		$this->value = $value;
 		foreach($this->digits as $i => $v) {
@@ -57,7 +58,8 @@ class ConsoleDigits extends ConsoleWindow
 		return $this;
 	}
 	
-	public function value($i) {
+	public function value($i) 
+	{
 		$newWidth = $this->digitWidth * strlen($i) + strlen($i)-1 * $this->space;
 		//if ($newwidth > $this->width) {
 			$this->width = $newWidth;
@@ -78,7 +80,6 @@ class ConsoleDigits extends ConsoleWindow
 		$this->content($content);
 		$this->redraw();
 	}
-	
 }
 
 /**

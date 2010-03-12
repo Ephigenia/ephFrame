@@ -53,7 +53,8 @@ class ConsoleDrawing extends Console
 	 * @param integer $x
 	 * @param integer $y
 	 */
-	public function moveCursor($x, $y) {
+	public function moveCursor($x, $y) 
+	{
 		$this->out(chr(27).'['.$y.';'.$x.'f');
 	}
 	
@@ -66,7 +67,8 @@ class ConsoleDrawing extends Console
 	 * @param string $char char used for line drawing, default is -
 	 * @return boolean true on finish
 	 */
-	public function drawLine ($x1, $y1, $x2, $y2, $char = '─') {
+	public function drawLine ($x1, $y1, $x2, $y2, $char = '─') 
+	{
 		// horizontal lines
 		if ($x2 > $x1) {
 			$this->moveCursor($x1, $y1);
@@ -81,5 +83,4 @@ class ConsoleDrawing extends Console
 		}
 		return true;
 	}
-
 }

@@ -156,16 +156,19 @@ abstract class Object
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ObjectException extends BasicException {}
+class ObjectException extends BasicException 
+{}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ObjectMethodNotFoundException extends ObjectException {}
+class ObjectMethodNotFoundException extends ObjectException 
+{}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ObjectVariableNotFoundException extends ObjectException {}
+class ObjectVariableNotFoundException extends ObjectException 
+{}

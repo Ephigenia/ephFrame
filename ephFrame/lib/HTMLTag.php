@@ -26,11 +26,12 @@ class_exists('SGMLTag') or require dirname(__FILE__).'/SGMLTag.php';
  * @since 01.07.2007
  * @version 0.1
  */
-class HTMLTag extends SGMLTag {
-	
+class HTMLTag extends SGMLTag 
+{	
 	public $noShortTags = array('script', 'textarea', 'a');
 
-	public function renderOpenTag() {
+	public function renderOpenTag() 
+	{
 		if (empty($this->tagName)) return '';
 		$rendered = $this->tagIndent().self::OPEN.$this->tagName;
 		if (count($this->attributes) > 0) $rendered .= ' '.$this->attributes->render();
@@ -40,7 +41,8 @@ class HTMLTag extends SGMLTag {
 		return $rendered;
 	}
 	
-	public function renderCloseTag() {
+	public function renderCloseTag() 
+	{
 		foreach($this->noShortTags as $tagName) {
 			if (strcasecmp($this->tagName, $tagName) !== 0) continue;
 			return self::OPEN.'/'.$tagName.self::CLOSE;
@@ -58,11 +60,11 @@ class HTMLTag extends SGMLTag {
 		}
 		return '';
 	}
-
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.component
  */
-class HTMLTagException extends SGMLTagException {}
+class HTMLTagException extends SGMLTagException 
+{}

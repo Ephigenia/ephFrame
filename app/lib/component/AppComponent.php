@@ -31,4 +31,5 @@ class AppComponent extends Component
  * @package app
  * @subpackage app.libs.exceptions 
  */
-class AppComponentException extends ComponentException {}
+class AppComponentException extends ComponentException 
+{}

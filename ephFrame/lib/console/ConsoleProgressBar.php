@@ -54,7 +54,8 @@ class ConsoleProgressBar extends ConsoleWindow
 		''	// indicator of current value
 	);
 	
-	public function __construct($x, $y, $width, $max) {
+	public function __construct($x, $y, $width, $max) 
+	{
 		$this->x = $x;
 		$this->y = $y;
 		$this->width = $width;
@@ -64,7 +65,8 @@ class ConsoleProgressBar extends ConsoleWindow
 		return $this;
 	}
 	
-	public function value($value) {
+	public function value($value) 
+	{
 		$this->value = $value;
 		if ($this->max < $this->value) {
 			$this->max = $this->value;
@@ -72,11 +74,13 @@ class ConsoleProgressBar extends ConsoleWindow
 		return $this->redraw();
 	}
 	
-	public function increase() {
+	public function increase() 
+	{
 		return $this->value($this->value++);
 	}
 	
-	public function redraw() {
+	public function redraw() 
+	{
 		if ($this->max > 0) {
 			$percent = $this->value / $this->max;
 		} else {
@@ -112,6 +116,5 @@ class ConsoleProgressBar extends ConsoleWindow
 		$rendered .= $this->drawChars[3];
 		$this->content = $rendered;
 		parent::redraw();
-	}
-	
+	}	
 }

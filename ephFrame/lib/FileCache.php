@@ -23,14 +23,14 @@
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class FileCache extends Object implements CacheEngine {
-	
-	public $directory;
-	
+class FileCache extends Object implements CacheEngine 
+{
+	public $directory;	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class FileCacheException extends BasicException {}
+class FileCacheException extends BasicException 
+{}

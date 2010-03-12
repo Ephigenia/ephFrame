@@ -33,6 +33,5 @@
  * @abstract
  * @subpackage ephFrame.lib
  */
-abstract class Factory extends Object {
-	
-}
+abstract class Factory extends Object
+{}

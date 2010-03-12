@@ -35,15 +35,16 @@ class_exists('IndexedArray') or require dirname(__FILE__).'/IndexedArray.php';
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class Hash extends IndexedArray {
-	
+class Hash extends IndexedArray 
+{
 	/**
 	 * Deletes all indexes from the {@link Hash} that are not in the whitelist
 	 * of $keys passed to this method
 	 * @param array(string)
 	 * @return Hash
 	 */
-	public function whitelist(Array $keys = array()) {
+	public function whitelist(Array $keys = array()) 
+	{
 		foreach($this->data as $key => $value) {
 			if (!in_array($key, $keys)) {
 				unset($this->data[$key]);
@@ -57,7 +58,8 @@ class Hash extends IndexedArray {
 	 * @param array(mixed) $data
 	 * @return Hash
 	 */
-	public function fromArray(Array $data) {
+	public function fromArray(Array $data) 
+	{
 		$this->data = $data;
 		return $this;
 	}
@@ -70,7 +72,8 @@ class Hash extends IndexedArray {
 	 * @param mixed $value
 	 * @return Hash
 	 */
-	public function add($key, $value = null) {
+	public function add($key, $value = null) 
+	{
 		if (func_num_args() == 1) {
 			$this->data[] = $key;
 		} else {
@@ -85,7 +88,8 @@ class Hash extends IndexedArray {
 	 * @param mixed $val
 	 * @return Hash
 	 */
-	public function append($val) {
+	public function append($val) 
+	{
 		$args = func_get_args();
 		return $this->callmethod('push', $args);
 	}
@@ -96,7 +100,8 @@ class Hash extends IndexedArray {
 	 * @param mixed $val
 	 * @return Hash
 	 */
-	public function push($val) {
+	public function push($val) 
+	{
 		if (func_num_args() > 1) {
 			foreach(func_get_args() as $value) {
 				$this->push($value);
@@ -115,16 +120,17 @@ class Hash extends IndexedArray {
 	 * @param mixed $value
 	 * @return Hash
 	 */
-	public function setValue($key, $value) {
+	public function setValue($key, $value) 
+	{
 		$this->data[$key] = $value;
 		return $this;
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception 
  */
-class HashException extends BasicException {
+class HashException extends BasicException 
+{
 }

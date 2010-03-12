@@ -44,8 +44,8 @@ ephFrame::loadClass('ephFrame.lib.helper.String');
  * @since 10.06.2007
  * @uses String
  */
-class Sanitizer extends Helper {
-	
+class Sanitizer extends Helper 
+{
 	const PANIC = 1;
 	const PARANOID = 2;
 	const SQL = 4;
@@ -63,7 +63,8 @@ class Sanitizer extends Helper {
 	const CLEAN_CONTROL_CHARS = 32;
 	const CLEAN_ALL = 255;
 	
-	public static function clean(&$var, $flags = null, $ignore = null) {
+	public static function clean(&$var, $flags = null, $ignore = null)
+	{
 		if ($flags == null) {
 			$flags = self::CLEAN_ALL;
 		}
@@ -98,11 +99,11 @@ class Sanitizer extends Helper {
 		return $var;
 	}
 
-	public static function sanitize($var, $flags = null, $include = null) {
+	public static function sanitize($var, $flags = null, $include = null)
+	{
 		if ($flags == null) {
 			$flags = self::PARANOID; 
 		}
-		//$var = self::clean($var);
 		if (is_array($var)) {
 			foreach($var as $i => $v) {
 				if ($include == null || ($include !== null && in_array($i, $include))) {
@@ -122,13 +123,15 @@ class Sanitizer extends Helper {
 		return $var;
 	}
 	
-	public static function panic(&$var, $ignore = null) {
+	public static function panic(&$var, $ignore = null)
+	{
 		if (is_array($var)) return self::sanitize($var, self::PANIC, $ignore);
 		$var = preg_replace('@[^0-9a-z_-]@i', '', $var);
 		return $var;
 	}
 	
-	public static function paranoid($string, $additionalChars = null) {
+	public static function paranoid($string, $additionalChars = null)
+	{
 		$allow = 'a-zA-Zà-úÀ-Ú!?*™˝©®+-_%&\/|(){}[]$€£₤¥¡¿#§@:;⁏.,‚~‘’‛“”„‟°˝`´‵‶′″"\'';
 		if ($additionalChars === null) {
 			$allow .= $additionalChars;
@@ -146,7 +149,8 @@ class Sanitizer extends Helper {
 	 * 	@param $string
 	 *	@return string
 	 */
-	public static function filename($string) {
+	public static function filename($string)
+	{
 		$filename = String::toURL(trim(basename($string, '.')), '_');
 		if (($dotPos = strpos($filename, '.')) !== false) {
 			$extension = substr($filename, $dotPos + 1);
@@ -160,17 +164,20 @@ class Sanitizer extends Helper {
 	 * @param $string
 	 * @return string
 	 */
-	public static function sql($string) {
+	public static function sql($string)
+	{
 		if (is_array($string)) return self::sanitize($string, self::SQL);
 		return mysql_real_escape_string($string);
 	}
 	
-	public static function system($string) {
+	public static function system($string)
+	{
 		if (is_array($string)) return self::sanitize($string, self::SYSTEM);
 		return escapeshellcmd($string);
 	}
 	
-	public static function html($string, $allowedTags = array()) {
+	public static function html($string, $allowedTags = array())
+	{
 		if (is_array($string)) return self::sanitize($string, self::HTML);
 		return $string;
 		// first replace various encodings of < and > back to < and >
@@ -191,7 +198,8 @@ class Sanitizer extends Helper {
 		return $string;
 	}
 	
-	public static function int($string, $min = null, $max = null) {
+	public static function int($string, $min = null, $max = null)
+	{
 		if (is_array($string)) return self::sanitize($string, self::INT);
 		$int = intval($string);
 		if (($min !== null && $int < $min) || ($max !== null && $int > $max)) {
@@ -200,13 +208,13 @@ class Sanitizer extends Helper {
 		return $int;
 	}
 	
-	public static function float($string, $min = null, $max = null) {
+	public static function float($string, $min = null, $max = null)
+	{
 		if (is_array($string)) return self::sanitize($float, self::SQL);
 		$int = floatval($string);
 		if (($min !== null && $int < $min) || ($max !== null && $int > $max)) {
 			return false;
 		}
 		return $int;
-	}
-	
+	}	
 }

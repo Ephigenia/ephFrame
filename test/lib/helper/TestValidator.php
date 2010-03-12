@@ -27,11 +27,13 @@ require_once dirname(__FILE__).'/../../autorun.php';
  */
 class TestValidator extends UnitTestCase
 {
-	public function setUp() {
+	public function setUp() 
+	{
 		ephFrame::loadClass('ephFrame.lib.helper.Validator');
 	}
 	
-	public function testEmail() {
+	public function testEmail() 
+	{
 		$emails = array(
 			'l.fgetgwxpv@manexam.net',
 		);

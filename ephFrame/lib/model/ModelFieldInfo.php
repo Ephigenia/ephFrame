@@ -26,12 +26,12 @@
  * @package ephFrame
  * @subpackage ephFrame.lib.model
  */
-class ModelFieldInfo extends Object {
-	
-	const QUOTE_STRING 	= 'string';
-	const QUOTE_INTEGER 	= 'integer';
-	const QUOTE_FLOAT 	= 'float';
-	const QUOTE_BOOLEAN 	= 'bool';
+class ModelFieldInfo extends Object 
+{
+	const QUOTE_STRING = 'string';
+	const QUOTE_INTEGER = 'integer';
+	const QUOTE_FLOAT = 'float';
+	const QUOTE_BOOLEAN	= 'bool';
 	
 	public $name;
 	public $null = false;
@@ -77,14 +77,16 @@ class ModelFieldInfo extends Object {
 		self::QUOTE_BOOLEAN	=> array('bool') 
 	);
 	
-	public function __construct(Array $columnInfo = array()) {
+	public function __construct(Array $columnInfo = array()) 
+	{
 		if (is_array($columnInfo) && count($columnInfo) > 0) {
 			$this->fromColumnInfo($columnInfo);
 		}
 		return $this;
 	}
 	
-	public function fromColumnInfo(Array $columnInfo) {
+	public function fromColumnInfo(Array $columnInfo) 
+	{
 		$this->name = $columnInfo['Field'];
 		$this->null = (@$columnInfo['Null'] == 'NO') ? false : true;
 		$this->primary = (@$columnInfo['Key'] == 'PRI') ? true : false;
@@ -142,13 +144,15 @@ class ModelFieldInfo extends Object {
 		return $this;
 	}
 	
-	public function fromJson($data) {
+	public function fromJson($data) 
+	{
 		$this->fromArray(get_object_vars($data));
 		unset($data);
 		return true;
 	}
 	
-	public function fromArray(Array $data = array()) {
+	public function fromArray(Array $data = array()) 
+	{
 		foreach($data as $key => $value) {
 			if (property_exists($this, $key)) {
 				$this->{$key} = $value;
@@ -157,19 +161,20 @@ class ModelFieldInfo extends Object {
 		return true;
 	}
 	
-	public function toArray() {
+	public function toArray() 
+	{
 		$r = get_object_vars($this);
 		$ignore = array('quoteMap');
 		foreach($ignore as $key) {
 			unset($r[$key]);
 		}
 		return $r;
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.exception
  */
-class ModelFieldInfoException extends ObjectException {}
+class ModelFieldInfoException extends ObjectException 
+{}

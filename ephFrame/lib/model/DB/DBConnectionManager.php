@@ -28,8 +28,8 @@
  * @package ephFrame
  * @subpackage ephFrame.lib.model.DB
  */
-class DBConnectionManager extends Object {
-	
+class DBConnectionManager extends Object 
+{	
 	/**
 	 * @var DBConnectionManager
 	 */
@@ -46,7 +46,8 @@ class DBConnectionManager extends Object {
 	 */
 	public $connections = array();
 	
-	public function __construct() {
+	public function __construct() 
+	{
 		ephFrame::loadClass('ephFrame.lib.model.DB.DBFactory');
 		ephFrame::loadClass('ephFrame.lib.model.DB.DBDSN');
 		$this->factory = new DBFactory();
@@ -68,7 +69,8 @@ class DBConnectionManager extends Object {
 	 * 
 	 * @param string $DBConfigName
 	 */
-	public function get($DBConfigName) {
+	public function get($DBConfigName) 
+	{
 		$instance = self::getInstance();
 		// open conenction and place connection in {@link data} when successfully connected
 		if (!$instance->opened($DBConfigName)) {
@@ -81,24 +83,27 @@ class DBConnectionManager extends Object {
 		return $instance->connections[$DBConfigName];
 	}
 	
-	public function opened($DBConfigName) {
+	public function opened($DBConfigName) 
+	{
 		return array_key_exists($DBConfigName, self::getInstance()->connections);
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class DBConnectionManagerException extends BasicException {}
+class DBConnectionManagerException extends BasicException 
+{}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class DBConnectionManagerDBConfigNotFoundException extends DBConnectionManagerException {
-	public function __construct($DBConfigName) {
+class DBConnectionManagerDBConfigNotFoundException extends DBConnectionManagerException 
+{
+	public function __construct($DBConfigName) 
+	{
 		$this->message = 'Unable to find \''.$DBConfigName.'\' in DBConfig.';
 		parent::__construct($this->message);
 	}

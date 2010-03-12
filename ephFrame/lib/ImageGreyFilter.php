@@ -41,14 +41,15 @@ interface_exists('ImageFilter') or require dirname(__FILE__).'/ImageFilter.php';
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class ImageGreyFilter extends Object implements ImageFilter {
-	
+class ImageGreyFilter extends Object implements ImageFilter 
+{
 	/**
 	 * Runs the filter on a {@link Image}
 	 * @param Image $image
 	 * @return Image the manipulated image
 	 */
-	public function apply(Image $image) {
+	public function apply(Image $image) 
+	{
 		$imgWidth = $image->width() - 1;
 		$imgHeight = $image->height() - 1;
 		$imgHandle = $image->handle();
@@ -74,6 +75,5 @@ class ImageGreyFilter extends Object implements ImageFilter {
 			}
 		}
 		return $image;
-	}
-	
+	}	
 }

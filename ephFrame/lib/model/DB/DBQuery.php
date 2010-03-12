@@ -118,7 +118,8 @@ abstract class DBQuery extends Object implements Renderable
 	 * @param string $verb
 	 * @return DBQuery
 	 */
-	public function __construct($verb = null, $table = null, $conditions = array(), $values = array()) {
+	public function __construct($verb = null, $table = null, $conditions = array(), $values = array()) 
+	{
 		if ($verb !== null) $this->verb($verb);
 		ephFrame::loadClass('ephFrame.lib.component.Collection');
 		$this->reset();
@@ -143,7 +144,8 @@ abstract class DBQuery extends Object implements Renderable
 	 * Clears all settings for this query
 	 * @return DBQuery
 	 */
-	public function reset() {
+	public function reset() 
+	{
 		$this->select = new Hash();
 		$this->tables = new Collection();
 		$this->join = new Collection();
@@ -227,7 +229,8 @@ abstract class DBQuery extends Object implements Renderable
 	 * Renders the query using the {@link renderTemplate} and returns it
 	 * @return string
 	 */
-	public function render() {
+	public function render() 
+	{
 		if (!$this->beforeRender()) return false;
 		$renderParts = explode(' ', $this->renderTemplate);
 		$rendered = '';
@@ -262,7 +265,8 @@ abstract class DBQuery extends Object implements Renderable
 	 * A false halts the rendering process.
 	 * @return boolean
 	 */
-	public function beforeRender() {
+	public function beforeRender() 
+	{
 		if ($this->highPriority) {
 			$this->addFlag(DBQuery::FLAG_HIGH_PRIORITY);
 		}
@@ -285,7 +289,8 @@ abstract class DBQuery extends Object implements Renderable
 	 * @param string $rendered
 	 * @return string
 	 */
-	public function afterRender($rendered) {
+	public function afterRender($rendered) 
+	{
 		$rendered = trim($rendered);
 		return $rendered;
 	}
@@ -301,7 +306,8 @@ abstract class DBQuery extends Object implements Renderable
 	 * @param string $tablename Name of the table in the DB, optional with Database Name
 	 * @param string $alias optional table alias
 	 */
-	public function table($tablename, $alias = null) {
+	public function table($tablename, $alias = null) 
+	{
 		if (is_array($tablename)) {
 			foreach($tablename as $value) {
 				$this->table($tablename);	
@@ -322,7 +328,8 @@ abstract class DBQuery extends Object implements Renderable
 	 * @param string $type join type to use, use the JOIN_* constants of this class
 	 * @param array() $conditions Join conditions, rendered as where statement
 	 */
-	public function join($tablename, $alias = null, $type = self::JOIN, $conditions = array()) {
+	public function join($tablename, $alias = null, $type = self::JOIN, $conditions = array()) 
+	{
 		if (!is_array($conditions)) {
 			$conditions = array($conditions);
 		}
@@ -336,7 +343,8 @@ abstract class DBQuery extends Object implements Renderable
 	 * @param string $verb
 	 * @return DBQuery
 	 */
-	public function verb($verb = null) {
+	public function verb($verb = null) 
+	{
 		if (func_num_args() == 0) return $this->verb;
 		if (empty($verb)) throw new StringExpectedException();
 		assert(is_string($verb) && !empty($verb));
@@ -356,7 +364,8 @@ abstract class DBQuery extends Object implements Renderable
 	 * @param mixed $value
 	 * @return DBQuery
 	 */
-	public function value($fieldname, $value) {
+	public function value($fieldname, $value) 
+	{
 		$fieldname = trim($fieldname);
 		assert(is_string($fieldname) && !empty($fieldname));
 		$this->values->add($fieldname, $value);
@@ -372,7 +381,8 @@ abstract class DBQuery extends Object implements Renderable
 	 * @param array(string) $array
 	 * @return DBQuery
 	 */
-	public function values(Array $array = array()) {
+	public function values(Array $array = array()) 
+	{
 		$this->values = new Hash($array);
 		return $this;
 	}
@@ -383,7 +393,8 @@ abstract class DBQuery extends Object implements Renderable
 	 * @param string $fieldname
 	 * @return DBQuery
 	 */
-	public function groupBy($fieldname) {
+	public function groupBy($fieldname) 
+	{
 		$fieldname = trim($fieldname);
 		assert(is_string($fieldname) && !empty($fieldname));
 		$this->groupBy->add($fieldname);
@@ -409,7 +420,8 @@ abstract class DBQuery extends Object implements Renderable
 	 * @param string $direction
 	 * @return DBQuery
 	 */
-	public function orderBy($fieldname, $direction = null) {
+	public function orderBy($fieldname, $direction = null) 
+	{
 		$fieldname = trim($fieldname);
 		$direction = trim($direction);
 		assert(is_string($fieldname) && !empty($fieldname));
@@ -428,7 +440,8 @@ abstract class DBQuery extends Object implements Renderable
 	 * @param integer $count
 	 * @return DBQuery
 	 */
-	public function limit($offset, $count) {
+	public function limit($offset, $count) 
+	{
 		return $this->offset($offset)->count($count);
 	}
 	
@@ -437,7 +450,8 @@ abstract class DBQuery extends Object implements Renderable
 	 * @param integer $offset
 	 * @return integer|DBQuery
 	 */
-	public function offset($offset = null) {
+	public function offset($offset = null) 
+	{
 		if ($offset < 0) return $this;
 		return $this->__getOrSet('offset', $offset);
 	}
@@ -447,7 +461,8 @@ abstract class DBQuery extends Object implements Renderable
 	 * @param integer $count
 	 * @return integer
 	 */
-	public function count($count = null) {
+	public function count($count = null) 
+	{
 		if ($count < 0 || $count == null) return $this;
 		return $this->__getOrSet('count', $count);
 	}
@@ -465,7 +480,8 @@ abstract class DBQuery extends Object implements Renderable
 	 * @param string $value
 	 * @return DBQuery
 	 */
-	public function where($key, $right = null) {
+	public function where($key, $right = null) 
+	{
 		if (func_num_args() == 1) {
 			$this->where->add($key);
 		} else {
@@ -494,7 +510,8 @@ abstract class DBQuery extends Object implements Renderable
 	 * @param string $flag
 	 * @return DBQuery
 	 */
-	public function addFlag($flag, $asComment = false) {
+	public function addFlag($flag, $asComment = false) 
+	{
 		if ($asComment) {
 			$flag = '/* '.$flag.' */';
 		}
@@ -506,7 +523,8 @@ abstract class DBQuery extends Object implements Renderable
 	 * Adds a comment to the query
 	 * @param string $comment
 	 */
-	public function addComment($comment) {
+	public function addComment($comment) 
+	{
 		$this->flags->add('/* '.$comment.' */');
 		return $this;
 	}
@@ -605,7 +623,8 @@ abstract class DBQuery extends Object implements Renderable
 		}
 	}
 	
-	public function renderConditions($conditions, $quote = true) {
+	public function renderConditions($conditions, $quote = true) 
+	{
 		if (count($conditions) == 0) {
 			return null;
 		}
@@ -640,7 +659,8 @@ abstract class DBQuery extends Object implements Renderable
 	 * @param array(string) $join
 	 * @return string
 	 */
-	public function renderJoin($join = array()) {
+	public function renderJoin($join = array()) 
+	{
 		if (func_num_args() == 0) {
 			$join = $this->join;
 		}
@@ -699,10 +719,10 @@ abstract class DBQuery extends Object implements Renderable
 	 * Returns the rendered query
 	 * @return string
 	 */
-	public function __toString() {
+	public function __toString() 
+	{
 		return $this->render();
 	}
-
 }
 
 /**

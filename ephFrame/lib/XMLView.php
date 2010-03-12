@@ -31,8 +31,7 @@ class_exists('HTMLView') or require dirname(__FILE__).'/HTMLView.php';
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 22.10.2008
  */
-class XMLView extends HTMLView {
-	
-	public $contentType = 'application/rss+xml';
-	
+class XMLView extends HTMLView 
+{
+	public $contentType = 'application/rss+xml';	
 }

@@ -31,18 +31,21 @@ require_once dirname(__FILE__).'/../../../autorun.php';
  */
 class TestSelectQuery extends UnitTestCase
 {	
-	public function setUp() {
+	public function setUp() 
+	{
 		ephFrame::loadClass('ephFrame.lib.model.DB.SelectQuery');
 	}
 	
-	public function testSimple() {
+	public function testSimple() 
+	{
 		$q = new SelectQuery();
 		$q->autoNewLine = false;
 		$q->from('testtable')->select('*');
 		$this->assertEqual((string) $q, 'SELECT * FROM testtable');
 	}
 	
-	public function testAutoAllColumns() {
+	public function testAutoAllColumns() 
+	{
 		$q = new SelectQuery();
 		$q->autoNewLine = false;
 		$q->from('testtable');

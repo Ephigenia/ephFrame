@@ -28,8 +28,8 @@
  * @package ephFrame
  * @subpackage ephFrame.lib.component
  */
-class GEOCoords extends AppComponent {
-	
+class GEOCoords extends AppComponent 
+{
 	/**
 	 * Stores the constant radius at the equator
 	 * @var float
@@ -83,6 +83,5 @@ class GEOCoords extends AppComponent {
         $latB = $latitudeB  / 180 * pi();
         $lonB = $longitudeB / 180 * pi();
         return acos (sin($latA) * sin($latB) + cos($latA) * cos($latB) * cos($lonB-$lonA)) * self::EQUATORIAL_RADIUS_KM;  
-    } 
-	
+    } 	
 }

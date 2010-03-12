@@ -24,14 +24,14 @@ ephFrame::loadClass('ephFrame.lib.model.DB.DBQuery');
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 26.09.2008
  */
-class DBDescribeQuery extends DBQuery {
-	
+class DBDescribeQuery extends DBQuery 
+{
 	public $renderTemplate = '%verb %tables';
 	
-	public function __construct($tablename) {
+	public function __construct($tablename) 
+	{
 		parent::__construct('DESCRIBE');
 		$this->table($tablename);
 		return $this;
-	}
-	
+	}	
 }

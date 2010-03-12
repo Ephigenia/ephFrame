@@ -41,7 +41,8 @@
  * @subpackage ephFrame.lib
  * @version 0.2
  */
-class Color extends Object {
+class Color extends Object 
+{
 	
 	public $r;
 	public $g;
@@ -53,7 +54,8 @@ class Color extends Object {
 	 * Color Constructor
 	 * @param array(integer), integer, string
 	 */
-    public function __construct() {
+    public function __construct() 
+	{
     	// create color
     	$args = func_get_args();
     	// parameters passed: image, hexcolorstring
@@ -100,7 +102,8 @@ class Color extends Object {
      * Returns color handle used for painting in images
      * @return integer
      */
-    public function handle() {
+    public function handle() 
+	{
     	if (empty($this->handle)) {
     		$this->handleCreate();	
     	}
@@ -111,7 +114,8 @@ class Color extends Object {
      * Creates a Handle for this color and returns it
      * @return integer
      */
-    public function handleCreate() {
+    public function handleCreate() 
+	{
     	$this->handle = imagecolorallocate($this->image->handle(), $this->r, $this->g, $this->b);
     	return $this->handle;
     }
@@ -122,7 +126,8 @@ class Color extends Object {
      *
      * @param	integer $factor
      */
-    public function shift($factor) {
+    public function shift($factor) 
+	{
     	$this->r += $factor;
     	$this->g += $factor;
     	$this->b += $factor;
@@ -138,7 +143,8 @@ class Color extends Object {
      * Returns Hex Value for this Color as String
      * @return string
      */
-    public function hex($value = null) {
+    public function hex($value = null) 
+	{
     	if ($value !== null) {
     		list($this->r, $this->g, $this->b) = Color::HexToRGB($value);
     		return $this;
@@ -152,7 +158,8 @@ class Color extends Object {
      * Returns r,g,b array for this color
      * @return array(integer)
      */
-    public function rgb() {
+    public function rgb() 
+	{
     	return array($this->r, $this->g, $this->b);
     }
     
@@ -161,7 +168,8 @@ class Color extends Object {
      * 0 = 0, 1 = 255, 0.5 = 128
      * @return array(float)
      */
-   	public function rgbFloat() {
+   	public function rgbFloat() 
+	{
    		return array($this->r / 255, $this->g / 255, $this->b / 255);
    	}
    	
@@ -169,7 +177,8 @@ class Color extends Object {
    	 * Returns the color value as float values
    	 * @return array(float)
    	 */
-   	public function toFloat() {
+   	public function toFloat() 
+	{
    		return Color::rgbFloat($this->r, $this->g, $this->b);
    	}
     
@@ -207,7 +216,8 @@ class Color extends Object {
      * Returns the hex value for this color
      * @return string
      */
-    public function toHex() {
+    public function toHex() 
+	{
     	return Color::RGBtoHex($this->r, $this->g, $this->b);
     }
     
@@ -245,11 +255,13 @@ class Color extends Object {
     	return array($h, $s, $l);
     }
     
-    public function toHSL() {
+    public function toHSL() 
+	{
     	return Color::RGBtoHSL($this->r, $this->g, $this->b);
     }
     
-    public function hsl() {
+    public function hsl() 
+	{
     	return $this->toHSL();
     }
     
@@ -282,11 +294,13 @@ class Color extends Object {
     	return array($h, $s, $v);
     }
     
-    public function toHSV() {
+    public function toHSV() 
+	{
     	return Color::RGBtoHSV($this->r, $this->g, $this->b);
     }
     
-    public function hsv() {
+    public function hsv() 
+	{
     	return $this->toHSV();
     }
     
@@ -314,11 +328,13 @@ class Color extends Object {
      * Returns this color as YUV values
      * @return array(integer)
      */
-    public function toYUV() {
+    public function toYUV() 
+	{
     	return Color::RGBtoYUV($this->r, $this->g, $this->b);
     }
     
-    public function yuv() {
+    public function yuv() 
+	{
     	return $this->toYUV();
     }
     
@@ -359,8 +375,8 @@ class Color extends Object {
      * Returns this color as HUV values
      * @return array(integer)
      */
-    public function toHUV() {
+    public function toHUV() 
+	{
     	return Color::RGBtoHUV($this->r, $this->g, $this->b);
     }
-    
 }

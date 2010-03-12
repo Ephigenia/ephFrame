@@ -26,8 +26,8 @@
  * @subpackage ephFrame.lib.helper
  * @version 0.2
  */
-class Time extends Helper {
-	
+class Time extends Helper 
+{
 	/**
 	 * Shifts a timestamp by days, month, years in the future or
 	 * past. If you want to shift to the future you use positve values,
@@ -39,7 +39,8 @@ class Time extends Helper {
 	 * @param integer	$years		Number of Years to shift
 	 * @return integer
 	 */
-	public static function shift($timestamp, $days = null, $months = null, $years = null) {
+	public static function shift($timestamp, $days = null, $months = null, $years = null)
+	{
 		return mktime(0, 0, 0, date('m', $timestamp) + $months, date('d', $timestamp) + $days, date('Y', $timestamp) + $years);
 	}
 	
@@ -48,7 +49,8 @@ class Time extends Helper {
 	 * @param integer	$timestamp
 	 * @return boolean
 	 */
-	public static function isToday($timestamp) {
+	public static function isToday($timestamp)
+	{
 		return (date('d.m.Y', $timestamp) == date('d.m.Y', time()));
 	}
 	
@@ -57,7 +59,8 @@ class Time extends Helper {
 	 * @param integer	$timestamp
 	 * @return boolean
 	 */
-	public static function isYesterday($timestamp) {
+	public static function isYesterday($timestamp)
+	{
 		$yesterday = self::shift(time(),-1);
 		$today = self::shift(time(),0);
 		return ($timestamp >= $yesterday && $timestamp < $today);
@@ -68,7 +71,8 @@ class Time extends Helper {
 	 * @param integer	$timestamp
 	 * @return boolean
 	 */
-	public static function isTomorrow($timestamp) {
+	public static function isTomorrow($timestamp)
+	{
 		$tomorrow = self::shift(time(), 1);
 		$tomorrow2 = self::shift(time(), 2);
 		return ($timestamp >= $tomorrow && $timestamp < $tomorrow2);
@@ -79,7 +83,8 @@ class Time extends Helper {
 	 * @param integer	$timestamp
 	 * @return boolean
 	 */
-	public static function isThisWeek($timestamp) {
+	public static function isThisWeek($timestamp)
+	{
 		return (date('W', $timestamp) == date("W", time()));
 	}
 	
@@ -88,7 +93,8 @@ class Time extends Helper {
 	 * @param integer	$timestamp
 	 * @return boolean
 	 */
-	public static function isThisMonth($timestamp) {
+	public static function isThisMonth($timestamp)
+	{
 		return (date('m', $timestamp) == date("m", time()));
 	}
 	
@@ -97,7 +103,8 @@ class Time extends Helper {
 	 * @param integer	$timestamp
 	 * @return boolean
 	 */
-	public static function isThisYear($timestamp) {
+	public static function isThisYear($timestamp)
+	{
 		return (date('Y', $timestamp) == date('Y', time()));
 	}
 	
@@ -109,7 +116,8 @@ class Time extends Helper {
 	 * @param integer $precision
 	 * @return string
 	 */
-	public static function nice($timestamp, $timestamp2 = null, $precision = 2) {
+	public static function nice($timestamp, $timestamp2 = null, $precision = 2)
+	{
 		// parameter sanitize
 		if ($timestamp2 == null) $timestamp2 = time();
 		if ($precision <= 0) return null;
@@ -142,7 +150,8 @@ class Time extends Helper {
 		return $intervals[0][0];
 	}
 	
-	public static function niceShort($timestamp, $timestamp2 = null) {
+	public static function niceShort($timestamp, $timestamp2 = null)
+	{
 		return self::nice($timestamp, $timestamp2, 1);
 	}
 	
@@ -154,7 +163,8 @@ class Time extends Helper {
 	 * @param  integer	$timstamp	Timestamp from the past
 	 * @return string	Created human readable time string
 	 */
-	public static function timeAgoInWords($timestamp) {
+	public static function timeAgoInWords($timestamp)
+	{
 		if (self::isToday($timestamp)) {
 			$diff = time() - $timestamp;
 			$hours = $diff / 3600;
@@ -211,7 +221,8 @@ class Time extends Helper {
 	 * 					false return difference unsigned
 	 * @return array(integer) Calculated Difference Array
 	 */
-	public static function diff($time1, $time2 = null, $signed = true) {
+	public static function diff($time1, $time2 = null, $signed = true)
+	{
 		if ($time2 === null) $time2 = time();
 		// split arguments into year, month and day
 		if (is_int($time1)) {
@@ -271,7 +282,8 @@ class Time extends Helper {
 	/**
 	 * Return a timestamp for the monday of a week a day is in
 	 */
-	public static function weekMonday($year, $month, $day) {
+	public static function weekMonday($year, $month, $day)
+	{
 		return strtotime($year.'-W'.date('W', mktime(12, 0, 0,$month, $day, $year)).'-1');
 	}
 		
@@ -280,7 +292,8 @@ class Time extends Helper {
 	 * @param	integer	Last day of a month
 	 * @return integer Last day of a month
 	 */
-	public static function lastDayOfMonth($timestamp = null) {
+	public static function lastDayOfMonth($timestamp = null)
+	{
 		return date('d', self::lastDayOfMonthTimestamp($timestamp));
 	}
 	
@@ -289,7 +302,8 @@ class Time extends Helper {
 	 * @param integer $timestamp
 	 * @return integer Timestamp of the last day of a month
 	 */
-	public static function lastDayOfMonthTimestamp($timestamp = null) {
+	public static function lastDayOfMonthTimestamp($timestamp = null)
+	{
 		if ($timestamp === null) {
 			$timestamp = time();
 		}
@@ -309,7 +323,8 @@ class Time extends Helper {
 	 * @return integer Calculated Age in Years
 	 * @see diff
 	 */
-	public static function ageInYears($time) {
+	public static function ageInYears($time)
+	{
 		$difference = self::diff(date('j-n-Y'), $time);
 		// reduce age to one if the day and month is not reached
 		if (date("n") < $difference["months"] && date("j") < $difference["days"]) {
@@ -317,6 +332,5 @@ class Time extends Helper {
 		}
 		// return the calculated age
 		return $difference["years"];
-	}
-	
+	}	
 }

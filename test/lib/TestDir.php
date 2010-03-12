@@ -28,11 +28,13 @@ require_once dirname(__FILE__).'/../autorun.php';
  */
 class TestDir extends UnitTestCase
 {	
-	public function setUp() {
+	public function setUp() 
+	{
 		loadClass('ephFrame.lib.Dir');
 	}
 	
-	public function testRead() {
+	public function testRead() 
+	{
 		$dir = new Dir(FRAME_LIB_DIR);
 		$this->assertTrue($dir->read() instanceof IndexedArray);
 		$this->assertTrue($dir->read()->count() > 0);

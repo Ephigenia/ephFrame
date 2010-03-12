@@ -149,7 +149,8 @@ class Image extends File implements Renderable
 	 * @param integer $backgroundColor
 	 * @return Image
 	 */
-	public function __construct($filenameWidthOrHandle = null, $height = null, $backgroundColor = 0xffffff) {
+	public function __construct($filenameWidthOrHandle = null, $height = null, $backgroundColor = 0xffffff) 
+	{
 		// first check for gd lib installed
 		if (!$this->phpHasGDLib()) throw new ImageGDLibNotFoundException();
 		// create from ressource
@@ -177,7 +178,8 @@ class Image extends File implements Renderable
 	 * @param $filter ImageFilter
 	 * @return Image
 	 */
-	public function applyFilter(ImageFilter $filter) {
+	public function applyFilter(ImageFilter $filter) 
+	{
 		$filter->apply($this);
 		return $this;
 	}
@@ -187,7 +189,8 @@ class Image extends File implements Renderable
 	 * @param Color|array $color
 	 * @return Image
 	 */
-	public function backgroundColor($color) {
+	public function backgroundColor($color) 
+	{
 		return $this->rectangle(0, 0, $this->width, $this->height, null, $color);
 	}
 	
@@ -206,7 +209,8 @@ class Image extends File implements Renderable
 	 * @param string $backgroundColor
 	 * @return Image
 	 */
-	public function rectangle($x1, $y1, $x2, $y2, $borderColor = null, $backgroundColor = null, $antialias = false, $lineWidth = 1) {
+	public function rectangle($x1, $y1, $x2, $y2, $borderColor = null, $backgroundColor = null, $antialias = false, $lineWidth = 1) 
+	{
 		if ($lineWidth > 1) {
 			imagesetthickness($this->handle(), $lineWidth);
 		}
@@ -228,7 +232,8 @@ class Image extends File implements Renderable
 	 * Alias for {@link rectangle}
 	 * @return Image
 	 */
-	public function rect($x1, $y1, $x2, $y2, $borderColor = null, $backgroundColor = null, $antialias = false) {
+	public function rect($x1, $y1, $x2, $y2, $borderColor = null, $backgroundColor = null, $antialias = false) 
+	{
 		return $this->rectangle($x1, $y1, $x2, $y2, $borderColor, $backgroundColor, $antialias);
 	}
 	
@@ -240,7 +245,8 @@ class Image extends File implements Renderable
 	 * @param integer $padding
 	 * @return Image
 	 */
-	public function border($color, $width = 1, $padding = 0) {
+	public function border($color, $width = 1, $padding = 0) 
+	{
 		for($i = 0; $i < $width; $i++) {
 			$this->rect($i + $padding, $i + $padding, $this->width - $i - 1 - $padding, $this->height - $i - 1 - $padding, $color);
 		}
@@ -255,7 +261,8 @@ class Image extends File implements Renderable
 	 * @param integer $y2
 	 * @param array|Color $color
 	 */
-	public function line($x1, $y1, $x2, $y2, $color, $thickness = 1, $antialias = false) {
+	public function line($x1, $y1, $x2, $y2, $color, $thickness = 1, $antialias = false) 
+	{
 		if (func_num_args() == 6) $this->setThickness($thickness);
 		$color = $this->createColor($color);
 		$color = $color->handle();
@@ -271,13 +278,15 @@ class Image extends File implements Renderable
 	
 	protected $y = 0;
 	
-	public function moveTo($x, $y) {
+	public function moveTo($x, $y) 
+	{
 		$this->x = $x;
 		$this->y = $y;
 		return $this;
 	}
 	
-	public function lineTo($x, $y, $color, $width = 1, $antialias = false) {
+	public function lineTo($x, $y, $color, $width = 1, $antialias = false) 
+	{
 		if ($width > 1) imagesetthickness($this->h(), $width);
 		if ($antialias && function_exists('imageantialias')) imageantialias($this->h(), true);
 		imageline($this->h(), $this->x, $this->y, $x, $y, $this->color($color));
@@ -318,7 +327,8 @@ class Image extends File implements Renderable
 	 * @param $backgroundColor
 	 * @return Image
 	 */
-	public function circle($x, $y, $d, $color, $backgroundColor = false) {
+	public function circle($x, $y, $d, $color, $backgroundColor = false) 
+	{
 		if ($backgroundColor) {
 			imagefilledellipse($this->handle(), $x, $y, $d, $d, $this->createColor($backgroundColor));
 		}
@@ -333,7 +343,8 @@ class Image extends File implements Renderable
 	 * @param array|integer $color
 	 * @return Image 
 	 */
-	public function setPixel($x, $y, $color) {
+	public function setPixel($x, $y, $color) 
+	{
 		$color = $this->createColor($color);
 		imagesetpixel($this->handle(), $x, $y, $color->handle());
 		return $this;
@@ -345,7 +356,8 @@ class Image extends File implements Renderable
 	 * @param integer $y
 	 * @return Color
 	 */
-	public function getPixel($x, $y) {
+	public function getPixel($x, $y) 
+	{
 		$col = imagecolorat($this->handle(), $x, $y);
 		if ($this->type() == self::TYPE_GIF) {
 			$col = imagecolorsforindex($this->handle(), $col);
@@ -382,7 +394,8 @@ class Image extends File implements Renderable
 	 * @param integer $scale Scale the sprite by given value 2 doubles the size
 	 * @return Image
 	 */
-	public function drawSprite($posx, $posy, Array $sprite, $color = null, $invert = false, $scale = 1) {
+	public function drawSprite($posx, $posy, Array $sprite, $color = null, $invert = false, $scale = 1) 
+	{
 		// get the color
 		if (!is_integer($color)) {
 			$color = $this->createColor($color);
@@ -419,7 +432,8 @@ class Image extends File implements Renderable
 	 * Alias for {@link drawSprite}
 	 * @return Image
 	 */
-	public function sprite($posx, $posy, Array $sprite, $color = null, $invert = false, $scale = 1) {
+	public function sprite($posx, $posy, Array $sprite, $color = null, $invert = false, $scale = 1) 
+	{
 		return $this->drawSprite($posx, $posy, $sprite, $color, $invert, $scale);
 	}
 	
@@ -457,7 +471,8 @@ class Image extends File implements Renderable
 	 * Returns the width of the image
 	 * @return integer|Image
 	 */	
-	public function width($width = null) {
+	public function width($width = null) 
+	{
 		if (func_num_args() == 0) {
 			if (!empty($this->width)) return $this->width;
 			if ($this->exists()) {
@@ -476,7 +491,8 @@ class Image extends File implements Renderable
 	 * Returns the height of the image
 	 * @return integer|Image
 	 */
-	public function height($height = null) {
+	public function height($height = null) 
+	{
 		if (func_num_args() == 0) {
 			if (!empty ($this->height)) return $this->height;
 			if ($this->exists()) {
@@ -507,7 +523,8 @@ class Image extends File implements Renderable
 	 * @param Color|integer|array $backgroundColor optional Background color
 	 * @return Image
 	 */
-	public function text($x, $y, $text, $color, $size = null, $backgroundColor = null) {
+	public function text($x, $y, $text, $color, $size = null, $backgroundColor = null) 
+	{
 		if (is_object($text)) {
 			if (method_exists($text, '__toString')) {
 				$text = $text->__toString();
@@ -551,7 +568,8 @@ class Image extends File implements Renderable
 	 * @param  integer $font
 	 * @return integer
 	 */
-	public function fontHeight($font = null) {
+	public function fontHeight($font = null) 
+	{
 		return imagefontheight(($font == null) ? $this->fontSize : $font);
 	}							   
 		
@@ -560,7 +578,8 @@ class Image extends File implements Renderable
 	 * @param  integer $font
 	 * @return integer
 	 */						   
-	public function fontWidth($font = null)  {
+	public function fontWidth($font = null)  
+	{
 		return ImageFontWidth(($font == null) ? $this->fontSize : $font);
 	}
 	
@@ -570,7 +589,8 @@ class Image extends File implements Renderable
 	 * @param integer	$font
 	 * @return integer
 	 */
-	public function textWidth($text, $font = null) {
+	public function textWidth($text, $font = null) 
+	{
 		if (is_object($text)) {
 			if (method_exists($text, '__toString')) {
 				$text = $text->__toString();
@@ -581,7 +601,8 @@ class Image extends File implements Renderable
 		return strlen($text) * $this->fontWidth($font);
 	}
 	
-	public function textHeight($font = null) {
+	public function textHeight($font = null) 
+	{
 		return $this->fontHeight($font);
 	}
 	
@@ -589,7 +610,8 @@ class Image extends File implements Renderable
 	 * Image has Panel Format?
 	 * @return boolean
 	 */
-	public function isPanelFormat() {
+	public function isPanelFormat() 
+	{
 		return ($this->width() < $this->height());
 	}
 	
@@ -597,7 +619,8 @@ class Image extends File implements Renderable
 	 * Image has Landscape Format?
 	 * @return boolean
 	 */
-	public function isLandScapeFormat() {
+	public function isLandScapeFormat() 
+	{
 		return !$this->isPanelFormat();
 	}
 
@@ -617,7 +640,8 @@ class Image extends File implements Renderable
 	 * @param boolean $scale 
 	 * @return Image
 	 */
-	public function resizeTo($width = null, $height = null, $constrainProps = true, $upScale = true) {
+	public function resizeTo($width = null, $height = null, $constrainProps = true, $upScale = true) 
+	{
 		// don't scale if no width and no height is paassed
 		if ($width == null && $height == null) {
 			return $this;
@@ -660,7 +684,8 @@ class Image extends File implements Renderable
 		return $this;
 	}
 	
-	public function resize($width, $height, $contrainProps = true, $upScale = true) {
+	public function resize($width, $height, $contrainProps = true, $upScale = true) 
+	{
 		return $this->resizeTo($width, $height, $contrainProps, $upScale);
 	}
 	
@@ -673,7 +698,8 @@ class Image extends File implements Renderable
 	 * @param $upScale	
 	 * @return array(int) 0 => widht, 1 => height
 	 */
-	public function calculateThumbSize($width = null, $height = null, $constrainProps = true, $upScale = true) {
+	public function calculateThumbSize($width = null, $height = null, $constrainProps = true, $upScale = true) 
+	{
 		$r = array(null, null);
 		if ($width == null && $height == null) {
 			return $r;
@@ -725,7 +751,8 @@ class Image extends File implements Renderable
 	 * @param	integer	$height	
 	 * @return Image
 	 */
-	public function stretchResizeTo($width = null, $height = null) {
+	public function stretchResizeTo($width = null, $height = null) 
+	{
 		// no scaling at all if no width or height passed
 		if ($width == null && $height == null) {
 			return $this;
@@ -753,7 +780,8 @@ class Image extends File implements Renderable
 		return $this;
 	}
 	
-	public function resizeCrop($width, $height) {
+	public function resizeCrop($width, $height) 
+	{
 		return $this->stretchResizeTo($width, $height);
 	}
 	
@@ -772,7 +800,8 @@ class Image extends File implements Renderable
 	 * @throws ImageScaleException
 	 * @return Image
 	 */
-	public function scale($percent) {
+	public function scale($percent) 
+	{
 		//assert(is_integer($percent) || is_float($percent));
 		if ($percent <= 0) throw new ImageScaleException($this);
 		if ($percent <= 1) {
@@ -801,7 +830,8 @@ class Image extends File implements Renderable
 	 * @param 	boolean	$download	if set to true a download header is created
 	 * @return string
 	 */
-	public function header($filename = null, $download = false) {		
+	public function header($filename = null, $download = false) 
+	{		
 		$header[] = "Content-Type: image/" . $this->imageTypes[$this->type()];
 		if ($download) {
 			if ($filename !== null) {
@@ -825,7 +855,8 @@ class Image extends File implements Renderable
 	 * 
 	 * @return Image
 	 */
-	public function crop($x1, $y1, $x2, $y2) {
+	public function crop($x1, $y1, $x2, $y2) 
+	{
 		$this->handle = imagecopyresampled($this->handle, $oldHandle, 0, 0, $srcX, $srcY, $width, $height, $srcW, $srcH);
 		return $this;
 	}
@@ -838,7 +869,8 @@ class Image extends File implements Renderable
 	 * @throws ImageIndeterminateFormat
 	 * @throws ImageInvalidTypeException
 	 */
-	public function type($type = null) {
+	public function type($type = null) 
+	{
 		if (func_num_args() > 0) {
 			// check if image type valid
 			if (is_integer($type)) {
@@ -869,7 +901,8 @@ class Image extends File implements Renderable
 	 * </code>
 	 * @return array(string)
 	 */
-	public function availableTypes() {
+	public function availableTypes() 
+	{
 		return $this->imageTypes;
 	}
 
@@ -883,7 +916,8 @@ class Image extends File implements Renderable
 	 * </code>
 	 * @param	string|array(string)	$type
 	 */
-	public function hasType($type) {
+	public function hasType($type) 
+	{
 		if (is_array($type)) {
 			return (in_array($this->type(), $type));
 		} else {
@@ -896,7 +930,8 @@ class Image extends File implements Renderable
 	 * @see hasType
 	 * @return boolean
 	 */
-	public function isType($type) {
+	public function isType($type) 
+	{
 		return $this->hasType($type);
 	}
 
@@ -905,7 +940,8 @@ class Image extends File implements Renderable
 	 * @return string
 	 * @see getImageType
 	 */
-	public function extension($new = null) {
+	public function extension($new = null) 
+	{
 		if ($new !== null) {
 			return parent::extension($new);
 		}
@@ -923,7 +959,8 @@ class Image extends File implements Renderable
 	 * @return integer	Number of color channels
 	 * @throws ImageIndeterminateColorChannels
 	 */
-	public function channels() {
+	public function channels() 
+	{
 		$imgInfo = $this->getImageInfo();
 		if (!array_key_exists('channels', $imgInfo)) {
 			throw new ImageIndeterminateColorChannels($this);
@@ -935,7 +972,8 @@ class Image extends File implements Renderable
 	 * Tests wheter the image has the given number of color channels
 	 * @param	integer	$channels
 	 */
-	public function hasChannels($channels) {
+	public function hasChannels($channels) 
+	{
 		return ($this->channels() == $channels);
 	}
 	
@@ -943,7 +981,8 @@ class Image extends File implements Renderable
 	 * Returns the numbers of bits for the image
 	 * @return integer
 	 */
-	public function bits() {
+	public function bits() 
+	{
 		$imgInfo = $this->getImageInfo();
 		if (!array_key_exists('bits', $imgInfo)) {
 			throw new ImageIndeterminateBits($this);
@@ -981,7 +1020,8 @@ class Image extends File implements Renderable
 	 * @param integer $height
 	 * @return ressource
 	 */
-	public function createHandle($type = null, $width = null, $height = null) {
+	public function createHandle($type = null, $width = null, $height = null) 
+	{
 		// create handle from existing file
 		if ($this->exists() && func_num_args() == 0) {
 			// check if enough memory available
@@ -1038,7 +1078,8 @@ class Image extends File implements Renderable
 	 * created using {@link createHandle}
 	 * @return ressource for image
 	 */
-	public function handle() {
+	public function handle() 
+	{
 		if (empty($this->handle)) {
 			$this->createHandle();
 		}
@@ -1051,7 +1092,8 @@ class Image extends File implements Renderable
 	 * @param	integer	$quality optional JPG-Image quality (only applied if image is an jpeg)
 	 * @return boolean|string image string source or boolean failure
 	 */
-	public function getImage($quality = 60) {
+	public function getImage($quality = 60) 
+	{
 		switch ($this->type()) {
 			default :
 			case self::TYPE_GIF:
@@ -1094,7 +1136,8 @@ class Image extends File implements Renderable
 	 * @param integer $quality optional image quality
 	 * @return boolean
 	 */
-	public function saveImage($filename = null, $quality = 60) {
+	public function saveImage($filename = null, $quality = 60) 
+	{
 		if (is_null($filename)) {
 			$filename = $this->nodeName;
 		}
@@ -1129,7 +1172,8 @@ class Image extends File implements Renderable
 	 * Alias for {@link saveImage}
 	 * @see saveImage
 	 */
-	public function saveAs($filename, $quality = 60) {
+	public function saveAs($filename, $quality = 60) 
+	{
 		return $this->saveImage($filename, $quality);
 	}
 	
@@ -1144,7 +1188,8 @@ class Image extends File implements Renderable
 	 * @param integer	$quality Quality for jpg images
 	 * @return true on success
 	 */
-	public function save($quality = 60) {
+	public function save($quality = 60) 
+	{
 		return $this->saveImage(null, $quality);
 	}
 
@@ -1158,7 +1203,8 @@ class Image extends File implements Renderable
 	 * @param	integer	$precision
 	 * @return float
 	 */
-	public function aspectRatio($precision = 2) {
+	public function aspectRatio($precision = 2) 
+	{
 		// prevent division by zero
 		if ($this->height() == 0 || $this->width() == 0) {
 			return 0.0;
@@ -1233,7 +1279,8 @@ class Image extends File implements Renderable
 		return $this;
 	}
 
-	public function createColor($color) {
+	public function createColor($color) 
+	{
 		$args = func_get_args();
 		if (get_class($args[0]) == 'Color') {
 			$color = $args[0];
@@ -1255,7 +1302,8 @@ class Image extends File implements Renderable
 	 * @param integer	$colorIndex Index of Color you want to get
 	 * @return Color|boolean
 	 */
-	public function getColorForIndex($colorIndex) {
+	public function getColorForIndex($colorIndex) 
+	{
 		if (isset ($this->colors[$colorIndex])) {
 			return $this->colors[$colorIndex];
 		} elseif (!empty($this->handle)) {
@@ -1270,7 +1318,8 @@ class Image extends File implements Renderable
 	 * Converts the image to a color matrix.
 	 * @return	array(integer(array(string)))
 	 */
-	public function getColorMatrix() {
+	public function getColorMatrix() 
+	{
 		$imageHandle = $this->handle();
 		$width = $this->width();
 		$height = $this->height();
@@ -1283,11 +1332,13 @@ class Image extends File implements Renderable
 		return $matrix;
 	}
 	
-	public function beforeRender() {
+	public function beforeRender() 
+	{
 		return true;
 	}
 	
-	public function afterRender($rendered) {
+	public function afterRender($rendered) 
+	{
 		return $rendered;
 	}
 	
@@ -1296,21 +1347,23 @@ class Image extends File implements Renderable
 	 * @param integer $quality
 	 * @return string
 	 */
-	public function render($quality = 80) {
+	public function render($quality = 80) 
+	{
 		return $this->getImage($quality);
 	}
 	
-	public function __destruct() {
+	public function __destruct() 
+	{
 		unset($this->handle);
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ImageException extends BasicException {}
+class ImageException extends BasicException 
+{}
 
 /**
  * Thrown if the gd-lib (that is used by the {@link Image} class can
@@ -1318,7 +1371,8 @@ class ImageException extends BasicException {}
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ImageGDLibNotFoundException extends ImageException {}
+class ImageGDLibNotFoundException extends ImageException 
+{}
 
 /**
  * Thrown if a bezier curve has to less points to draw
@@ -1326,22 +1380,26 @@ class ImageGDLibNotFoundException extends ImageException {}
  * @subpackage ephFrame.lib.exception
  * 
  */
-class ImageDrawBezierInvalidPointCount extends ImageException {}
+class ImageDrawBezierInvalidPointCount extends ImageException 
+{}
 
 /**
  * Thrown if this class should create or manipulate swf files
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ImageCreateUnableToCreateSWFException extends ImageException {}
+class ImageCreateUnableToCreateSWFException extends ImageException 
+{}
 
 /**
  * Thrown if the image type could not be determined
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ImageUndetectableImageType extends ImageException {
-	public function __construct(Image $image) {
+class ImageUndetectableImageType extends ImageException 
+{
+	public function __construct(Image $image) 
+	{
 		if ($image->exists()) {
 			$message = 'Unable to determine type of image (\''.$image->nodeName.'\').';
 		} else {
@@ -1356,8 +1414,10 @@ class ImageUndetectableImageType extends ImageException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ImageInvalidTypeException extends ImageException {
-	public function __construct($type) {
+class ImageInvalidTypeException extends ImageException 
+{
+	public function __construct($type) 
+	{
 		parent::__construct('Invalid image type \''.$type.'\'.');
 	}
 }
@@ -1366,8 +1426,10 @@ class ImageInvalidTypeException extends ImageException {
  * Thrown if createHandle called for images that would let the memory
  * used by php be to large
  */
-class ImageToLargeToLoadException extends ImageException {
-	public function __construct(Image $image, $availableSize, $neededSize) {
+class ImageToLargeToLoadException extends ImageException 
+{
+	public function __construct(Image $image, $availableSize, $neededSize) 
+	{
 		parent::__construct('Unable to create image handle because image is to large.');
 	}
 }
@@ -1377,18 +1439,21 @@ class ImageToLargeToLoadException extends ImageException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ImageIndeterminateFormat extends ImageException {}
+class ImageIndeterminateFormat extends ImageException 
+{}
 
 /**
  * Thrown if the image type could not be determined
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ImageIndeterminateBits extends ImageException {}
+class ImageIndeterminateBits extends ImageException 
+{}
 
 /**
  * Thrown if the number of channels in the image could not be found
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ImageIndeterminateColorChannels extends ImageException {}
+class ImageIndeterminateColorChannels extends ImageException 
+{}

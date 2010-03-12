@@ -27,8 +27,7 @@ class_exists('FormField') or require(dirname(__FILE__).'/FormField.php');
  * @package ephFrame
  * @subpackage ephFrame.lib.component.Form.Field
  */
-class FormFieldHidden extends FormField {
-	
-	public $type = 'hidden';
-	
+class FormFieldHidden extends FormField 
+{	
+	public $type = 'hidden';	
 }

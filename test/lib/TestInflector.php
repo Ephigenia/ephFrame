@@ -26,13 +26,16 @@ require_once dirname(__FILE__).'/../autorun.php';
  * @package ephFrame
  * @subpackage ephFrame.test
  */
-class TestInflector extends UnitTestCase {
+class TestInflector extends UnitTestCase 
+{
 	
-	public function setUp() {
+	public function setUp() 
+	{
 		ephFrame::loadClass('ephFrame.lib.Inflector');
 	}
 	
-	public function testPluralize() {
+	public function testPluralize() 
+	{
 		$tests = array(
 			'User'  => 'Users',
 			'user'	=> 'users',
@@ -50,7 +53,8 @@ class TestInflector extends UnitTestCase {
 		}
 	}
 	
-	public function testCamellize() {
+	public function testCamellize() 
+	{
 		$this->assertEqual(Inflector::camellize('my_class_name'), 'myClassName');
 		$this->assertEqual(Inflector::camellize('my class name'), 'myClassName');
 		$this->assertEqual(Inflector::camellize('my class näme'), 'myClassNäme');
@@ -58,7 +62,8 @@ class TestInflector extends UnitTestCase {
 		$this->assertEqual(Inflector::camellize('my'.LF.' class näme'), 'myClassNäme');
 	}
 	
-	public function testDelimeterSeperate() {
+	public function testDelimeterSeperate() 
+	{
 		$a = array(
 			'hallo my name is Earl' => 'hallo_my_name_is_earl',
 			'youAreSo Great' => 'you_are_so_great',

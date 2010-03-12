@@ -50,8 +50,8 @@
  * @package ephFrame
  * @subpackage ephFrame.lib.component
  */
-class WikiText extends AppComponent {
-
+class WikiText extends AppComponent 
+{
 	/**
 	 * Wiki syntax array
 	 * @var array(string)
@@ -94,7 +94,8 @@ class WikiText extends AppComponent {
 	/**
 	 * WikiText contstructer, enhance the syntax from here
 	 */
-	public function __construct() {
+	public function __construct() 
+	{
 		return parent::__construct();
 	}
 	
@@ -107,7 +108,8 @@ class WikiText extends AppComponent {
 	 * @param string $string
 	 * @param string
 	 */
-	public function format($string) {
+	public function format($string) 
+	{
 		$translated = $string;
 		foreach ($this->syntax as $syntaxName => $syntaxData) {
 			// use the callback function if it's set
@@ -123,6 +125,5 @@ class WikiText extends AppComponent {
 		//$translated = String::normalizeBrakes($translated);
 		//$translated = preg_replace('@([^><])\n{2,}@', '$1<br /><br />'.LF, $translated);
 		return $translated;
-	}
-	
+	}	
 }

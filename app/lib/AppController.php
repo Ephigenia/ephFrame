@@ -43,7 +43,8 @@ class AppController extends Controller
 		'MetaTags',
 	);
 	
-	public function beforeRender() {
+	public function beforeRender() 
+	{
 		if (Registry::get('DEBUG') > DEBUG_PRODUCTION) {
 			$this->CSS->addFile('debug');
 		}

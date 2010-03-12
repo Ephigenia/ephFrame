@@ -26,23 +26,27 @@ require_once dirname(__FILE__).'/../../autorun.php';
  * @package ephFrame
  * @subpackage ephFrame.test
  */
-class TestWikiText extends UnitTestCase {
+class TestWikiText extends UnitTestCase 
+{
 	
 	/**
 	 * @var WikiText
 	 */
 	protected $wikiText;
 	
-	public function setUp() {
+	public function setUp() 
+	{
 		ephFrame::loadClass('ephFrame.lib.component.WikiText');
 		$this->wikiText = new WikiText();
 	}
 	
-	public function testBold() {
+	public function testBold() 
+	{
 		$this->assertEqual($this->wikiText->format("'''test'''"), '<strong>test</strong>');	
 	}
 	
-	public function testHeadline() {
+	public function testHeadline() 
+	{
 		$this->assertEqual($this->wikiText->format('= test ='), '<h1>test</h1>');
 		$this->assertEqual($this->wikiText->format('== test =='), '<h2>test</h2>');
 		$this->assertEqual($this->wikiText->format('=== test ==='), '<h3>test</h3>');
@@ -52,16 +56,19 @@ class TestWikiText extends UnitTestCase {
 		$this->assertEqual($this->wikiText->format('======= test ======='), '<h6>test</h6>');
 	}
 	
-	public function testItalic() {
+	public function testItalic() 
+	{
 		$this->assertEqual($this->wikiText->format("''italic''"), '<i>italic</i>');
 	}
 	
-	public function testLink() {
+	public function testLink() 
+	{
 		$this->assertEqual($this->wikiText->format('[www.ephigenia.de]'), '<a href="www.ephigenia.de">www.ephigenia.de</a>');
 		$this->assertEqual($this->wikiText->format('[www.ephigenia.de ephigenia]'), '<a href="www.ephigenia.de" title="ephigenia">ephigenia</a>');
 	}
 	
-	public function testHr() {
+	public function testHr() 
+	{
 		$this->assertEqual($this->wikiText->format('----'), '<hr />');
 	}
 }

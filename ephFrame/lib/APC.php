@@ -28,22 +28,23 @@
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class APC extends Object implements CacheEngine {
-	
+class APC extends Object implements CacheEngine 
+{
 	public static function checkForAPCPECL() {
 		
 	}
-	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class APCException extends CacheException {}
+class APCException extends CacheException 
+{}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class APCPECLNotFoundException extends APCException {}
+class APCPECLNotFoundException extends APCException 
+{}

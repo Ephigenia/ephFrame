@@ -26,13 +26,16 @@ require_once dirname(__FILE__).'/../../autorun.php';
  * @package ephFrame
  * @subpackage ephFrame.test
  */
-class TestTime extends UnitTestCase {
+class TestTime extends UnitTestCase 
+{
 	
-	public function setUp() {
+	public function setUp() 
+	{
 		ephFrame::loadClass('ephFrame.lib.helper.Time');
 	}
 	
-	public function testNiceShort() {
+	public function testNiceShort() 
+	{
 		$time1 = mktime(0, 0, 0, 6, 1, 2009);
 		foreach(array(
 			mktime(0, 0, 0, 6, 1, 2009) => 'jetzt',
@@ -52,7 +55,8 @@ class TestTime extends UnitTestCase {
 		}
 	}
 	
-	public function testNice() {
+	public function testNice() 
+	{
 		// 2009-10-10 12:00:00
 		$time = mktime(12, 0, 0, 10, 10, 2009);
 		foreach(array(
@@ -71,12 +75,14 @@ class TestTime extends UnitTestCase {
 		}
 	}
 	
-	public function testIsToday() {
+	public function testIsToday() 
+	{
 		$this->assertEqual(Time::isToday(time()), true);
 		$this->assertEqual(Time::isToday(time()-DAY), false);
 	}
 	
-	public function testIsYesterday() {
+	public function testIsYesterday() 
+	{
 		$this->assertEqual(Time::isYesterday(time()), false);
 		$this->assertEqual(Time::isYesterday(time()-DAY), true);
 	}

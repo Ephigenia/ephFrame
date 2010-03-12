@@ -55,7 +55,8 @@ class Paginator extends AppHelper
 	 * @var array(string) $attributes
 	 * @return HTMLTag
 	 */
-	public function current($label = null, Array $attributes = array()) {
+	public function current($label = null, Array $attributes = array()) 
+	{
 		return $this->page($this->page, $label);
 	}
 	
@@ -67,7 +68,8 @@ class Paginator extends AppHelper
 	 * @param array(string) $attributes
 	 * @return HTMLTag
 	 */
-	public function page($page, $label = null, Array $attributes = array()) {
+	public function page($page, $label = null, Array $attributes = array()) 
+	{
 		if (!$this->hasPage($page)) return false;
 		return $this->HTML->link(
 			$this->url($page),
@@ -81,7 +83,8 @@ class Paginator extends AppHelper
 	 * @param integer $page
 	 * @return string
 	 */
-	public function url($page) {
+	public function url($page) 
+	{
 		return String::substitute($this->url, array('page' => $page));
 	}
 	
@@ -90,7 +93,8 @@ class Paginator extends AppHelper
 	 * @param integer $page
 	 * @return boolean
 	 */
-	public function hasPage($page) {
+	public function hasPage($page) 
+	{
 		return ((int) $page <= $this->pagesTotal);
 	}
 	
@@ -100,7 +104,8 @@ class Paginator extends AppHelper
 	 * @param array(string) $attributes optional additional link attributes
 	 * @return HTMLTag
 	 */
-	public function first($label = null, Array $attributes = array()) {
+	public function first($label = null, Array $attributes = array()) 
+	{
 		return $this->page(1, $label, $attributes);
 	}
 	
@@ -112,7 +117,8 @@ class Paginator extends AppHelper
 	 * @param Array(string) $attributes 
 	 * @return HTMLTag
 	 */
-	public function last($label = null, Array $attributes = array()){
+	public function last($label = null, Array $attributes = array())
+	{
 		return $this->page($this->pagesTotal, $label, $attributes);
 	}
 	
@@ -120,7 +126,8 @@ class Paginator extends AppHelper
 	 * Tests if there is a previous page to the current one.
 	 * @return boolean
 	 */
-	public function hasPrevious() {
+	public function hasPrevious() 
+	{
 		return ($this->page > 1);
 	}
 	
@@ -130,7 +137,8 @@ class Paginator extends AppHelper
 	 * @param array(string) $attributes
 	 * @return HTMLTag
 	 */
-	public function previous($label = null, Array $attributes = array()) {
+	public function previous($label = null, Array $attributes = array()) 
+	{
 		return $this->page($this->page - 1 or 1, $label, $attributes);
 	}
 	
@@ -138,7 +146,8 @@ class Paginator extends AppHelper
 	 * Checks if there’s a next page for the current Paginator state
 	 * @return boolean
 	 */
-	public function hasNext() {
+	public function hasNext() 
+	{
 		return $this->hasPage($this->page + 1);
 	}
 	
@@ -148,7 +157,8 @@ class Paginator extends AppHelper
 	 * @param array(string) $attributes optional additional link attributes
 	 * @return HTMLTag
 	 */
-	public function next($label = null, Array $attributes = array()) {
+	public function next($label = null, Array $attributes = array()) 
+	{
 		return $this->page($this->page + 1, $label, $attributes);
 	}
 	
@@ -159,7 +169,8 @@ class Paginator extends AppHelper
 	 * @param integer $padding 
 	 * @return string
 	 */
-	public function numbers($tag = 'li', Array $attributes = array(), $padding = 2) {
+	public function numbers($tag = 'li', Array $attributes = array(), $padding = 2) 
+	{
 		$numbers = array();
 		for($i = 1; $i <= $this->pagesTotal; $i++) {
 			if (
@@ -189,7 +200,8 @@ class Paginator extends AppHelper
 	 * Before-Render Callback that is called from the controller
 	 * @return boolean
 	 */
-	public function beforeRender() {
+	public function beforeRender() 
+	{
 		$this->page = (int) $this->controller->data['pagination']['page'] or 1;
 		$this->pagesTotal = (int) $this->controller->data['pagination']['pagesTotal'];
 		$this->url = $this->controller->data['pagination']['url'];

@@ -41,7 +41,8 @@ class ConsoleHistogram extends ConsoleDrawing
 	public $titleFormat = '[ %title% ]';
 	public $relativeMax = true;
 	
-	public function __construct($x, $y, $width = null, $height = null) {
+	public function __construct($x, $y, $width = null, $height = null) 
+	{
 		foreach(array('x','y','width','height') as $index => $val) {
 			if (${$val} !== null || func_num_args() > $index+1) {
 				$this->{$val} = ${$val};
@@ -51,7 +52,8 @@ class ConsoleHistogram extends ConsoleDrawing
 		return $this;
 	}
 	
-	public function draw($value = null) {
+	public function draw($value = null) 
+	{
 		if ($value !== null) {
 			$this->data[] = $value;
 		}
@@ -78,7 +80,8 @@ class ConsoleHistogram extends ConsoleDrawing
 		return true;
 	}
 	
-	public function drawTitle($title) {
+	public function drawTitle($title) 
+	{
 		$this->moveCursor($this->x + 3, $this->y + 1);
 		$this->out(strtr($this->titleFormat, array('%title%' => $title)));
 		return true;
@@ -102,12 +105,12 @@ class ConsoleHistogram extends ConsoleDrawing
 		$this->drawLine($x, $y - $height + 1, $x, $y + 1, $this->emptyIndicator);
 		$this->drawLine($x, $y - $onHeight + 1, $x, $y + 1, $char);
 		return true;
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ConsoleHistogramException extends ConsoleDrawingException {}
+class ConsoleHistogramException extends ConsoleDrawingException 
+{}

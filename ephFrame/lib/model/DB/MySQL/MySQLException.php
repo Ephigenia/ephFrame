@@ -26,8 +26,8 @@
  * @package ephFrame
  * @subpackage ephFrame.lib.model.DB.MySQL
  */
-class MySQLException extends DBException {
-	
+class MySQLException extends DBException 
+{	
 	const ERRNO_DEFAULT 					= 0;
 	const ERRNO_ACCESS_DENIED 				= 1045;
 	const ERRNO_NO_DB_SELECTED 				= 1046;
@@ -58,7 +58,8 @@ class MySQLException extends DBException {
 	 */
 	public $errorMessage;
 	
-	public function __construct(MySQL $dao) {
+	public function __construct(MySQL $dao) 
+	{
 		$this->errorMessage = $dao->errorMessage();
 		$this->errorNumber 	= (int) $dao->errorNo();
 		// put some information in any mysql exception that might have no message
@@ -143,8 +144,10 @@ class MySQLException extends DBException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception 
  */
-class MySQLNotInstalledException extends MySQLException {
-	public function __construct(MySQL $dao, $query) {
+class MySQLNotInstalledException extends MySQLException 
+{
+	public function __construct(MySQL $dao, $query) 
+	{
 		$this->message = 'MySQL seems not to be activated or compiled in this php installation.';
 		parent::__construct($dao);
 	}
@@ -155,8 +158,10 @@ class MySQLNotInstalledException extends MySQLException {
  * @package ephFrame
  * @subpackage ephFrame.lib 
  */
-class MySQLQueryException extends MySQLException {
-	public function __construct(MySQL $dao, $query = null) {
+class MySQLQueryException extends MySQLException 
+{
+	public function __construct(MySQL $dao, $query = null) 
+	{
 		$this->level = self::FATAL;
 		parent::__construct($dao);
 	}
@@ -167,8 +172,10 @@ class MySQLQueryException extends MySQLException {
  * @package ephFrame
  * @subpackage ephFrame.lib 
  */
-class MySQLQueryEmptyException extends MySQLQueryException {
-	public function __construct(MySQL $dao) {
+class MySQLQueryEmptyException extends MySQLQueryException 
+{
+	public function __construct(MySQL $dao) 
+	{
 		$this->message = 'MySQL seems not to be activated or compiled in this php installation.';
 		parent::__construct('The query that should be performed is empty.');
 	}
@@ -179,8 +186,10 @@ class MySQLQueryEmptyException extends MySQLQueryException {
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class MySQLConnectionErrorException extends MySQLException {
-	public function __construct(MySQL $dao) {
+class MySQLConnectionErrorException extends MySQLException 
+{
+	public function __construct(MySQL $dao) 
+	{
 		$this->level = self::FATAL;
 		parent::__construct($dao);
 	}
@@ -191,8 +200,10 @@ class MySQLConnectionErrorException extends MySQLException {
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class MySQLSocketConnectionError extends MySQLConnectionErrorException {
-	public function __construct(MySQL $dao) {
+class MySQLSocketConnectionError extends MySQLConnectionErrorException 
+{
+	public function __construct(MySQL $dao) 
+	{
 		$this->level = self::FATAL;
 		parent::__construct($dao);
 	}
@@ -203,8 +214,10 @@ class MySQLSocketConnectionError extends MySQLConnectionErrorException {
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class MySQLDBNameEmptyException extends MySQLException {
-	public function __construct(MySQL $dao) {
+class MySQLDBNameEmptyException extends MySQLException 
+{
+	public function __construct(MySQL $dao) 
+	{
 		$this->message = 'Database name was empty. Unable to select database with no name.';
 		parent::__construct($dao);
 	}
@@ -215,14 +228,16 @@ class MySQLDBNameEmptyException extends MySQLException {
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class MySQLQueryLostConnectionException extends MySQLQueryException{}
+class MySQLQueryLostConnectionException extends MySQLQueryException
+{}
 
 /**
  * Thrown if a MySQL Error occured during a query
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class MySQLQueryDuplicateEntryException extends MySQLQueryException{}
+class MySQLQueryDuplicateEntryException extends MySQLQueryException
+{}
 
 
 /**
@@ -230,15 +245,18 @@ class MySQLQueryDuplicateEntryException extends MySQLQueryException{}
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class MySQLConnectionException extends MySQLException {}
+class MySQLConnectionException extends MySQLException 
+{}
 
 /**
  * Thrown if PHP was unable to connect with the given user/password combination 
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class MySQLConnectionAccessDeniedException extends MySQLConnectionException {
-	public function __construct(MySQL $MySQL) {
+class MySQLConnectionAccessDeniedException extends MySQLConnectionException 
+{
+	public function __construct(MySQL $MySQL) 
+	{
 		$this->message = 'Unable to login into mysql server.';
 		parent::__construct($MySQL);
 	}
@@ -248,8 +266,10 @@ class MySQLConnectionAccessDeniedException extends MySQLConnectionException {
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class MySQLConnectionUnknownHostException extends MySQLConnectionException {
-	public function __construct(MySQL $MySQL) {
+class MySQLConnectionUnknownHostException extends MySQLConnectionException 
+{
+	public function __construct(MySQL $MySQL) 
+	{
 		$this->message = 'Unable to connect to unknown host.';
 		parent::__construct($MySQL);
 	}
@@ -260,14 +280,16 @@ class MySQLConnectionUnknownHostException extends MySQLConnectionException {
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class MySQLServerGoneAwayException extends MySQLConnectionException {}
+class MySQLServerGoneAwayException extends MySQLConnectionException 
+{}
 
 /**
  * Thrown possibly if MySQL Server went away (probably crashed)
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class MySQLServerShutdownInProgressException extends MySQLConnectionException {}
+class MySQLServerShutdownInProgressException extends MySQLConnectionException 
+{}
 
 
 /**
@@ -275,15 +297,18 @@ class MySQLServerShutdownInProgressException extends MySQLConnectionException {}
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class MySQLDBException extends MySQLException {}
+class MySQLDBException extends MySQLException 
+{}
 
 /**
  * Thrown if no table was selected somewhere
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class MySQLNoDBSelectedException extends MySQLDBException {
-	public function __construct(MySQL $dao) {
+class MySQLNoDBSelectedException extends MySQLDBException 
+{
+	public function __construct(MySQL $dao) 
+	{
 		$this->message = 'The current dao has no database selected. Please select a database.';
 		parent::__construct($dao);
 	}
@@ -294,8 +319,10 @@ class MySQLNoDBSelectedException extends MySQLDBException {
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class MySQLDBNotFoundException extends MySQLDBException {
-	public function __construct(MySQL $dao) {
+class MySQLDBNotFoundException extends MySQLDBException 
+{
+	public function __construct(MySQL $dao) 
+	{
 		$this->databaseName = $dao->DBDSN->db();
 		$this->message = 'Database \''.$dao->DBDSN->db().'\' not found.';
 		parent::__construct($dao);
@@ -307,15 +334,18 @@ class MySQLDBNotFoundException extends MySQLDBException {
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class MySQLTableException extends MySQLException {}
+class MySQLTableException extends MySQLException 
+{}
 
 /**
  * Thrown if a table was found that is marked as chrashed
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class MySQLTableCrashedException extends MySQLTableException {
-	public function __construct(MySQL $dao) {
+class MySQLTableCrashedException extends MySQLTableException 
+{
+	public function __construct(MySQL $dao) 
+	{
 		$tablename = preg_match_first($dao->errorMessage(), "!^Table \'([\w\d\.]*)\'!");
 		$this->message = 'Database Table \''.$tablename.'\' is marked as crashed.';
 		parent::__construct($dao);
@@ -327,8 +357,10 @@ class MySQLTableCrashedException extends MySQLTableException {
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class MySQLTableNotAccessibleException extends MySQLTableException {
-	public function __construct(MySQL $dao) {
+class MySQLTableNotAccessibleException extends MySQLTableException 
+{
+	public function __construct(MySQL $dao) 
+	{
 		$tablename = preg_match_first($dao->errorMessage(), "!^Table \'([\w\d\.]*)\'!");
 		$this->message = 'Database Table \''.$tablename.'\' is not accessible.';
 		parent::__construct($dao);
@@ -341,12 +373,14 @@ class MySQLTableNotAccessibleException extends MySQLTableException {
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class MySQLTableNotFoundException extends MySQLTableException {
+class MySQLTableNotFoundException extends MySQLTableException 
+{
 	/**
 	 * @var string
 	 */
 	public $tablename = '';
-	public function __construct(MySQL $dao) {
+	public function __construct(MySQL $dao) 
+	{
 		$this->tablename = preg_match_first($dao->errorMessage(), "!^Table \'([\w\d\.]*)\'!");
 		$this->message = 'Database Table \''.$this->tablename.'\' not found.';
 		parent::__construct($dao);

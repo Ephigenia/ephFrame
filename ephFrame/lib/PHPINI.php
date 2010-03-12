@@ -6,8 +6,8 @@
  * @author Ephigenia // Marcel Eichner <love@ephigenia.de>
  * @since 26.05.2009
  */
-class PHPINI {
-
+class PHPINI
+{
 	/**
 	 * 
 	 * @param string $varname
@@ -42,6 +42,5 @@ class PHPINI {
 	
 	public static function set($name, $value) {
 		return ini_set($name, $value);
-	}
-	
+	}	
 }

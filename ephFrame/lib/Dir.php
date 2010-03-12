@@ -35,8 +35,8 @@ class_exists('ArrayHelper') or require dirname(__FILE__).'/helper/ArrayHelper.ph
  * @uses File
  * @uses ArrayHelper
  */
-class Dir extends FileSystemNode {
-	
+class Dir extends FileSystemNode 
+{
 	/**
 	 * Stores the path to this directory
 	 * @var string
@@ -52,7 +52,8 @@ class Dir extends FileSystemNode {
 	 * @param string $path
 	 * @return Directory
 	 */
-	public function __construct($path) {
+	public function __construct($path) 
+	{
 		if (is_object($path) && is_subclass_of($path, 'Controller')) {
 			return parent::__construct($path);
 		}
@@ -72,7 +73,8 @@ class Dir extends FileSystemNode {
 	 * @param string $class
 	 * @return File
 	 */
-	public function newFile($filename, $content = null, $class = 'File') {
+	public function newFile($filename, $content = null, $class = 'File') 
+	{
 		$newFilename = $this->nodeName.$filename;
 		if (!$this->writable()) {
 			try {
@@ -88,14 +90,16 @@ class Dir extends FileSystemNode {
 	/**
 	 * @return boolean
 	 */
-	public function isDir() {
+	public function isDir() 
+	{
 		return true;
 	}
 	
 	/**
 	 * @return boolean
 	 */
-	public function isFile() {
+	public function isFile() 
+	{
 		return false;
 	}
 	
@@ -103,7 +107,8 @@ class Dir extends FileSystemNode {
 	 * Tests wheter this directory exists and is a directory
 	 * @return boolean
 	 */
-	public function exists() {
+	public function exists() 
+	{
 		return (parent::exists() && is_dir($this->path));
 	}
 	
@@ -111,7 +116,8 @@ class Dir extends FileSystemNode {
 	 * Test if the directory exists and if not throws an exception
 	 * @return boolean
 	 */
-	public function checkExistence() {
+	public function checkExistence() 
+	{
 		if (!$this->exists()) {
 			throw new DirNotFoundException($this->nodeName);
 			return false;
@@ -123,7 +129,8 @@ class Dir extends FileSystemNode {
 	 * Returns the number of files in this directory
 	 * @return integer
 	 */
-	public function numFiles() {
+	public function numFiles() 
+	{
 		return count($this->listFiles());
 	}
 	
@@ -136,7 +143,8 @@ class Dir extends FileSystemNode {
 	 * </code>
 	 * @return string
 	 */
-	public function dirName() {
+	public function dirName() 
+	{
 		return dirname($this->nodeName);
 	}
 	
@@ -144,7 +152,8 @@ class Dir extends FileSystemNode {
 	 * Returns the number of directories in this directory
 	 * @return integer
 	 */
-	public function numDirectories() {
+	public function numDirectories() 
+	{
 		return count($this->listDirectories());
 	}
 	
@@ -152,7 +161,8 @@ class Dir extends FileSystemNode {
 	 * Returns Files in this directory
 	 * @return Array(File) of Files
 	 */
-	public function listFiles($pattern = null) {
+	public function listFiles($pattern = null) 
+	{
 		return ArrayHelper::extractByClassName($this->read($pattern), 'File');
 	}
 	
@@ -160,7 +170,8 @@ class Dir extends FileSystemNode {
 	 * Returns Directories that are in this directory
 	 * @return Array(Dir) of Directories
 	 */
-	public function listDirectories($pattern = null) {
+	public function listDirectories($pattern = null) 
+	{
 		return ArrayHelper::extractByClassName($this->read($pattern), get_class($this));
 	}
 	
@@ -186,7 +197,8 @@ class Dir extends FileSystemNode {
 	 * @return IndexedArray {@link IndexedArray} of files and directories
 	 * @throws DirNotFoundException if directory was not found
 	 */
-	public function read($pattern = null) {
+	public function read($pattern = null) 
+	{
 		$this->checkExistence();
 		$contents = new IndexedArray();
 		foreach (scandir($this->nodeName) as $possible) {
@@ -214,7 +226,8 @@ class Dir extends FileSystemNode {
 	 * @param integer $chmod
 	 * @return Dir Instance of the newly created Directory
 	 */
-	public function create($newDirname = null, $chmod = 0777) {
+	public function create($newDirname = null, $chmod = 0777) 
+	{
 		if (is_array($newDirname)) {
 			$newDirname = implode(DS, $newDirname);
 		}
@@ -243,7 +256,8 @@ class Dir extends FileSystemNode {
 	 * @param integer $chmod
 	 * @return DirectoryComponent Instance of the newly created Directory
 	 */
-	public function mkdir($newDirname, $chmod = 0777) {
+	public function mkdir($newDirname, $chmod = 0777) 
+	{
 		return $this->create($newDirname, $chmod);
 	}
 	
@@ -252,7 +266,8 @@ class Dir extends FileSystemNode {
 	 * @param string $path
 	 * @return boolean
 	 */
-	public function delete($path = null) {
+	public function delete($path = null) 
+	{
 		if (func_num_args() == 0) {
 			$dir = $this;
 		} else {
@@ -272,7 +287,8 @@ class Dir extends FileSystemNode {
 	 * @param boolean $humanized Returned size is 'humanized'
 	 * @return integer
 	 */
-	public function size($rekursive = true, $humanized = false) {
+	public function size($rekursive = true, $humanized = false) 
+	{
 		$this->checkExistence();
 		$size = 0;
 		if($handle = opendir($this->dirname)) {
@@ -293,23 +309,25 @@ class Dir extends FileSystemNode {
 		} else {
 			return File::sizeHumanized($size);
 		}
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class DirException extends FileSystemNodeException {}
+class DirException extends FileSystemNodeException 
+{}
 
 /**
  * Thrown as soon a directory is needed but not existant.
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class DirNotFoundException extends DirException {
-	public function __construct($directory = null) {
+class DirNotFoundException extends DirException 
+{
+	public function __construct($directory = null) 
+	{
 		$this->message = 'Directory not found.';
 		if ($directory !== null) {
 			if (is_object($directory)) {
@@ -327,8 +345,10 @@ class DirNotFoundException extends DirException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class DirNotWritableException extends DirException {
-	public function __construct($directory) {
+class DirNotWritableException extends DirException 
+{
+	public function __construct($directory) 
+	{
 		if ($directory !== null) {
 			if (is_object($directory)) {
 				$this->message = sprintf('The directory \'%s\' is not writable.', $directory->nodeName);
@@ -344,8 +364,10 @@ class DirNotWritableException extends DirException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class DirCreateErrorException extends DirException {
-	public function __construct($dirname) {
+class DirCreateErrorException extends DirException 
+{
+	public function __construct($dirname) 
+	{
 		parent::__construct('Unable to create directory \''.$dirname.'\'');
 	}
 }

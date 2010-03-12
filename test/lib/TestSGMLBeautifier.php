@@ -27,13 +27,16 @@ require_once dirname(__FILE__).'/../autorun.php';
  * @package ephFrame
  * @subpackage ephFrame.test
  */
-class TestSGMLBeautifier extends UnitTestCase {
+class TestSGMLBeautifier extends UnitTestCase 
+{
 	
-	public function setUp() {
+	public function setUp() 
+	{
 		ephFrame::loadClass('ephFrame.lib.SGMLBeautifierFilter');
 	}
 	
-	public function testBeautifier() {
+	public function testBeautifier() 
+	{
 		$testString = '<html><head></head><body><h1><strong>Bold</strong></h1></body></html>';
 		$beautifier = new SGMLBeautifierFilter();
 		$this->assertEqual($beautifier->apply($testString), '<html>

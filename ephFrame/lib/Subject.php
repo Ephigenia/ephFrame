@@ -27,8 +27,8 @@
  * @version 1.0
  * @abstract 
  */
-abstract class Subject extends Object implements SplSubject {
-	
+abstract class Subject extends Object implements SplSubject
+{
 	/**
 	 * List of observers registered by this subject
 	 * @var unknown_type
@@ -39,7 +39,8 @@ abstract class Subject extends Object implements SplSubject {
 	 * Attaches a new Observer
 	 * @param Observer $observer
 	 */
-	public function attach(Observer $observer) {
+	public function attach(Observer $observer) 
+	{
 		$this->observers[] = $observer;
 	}
  
@@ -48,7 +49,8 @@ abstract class Subject extends Object implements SplSubject {
 	 * @param Observer $observer
 	 * @return boolean 
 	 */
-	public function detach(Observer $observer) {
+	public function detach(Observer $observer) 
+	{
 		for ($i = 0; $i < sizeof($this->observers); $i++) {
 			if ($this->observers[$i] === $observer) {
 				unset($this->observers[$i]);
@@ -71,8 +73,8 @@ abstract class Subject extends Object implements SplSubject {
  
 	public abstract function getState();
 	
-	public function __clone() {
+	public function __clone() 
+	{
 		throw new NotClonableException();
-	}
-	
+	}	
 }

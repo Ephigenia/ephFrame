@@ -46,8 +46,8 @@ class_exists('File') or require dirname(__FILE__).'/../File.php';
  * @uses CSSCompressor
  * @uses File
  */
-class CSSPacker extends AppComponent {
-	
+class CSSPacker extends AppComponent 
+{
 	public $compress = true;
 	
 	/**
@@ -78,7 +78,8 @@ class CSSPacker extends AppComponent {
 	/**
 	 * @return CSSPacker
 	 */
-	public function __construct() {
+	public function __construct() 
+	{
 		loadComponent($this->compressorClassname);
 		$this->compressor = new $this->compressorClassname();
 		return $this;
@@ -92,7 +93,8 @@ class CSSPacker extends AppComponent {
 	 * @param array(string) $files
 	 * @param string $targetDir
 	 */
-	public function packAndStore(Array $files, $targetDir) {
+	public function packAndStore(Array $files, $targetDir) 
+	{
 		assert(!empty($targetDir));
 		$dir = new Dir($targetDir);
 		if (!$dir->exists()) {
@@ -122,7 +124,8 @@ class CSSPacker extends AppComponent {
 	 * @param array $files Array of absolute paths to css files that should be packed
 	 * @return string
 	 */
-	public function pack(Array $files) {
+	public function pack(Array $files) 
+	{
 		$packed = '';
 		foreach($files as $filename) {
 			// only compress if turned on
@@ -151,17 +154,18 @@ class CSSPacker extends AppComponent {
 	 * @param array(string) $files
 	 * @return string
 	 */
-	public function packedFilename(Array $files = array()) {
+	public function packedFilename(Array $files = array()) 
+	{
 		$md5Filenames = substr(md5(implode('', array_map('basename', $files))), 0, 8);
 		$compressedFileName = $this->packedPrefix.$md5Filenames.'.'.$this->packedExtension;
 		$compressedFileName = str_replace('/[^-_A-Za-z0-9\./', '', $compressedFileName);
 		return $compressedFileName;
 	}
-	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class CSSPackerException extends ComponentException {}
+class CSSPackerException extends ComponentException 
+{}

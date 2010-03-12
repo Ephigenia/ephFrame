@@ -25,8 +25,7 @@ class_exists('FormFieldText') or require dirname(__FILE__).'/FormFieldText.php';
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 04.11.2008
  */
-class FormFieldPassword extends FormFieldText {
-
+class FormFieldPassword extends FormFieldText 
+{
 	public $type = 'password';
-	
 }

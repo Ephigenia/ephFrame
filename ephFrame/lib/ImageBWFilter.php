@@ -37,8 +37,8 @@ interface_exists('ImageFilter') or require dirname(__FILE__).'/ImageFilter.php';
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class ImageBWFilter extends Object implements ImageFilter {
-	
+class ImageBWFilter extends Object implements ImageFilter 
+{
 	public $black = 0;
 	public $white = 16777215;
 	public $treshold = 0.5;
@@ -49,7 +49,8 @@ class ImageBWFilter extends Object implements ImageFilter {
 	 * @param Image $image
 	 * @return Image the manipulated image
 	 */
-	public function apply(Image $image) {
+	public function apply(Image $image) 
+	{
 		$imgWidth = $image->width() - 1;
 		$imgHeight = $image->height() - 1;
 		$imgHandle = $image->handle();
@@ -79,6 +80,5 @@ class ImageBWFilter extends Object implements ImageFilter {
 			}
 		}
 		return $image;
-	}
-	
+	}	
 }

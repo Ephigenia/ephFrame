@@ -38,8 +38,8 @@ class_exists('IndexedArray') or require dirname(__FILE__).'/IndexedArray.php';
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 19.07.2008
  */
-class ObjectSet extends IndexedArray {
-	
+class ObjectSet extends IndexedArray 
+{
 	/**
 	 * Name of class this ObjectSet allows to store
 	 * @var string
@@ -53,7 +53,8 @@ class ObjectSet extends IndexedArray {
 	 * @param array $data
 	 * @return ObjectSet
 	 */
-	public function __construct($classname, $data = null) {
+	public function __construct($classname, $data = null) 
+	{
 		$this->classname = $classname;
 		if (func_num_args() > 2) {
 			$args = func_get_args();
@@ -90,7 +91,8 @@ class ObjectSet extends IndexedArray {
 	 * @param object $object
 	 * @return ObjectSet
 	 */
-	public function add($object) {
+	public function add($object) 
+	{
 		$this->canBeAdded($object);
 		return parent::add($object);
 	}
@@ -120,7 +122,8 @@ class ObjectSet extends IndexedArray {
 	 * @param integer $index
 	 * @param object $val
 	 */
-	public function setValue($index, $object) {
+	public function setValue($index, $object) 
+	{
 		$this->canBeAdded($object);
 		return parent::setValue($index, $object);
 	}
@@ -129,7 +132,8 @@ class ObjectSet extends IndexedArray {
 	 * Add an other $object to the beginning of the {@link ObjectSet}
 	 * @param object $val
 	 */
-	public function prepend($val) {
+	public function prepend($val) 
+	{
 		$this->canBeAdded($object);
 		return parent::prepend($val);
 	}
@@ -149,14 +153,17 @@ class ObjectSet extends IndexedArray {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception 
  */
-class ObjectSetException extends IndexedArrayException {}
+class ObjectSetException extends IndexedArrayException 
+{}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception 
  */
-class ObjectSetObjectExpectedException extends ObjectSetException {
-	public function __construct(ObjectSet $objectSet, $var) {
+class ObjectSetObjectExpectedException extends ObjectSetException 
+{
+	public function __construct(ObjectSet $objectSet, $var) 
+	{
 		$message = sprintf('%s expects objects not %s.',
 			get_class($objectSet), gettype($var));
 		parent::__construct($message);
@@ -168,8 +175,10 @@ class ObjectSetObjectExpectedException extends ObjectSetException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception 
  */
-class ObjectSetInvalidClassException extends ObjectSetException {
-	public function __construct(ObjectSet $objectSet, Object $object) {
+class ObjectSetInvalidClassException extends ObjectSetException 
+{
+	public function __construct(ObjectSet $objectSet, Object $object) 
+	{
 		$message = sprintf('%s expects instances of \'%s\', you passed \'%s\' which is not accepted.',
 			get_class($objectSet), $objectSet->classname, get_class($object)
 		);

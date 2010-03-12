@@ -33,7 +33,8 @@
  * <code>
  * class ExampleController extends AppController {
  * 	public $components = array('Cookie');
- * 	public function login() {
+ * 	public function login() 
+	{
  * 		if ($this->params['username'] == 'alpha' && $this->params['password'] == 'gamma') {
  * 			$this->Cookie->set('welcomeMessage', 'Hi Baby!');
  * 		}
@@ -74,8 +75,8 @@
  * @subpackage ephFrame.lib.helper
  * @version 0.1
  */
-class Cookie extends AppComponent {
-	
+class Cookie extends AppComponent 
+{	
 	/**
 	 * Use this when setting a cockie for http only
 	 * @var integer
@@ -129,7 +130,8 @@ class Cookie extends AppComponent {
 	 * Cookie Constructor
 	 * @return Cookie
 	 */
-	public function __construct() {
+	public function __construct() 
+	{
 		parent::__construct();
 		$this->data = &$_COOKIE;
 		foreach($this->data as $k => $v) {
@@ -148,7 +150,8 @@ class Cookie extends AppComponent {
 	 * @param string	
 	 * @return Cookie|string
 	 */
-	public function domain($domain = null) {
+	public function domain($domain = null) 
+	{
 		return parent::__getOrSet('domain', $domain);
 	}
 	
@@ -157,7 +160,8 @@ class Cookie extends AppComponent {
 	 * @param string
 	 * @return Cookie|string
 	 */
-	public function path($path = null) {
+	public function path($path = null) 
+	{
 		return parent::__getOrSet('path', $path);
 	}
 	
@@ -185,7 +189,8 @@ class Cookie extends AppComponent {
 	 * @param boolean $httpOnly	 
 	 * @throws StringExpectedException on invalid varname or value
 	 */
-	public function write($varname, $value, $ttl = null, $path = null, $domain = null, $flags = null) {
+	public function write($varname, $value, $ttl = null, $path = null, $domain = null, $flags = null) 
+	{
 		if (!is_string($varname) || strlen($varname) == 0) throw new StringExpectedException();
 		$this->data[$varname] = $value;
 		$this->saveData[$varname] = array(
@@ -202,7 +207,8 @@ class Cookie extends AppComponent {
 	 * Alias for {@link write}
 	 * @return Cookie
 	 */
-	public function set($varname, $value, $ttl = null, $path = null, $domain = null, $flags = null) {
+	public function set($varname, $value, $ttl = null, $path = null, $domain = null, $flags = null) 
+	{
 		return $this->write($varname, $value, $ttl, $path, $domain, $flags);
 	}
 	
@@ -211,7 +217,8 @@ class Cookie extends AppComponent {
 	 * @param string	$varname
 	 * @return boolean
 	 */
-	public function defined($varname) {
+	public function defined($varname) 
+	{
 		return isset($this->data[$varname]);
 	}
 	
@@ -222,7 +229,8 @@ class Cookie extends AppComponent {
 	 * @param	string $varname
 	 * @return string|integer
 	 */
-	public function read($varname) {
+	public function read($varname) 
+	{
 		if ($this->defined($varname)) {
 			if (empty($this->data[$varname])) return false;
 			return $this->data[$varname];
@@ -235,7 +243,8 @@ class Cookie extends AppComponent {
 	 * @param string $varname
 	 * @return mixed
 	 */
-	public function get($varname) {
+	public function get($varname) 
+	{
 		return $this->read($varname);
 	}
 	
@@ -244,7 +253,8 @@ class Cookie extends AppComponent {
 	 * @param string	$cookiename
 	 * @return boolean
 	 */
-	public function delete($cookiename) {
+	public function delete($cookiename) 
+	{
 		if ($this->defined($cookiename)) {
 			$this->saveData[$cookiename]['ttl'] = -1;
 			unset($this->data[$cookiename]);
@@ -257,7 +267,8 @@ class Cookie extends AppComponent {
 	 * Saves all cookies that are new and returns the number of cookies saved
 	 * @return integer
 	 */
-	public function save() {
+	public function save() 
+	{
 		$debug = false;
 		foreach ($this->saveData as $cookieName => $cookieData) {
 			$path = (isset($cookieData['path'])) ? $cookieData['path'] : $this->path;
@@ -285,23 +296,25 @@ class Cookie extends AppComponent {
 		return $count;
 	}
 	
-	public function beforeRender() {
+	public function beforeRender() 
+	{
 		if ($this->autosave) {
 			$this->save();
 		}
 		return parent::beforeRender();
 	}
 	
-	public function __destruct() {
+	public function __destruct() 
+	{
 		if ($this->autosave && count($this->saveData) > 0 && !headers_sent()) {
 			$this->save();
 		}
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class CookieException extends BasicException {}
+class CookieException extends BasicException 
+{}

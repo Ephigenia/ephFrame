@@ -27,18 +27,18 @@ class_exists('View') or require dirname(__FILE__).'/View.php';
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 10.08.2007
  */
-class HTMLView extends View {
-	
+class HTMLView extends View 
+{	
 	/**
 	 * Content type for this view that can be send to the client
 	 * @var string
 	 */
-	public $contentType = 'text/html';
-		
+	public $contentType = 'text/html';		
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class HTMLViewException extends ViewException {}
+class HTMLViewException extends ViewException 
+{}

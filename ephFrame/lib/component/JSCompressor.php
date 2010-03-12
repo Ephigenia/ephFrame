@@ -26,21 +26,22 @@ class_exists('Compressor') or require dirname(__FILE__).'/Compressor.php';
  * @subpackage ephFrame.lib.component
  */
 class JSCompressor extends Compressor
-{	
+{
 	/**
 	 * Compresses the passes javascript code
 	 * @todo implement a real compression algorithm for javascript, that is still missing
 	 * @param string $code
 	 * @return string
 	 */
-	public function compress($code) {
+	public function compress($code) 
+	{
 		// strip multiline comments
 		$code = String::stripComments($code);
 		return $code;
 	}
 	
-	public function basicCompress($code) {
+	public function basicCompress($code) 
+	{
 		return $code;
-	}
-	
+	}	
 }

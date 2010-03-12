@@ -27,8 +27,8 @@
  * @subpackage ephFrame.lib.helper
  * @version 0.2
  */
-class Validator extends Helper {
-	
+class Validator extends Helper 
+{
 	public $config = array();
 	public $callbackObject;
 	
@@ -38,7 +38,8 @@ class Validator extends Helper {
 	 * @param array(string) $config
 	 * @param Object $callbackObject
 	 */
-	public function __construct($config = array(), $callbackObject = null) {
+	public function __construct($config = array(), $callbackObject = null) 
+	{
 		$this->config = $config;
 		$this->callbackObject = $callbackObject;
 		return $this;
@@ -51,7 +52,8 @@ class Validator extends Helper {
 	 * @param string|mixed $value
 	 * @return boolean|string
 	 */
-	public function validate($value = null) {
+	public function validate($value = null) 
+	{
 		// single line string rules are callbacks!
 		foreach($this->config as $ruleName => $config) {
 			// allowEmpty Rule
@@ -103,7 +105,8 @@ class Validator extends Helper {
 	/**
 	 *	Returns true if $val is between $min and $max
 	 */
-	public static function between($val, $min, $max) {
+	public static function between($val, $min, $max)
+	{
 		return ($val > $min && $val < $max);
 	}
 	
@@ -116,7 +119,8 @@ class Validator extends Helper {
 	 * @param string|integer $zipCode
 	 * @return true if zipCode is a valid German zip code
 	 */
-	public static function zipDe($zipCode) {
+	public static function zipDe($zipCode)
+	{
 		return preg(self::ZIP_DE, $zipCode);
 	}
 	 
@@ -132,7 +136,8 @@ class Validator extends Helper {
 	 * @param string $stringEmail
 	 * @return boolean
 	 */
-	public static function email($stringEmail) {
+	public static function email($stringEmail)
+	{
 		return (bool) preg_match(self :: EMAIL, (string) $stringEmail);
 	}
 	
@@ -146,7 +151,8 @@ class Validator extends Helper {
 	 * @param string	$ip
 	 * @return boolean
 	 */
-	public static function IP($ip) {
+	public static function IP($ip)
+	{
 		return (preg_match(self :: IP, (string) $ip));
 	}
 
@@ -160,7 +166,8 @@ class Validator extends Helper {
 	 * @param	integer|string	$ICQUIN	
 	 * @return boolean
 	 */
-	public static function ICQUIN($ICQUIN) {
+	public static function ICQUIN($ICQUIN)
+	{
 		if (is_string($ICQUIN) || is_int($ICQUIN)) {
 			$ICQUIN = intval($ICQUIN);
 			if (!empty ($ICQUIN)) {
@@ -177,7 +184,8 @@ class Validator extends Helper {
 	 * @param unknown_type $hostname
 	 * @return boolean
 	 */
-	public static function hostname($hostname) {
+	public static function hostname($hostname)
+	{
 		return preg_mtach(self::HOSTNAME, $hostname);
 	}
 	
@@ -225,7 +233,8 @@ class Validator extends Helper {
 	 * @param	string	$url	
 	 * @return boolean
 	 */
-	public static function URL($url) {
+	public static function URL($url)
+	{
 		return (preg_match(self :: URL, $url));
 	}
 	
@@ -238,7 +247,8 @@ class Validator extends Helper {
 	/**
 	 * Returns true if the date is valid or not
 	 */
-	public static function date($date) {
+	public static function date($date)
+	{
 		return (preg_match(self :: DATE, $date));
 	}
 		
@@ -253,7 +263,8 @@ class Validator extends Helper {
 	 * @param mixed	$integer
 	 * @return boolean
 	 */
-	public static function integer($integer) {
+	public static function integer($integer)
+	{
 		if (is_int($integer)) return true;
 		return (preg_match(self :: INTEGER, (string) $integer));
 	}
@@ -268,7 +279,8 @@ class Validator extends Helper {
 	 * valid formats are +0.23, -123,24,039.32 and ,234, BUT NOT: +.32
 	 * @return boolean
 	 */
-	public static function float($float) {
+	public static function float($float)
+	{
 		if (is_float($float)) return true;
 		return (preg_match(self :: FLOAT, (string)$float));
 	}
@@ -278,7 +290,8 @@ class Validator extends Helper {
 	 * @param integer
 	 * @return boolean
 	 */
-	public static function timestamp($timestamp) {
+	public static function timestamp($timestamp)
+	{
 		return (self::isInteger($timestamp));
 	}
 	
@@ -293,8 +306,8 @@ class Validator extends Helper {
 	 * @param string
 	 * @return boolean
 	 */
-	public static function isbn($isbn) {
+	public static function isbn($isbn)
+	{
 		return preg_match(self::ISBN, $isbn);
 	}
-	
 }

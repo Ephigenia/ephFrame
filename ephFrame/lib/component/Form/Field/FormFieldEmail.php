@@ -24,8 +24,8 @@ class_exists('FormFieldText') or require(dirname(__FILE__).'/FormFieldText.php')
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 04.11.2008
  */
-class FormFieldEmail extends FormFieldText {
-
+class FormFieldEmail extends FormFieldText 
+{
 	/**
 	 * Default validation rules for emails, should be emails
 	 * @var array(string)
@@ -35,6 +35,5 @@ class FormFieldEmail extends FormFieldText {
 			'regexp' => Validator::EMAIL,
 			'message' => 'The email adress you\'ve entered seemes to be invalid. Please enter a valid email adress.'
 		)
-	);
-	
+	);	
 }

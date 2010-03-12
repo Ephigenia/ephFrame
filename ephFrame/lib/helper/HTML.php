@@ -33,8 +33,8 @@ ephFrame::loadClass('ephFrame.lib.HTMLTag');
  * @subpackage ephFrame.lib.helper
  * @uses HTMLTag
  */
-class HTML extends AppHelper {
-	
+class HTML extends AppHelper 
+{	
 	/**
 	 * Create valid {@link HTMLTag} object with passed arguments and return it
 	 * 
@@ -50,7 +50,8 @@ class HTML extends AppHelper {
 	 * @param array $attributes
 	 * @return HTMLTag
 	 */
-	public function tag($tagName, $content = null, Array $attributes = array()) {
+	public function tag($tagName, $content = null, Array $attributes = array()) 
+	{
 		return new HTMLTag($tagName, $attributes, $content);
 	}
 	
@@ -61,7 +62,8 @@ class HTML extends AppHelper {
 	 * @param $attributes
 	 * @return String
 	 */
-	public function openTag($tagName, Array $attributes = array()) {
+	public function openTag($tagName, Array $attributes = array()) 
+	{
 		$tag = new HTMLTag($tagName, $attributes, '&nbsp;');
 		return $tag->renderOpenTag();
 	}
@@ -79,7 +81,8 @@ class HTML extends AppHelper {
 	 * @param array(string) $attributes
 	 * @return HTMLTag
 	 */
-	public function p($content, Array $attributes = array()) {
+	public function p($content, Array $attributes = array()) 
+	{
 		return $this->tag('p', $content, $attributes);
 	}
 	
@@ -101,7 +104,8 @@ class HTML extends AppHelper {
 	 * @param array(string) $attributes optional additional attributes for {@link HTMLTag}
 	 * @return string
 	 */
-	public function email($email, $label = null, Array $attributes = array()) {
+	public function email($email, $label = null, Array $attributes = array()) 
+	{
 		$emailEncoded = String::htmlOrdEncode($email);
 		if ($label == null) {
 			$label = $emailEncoded;
@@ -120,7 +124,8 @@ class HTML extends AppHelper {
 	 * @param array(string) $attributes optional link attributes
 	 * @return HTMLTag
 	 */
-	public function link($url, $label = null, Array $attributes = array()) {
+	public function link($url, $label = null, Array $attributes = array()) 
+	{
 		if (!empty($url)) {
 			$attributes['href'] = $url;
 		}
@@ -149,7 +154,8 @@ class HTML extends AppHelper {
 	 * @param array(string) $attributes optional additional attributes for img-tag
 	 * @return HTMLTag
 	 */
-	public function image($src, Array $attributes = array()) {
+	public function image($src, Array $attributes = array()) 
+	{
 		if (strpos($src, '/') !== 0 && substr($src, 0, 7) !== 'http://') {
 			if ($this->controller instanceof Controller && $this->controller->theme) {
 				$searchPaths[] = STATIC_DIR.'theme/'.$this->controller->theme.'/img/'.$src;
@@ -180,9 +186,9 @@ class HTML extends AppHelper {
 	 * Alias for {@link image}
 	 * @return string
 	 */
-	public function img() {
+	public function img() 
+	{
 		$args = func_get_args();
 		return $this->callMethod('image', $args);
 	}
-	
-} // END HTML class
+}

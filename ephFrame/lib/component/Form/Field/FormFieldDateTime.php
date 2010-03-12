@@ -23,8 +23,7 @@ class_exists('FormFieldDate') or require(dirname(__FILE__).'/FormFieldDate.php')
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 20.02.2009
  */
-class FormFieldDateTime extends FormFieldDate {
-	
+class FormFieldDateTime extends FormFieldDate 
+{
 	public $format = 'd.m.Y H:i';
-	
 }

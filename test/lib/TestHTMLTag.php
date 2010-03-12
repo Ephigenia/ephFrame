@@ -26,18 +26,22 @@ require_once dirname(__FILE__).'/../autorun.php';
  * @package ephFrame
  * @subpackage ephFrame.test
  */
-class TestHTMLTag extends UnitTestCase {
+class TestHTMLTag extends UnitTestCase 
+{
 	
-	public function setUp() {
+	public function setUp() 
+	{
 		loadClass('ephFrame.lib.HTMLTag');
 	}
 	
-	public function testRender() {
+	public function testRender() 
+	{
 		$tag = new HTMLTag('a', array('href' => 'http://www.ephigenia.de'), 'label');
 		$this->assertEqual((string) $tag, '<a href="http://www.ephigenia.de">label</a>');
 	}
 	
-	public function testQuoting() {
+	public function testQuoting() 
+	{
 		$tag = new HTMLTag('img', array('src' => 'test.jpg', 'alt' => '"Hallo" - he said'));
 		$this->assertEqual((string) $tag, '<img src="test.jpg" alt="&quot;Hallo&quot; - he said" />');
 	}

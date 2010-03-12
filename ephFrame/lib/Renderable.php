@@ -31,8 +31,8 @@
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-interface Renderable {
-
+interface Renderable 
+{
 	public function render();
 	
 	public function beforeRender();

@@ -25,17 +25,18 @@ class_exists('CURL') or require dirname(__FILE__).'/CURL.php';
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class Scraper extends CURL {
-	
-	public function read($url = null) {
+class Scraper extends CURL 
+{
+	public function read($url = null) 
+	{
 		$this->url = is_null($url) ? $this->url : $url;
 		$this->followLocation = true;
 		return $this->exec(true, false);
 	}
 	
-	public static function scrape($url = null) {
+	public static function scrape($url = null)
+	{
 		$s = new Scraper($url);
 		return $s->read();
 	}
-
 }

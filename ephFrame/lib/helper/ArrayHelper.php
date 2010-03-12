@@ -24,8 +24,8 @@
  * @package ephFrame
  * @subpackage ephFrame.lib.helper
  */
-class ArrayHelper extends Helper {
-	
+class ArrayHelper extends Helper 
+{
 	/**
 	 * array_map with recursion
 	 * @param array(mixed) $array
@@ -53,7 +53,8 @@ class ArrayHelper extends Helper {
 	 * @param array(mixed) $append
 	 * @return array(mixed)
 	 */
-	public function appendFromArray($array, $append) {
+	public function appendFromArray($array, $append) 
+	{
 		foreach($append as $value) {
 			$array[] = $value;
 		}
@@ -65,7 +66,8 @@ class ArrayHelper extends Helper {
 	 * @param array(mixed)
 	 * @return integer
 	 */
-	public static function dimensions($array) {
+	public static function dimensions($array)
+	{
 		if (!is_array($array)) {
 			return false;
 		}
@@ -116,7 +118,8 @@ class ArrayHelper extends Helper {
 	 * @param string|array $valueCallback call back for values imploded
 	 * @return string 
 	 */
-	public static function implodef($arr, $glue = '', $format = '', $keyCallback = null, $valueCallback = null) {
+	public static function implodef($arr, $glue = '', $format = '', $keyCallback = null, $valueCallback = null)
+	{
 		if (is_object($arr) && $arr instanceof IteratorAggregate) {
 			$arr = iterator_to_array($arr);
 		}
@@ -158,7 +161,8 @@ class ArrayHelper extends Helper {
 	 * @param array(mixed) $in
 	 * @return boolean
 	 */
-	public static function isEmpty(Array $arr) {
+	public static function isEmpty(Array $arr)
+	{
 		foreach($arr as $value) {
 			if (is_array($value)) {
 				if (self::isEmpty($value)) return true;
@@ -190,7 +194,8 @@ class ArrayHelper extends Helper {
 	 * @param String $path
 	 * @return mixed
 	 */
-	public static function extract($arr, $path) {
+	public static function extract($arr, $path)
+	{
 		if (!is_array($arr)) return false;
 		$path = preg_replace(
 			array('/\[+/', '/\]+/', '/\/{2,}/', '/^\/|\/$/'),
@@ -213,7 +218,8 @@ class ArrayHelper extends Helper {
 	 * @param array $array
 	 * @return string
 	 */
-	public static function implode($glue, Array $array) {
+	public static function implode($glue, Array $array)
+	{
 		$rendered = array();
 		foreach ($array as $value) {
 			if (is_object($value)) {
@@ -234,7 +240,8 @@ class ArrayHelper extends Helper {
 	 * @param array() $array
 	 * @return array()
 	 */
-	public static function stripslashes($array) {
+	public static function stripslashes($array)
+	{
 		if (!is_array($array)) {
 			return stripslashes($array);
 		} else {
@@ -249,7 +256,8 @@ class ArrayHelper extends Helper {
 	 * @param string|array $className
 	 * @return Array
 	 */
-	public static function extractByClassName($input, $className) {
+	public static function extractByClassName($input, $className)
+	{
 		if (!is_array($className)) {
 			$matchAgainst = array($className); 
 		} else {
@@ -276,7 +284,8 @@ class ArrayHelper extends Helper {
 	 * @throws ArrayExpectedException
 	 * @return array(mixed)
 	 */
-	public static function flatten($array, $associative = true) {
+	public static function flatten($array, $associative = true)
+	{
 		if (!is_array($array)) {
 			throw new ArrayExpectedException();
 		}
@@ -306,7 +315,8 @@ class ArrayHelper extends Helper {
 	 * @throws ArrayExpectedException
 	 * @return array(mixed)
 	 */
-	public static function flattenAssociative($array) {
+	public static function flattenAssociative($array)
+	{
 		return self::flatten($array, true);
 	}
 	
@@ -317,7 +327,8 @@ class ArrayHelper extends Helper {
 	 * @throws ArrayExpectedException
 	 * @return array(mixed)
 	 */
-	public static function flattenIndexed($array) {
+	public static function flattenIndexed($array)
+	{
 		return self::flatten($array, false);
 	}
 	
@@ -346,7 +357,8 @@ class ArrayHelper extends Helper {
 	 * @param boolean be-drop rekursive on the input array, or just 1-dimension
 	 * @return array(string) cleaned array
 	 */
-	public static function dropIndex($input, $indexNames = array(), $recursive = false) {
+	public static function dropIndex($input, $indexNames = array(), $recursive = false)
+	{
 		assert(is_array($input));
 		if (count($indexNames) == 0) return $input;
 		if (!is_array($indexNames)) {
@@ -362,7 +374,6 @@ class ArrayHelper extends Helper {
 		}
 		return $return;
 	}
-
 }
 
 /**
@@ -372,4 +383,5 @@ class ArrayHelper extends Helper {
  * @since Marcel Eichner // Ephigenia <love@ephigenia.de
  * @since 29.11.2007
  */
-class A extends ArrayHelper {} 
+class A extends ArrayHelper 
+{} 

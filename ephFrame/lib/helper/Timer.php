@@ -43,91 +43,105 @@
  * @version 0.1
  * @subpackage ephFrame.lib.helper
  */
-class Timer extends Helper {
-	
+class Timer extends Helper 
+{
 	public static $timers = array();
 	
 	private $start;
 	private $stop;
 	
-	public function __construct() {
+	public function __construct() 
+	{
 		$this->start();
 		return $this;
 	}
 	
-	public function time() {
+	public function time() 
+	{
 		if ($this->stop > 0) {
 			return ($this->stop - $this->start);
 		}
 		return (microtime(true) - $this->start);
 	}
 	
-	public function __toString() {
+	public function __toString() 
+	{
 		return $this->render();
 	}
 	
-	public function render() {
+	public function render() 
+	{
 		return $this->time();
 	}
 	
-	public function start() {
+	public function start() 
+	{
 		$this->start = microtime(true);
 		return $this;
 	}
 	
-	public function end() {
+	public function end() 
+	{
 		$this->stop = microtime(true);
 		return $this;
 	}
 	
-	public static function set($timerName) {
+	public static function set($timerName)
+	{
 		if (!is_string($timerName)) throw new StringExpectedException();
   		self::$timers[$timerName] = new Timer();
 	}
 	
-	public function stopTimer() {
+	public function stopTimer() 
+	{
 		$this->end();
 		return $this;
 	}
 	
-	public static function stop($timerName) {
+	public static function stop($timerName)
+	{
 		if (!is_string($timerName)) throw new StringExpectedException();
 		if (!self::hasTimer($timerName)) throw new TimerNotFoundException($timerName);
 		self::$timers[$timerName]->stopTimer();
 	}
 	
-	public static function read($timerName) {
+	public static function read($timerName)
+	{
 		if (!is_string($timerName)) throw new StringExpectedException();
 		if (!self::hasTimer($timerName)) throw new TimerNotFoundException($timerName);
 		return self::$timers[$timerName]->__toString();
 	}
 	
-	public static function hasTimer($timerName) {
+	public static function hasTimer($timerName)
+	{
 		return (isset(self::$timers[$timerName]));
 	}
 	
-	public static function dump() {
+	public static function dump()
+	{
 		$dump = '';
 		foreach(self::$timers as $timerName => $timer) {
 			$dump .= $timerName.': '.$timer->__toString().LF;
 		}
 		return $dump;	
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class TimerException extends BasicException {}
+class TimerException extends BasicException 
+{}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class TimerNotFoundException extends TimerException {
-	public function __construct($timerName) {
+class TimerNotFoundException extends TimerException 
+{
+	public function __construct($timerName) 
+	{
 		$this->message = 'No timer found with \''.$timerName.'\' as name.';
 		parent::__construct();
 	}

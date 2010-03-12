@@ -26,24 +26,26 @@ class_exists('DBQuery') or require dirname(__FILE__).'/DBQuery.php';
  * @since 09.03.2008
  * @version 0.2
  */
-class UpdateQuery extends DBQuery {
-	
+class UpdateQuery extends DBQuery 
+{
 	public $verb = 'UPDATE';
 	
 	public $renderTemplate = '%verb %flags %tables SET %values %where %orderBy %limit';
 	
-	public function __construct($table = null, $values = array(), $conditions = array()) {
+	public function __construct($table = null, $values = array(), $conditions = array()) 
+	{
 		return parent::__construct($this->verb, $table, $conditions, $values);
 	}
 	
-	public function update($tablename, $alias = null) {
+	public function update($tablename, $alias = null) 
+	{
 		return parent::table($tablename, $alias);
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class UpdateQueryException extends DBQueryException {}
+class UpdateQueryException extends DBQueryException 
+{}

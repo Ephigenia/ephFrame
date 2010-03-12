@@ -27,8 +27,8 @@
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 23.07.2007
  */
-class QueryHistory extends Object implements Countable, Renderable {
-	
+class QueryHistory extends Object implements Countable, Renderable 
+{
 	/**
 	 * Stores all the queries in an array
 	 * @var array(array)
@@ -70,7 +70,8 @@ class QueryHistory extends Object implements Countable, Renderable {
 	 * Returns the number of queries in the history
 	 * @return integer
 	 */
-	public function count() {
+	public function count() 
+	{
 		$history = self::getInstance();
 		return count($history->data);
 	}
@@ -79,7 +80,8 @@ class QueryHistory extends Object implements Countable, Renderable {
 	 * Returns the last query from the query history
 	 * @return DBQuery
 	 */
-	public function last() {
+	public function last() 
+	{
 		$history = self::getInstance();
 		if (count($history) > 0) return $history->data[count($history)-1]['query'];
 		return false;
@@ -90,7 +92,8 @@ class QueryHistory extends Object implements Countable, Renderable {
 	 * @param integer $queryIndex
 	 * @return DBQuery
 	 */
-	public function query($queryIndex) {
+	public function query($queryIndex) 
+	{
 		if ($this->defined($queryIndex)) throw new QueryHistoryIndexNotFoundException();
 		return $this->data[$queryIndex]['query'];
 	}
@@ -99,7 +102,8 @@ class QueryHistory extends Object implements Countable, Renderable {
 	 * Return the time in seconds the queries took all in all
 	 * @return float
 	 */
-	public function timeTotal($precision = 6) {
+	public function timeTotal($precision = 6) 
+	{
 		$sum = 0.0;
 		foreach($this->data as $index => $data) {
 			$sum += $data['timer']->time();
@@ -107,7 +111,8 @@ class QueryHistory extends Object implements Countable, Renderable {
 		return round($sum, $precision);
 	}
 	
-	public function render() {
+	public function render() 
+	{
 		if (!$this->beforeRender()) return '';
 		$rendered = '';
 		if (!$this->beforeRender()) return $rendered;
@@ -132,29 +137,33 @@ class QueryHistory extends Object implements Countable, Renderable {
 		return $this->afterRender($rendered);
 	}
 	
-	public function beforeRender() {
+	public function beforeRender() 
+	{
 		return true;
 	}
 	
-	public function afterRender($rendered) {
+	public function afterRender($rendered) 
+	{
 		return $rendered;
 	}
 	
-	public function __toString() {
+	public function __toString() 
+	{
 		echo 'QueryHistory Render reached';
 		return $this->render();
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class QueryHistoryException extends BasicException {}
+class QueryHistoryException extends BasicException 
+{}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class QueryHistoryIndexNotFoundException extends BasicException {}
+class QueryHistoryIndexNotFoundException extends BasicException 
+{}

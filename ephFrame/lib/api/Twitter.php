@@ -44,7 +44,8 @@ class_exists('CURL') or require(dirname(__FILE__).'/../CURL.php');
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 11.11.2008
  */
-class Twitter extends CURL {
+class Twitter extends CURL 
+{
 	
 	public $baseUrl = 'http://www.twitter.com/';
 	
@@ -62,7 +63,8 @@ class Twitter extends CURL {
 	 * @param string $username
 	 * @param string $password
 	 */
-	public function __construct($username = null, $password = null) {
+	public function __construct($username = null, $password = null) 
+	{
 		$this->username = $username;
 		$this->password = $password;
 		$this->auth = array(&$this->username, &$this->password);
@@ -91,7 +93,8 @@ class Twitter extends CURL {
 	 * @param integer $page
 	 * @return array(StdObj)
 	 */
-	public function timeline($id = null, $count = null, $since = null, $since_id = null, $page = null) {
+	public function timeline($id = null, $count = null, $since = null, $since_id = null, $page = null) 
+	{
 		$this->method = CURL::METHOD_GET;
 		$this->url	= $this->baseUrl.'statuses/user_timeline.json';
 		$this->data = array(
@@ -119,7 +122,8 @@ class Twitter extends CURL {
 	 * @return integer $id
 	 * @param string message
 	 */
-	public function updateStatus($message) {
+	public function updateStatus($message) 
+	{
 		if (trim($message) == '') return false;
 		$this->url 	= $this->baseUrl.'statuses/update.json';
 		$this->data = array('status' => $message);
@@ -132,7 +136,8 @@ class Twitter extends CURL {
 	 * @param integer $id
 	 * @return array(StdObj)
 	 */
-	public function deleteStatus($id) {
+	public function deleteStatus($id) 
+	{
 		$this->url	= $this->baseUrl.'statuses/destroy.json';
 		$this->data = array('id' => (int) $id);
 		return $this->sendAndReceive();
@@ -151,7 +156,8 @@ class Twitter extends CURL {
 	 * @param string
 	 * @return StdObj
 	 */
-	public function location($location) {
+	public function location($location) 
+	{
 		$this->url	= $this->baseUrl.'statuses/update_location.json';
 		$thsi->data = array('location' => $location);
 		return $this->sendAndReceive();
@@ -164,7 +170,8 @@ class Twitter extends CURL {
 	 * @param integer $since
 	 * @return array(StdObj)
 	 */
-	public function friends($id = null, $page = null, $since = null) {
+	public function friends($id = null, $page = null, $since = null) 
+	{
 		$this->url 	= $this->baseUrl.'statuses/friends.json';
 		$this->data = array('id' => (int) $id, 'page' => (int) $page, 'since' => $since);
 		return $this->sendAndReceive();
@@ -176,7 +183,8 @@ class Twitter extends CURL {
 	 * @param integer $page
 	 * @return array(StdObj)
 	 */
-	public function followers($id = null, $page = null) {
+	public function followers($id = null, $page = null) 
+	{
 		$this->url	= $this->baseUrl.'statuses/followers.json';
 		$this->data = array('id' => (int) $id, 'page' => (int) $page);
 		return $this->sendAndReceive();
@@ -208,7 +216,8 @@ class Twitter extends CURL {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class TwitterException extends BasicException {
+class TwitterException extends BasicException 
+{
 	
 }
 
@@ -216,8 +225,10 @@ class TwitterException extends BasicException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class TwitterErrorException extends TwitterException {
-	public function __construct($response) {
+class TwitterErrorException extends TwitterException 
+{
+	public function __construct($response) 
+	{
 		parent::__construct('\''.$response->error.'\'');
 	}
 }
@@ -226,5 +237,6 @@ class TwitterErrorException extends TwitterException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class TwitterAuthentificationException extends TwitterErrorException {
+class TwitterAuthentificationException extends TwitterErrorException 
+{
 }

@@ -35,7 +35,7 @@ ephFrame::loadClass('ephFrame.lib.Image');
  * @subpackage ephFrame.lib
  */
 abstract class Barcode extends Image {
-
+{
 	public $code;
 	
 	public $barColor;
@@ -51,7 +51,8 @@ abstract class Barcode extends Image {
 	/**
 	 * Abstract BarCode Constructor
 	 */
-    public function __construct($code, $width = 300, $height = 100) {
+    public function __construct($code, $width = 300, $height = 100) 
+	{
     	$this->type("gif");
     	$this->font(2);
     	$this->width($width);
@@ -68,7 +69,8 @@ abstract class Barcode extends Image {
      * @param string $code
      * @throws BarcodeEmptyCodeException
      */
-    public function code($code = -1) {
+    public function code($code = -1) 
+	{
     	if ($code != -1) {
     		if (empty($code)) throw new BarcodeEmptyCodeException();
     		$this->code = $code;	
@@ -80,7 +82,8 @@ abstract class Barcode extends Image {
      * Draws the text under the barcode
      * @param boolean $bool
      */
-    final public function drawText($bool = -1) {
+    final public function drawText($bool = -1) 
+	{
     	if ($bool != -1) {
     		$this->drawText = (bool) $bool;
     	} else {
@@ -105,7 +108,8 @@ abstract class Barcode extends Image {
      * Define if the text should be stretched along the hole barcode
      * @param boolean $bool
      */
-    final public function stretchText($bool = -1) {
+    final public function stretchText($bool = -1) 
+	{
     	if ($bool != -1) $this->stretchText = (bool) $bool;
     	return $this->stretchText;
     }
@@ -114,7 +118,8 @@ abstract class Barcode extends Image {
      * Define if the border should be drawn or draw the border if no parameter is passed
      * @param boolean $bool
      */
-    final public function drawBorder ($bool = -1) {
+    final public function drawBorder ($bool = -1) 
+	{
     	if ($bool != -1) {
     		$this->drawBorder = (bool) $bool;	
     	} else {
@@ -133,7 +138,8 @@ abstract class Barcode extends Image {
 	 * Define the Backgroundcolor
 	 * @param string|array(integer)|Color	$backgroundColor
 	 */
-	final public function backgroundColor($backgroundColor = -1) {
+	final public function backgroundColor($backgroundColor = -1) 
+	{
 		return $this->_newColor("backgroundColor",$backgroundColor);
 	}
 	
@@ -141,7 +147,8 @@ abstract class Barcode extends Image {
 	 * Define the Color of the Border, useless if drawBorder is set to false
 	 * @param string|array(integer)|Color	$borderColor
 	 */
-    final public function borderColor($borderColor = -1) {
+    final public function borderColor($borderColor = -1) 
+	{
     	return $this->_newColor("borderColor", $borderColor);
     }
     
@@ -149,7 +156,8 @@ abstract class Barcode extends Image {
 	 * Define the Color for the barcode Bars
 	 * @param string|array(integer)|Color	$barColor
 	 */
-    final public function barColor($barColor = -1) {
+    final public function barColor($barColor = -1) 
+	{
     	return $this->_newColor("barColor", $barColor);
     }
     
@@ -157,20 +165,24 @@ abstract class Barcode extends Image {
 	 * Define the Color of the Text, useless if drawText is set to false
 	 * @param string|array(integer)|Color	$textColor
 	 */
-    final public function textColor($textColor = -1) {
+    final public function textColor($textColor = -1) 
+	{
     	return $this->_newColor("textColor", $textColor);
     }
     
-    public function increaseDrawPos($int) {
+    public function increaseDrawPos($int) 
+	{
     	$this->drawPos += $int;
     }
     
-    public function drawPos($pos = -1) {
+    public function drawPos($pos = -1) 
+	{
     	if ($pos != -1) $this->drawPos = $pos;
     	return $this->drawPos;
     }
     
-    public function drawBar($xPos, $width) {
+    public function drawBar($xPos, $width) 
+	{
     	$YEnd = $this->height()-10;
     	if ($this->drawText) {
     		$YEnd -= $this->fontHeight();
@@ -183,7 +195,8 @@ abstract class Barcode extends Image {
      * Returns the content of the image
      * @return string
      */
-    public function getImage($quality = 60) {
+    public function getImage($quality = 60) 
+	{
     	if ($this->drawText) $this->drawText();
     	if ($this->drawBorder) $this->drawBorder();
     	// calculate Starting Position for barcode
@@ -200,14 +213,17 @@ abstract class Barcode extends Image {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class BarcodeException extends BasicException {}
+class BarcodeException extends BasicException 
+{}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class BarcodeEmptyCodeException extends BarcodeException {
-	public function __construct() {
+class BarcodeEmptyCodeException extends BarcodeException 
+{
+	public function __construct() 
+	{
 		$this->message = 'You must set a code for the barcode. Empty Codes are invalid!';
 		parent::__construct();
 	}

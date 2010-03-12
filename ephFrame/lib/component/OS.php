@@ -34,8 +34,8 @@
  * @package ephFrame
  * @subpackage ephFrame.lib.component
  */
-class OS extends AppComponent implements Renderable {
-	
+class OS extends AppComponent implements Renderable 
+{	
 	public $name = 'unknown';
 	public $id	= 0;
 	
@@ -74,29 +74,34 @@ class OS extends AppComponent implements Renderable {
 		26 => 'OS/2'
 	);
 
-	public function startup($stringOrId = null) {
+	public function startup($stringOrId = null) 
+	{
 		if (isset($_SERVER['HTTP_USER_AGENT'])) {
 			$this->fromUserAgent($_SERVER['HTTP_USER_AGENT']);
 		}
 		return $this;
 	}
 	
-	public function beforeRender() {
+	public function beforeRender() 
+	{
 		return true;
 	}
 	
-	public function afterRender($rendered) {
+	public function afterRender($rendered) 
+	{
 		return $rendered;
 	}
 	
-	public function render() {
+	public function render() 
+	{
 		if (!$this->beforeRender()) {
 			return false;
 		}
 		return $this->afterRender($this->__toString());
 	}
 	
-	public function __toString() {
+	public function __toString() 
+	{
 		return $this->name;
 	}
 	
@@ -111,7 +116,8 @@ class OS extends AppComponent implements Renderable {
 	 *
 	 * @param string $userAgentString
 	 */
-	public function fromUserAgent($userAgentString) {
+	public function fromUserAgent($userAgentString) 
+	{
 		Sanitize::panic($userAgentString);
 		if (stristr($userAgentString, 'sunos')) {
 			$this->id(1);
@@ -172,22 +178,24 @@ class OS extends AppComponent implements Renderable {
 				$this->id(20);
 			}
 		}
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class OSException extends ComponentException{}
+class OSException extends ComponentException
+{}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class OSNotFoundException extends OSException {
-	public function __construct($id) {
+class OSNotFoundException extends OSException 
+{
+	public function __construct($id) 
+	{
 		parent::__construct('No OS found with the id \''.$id.'\'');
 	}
 }

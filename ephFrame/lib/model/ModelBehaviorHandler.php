@@ -25,8 +25,8 @@
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 16.10.2008
  */
-class ModelBehaviorHandler extends Object implements Iterator, Countable {
-
+class ModelBehaviorHandler extends Object implements Iterator, Countable 
+{
 	/**
 	 * @var array(ModelBehavior)
 	 */
@@ -37,14 +37,16 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 	 */
 	public $model;
 	
-	public function __construct(Model $model, Array $behaviors = array()) {
+	public function __construct(Model $model, Array $behaviors = array()) 
+	{
 		$this->model = $model;
 		$this->behaviors = $behaviors;
 		$this->initBehaviors();
 		return $this;
 	}
 	
-	public function initBehaviors() {
+	public function initBehaviors() 
+	{
 		foreach($this->behaviors as $behaviorName => $config) {
 			unset($this->behaviors[$behaviorName]);
 			// $behavior = array('Taggable', 'Deletable') notation
@@ -73,7 +75,8 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 	 * @param array(string) $config
 	 * @return ModelBehaviorHandler
 	 */
-	public function addBehavior($behaviorName, Array $config = array()) {
+	public function addBehavior($behaviorName, Array $config = array()) 
+	{
 		$behaviorName = trim($behaviorName);
 		if (!isset(self::$cache[$behaviorName])) {
 			if ($this->hasBehavior($behaviorName)) return $this;
@@ -112,7 +115,8 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 	 * @return boolean
 	 * @param string
 	 */
-	public function hasBehavior($behaviorName) {
+	public function hasBehavior($behaviorName) 
+	{
 		return isset($this->behaviors[$behaviorName]);
 	}
 	
@@ -121,7 +125,8 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 	 * @param string	$name
 	 * @return boolean
 	 */
-	public function implement($name) {
+	public function implement($name) 
+	{
 		return $this->hasBehavior($name);
 	}
 	
@@ -130,7 +135,8 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 	 * @param string $behaviorName
 	 * @return boolean
 	 */
-	public function removeBehavior($behaviorName) {
+	public function removeBehavior($behaviorName) 
+	{
 		if (isset($this->behaviors[$behaviorName])) {
 			unset($this->behaviors[$behaviorName]);
 		} elseif (in_array($behaviorName, $this->behaviors)) {
@@ -139,7 +145,8 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 		return true;
 	}
 	
-	public function call($methodName, Array $args = array()) {
+	public function call($methodName, Array $args = array()) 
+	{
 		foreach($this->behaviors as $behavior) {
 			if (!method_exists($behavior, $methodName)) continue;
 			if ($r = $behavior->callMethod($methodName, $args));
@@ -151,7 +158,8 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 		}
 	}
 	
-	public function __call($methodName, Array $args = array()) {
+	public function __call($methodName, Array $args = array()) 
+	{
 		if (method_exists($this, $methodName)) {
 			return $this->callMethod($methodName, $args);
 		}
@@ -166,7 +174,8 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 	 * @param string	$behaviorName
 	 * @return ModelBehavior Model behavior class if found
 	 */
-	public function __get($behaviorName) {
+	public function __get($behaviorName) 
+	{
 		if ($this->hasBehavior($behaviorName)) {
 			return $this->behaviors[$behaviorName];
 		}
@@ -177,44 +186,52 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable {
 	 * Returns the number of behaviors
 	 * @return integer
 	 */
-	public function count() {
+	public function count() 
+	{
 		return count($this->behaviors);
 	}
 	
-	public function next() {
+	public function next() 
+	{
 		return next($this->behaviors);
 	}
 	
-	public function rewind() {
+	public function rewind() 
+	{
 		return reset($this->behaviors);
 	}
 	
-	public function valid() {
+	public function valid() 
+	{
 		return FALSE !== $this->current();
 	}
 	
-	public function key() {
+	public function key() 
+	{
 		return key($this->behaviors);
 	}
 	
-	public function current() {
+	public function current() 
+	{
 		return current($this->behaviors);
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.exception
  */
-class ModelBehaviorHandlerException extends ObjectException {}
+class ModelBehaviorHandlerException extends ObjectException 
+{}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.exception
  */
-class ModelEmptyBehaviorNameException extends ModelBehaviorHandlerException {
-	public function __construct(Model $model) {
+class ModelEmptyBehaviorNameException extends ModelBehaviorHandlerException 
+{
+	public function __construct(Model $model) 
+	{
 		parent::__construct('Empty model behavior name detected when trying to add a new behavior.');
 	}
 }
@@ -223,8 +240,10 @@ class ModelEmptyBehaviorNameException extends ModelBehaviorHandlerException {
  * @package ephFrame
  * @subpackage ephFrame.exception
  */
-class ModelBehaviorHandlerMethodNotFoundException extends ModelBehaviorHandlerException {
-	public function __construct(Model $model, $method) {
+class ModelBehaviorHandlerMethodNotFoundException extends ModelBehaviorHandlerException 
+{
+	public function __construct(Model $model, $method) 
+	{
 		parent::__construct('The model \''.get_class($model).'\' does not implement the behavior method "'.$method.'".');
 	}
 }
@@ -233,8 +252,10 @@ class ModelBehaviorHandlerMethodNotFoundException extends ModelBehaviorHandlerEx
  * @package ephFrame
  * @subpackage ephFrame.exception
  */
-class ModelBehaviorNotFoundException extends ModelBehaviorHandlerException {
-	public function __construct(Model $model, $behaviorName) {
+class ModelBehaviorNotFoundException extends ModelBehaviorHandlerException 
+{
+	public function __construct(Model $model, $behaviorName) 
+	{
 		parent::__construct('Unable to find model behavior: \''.$behaviorName.'\'');
 	}
 }

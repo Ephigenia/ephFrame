@@ -58,9 +58,9 @@ class_exists('Charset') or require dirname(__FILE__).'/helper/Charset.php';
  * @uses HTTPResponse
  * @version 0.1
  */
-class HTTPRequest extends Component {
-
-	const METHOD_GET = 'GET';
+class HTTPRequest extends Component 
+{
+{	const METHOD_GET = 'GET';
 	const METHOD_POST = 'POST';
 	const METHOD_PUT = 'PUT';
 	const METHOD_DELETE = 'DELETE';
@@ -100,7 +100,8 @@ class HTTPRequest extends Component {
 	 * @param boolean|array(string) $autofillOrData
 	 * @return HTTPRequest
 	 */
-	public function __construct($autofillOrData = false) {
+	public function __construct($autofillOrData = false) 
+	{
 		$this->header = new HTTPHeader();
 		if (is_array($autofillOrData)) {
 			$this->data = $autofillOrData;
@@ -110,11 +111,13 @@ class HTTPRequest extends Component {
 		return $this;
 	}
 	
-	public function isPost() {
+	public function isPost() 
+	{
 		return $this->method == self::METHOD_POST;
 	}
 	
-	public function isGet() {
+	public function isGet() 
+	{
 		return $this->method == self::METHOD_GET;
 	}
 	
@@ -122,7 +125,8 @@ class HTTPRequest extends Component {
 	 * Returns the name of the requesting host
 	 * @return string
 	 */
-	public function hostname() {
+	public function hostname() 
+	{
 		// determine host name if possible
 		if (empty($this->hostname)) {
 			$this->hostname = gethostbyaddr($this->host);
@@ -175,7 +179,8 @@ class HTTPRequest extends Component {
 	 * Tests if a sended request is ajax (only works with jquery)
 	 * @return boolean
 	 */
-	public function isAjax() {
+	public function isAjax() 
+	{
 		return ($this->header->get('x_requested_with') == 'XMLHttpRequest');
 	}
 	
@@ -188,7 +193,8 @@ class HTTPRequest extends Component {
 	 * @param string $name
 	 * @return mixed
 	 */
-	public function get($name) {
+	public function get($name) 
+	{
 		return ArrayHelper::extract($this->data, $name);
 	}
 	
@@ -198,7 +204,8 @@ class HTTPRequest extends Component {
 	 * @param string $url
 	 * @return HTTPResponse
 	 */
-	public function send($url = null) {
+	public function send($url = null) 
+	{
 		// use passed url
 		if ($url) {
 			$host = parse_url($url, PHP_URL_HOST);
@@ -281,7 +288,8 @@ class HTTPRequest extends Component {
 	 * @param array $data
 	 * @return string
 	 */
-	public function buildRequestQuery($data = null) {
+	public function buildRequestQuery($data = null) 
+	{
 		if (!$data) {
 			$data = $this->data;
 		}
@@ -298,7 +306,8 @@ class HTTPRequest extends Component {
 	 * Dumps the data from the request and returns it
 	 * @return string
 	 */
-	public function dump() {
+	public function dump() 
+	{
 		$rendered = '';
 		foreach ($this->data as $key => $var) {
 			$rendered .= htmlentities($key).': '.htmlentities(var_export($var, true)).LF;
@@ -312,11 +321,13 @@ class HTTPRequest extends Component {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class HTTPRequestException extends BasicException {}
+class HTTPRequestException extends BasicException 
+{}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class HTTPRequestFSockError extends HTTPRequestException {
+class HTTPRequestFSockError extends HTTPRequestException 
+{
 }

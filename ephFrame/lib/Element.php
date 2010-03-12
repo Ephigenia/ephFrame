@@ -72,7 +72,8 @@ class Element extends View
  */
 class ElementException extends ViewException
 {
-	public function __construct(View $element, $message) {
+	public function __construct(View $element, $message) 
+	{
 		parent::__construct($element, $message);
 	}
 }
@@ -82,7 +83,8 @@ class ElementException extends ViewException
  */
 class ElementFileNotFoundException extends ElementException
 {
-	public function __construct(View $element, $filename) {
+	public function __construct(View $element, $filename) 
+	{
 		parent::__construct($element, sprintf('Unable to find element file \'%s\'.', $filename));
 	}
 }

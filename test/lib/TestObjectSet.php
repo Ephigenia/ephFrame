@@ -26,13 +26,16 @@ require_once dirname(__FILE__).'/../autorun.php';
  * @package ephFrame
  * @subpackage ephFrame.test
  */
-class TestObjectSet extends UnitTestCase {
+class TestObjectSet extends UnitTestCase 
+{
 	
-	public function setUp() {
+	public function setUp() 
+	{
 		ephFrame::loadClass('ephFrame.lib.ObjectSet');
 	}
 	
-	public function testGeneral() {
+	public function testGeneral() 
+	{
 		$set = new ObjectSet('IndexedArray');
 		$set->add(new IndexedArray('test'));
 		$set->add(new IndexedArray('zero'));

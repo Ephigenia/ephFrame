@@ -26,8 +26,8 @@ interface_exists('ImageFilter') or require dirname(__FILE__).'/ImageFilter.php';
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class ImageNegativeFilter extends Object implements ImageFilter {
-
+class ImageNegativeFilter extends Object implements ImageFilter 
+{
 	public $cache = array();
 	
 	/**
@@ -35,7 +35,8 @@ class ImageNegativeFilter extends Object implements ImageFilter {
 	 * @param Image $image
 	 * @return Image the manipulated image
 	 */
-	public function apply(Image $image) {
+	public function apply(Image $image) 
+	{
 		$imgWidth = $image->width() - 1;
 		$imgHeight = $image->height() - 1;
 		$imgHandle = $image->handle();
@@ -57,6 +58,5 @@ class ImageNegativeFilter extends Object implements ImageFilter {
 			}
 		}
 		return $image;
-	}
-	
+	}	
 }

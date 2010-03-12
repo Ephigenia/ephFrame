@@ -72,7 +72,8 @@ class ConsoleController extends Controller
 	 */
 	protected $consoleWidth = 80;
 	
-	public function afterConstruct() {
+	public function afterConstruct() 
+	{
 		parent::afterConstruct();
 		// load console class
 		$consoleClassName = ephFrame::loadClass($this->consoleClassname);
@@ -99,30 +100,34 @@ class ConsoleController extends Controller
 		return true;
 	}
 	
-	public function showHello() {
+	public function showHello() 
+	{
 		return true;
 	}
 	
-	public function showHelp() {
+	public function showHelp() 
+	{
 		$this->console->out($this->optParse->usage($this->consoleWidth));
 		return true;
 	}
 	
-	public function boxedMessage($message) {
+	public function boxedMessage($message) 
+	{
 		return 
 			WACS_ULCORNER.str_repeat(WACS_HLINE, $this->consoleWidth-2).WACS_URCORNER.LF.
 			WACS_VLINE.' '.str_pad($message, $this->consoleWidth - 3, ' ', STR_PAD_RIGHT).WACS_VLINE.LF.
 			WACS_LLCORNER.str_repeat(WACS_HLINE, $this->consoleWidth-2).WACS_LRCORNER.LF;
 	}
 	
-	public function quit() {
+	public function quit() 
+	{
 		exit;
 	}
-	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exceptions
  */
-class ConsoleControllerException extends ControllerException {}
+class ConsoleControllerException extends ControllerException 
+{}

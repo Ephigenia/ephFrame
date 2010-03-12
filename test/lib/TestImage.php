@@ -26,55 +26,67 @@ require_once dirname(__FILE__).'/../autorun.php';
  * @package ephFrame
  * @subpackage ephFrame.test
  */
-class TestImage extends UnitTestCase {
+class TestImage extends UnitTestCase 
+{
 	
 	/**
 	 * @var Image
 	 */
 	public $testImage;
 	
-	public function setUp() {
+	public function setUp() 
+	{
 		ephFrame::loadClass('ephFrame.lib.Image');
 		$this->testImage = new Image(dirname(__FILE__).'/../tmp/Blue_Box_in_museum.jpg');
 	}
 	
-	public function testType() {
+	public function testType() 
+	{
 		$this->assertEqual($this->testImage->type(), Image::TYPE_JPG);
 	}
 	
-	public function testIsType() {
+	public function testIsType() 
+	{
 		$this->assertTrue($this->testImage->isType(Image::TYPE_JPG), true);
 	}
 	
-	public function testExtension() {
+	public function testExtension() 
+	{
 		$this->assertEqual($this->testImage->extension(), 'jpg');
 	}
 	
-	public function testChannels() {
+	public function testChannels() 
+	{
 		$this->assertEqual($this->testImage->channels(), 3);
 	}
 	
-	public function testHasChannels() {
+	public function testHasChannels() 
+	{
 		$this->assertEqual($this->testImage->hasChannels(3), true);
 	}
 	
-	public function testHandle() {
+	public function testHandle() 
+	{
 		$this->assertTrue(is_resource($this->testImage->handle()), true);
 	}
 	
-	public function testAspectRatio() {
+	public function testAspectRatio() 
+	{
 		$this->assertEqual($this->testImage->aspectRatio(2), 1.00);
 	}
 	
-	public function testWidth() {
+	public function testWidth() 
+	{
 		$this->assertEqual($this->testImage->width(), 461);
 	}
 	
-	public function testHeight() {
+	public function testHeight() 
+	{
 		$this->assertEqual($this->testImage->height(), 461);
 	}
 	
-	public function testIsPanelFormat() {
+	public function testIsPanelFormat() 
+	{
 		$this->assertEqual($this->testImage->isPanelFormat(), false);
 	}
 	

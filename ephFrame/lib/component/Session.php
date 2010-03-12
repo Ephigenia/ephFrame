@@ -35,8 +35,8 @@ class_exists('Hash') or require dirname(__FILE__).'/../Hash.php';
  * @uses PHPINI
  * @version 0.1
  */
-class Session extends Hash {
-	
+class Session extends Hash 
+{
 	/**
 	 * Default session name, usually overwritten by Session.name in the
 	 * application config
@@ -66,7 +66,8 @@ class Session extends Hash {
 	 * @param 	string	$sessionName
 	 * @return Session
 	 */
-	public function init(Controller $controller) {
+	public function init(Controller $controller) 
+	{
 		$this->start();
 		$this->data = &$_SESSION;
 		if ($sessionName = Registry::get('Session.name')) {
@@ -91,7 +92,8 @@ class Session extends Hash {
 	 * @param unknown_type $sessionName
 	 * @return boolean
 	 */
-	public function start($sessionName = null) {
+	public function start($sessionName = null) 
+	{
 		session_write_close();
 		$this->name($this->name);
 		if (!empty($this->controller->request->data[$this->name])) {
@@ -109,7 +111,8 @@ class Session extends Hash {
 	 * @throws StringExpectedException
 	 * @return string
 	 */
-	public function id($id = null) {
+	public function id($id = null) 
+	{
 		if (func_num_args() > 0) {
 			if (!is_string($id) || strlen($id) == 0) throw new StringExpectedException();
 			session_id($id);
@@ -124,7 +127,8 @@ class Session extends Hash {
 	 * @throws StringExpectedException
 	 * @return string
 	 */
-	public function name($name = null) {
+	public function name($name = null) 
+	{
 		if (func_num_args() > 0 && $name !== null) {
 			$this->name = (string) $name;
 			session_name($this->name);
@@ -137,7 +141,8 @@ class Session extends Hash {
 	 * are rendered.
 	 * @return Session
 	 */
-	public function beforeRender() {
+	public function beforeRender() 
+	{
 		$this->Cookie->set($this->name(), $this->id(), $this->ttl);
 		return parent::beforeRender();
 	}
@@ -148,12 +153,12 @@ class Session extends Hash {
 	 *
 	 * @return boolean
 	 */
-	public function __destroy() {
+	public function __destroy() 
+	{
 		session_write_close();
 		parent::__destroy();
 		return true;
 	}
-
 }
 
 /**
@@ -162,7 +167,8 @@ class Session extends Hash {
  * @author Ephigenia // Marcel Eichner <love@ephigenia.de>
  * @since 16.04.2009
  */
-class SessionException extends ComponentException {}
+class SessionException extends ComponentException 
+{}
 
 /**
  * @package ephFrame
@@ -170,8 +176,10 @@ class SessionException extends ComponentException {}
  * @author Ephigenia // Marcel Eichner <love@ephigenia.de>
  * @since 16.04.2009
  */
-class SessionStartException extends SessionException {
-	public function __construct() {
+class SessionStartException extends SessionException 
+{
+	public function __construct() 
+	{
 		parent::__construct('Unable to start session: \''.error_get_last().'\'');
 	}
 }

@@ -40,14 +40,15 @@ class_exists('Compressor') or require dirname(__FILE__).'/Compressor.php';
  * @author Marcel Eichner // Ephiagenia <love@ephigenia.de>
  * @since 12.05.2008
  */
-class CSSCompressor extends Compressor {
-	
+class CSSCompressor extends Compressor 
+{
 	/**
 	 * Compresses the incoming css string and returns it
 	 * @param string $css
 	 * @return string
 	 */
-	public function compress($css) {
+	public function compress($css) 
+	{
 		$compressed = preg_replace('!
 			# comments
 			(
@@ -66,12 +67,12 @@ class CSSCompressor extends Compressor {
 			)
 			!mix', '', $css);
 		return $compressed;
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class CSSCompressorException extends ComponentException {}
+class CSSCompressorException extends ComponentException 
+{}

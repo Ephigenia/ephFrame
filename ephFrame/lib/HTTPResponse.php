@@ -27,8 +27,8 @@ class_exists('HTTPHeader') or require dirname(__FILE__).'/HTTPHeader.php';
  * @version 0.1
  * @uses HTTPHeader
  */
-class HTTPResponse extends Object implements Renderable {
-	
+class HTTPResponse extends Object implements Renderable 
+{
 	/**
 	 * Array of header statements in the response
 	 * @var HTTPHeader
@@ -74,7 +74,8 @@ class HTTPResponse extends Object implements Renderable {
 	 * @param string|integer $rawDataOrStatusCode
 	 * @return HTTPResponse
 	 */
-	public function __construct($rawDataOrStatusCode = null) {
+	public function __construct($rawDataOrStatusCode = null) 
+	{
 		$this->header = new HTTPHeader();
 		if (is_string($rawDataOrStatusCode)) {
 			$this->rawData = $rawDataOrStatusCode;
@@ -86,7 +87,8 @@ class HTTPResponse extends Object implements Renderable {
 		return $this;
 	}
 	
-	public function hasHeader() {
+	public function hasHeader() 
+	{
 		return count($this->header) > 0;
 	}
 	
@@ -115,7 +117,8 @@ class HTTPResponse extends Object implements Renderable {
 	 * Renders the HTTP Response with all headers
 	 * @return string
 	 */
-	public function render() {
+	public function render() 
+	{
 		if (!$this->beforeRender()) return false;
 		// add http status code to header
 		$rendered = '';
@@ -133,7 +136,8 @@ class HTTPResponse extends Object implements Renderable {
 	 * 
 	 * @return boolean
 	 */
-	public function beforeRender() {
+	public function beforeRender() 
+	{
 		// enable GZip Compression
 		loadClass('ephFrame.lib.component.GZipCompressor');
 		if ($this->enableGZipCompression) {
@@ -152,7 +156,8 @@ class HTTPResponse extends Object implements Renderable {
 	 * @param string $rendered
 	 * @return string
 	 */
-	public function afterRender($rendered) {
+	public function afterRender($rendered) 
+	{
 		return $rendered;
 	}
 	
@@ -160,14 +165,15 @@ class HTTPResponse extends Object implements Renderable {
 	 * Returns the rendered HTTP Response
 	 * @return string
 	 */
-	public function __toString() {
+	public function __toString() 
+	{
 		return $this->render();
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class HTTPResponseException extends BasicException {}
+class HTTPResponseException extends BasicException 
+{}

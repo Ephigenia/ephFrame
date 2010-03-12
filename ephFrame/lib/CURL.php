@@ -34,8 +34,8 @@
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 11.11.2008
  */
-class CURL extends Object {
-	
+class CURL extends Object 
+{
 	private $handle;
 	
 	const METHOD_POST = 0;
@@ -114,7 +114,8 @@ class CURL extends Object {
 	 * Curl wrapper constructor
 	 * @
 	 */
-	public function __construct($url = null, Array $options = array()) {
+	public function __construct($url = null, Array $options = array()) 
+	{
 		if ($url !== null) {
 			$this->handle = curl_init($url);
 			$this->url = $url;
@@ -128,7 +129,8 @@ class CURL extends Object {
 	/**
 	 * @param array(string)
 	 */
-	public function fromArray(Array $options = array()) {
+	public function fromArray(Array $options = array()) 
+	{
 		foreach($options as $key => $value) {
 			$this->{$key} = $value;
 		}
@@ -150,7 +152,8 @@ class CURL extends Object {
 	 * @param boolean $header return/print response headers as well
 	 * @return boolean|string
 	 */
-	public function exec($buffered = true, $headers = false) {
+	public function exec($buffered = true, $headers = false) 
+	{
 		if (!empty($this->data)) {
 			if ($this->method === self::METHOD_POST) {
 				curl_setopt($this->handle, CURLOPT_POST, true);
@@ -199,7 +202,8 @@ class CURL extends Object {
 		return curl_exec($this->handle);
 	}
 	
-	public function __destroy() {
+	public function __destroy() 
+	{
 		curl_close($this->handle);
 	}
 	
@@ -209,17 +213,12 @@ class CURL extends Object {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class CURLException extends BasicException {}
+class CURLException extends BasicException 
+{}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class CURLEmptyURLException extends CURLException {}
-
-/**
- * Thrown when CURL instance is created and no curl support
- * for this PHP installation
- * @package ephFrame
- * @subpackage ephFrame.lib.exception
- */
+class CURLEmptyURLException extends CURLException 
+{}

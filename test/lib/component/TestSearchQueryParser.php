@@ -28,11 +28,13 @@ require_once dirname(__FILE__).'/../../autorun.php';
  */
 class TestSeachQueryParser extends UnitTestCase
 {	
-	public function setUp() {
+	public function setUp() 
+	{
 		loadClass('ephFrame.lib.component.SearchQueryParser');
 	}
 	
-	public function test() {
+	public function test() 
+	{
 		$testArray = array(
 			'%25C3%25A4' => array('%C3%A4'),
 			'%22marcel+eichner+%26+illustration%22' => array('marcel eichner & illustration'),

@@ -26,8 +26,7 @@ class_exists('Image') or require dirname(__FILE__).'/../../../Image.php';
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 04.11.2008
  */
-class FormFieldImage extends FormFieldFile {
-	
+class FormFieldImage extends FormFieldFile 
+{
 	public $fileClassName = 'Image';
-	
 }

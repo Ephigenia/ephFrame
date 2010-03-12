@@ -38,13 +38,15 @@ class TestFile extends UnitTestCase
 	 */
 	protected $falseFile;
 	
-	public function setUp() {
+	public function setUp() 
+	{
 		ephFrame::loadClass('ephFrame.lib.File');
 		$this->testFile = new File(__FILE__);
 		$this->falseFile = new File('nixda');
 	}
 	
-	public function testReadLine() {
+	public function testReadLine() 
+	{
 		$file = new File(dirname(__FILE__).'/../tmp/textfile.txt');
 		while($line = $file->read(true)) {
 			$this->assertTrue(is_string($line));
@@ -52,7 +54,8 @@ class TestFile extends UnitTestCase
 		$this->assertTrue(count($file->toArray()), 4);
 	}
 	
-	public function testExt() {
+	public function testExt() 
+	{
 		$this->assertEqual(File::ext('Simplefilename.ext'), 'ext');
 		$this->assertEqual(File::ext('Simplefilename.ext  '), 'ext');
 		$this->assertEqual(File::ext('Simplefilename.double.ext  '), 'ext');
@@ -67,7 +70,8 @@ class TestFile extends UnitTestCase
 		$this->assertEqual(File::ext('S'), '');
 	}
 	
-	public function testSizeHumanized() {
+	public function testSizeHumanized() 
+	{
 		$this->assertEqual(File::sizeHumanized(1), '1 B');
 		$this->assertEqual(File::sizeHumanized(KILOBYTE - 1), '1023 B');
 		// KB
@@ -85,39 +89,47 @@ class TestFile extends UnitTestCase
 		$this->assertEqual(File::sizeHumanized(GIGABYTE + 1), '1 GB');
 	}
 	
-	public function testIsFile() {
+	public function testIsFile() 
+	{
 		$this->assertTrue($this->testFile->isFile());
 	}
 	
-	public function testIsDir() {
+	public function testIsDir() 
+	{
 		$this->assertFalse($this->testFile->isDir());
 	}
 	
-	public function testMIME() {
+	public function testMIME() 
+	{
 		$this->assertEqual($this->testFile->mimeType(), 'application/x-httpd-php');
 	}
 	
-	public function testExtension() {
+	public function testExtension() 
+	{
 		$this->assertEqual($this->testFile->extension(), 'php');
 		$this->assertFalse($this->falseFile->extension());
 	}
 	
-	public function testSize() {
+	public function testSize() 
+	{
 		$this->assertTrue(is_int($this->testFile->size()));
 		$this->assertTrue($this->testFile->size() > 100);
 	}
 	
-	public function testExists() {
+	public function testExists() 
+	{
 		$this->assertTrue($this->testFile->exists());
 		$this->assertFalse($this->falseFile->exists());
 	}
 	
-	public function testLastModified() {
+	public function testLastModified() 
+	{
 		$this->assertTrue(is_int($this->testFile->lastModified()));
 		$this->assertTrue($this->testFile->lastModified() > 0);
 	}
 	
-	public function testCreated() {
+	public function testCreated() 
+	{
 		$this->assertTrue(is_int($this->testFile->created()));
 		$this->assertTrue($this->testFile->created() > 0);
 	}

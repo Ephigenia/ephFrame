@@ -26,8 +26,8 @@
  * @package ephFrame
  * @subpackage ephFrame.lib.helper
  */
-class IP extends Helper {
-	
+class IP extends Helper 
+{
 	/**
 	 * Convert an ip to number
 	 * <code>
@@ -38,7 +38,8 @@ class IP extends Helper {
 	 * @static
 	 * @return integer
 	 */
-	public static function toNumber($ip) {
+	public static function toNumber($ip)
+	{
 		if (empty($ip)) {
 			return 0;
 		}
@@ -58,13 +59,12 @@ class IP extends Helper {
 	 * @static
 	 * @return string
 	 */
-	public static function toIP($number) {
+	public static function toIP($number)
+	{
 		if (empty($number)) {
 			return '';
 		}		
 		$ip = implode('.', array(($number >> 24) & 0xff, ($number >> 16) & 0xff, ($number >> 8) & 0xff, $number & 0xff));
-		pr($ip);
 		exit;
 	}
-
 }

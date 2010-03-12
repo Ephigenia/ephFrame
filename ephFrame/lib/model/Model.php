@@ -46,8 +46,8 @@ unset($___d);
  * @uses SelectQuery
  * @uses ModelStructureCache
  */
-class Model extends Object {
-	
+class Model extends Object 
+{
 	/**
 	 * Stores information about the columns in the database table that belong	
 	 * to this model
@@ -227,9 +227,9 @@ class Model extends Object {
 	 * @param integer|array(mixed) $id
 	 * @return Model
 	 */
-	public function __construct($id = null, $fieldNames = array()) {
-
-		if ($this->tablename !== false) {
+	public function __construct($id = null, $fieldNames = array()) 
+	{
+{		if ($this->tablename !== false) {
 			if (empty($this->name)) {
 				$this->name = get_class($this);
 			}
@@ -280,7 +280,8 @@ class Model extends Object {
 	/**
 	 * callback called after model finished constructing and init
 	 */
-	public function afterConstruct() {
+	public function afterConstruct() 
+	{
 		return true;
 	}
 	
@@ -288,7 +289,8 @@ class Model extends Object {
 	 * Init is called by the controller after it attached this model to it
 	 * @return boolean
 	 */
-	public function init() {
+	public function init() 
+	{
 		return true;
 	}
 	
@@ -333,7 +335,8 @@ class Model extends Object {
 	 * @throws ModelReflexiveException if you try to bin the model to itsself
 	 * @return boolean
 	 */
-	public function bind($modelAlias, $associationType = null, Array $config = array(), $bind = false) {
+	public function bind($modelAlias, $associationType = null, Array $config = array(), $bind = false) 
+	{
 		// input-check
 		if (empty($modelAlias)) return false;
 		if (!empty($associationType) && !$this->validAssociationType($associationType)) throw new ModelInvalidAssociationTypeException($this, $associationType);
@@ -443,7 +446,8 @@ class Model extends Object {
 	 * @param string|array(string) $modelName
 	 * @return boolean
 	 */
-	public function unbind($modelName) {
+	public function unbind($modelName) 
+	{
 		if ($modelName == 'all') {
 			$modelName = array_merge(
 				array_keys($this->hasOne),
@@ -472,7 +476,8 @@ class Model extends Object {
 	 * Return default URI to existing model detail pages
 	 * @return string
 	 */
-	public function detailPageUri() {
+	public function detailPageUri() 
+	{
 		if (!$this->exists()) return false;
 		if (!$uri = Router::getRoute($this->name.'Id', array('id' => $this->id))) {
 			$uri = WEBROOT.lcfirst($this->name).'/'.$this->id.'/';	
@@ -480,7 +485,8 @@ class Model extends Object {
 		return $uri;
 	}
 	
-	public function detailPageURL() {
+	public function detailPageURL() 
+	{
 		return trim(Registry::get('WEBROOT_URL'), '/').$this->detailPageUri();
 	}
 	
@@ -489,7 +495,8 @@ class Model extends Object {
 	 * @param integer $length
 	 * @return string
 	 */
-	public function uniqueId($length = 8) {
+	public function uniqueId($length = 8) 
+	{
 		return substr(md5(SALT.$this->id), 0, $length);
 	}
 	
@@ -497,7 +504,8 @@ class Model extends Object {
 	 * Alias for {@link detailPageUri}
 	 * @return string
 	 */
-	public function permaLink() {
+	public function permaLink() 
+	{
 		return $this->detailPageUri();
 	}
 	
@@ -540,7 +548,8 @@ class Model extends Object {
 	 * @param array(string) name of the field that should be set (so you can ignore keys)
 	 * @return Model
 	 */
-	public function fromArray(Array $data = array(), Array $fieldNames = array()) {
+	public function fromArray(Array $data = array(), Array $fieldNames = array()) 
+	{
 		foreach($data as $key => $value) {
 			if (count($fieldNames) > 0 && !in_array($key, $fieldNames)) continue;
 			$this->set($key, $value);
@@ -554,7 +563,8 @@ class Model extends Object {
 	 * @param integer $id
 	 * @return boolean
 	 */
-	public function fromId($id) {
+	public function fromId($id) 
+	{
 		if (!$model = $this->findBy($this->primaryKeyName, $id)) {
 			return false;
 		}
@@ -577,7 +587,8 @@ class Model extends Object {
 	 * @param array(string) $fieldNames
 	 * @return array(mixed)
 	 */
-	public function toArray(Array $fieldNames = array()) {
+	public function toArray(Array $fieldNames = array()) 
+	{
 		if (func_num_args() == 0) {
 			return $this->data;
 		}
@@ -604,7 +615,8 @@ class Model extends Object {
 	 * @param mixed $value
 	 * @return boolean
 	 */
-	public function saveField($fieldname, $value) {
+	public function saveField($fieldname, $value) 
+	{
 		if (!$this->exists() || !$this->hasField($fieldname)) return false;
 		$this->query('UPDATE '.$this->tablename.' SET `'.$fieldname.'` = '.DBQuery::quote($value, $this->structure[$fieldname]->quoting).' WHERE '.$this->primaryKeyName.' = '.$this->get($this->primaryKeyName));
 		$this->set($fieldname, $value);
@@ -618,7 +630,8 @@ class Model extends Object {
 	 * @param array(string) $fieldNames
 	 * @return boolean
 	 */
-	public function save($validate = true, Array $fieldNames = array()) {
+	public function save($validate = true, Array $fieldNames = array()) 
+	{
 		if (!($this->beforeSave($this) && $this->behaviors->call('beforeSave', array($this)))) {
 			return false;
 		}
@@ -671,7 +684,8 @@ class Model extends Object {
 	 * Called before insert or update action takes places
 	 * @return boolean
 	 */
-	public function beforeSave() {
+	public function beforeSave() 
+	{
 		// check if associate models defined
 		foreach($this->belongsTo + $this->hasOne as $modelName => $config) {
 			if (!isset($this->{$modelName})) {
@@ -685,7 +699,8 @@ class Model extends Object {
 		return true;
 	}
 	
-	public function afterSave() {
+	public function afterSave() 
+	{
 		return true;
 	}
 	
@@ -721,11 +736,13 @@ class Model extends Object {
 		return true;
 	}
 	
-	public function beforeInsert() {
+	public function beforeInsert() 
+	{
 		return true;
 	}
 	
-	public function afterInsert() {
+	public function afterInsert() 
+	{
 		return true;
 	}
 	
@@ -753,13 +770,15 @@ class Model extends Object {
 	 * @param $conditions
 	 * @return Model|boolean
 	 */
-	public function updateWhere($conditions = array(), $values = array()) {
+	public function updateWhere($conditions = array(), $values = array()) 
+	{
 		$updateQuery = new UpdateQuery($this->tablename(), $values, $conditions);
 		$this->query($updateQuery);
 		return $this;
 	}
 	
-	public function beforeUpdate() {
+	public function beforeUpdate() 
+	{
 		// set created date if there's any
 		if (!$this->exists()) {
 			throw new ModelEmptyPrimaryKeyException($this);
@@ -767,7 +786,8 @@ class Model extends Object {
 		return true;
 	}
 	
-	public function afterUpdate() {
+	public function afterUpdate() 
+	{
 		return true;
 	}
 	
@@ -782,7 +802,8 @@ class Model extends Object {
 	 * @param integer|Model $id
 	 * @return boolean
 	 */
-	public function delete($id = null) {
+	public function delete($id = null) 
+	{
 		if (is_object($id)) {
 			return $id->delete();
 		} elseif ($id === null) {
@@ -807,7 +828,8 @@ class Model extends Object {
 	 * @param $conditions
 	 * @return Model|boolean
 	 */
-	public function deleteWhere($conditions, $callbacks = false) {
+	public function deleteWhere($conditions, $callbacks = false) 
+	{
 		if ($callbacks) {
 			
 		} else {
@@ -877,7 +899,8 @@ class Model extends Object {
 	 * @param integer $id
 	 * @return boolean|Model
 	 */
-	public function exists($id = null) {
+	public function exists($id = null) 
+	{
 		if ($id !== null || func_num_args() > 0) {
 			$classname = get_class($this);
 			$m = new $classname((int) $id);
@@ -910,7 +933,8 @@ class Model extends Object {
 	 * @param array(string) $fieldNames
 	 * @return boolean
 	 */
-	public function validate($data = array(), $fieldNames = array()) {
+	public function validate($data = array(), $fieldNames = array()) 
+	{
 		if (func_num_args() == 0) {
 			$data = $this->data;
 		}
@@ -936,7 +960,8 @@ class Model extends Object {
 	 * @param mixed $value
 	 * @return boolean|string
 	 */
-	public function validateField($fieldName, $value) {
+	public function validateField($fieldName, $value) 
+	{
 		if (func_num_args() == 1 && !isset($this->data[$fieldName])) {
 			return false;
 		}
@@ -959,7 +984,8 @@ class Model extends Object {
 	 * @param integer $depth depth of model associations to use in select query
 	 * @return SelectQuery
 	 */
-	public function createSelectQuery($conditions = array(), $order = null, $offset = 0, $count = null, $depth = null) {
+	public function createSelectQuery($conditions = array(), $order = null, $offset = 0, $count = null, $depth = null) 
+	{
 		if ($depth === null) {
 			$depth = $this->depth;
 		}
@@ -1049,7 +1075,8 @@ class Model extends Object {
 	 * @param integer	$depth	Depth of model association depth
 	 * @return IndexedArray
 	 */
-	public function createSelectResultList(QueryResult $result, $justOne = false, $depth = null) {
+	public function createSelectResultList(QueryResult $result, $justOne = false, $depth = null) 
+	{
 		if ($depth === null) {
 			$depth = $this->depth;
 		}
@@ -1137,7 +1164,8 @@ class Model extends Object {
 	 * @param $depth
 	 * @return Boolean|Model|Set
 	 */
-	public function query($query, $depth = null) {
+	public function query($query, $depth = null) 
+	{
 		if ($db = DBConnectionManager::getInstance()->get($this->useDBConfig)) {
 			$result = $db->query($query);
 			return $this->createSelectResultList($result, false, $depth);
@@ -1159,7 +1187,8 @@ class Model extends Object {
 	 * @param array $order
 	 * @return Model|boolean
 	 */
-	public function find($conditions = array(), $order = null, $depth = null) {
+	public function find($conditions = array(), $order = null, $depth = null) 
+	{
 		$query = $this->createSelectQuery($conditions, $order, null, null, $depth);
 		if (!$this->beforeFind($query)) return false;
 		if ($r = $this->query($query, $depth)) {
@@ -1175,7 +1204,8 @@ class Model extends Object {
 	 * @param integer	$depth
 	 * @return Model|boolean
 	 */
-	public function findOne($conditions, $order = null, $depth = null) {
+	public function findOne($conditions, $order = null, $depth = null) 
+	{
 		if ($ret = $this->findAll($conditions, $order, 0, 1, $depth)) {
 			return $ret[0];
 		}
@@ -1187,7 +1217,8 @@ class Model extends Object {
 	 * @param string|Query $query
 	 * @return boolean|Query
 	 */
-	public function beforeFind($query) {
+	public function beforeFind($query) 
+	{
 		return $query;
 	}
 	
@@ -1196,7 +1227,8 @@ class Model extends Object {
 	 * @param mixed $results
 	 * @return mixed
 	 */
-	public function afterFind($results) {
+	public function afterFind($results) 
+	{
 		return $results;
 	}
 	
@@ -1224,7 +1256,8 @@ class Model extends Object {
 	 * @param integer $depth
 	 * @return Model|boolean
 	 */
-	public function findBy($fieldname, $value = null, $depth = null) {
+	public function findBy($fieldname, $value = null, $depth = null) 
+	{
 		// if no fieldname passed and just single argument use this as id
 		if (func_num_args() == 1) {
 			$fieldname = $this->primaryKeyName;
@@ -1260,7 +1293,8 @@ class Model extends Object {
 	 * @param $conditions
 	 * @return array(string)
 	 */
-	public function listAll($fieldname, $conditions = array(), $order = array(), $offset = 0, $count = null, $depth = 0) {
+	public function listAll($fieldname, $conditions = array(), $order = array(), $offset = 0, $count = null, $depth = 0) 
+	{
 		$list = array();
 		if (!($r = $this->query($this->createSelectQuery($conditions, $order, $offset, $count, $depth), $depth))) {
 			return $list;
@@ -1301,7 +1335,8 @@ class Model extends Object {
 	 * @param integer $offset Offset to select from
 	 * @return IndexedArray(Model)|boolean
 	 */
-	public function findAll($conditions = null, $order = null, $offset = 0, $count = null, $depth = null) {
+	public function findAll($conditions = null, $order = null, $offset = 0, $count = null, $depth = null) 
+	{
 		if (!($query = $this->beforeFind($this->createSelectQuery($conditions, $order, $offset, $count, $depth)))) return false;
 		if ($r = $this->query($query)) {
 			return $this->afterFind($r);
@@ -1315,7 +1350,8 @@ class Model extends Object {
 	 * @param array(string) $conditions
 	 * @return boolean
 	 */
-	public function hasAny($conditions) {
+	public function hasAny($conditions) 
+	{
 		return ($this->findOne($conditions) !== false);
 	}
 	
@@ -1324,7 +1360,8 @@ class Model extends Object {
 	 * @param array(string) $conditions
 	 * @return IndexedArray(Model)|boolean
 	 */
-	public function findAllRandom($conditions = null, $count = 0, $depth = null) {
+	public function findAllRandom($conditions = null, $count = 0, $depth = null) 
+	{
 		return $this->findAll($conditions, array('RAND()'), 0, $count, $depth);
 	}
 	
@@ -1333,7 +1370,8 @@ class Model extends Object {
 	 * @param array(string) $conditions
 	 * @return Model|boolean
 	 */
-	public function findRandom($conditions = null) {
+	public function findRandom($conditions = null) 
+	{
 		return $this->find($conditions, array('RAND()'));
 	}
 	
@@ -1344,7 +1382,8 @@ class Model extends Object {
 	 * @param integer $count
 	 * @return integer
 	 */
-	public function countAll($conditions = null, $offset = null, $count = null) {
+	public function countAll($conditions = null, $offset = null, $count = null) 
+	{
 		$query = $this->createSelectQuery($conditions, array(), $offset, $count, null, null);
 		$query->select = new Hash(array('COUNT(*)' => 'count'));
 		if (!($result = $this->query($query))) {
@@ -1361,7 +1400,8 @@ class Model extends Object {
 	 * @param array(string) $conditions Conditions to mention when paginating
 	 * @return array()
 	 */
-	public function paginate($page = 1, $perPage = null, $conditions = null) {
+	public function paginate($page = 1, $perPage = null, $conditions = null) 
+	{
 		$page = abs((int) $page); $perPage = abs((int) $perPage);
 		if ($page <= 0) $page = 1;
 		if ($perPage == 0) $perPage = $this->perPage;
@@ -1406,7 +1446,8 @@ class Model extends Object {
 	 * @param integer $depth depth of model recursion (0-2);
 	 * @return IndexedArray(Model)|boolean
 	 */
-	public function findAllBy($fieldname, $value = null, $order = null, $offset = 0, $count = null, $depth = null) {
+	public function findAllBy($fieldname, $value = null, $order = null, $offset = 0, $count = null, $depth = null) 
+	{
 		if ($this->hasField($fieldname)) {
 			$value = DBQuery::quote($value, $this->structure[$fieldname]->quoting);
 			if (strchr($fieldname, '.') == false) {
@@ -1427,7 +1468,8 @@ class Model extends Object {
 	 * @param string $methodName
 	 * @param array $args
 	 */
-	public function __call($methodName, Array $args) {
+	public function __call($methodName, Array $args) 
+	{
 		// catch findAllBy[fieldname] calls
 		if (preg_match('/(findAll(By)?)(.+)/i', $methodName, $found)) {
 			return $this->findAllBy(Inflector::delimeterSeperate($found[3], null, true), $args[0]);
@@ -1466,7 +1508,8 @@ class Model extends Object {
 	 * @param string $fieldname
 	 * @return boolean
 	 */
-	public function hasField($fieldname) {
+	public function hasField($fieldname) 
+	{
 		if (empty($fieldname)) return false;
 		list($modelname, $fieldname) = Inflector::splitModelAndFieldName($fieldname);
 		if (!empty($modelname) && $modelname !== $this->name) {
@@ -1482,7 +1525,8 @@ class Model extends Object {
 	 * @param mixed	$default
 	 * @return boolean
 	 */
-	public function isEmpty($fieldname) {
+	public function isEmpty($fieldname) 
+	{
 		$r = $this->get($fieldname);
 		return empty($r);
 	}
@@ -1508,7 +1552,8 @@ class Model extends Object {
 	 * @param mixed	$default
 	 * @return mixed
 	 */
-	public function get($fieldname, $default = null) {
+	public function get($fieldname, $default = null) 
+	{
 		if (is_scalar($fieldname)) {
 			if (substr($fieldname, 0, strlen($this->name)) == $this->name) {
 				$fieldname = substr($fieldname, strlen($this->name) + 1);
@@ -1526,7 +1571,8 @@ class Model extends Object {
 		trigger_error(get_class($this).'->'.$fieldname.' undefined variable name', E_USER_ERROR);
 	}
 	
-	public function __get($fieldname) {
+	public function __get($fieldname) 
+	{
 		return $this->get($fieldname);	
 	}
 	
@@ -1551,7 +1597,8 @@ class Model extends Object {
 	 * @param mixed $value
 	 * @return Model
 	 */
-	public function set($fieldname, $value = null) {
+	public function set($fieldname, $value = null) 
+	{
 		list($modelname, $fieldname) = Inflector::splitModelAndFieldName($fieldname);
 		if (!empty($modelname) && $modelname !== $this->name) {
 			if (isset($this->$modelname) && $this->$modelname instanceof Model) {
@@ -1588,7 +1635,8 @@ class Model extends Object {
 	 * @param $value
 	 * @return unknown_type
 	 */
-	public function __set($fieldname, $value) {
+	public function __set($fieldname, $value) 
+	{
 		return $this->set($fieldname, $value);
 	}
 	
@@ -1596,7 +1644,8 @@ class Model extends Object {
 	 * Reset the model data and recreate associated models
 	 * @return boolean
 	 */
-	public function reset() {
+	public function reset() 
+	{
 		if (is_array($this->structure)) {
 			foreach($this->structure as $fieldInfo) {
 				$this->data[$fieldInfo->name] = null;
@@ -1615,7 +1664,8 @@ class Model extends Object {
 	 * {@link structure} of this model.
 	 * @return Model
 	 */
-	protected function loadStructure() {
+	protected function loadStructure()
+	{
 		if (!isset($this->modelStructureCache)) {
 			$this->modelStructureCache = new ModelStructureCache($this, $this->modelCacheTTL);
 		}
@@ -1646,28 +1696,31 @@ class Model extends Object {
 	 * Returns an array of all fieldnames of this model
 	 * @return array(string)
 	 */
-	public function fieldNames() {
+	public function fieldNames() 
+	{
 		$fieldNames = array();
 		foreach($this->structure as $fieldInfo) {
 			$fieldNames[] = $fieldInfo->name;
 		}
 		return $fieldNames;
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.exception
  */
-class ModelException extends ObjectException {}
+class ModelException extends ObjectException 
+{}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.exception
  */
-class ModelInvalidAssociationTypeException extends ModelException {
-	public function __construct(Model $model, $associationType) {
+class ModelInvalidAssociationTypeException extends ModelException 
+{
+	public function __construct(Model $model, $associationType) 
+	{
 		$messge = 'Invalid association type detected: ’'.$associationType.'’ in Model '.$model->name.' (class: '.get_class($model).')';
 		parent::construct($message);
 	}
@@ -1677,8 +1730,10 @@ class ModelInvalidAssociationTypeException extends ModelException {
  * @package ephFrame
  * @subpackage ephFrame.exception
  */
-class ModelEmptyPrimaryKeyException extends ModelException {
-	public function __construct(Model $model) {
+class ModelEmptyPrimaryKeyException extends ModelException 
+{
+	public function __construct(Model $model) 
+	{
 		$message = 'The primary key on '.$model->name.'.'.$model->primaryKeyName.' is empty and can not be uesed!';
 		parent::__construct($message);
 	}

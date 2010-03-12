@@ -28,24 +28,28 @@ require_once dirname(__FILE__).'/../autorun.php';
  */
 class TestHash extends UnitTestCase
 {	
-	public function setUp() {
+	public function setUp() 
+	{
 		ephFrame::loadClass('ephFrame.lib.Hash');
 	}
 	
-	public function testSort() {
+	public function testSort() 
+	{
 		$test = new Hash();
 		$test->append('Name', 'Hossa');
 		$test->sort();
 		$this->assertEqual($test->implode(), 'HossaName');
 	}
 	
-	public function testAdd() {
+	public function testAdd() 
+	{
 		$r = new Hash();
 		$r->add('test');
 		$this->assertEqual($r->toArray(), array(0 => 'test'));
 	}
 	
-	public function testToString() {
+	public function testToString() 
+	{
 		$test = new Hash();
 		$test->append('Name', 'Hossa');
 		$this->assertEqual((string) $test, 'NameHossa');

@@ -25,14 +25,14 @@ class_exists('DBQuery') or require dirname(__FILE__).'/DBQuery.php';
  * @since 09.03.2008
  * @version 0.2
  */
-class DeleteQuery extends DBQuery {
-	
+class DeleteQuery extends DBQuery 
+{
 	public $verb = 'DELETE';
 	
 	public $renderTemplate = '%verb %flags %tables FROM %tables %where %orderBy %limit';
 	
-	public function __construct($table, $conditions = array()) {
+	public function __construct($table, $conditions = array()) 
+	{
 		parent::__construct($this->verb, $table, $conditions);
-	}
-	
+	}	
 }

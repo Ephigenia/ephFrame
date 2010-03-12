@@ -31,8 +31,8 @@
  * @subpackage ephFrame.lib
  * @static
  */
-class HTTPStatusCode extends Object {
-	
+class HTTPStatusCode extends Object 
+{
 	/**
 	 * Collected StatusCode -> Message String collection
 	 * @var array(string)
@@ -85,7 +85,8 @@ class HTTPStatusCode extends Object {
 	 * @param string|integer $code
 	 * @return string|boolean
 	 */
-	public static function message($code) {
+	public static function message($code)
+	{
 		$code = (int) $code;
 		if (isset(self::$statusCodes[$code])) {
 			return self::$statusCodes[$code];
@@ -106,24 +107,11 @@ class HTTPStatusCode extends Object {
 	 * @param string|integer|float $httpVersion
 	 * @return string
 	 */
-	public static function header($code, $httpVersion = '1.x') {
+	public static function header($code, $httpVersion = '1.x')
+	{
 		if (!$msg = self::message($code)) {
 			return false;
 		}
 		return 'HTTP/'.$httpVersion.' '.$code.' '.$msg;
 	}
-	
-	/**
-	 * Send a header message with the passed status code to the client
-	 * @param string|integer $code
-	 * @return boolean
-	 */
-	public static function send($code) {
-		if (!$headerMessage = self::header($code)) {
-			return false;
-		}
-		header($headerMessage, true, $code);
-		return true;
-	}
-	
 }

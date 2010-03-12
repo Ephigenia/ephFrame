@@ -25,14 +25,15 @@ ephFrame::loadClass('ephFrame.lib.model.DB.QueryResult');
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 07.10.2007
  */
-class MySQLQueryResult extends QueryResult {
-	
+class MySQLQueryResult extends QueryResult 
+{
 	/**
 	 * Moves the internal pointer of the mysql query result index to the 
 	 * passed index.
 	 * @param integer $dataIndex
 	 */
-	public function seek($dataIndex) {
+	public function seek($dataIndex) 
+	{
 		if ($this->count() > 0) {
 			if ($dataIndex == QueryResult::SEEK_END) {
 				$dataIndex = $this->count()-1;
@@ -49,7 +50,8 @@ class MySQLQueryResult extends QueryResult {
 	 * is no result left
 	 * @return array()|boolean
 	 */
-	public function fetchAssoc() {
+	public function fetchAssoc() 
+	{
 		return mysql_fetch_assoc($this->result);
 	}
 	
@@ -58,7 +60,8 @@ class MySQLQueryResult extends QueryResult {
 	 * is no result left
 	 * @return array()|boolean
 	 */
-	public function fetchObject() {
+	public function fetchObject() 
+	{
 		return mysql_fetch_assoc($this->result);
 	}
 	
@@ -67,7 +70,8 @@ class MySQLQueryResult extends QueryResult {
 	 * is no result left
 	 * @return array()|boolean
 	 */
-	public function fetchIndexed() {
+	public function fetchIndexed() 
+	{
 		return mysql_fetch_row($this->result);
 	}
 	
@@ -75,11 +79,11 @@ class MySQLQueryResult extends QueryResult {
 	 * Returns the number of rows in the hole result as integer
 	 * @return integer
 	 */
-	public function numRows() {
+	public function numRows() 
+	{
 		if (!isset($this->numRows) && is_resource($this->result)) {
 			$this->numRows = mysql_num_rows($this->result);
 		}
 		return $this->numRows;
-	}
-	
+	}	
 }

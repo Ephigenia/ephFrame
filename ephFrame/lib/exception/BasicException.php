@@ -23,8 +23,8 @@
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class BasicException extends Exception {
-	
+class BasicException extends Exception 
+{
 	const FATAL = 1;
 	const ERROR = 2;
 	const NOTICE = 8;
@@ -33,7 +33,8 @@ class BasicException extends Exception {
 	public $created;
 	public $level;
 	
-	public function __construct($message = null) {
+	public function __construct($message = null) 
+	{
 		if ($message !== null) $this->message = $message;
 		$this->created = time();
 		if (!isset($this->level)) $this->level = self::ERROR;
@@ -47,8 +48,7 @@ class BasicException extends Exception {
 			}
 			logg(Log::VERBOSE_SILENT, $logMessage);
 		}
-	}
-	
+	}	
 }
 
 /**
@@ -56,8 +56,10 @@ class BasicException extends Exception {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class NotClonableException extends BasicException {
-	public function __construct(Object $object) {
+class NotClonableException extends BasicException 
+{
+	public function __construct(Object $object) 
+	{
 		$this->message = 'This object of class \''.get_class($object).'\' can not be cloned.';
 		parent::__construct();
 	}

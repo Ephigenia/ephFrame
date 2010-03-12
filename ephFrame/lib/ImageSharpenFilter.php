@@ -26,8 +26,8 @@ interface_exists('ImageFilter') or require dirname(__FILE__).'/ImageFilter.php';
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class ImageSharpenFilter extends Object implements ImageFilter {
-
+class ImageSharpenFilter extends Object implements ImageFilter 
+{
 	public $cache = array();
 	
 	public $sharpness = 16;
@@ -36,7 +36,8 @@ class ImageSharpenFilter extends Object implements ImageFilter {
 	
 	public $offset = 0;
 	
-	public function __construct($sharpness = null) {
+	public function __construct($sharpness = null) 
+	{
 		if ($sharpness !== null) {
 			$this->sharpness = (float) $sharpness;
 		}
@@ -47,7 +48,8 @@ class ImageSharpenFilter extends Object implements ImageFilter {
 	 * @param Image $image
 	 * @return Image the manipulated image
 	 */
-	public function apply(Image $image) {
+	public function apply(Image $image) 
+	{
 		$s = $this->sharpness;
 		$matrix = array(
 			array(-1, -1, -1),
@@ -57,14 +59,14 @@ class ImageSharpenFilter extends Object implements ImageFilter {
 		imageconvolution($image->handle(), $matrix, $this->divisor, $this->offset);
 		return $image;
 	}
-	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ImageSharpenFilterException extends BasicException {}
+class ImageSharpenFilterException extends BasicException 
+{}
 
 //http://www.weberdev.com/get_example-4602.html
 if(!function_exists('imageconvolution')){

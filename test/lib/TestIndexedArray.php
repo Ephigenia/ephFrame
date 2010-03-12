@@ -30,13 +30,16 @@ require_once dirname(__FILE__).'/../autorun.php';
  * @subpackage ephFrame.test
  * @uses IndexedArray
  */
-class TestIndexedArray extends UnitTestCase {
+class TestIndexedArray extends UnitTestCase 
+{
 	
-	public function setUp() {
+	public function setUp() 
+	{
 		ephFrame::loadClass('ephFrame.lib.IndexedArray');
 	}
 	
-	public function testImplode() {
+	public function testImplode() 
+	{
 		$test = new IndexedArray();
 		$test->append('Name', 'Hossa');
 		$this->assertEqual($test->implode(''), 'NameHossa');
@@ -45,26 +48,30 @@ class TestIndexedArray extends UnitTestCase {
 		$this->assertEqual($test->sort()->implode(','), 'Hossa,Name');
 	}
 	
-	public function testFromString() {
+	public function testFromString() 
+	{
 		$t = new IndexedArray();
 		$t->fromString('AABC');
 		$this->assertEqual($t->toArray(), array('A', 'A', 'B', 'C'));
 	}
 	
-	public function testUnique() {
+	public function testUnique() 
+	{
 		$t = new IndexedArray();
 		$t->fromString('AABC');
 		$this->assertEqual((string) $t->unique(), 'ABC');
 	}
 	
-	public function testMinimum() {
+	public function testMinimum() 
+	{
 		$t = new IndexedArray(1,2,2,3,4,5,5,1);
 		$this->assertEqual($t->min(), '1');
 		$this->assertEqual($t->min(0), null);
 		$this->assertEqual($t->min(2), new IndexedArray(array(1,2)));
 	}
 	
-	public function testMaximum() {
+	public function testMaximum() 
+	{
 		$t = new IndexedArray(1,2,2,3,4,5,5,1);
 		$this->assertEqual($t->max(), 5);
 		$this->assertEqual($t->max(0), null);

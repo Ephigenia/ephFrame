@@ -40,7 +40,8 @@ error_reporting(E_ALL);
 if (isset($_SERVER['SERVER_ADDR'])) {
 	header('Content-Type: text/html; charset=utf-8');
 	class ephFrameTestHTMLReporter extends HtmlReporter {
-		public function _getCss() {
+		public function _getCss() 
+	{
 			return parent::_getCss().'
 			body, html {
 				font-family: Pragmata, Monaco, Courier;

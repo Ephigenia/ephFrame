@@ -28,14 +28,15 @@ class_exists('File') or require dirname(__FILE__).'/../File.php';
  * @subpackage ephFrame.lib.component
  * @uses File
  */
-abstract class Compressor extends AppComponent {
-	
+abstract class Compressor extends AppComponent
+{	
 	/**
 	 * Compresses the passes string
 	 * @param string $code
 	 * @return string
 	 */
-	public function compress($string) {
+	public function compress($string) 
+	{
 		return $string;
 	}
 	
@@ -45,9 +46,9 @@ abstract class Compressor extends AppComponent {
 	 * @param string $filename
 	 * @return string
 	 */
-	public function compressFile($filename) {
+	public function compressFile($filename) 
+	{
 		$file = new File($filename);
 		return $this->compress($file->slurp());
-	}
-	
+	}	
 }

@@ -23,12 +23,11 @@ class_exists('FormField') or require dirname(__FILE__).'/FormField.php';
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 04.11.2008
  */
-class FormFieldSubmit extends FormField {
-	
+class FormFieldSubmit extends FormField 
+{
 	public $type = 'submit';
 	
 	public $label = false;
 	
-	public $mandatory = false;
-	
+	public $mandatory = false;	
 }

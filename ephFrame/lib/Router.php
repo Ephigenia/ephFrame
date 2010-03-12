@@ -67,7 +67,8 @@ class Router extends Hash
 	/**
 	 * @return Router
 	 */
-	public function __construct() {
+	public function __construct() 
+	{
 		$this->loadRoutes();
 		return $this;
 	}
@@ -93,7 +94,8 @@ class Router extends Hash
 		require_once APP_ROOT.'config'.DS.'routes.php';
 	}
 	
-	public function addScaffoldRoutes() {
+	public function addScaffoldRoutes() 
+	{
 		// add some default scaffolding routes
 		Router::addRoute('scaffold_view', ':controller/(?P<id>\d+)/?', array('action' => 'view'));
 		Router::addRoute('scaffold_actions', ':controller/(?P<id>\d+)/:action/?');
@@ -263,6 +265,5 @@ class Router extends Hash
 			}
 		}
 		return true;
-	}
-	
+	}	
 }

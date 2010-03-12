@@ -26,8 +26,8 @@ class_exists('HTMLTag') or require dirname(__FILE__).'/../HTMLTag.php';
  * @subpackage ephFrame.lib.component
  * @uses HTMLTag
  */
-class MetaTags extends Hash implements Renderable {
-	
+class MetaTags extends Hash implements Renderable 
+{
 	public $data = array(
 		'keywords' => array(''),
 		'description' => '',
@@ -39,20 +39,23 @@ class MetaTags extends Hash implements Renderable {
 	
 	public $metaEquivNames = array('content-type', 'content-language', 'pragma', 'imagetoolbar');
 	
-	public function startup() {
+	public function startup() 
+	{
 		$this->controller->set('MetaTags', $this);
 		$this->data['keywords'] = new Collection($this->data['keywords']);
 		return parent::startup();
 	}
 	
-	public function __get($index) {
+	public function __get($index) 
+	{
 		if (isset($this->data[$index])) {
 			return $this->data[$index];
 		}
 		return false;
 	}
 	
-	public function renderMetaTag($key, $value) {
+	public function renderMetaTag($key, $value) 
+	{
 		if (empty($value)) {
 			return '';
 		}
@@ -90,13 +93,13 @@ class MetaTags extends Hash implements Renderable {
 		return $metaTag->render();
 	}
 	
-	public function render() {
+	public function render() 
+	{
 		if (!$this->beforeRender()) return '';
 		$rendered = '';
 		foreach($this->data as $key => $value) {
 			$rendered .= $this->renderMetaTag($key, $value).LF;
 		}
 		return $this->afterRender($rendered);
-	}
-	
+	}	
 }

@@ -22,8 +22,8 @@
  * @since 06.05.2007
  * @package ephFrame
  */
-final class ephFrame {
-	
+final class ephFrame
+{	
 	/**
 	 * Stores the ephFrame version
 	 * @var integer
@@ -240,15 +240,15 @@ final class ephFrame {
 		} else {
 			return $usage;
 		}
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ephFrameException extends BasicException {
+class ephFrameException extends BasicException 
+{
 	public $level = BasicException::FATAL;
 }
 
@@ -256,16 +256,17 @@ class ephFrameException extends BasicException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ephFrameLoadError extends ephFrameException {
-	
-}
+class ephFrameLoadError extends ephFrameException 
+{}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ephFrameClassFileNotFoundException extends ephFrameLoadError {
-	public function __construct($classPath) {
+class ephFrameClassFileNotFoundException extends ephFrameLoadError 
+{
+	public function __construct($classPath) 
+	{
 		if (empty($classPath)) {
 			$this->message = 'No Classpath given.';
 		} else {
@@ -283,8 +284,10 @@ class ephFrameClassFileNotFoundException extends ephFrameLoadError {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ephFrameInterfaceFileFoundButNotLoadedException extends ephFrameException {
-	public function __construct($interfaceName, $path) {
+class ephFrameInterfaceFileFoundButNotLoadedException extends ephFrameException 
+{
+	public function __construct($interfaceName, $path) 
+	{
 		$this->message = 'Sorry, after loading Interface File \''.$path.'\' interface named \''.$interfaceName.'\' was not found.';
 	}
 }

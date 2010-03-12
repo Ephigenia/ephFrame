@@ -30,8 +30,8 @@
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class ClassPath extends Object {
-	
+class ClassPath extends Object 
+{
 	/**
 	 * Stores all translated classPaths
 	 * @var array(string)
@@ -54,7 +54,8 @@ class ClassPath extends Object {
 	 * Deletes the cache
 	 * @return boolean
 	 */
-	public static function reset() {
+	public static function reset()
+	{
 		self::$cache = array();
 	}
 	
@@ -65,7 +66,8 @@ class ClassPath extends Object {
 	 * @throws ClassPathEmptyClassNameException
 	 * @static
 	 */
-	public static function className($classPath) {
+	public static function className($classPath)
+	{
 		if (!is_string($classPath)) throw new StringExpectedException();
 		if (($className = strrchr($classPath, '.')) !== false) {
 			return substr($className, 1);
@@ -85,7 +87,8 @@ class ClassPath extends Object {
 	 * @static
 	 * @return string	filename
 	 */
-	public static function translatePath($classPath, $ignoreCache = false) {
+	public static function translatePath($classPath, $ignoreCache = false)
+	{
 		if (!isset(self::$cache[$classPath]) || $ignoreCache === true) {
 			if (preg_match('@[^A-Za-z0-9_. -]+@', $classPath)) throw new IntrusionException();
 			// check for valid classPath
@@ -112,26 +115,29 @@ class ClassPath extends Object {
 	 * @static
 	 * @return boolean
 	 */
-	public static function exists($classPath) {
+	public static function exists($classPath)
+	{
 		$translatedPath = self::translatePath($classPath);
 		if (file_exists($translatedPath) && is_file($translatedPath)) return true;
 		return false;
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ClassPathException extends BasicException {}
+class ClassPathException extends BasicException 
+{}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ClassPathEmptyClassNameException extends ClassPathException {
-	public function __construct() {
+class ClassPathEmptyClassNameException extends ClassPathException 
+{
+	public function __construct() 
+	{
 		$this->message = 'Empty Class Path detected.';
 		parent::__construct($this->message);
 	}
@@ -141,8 +147,10 @@ class ClassPathEmptyClassNameException extends ClassPathException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ClassPathMalFormedException extends ClassPathException {
-	public function __construct($classPath) {
+class ClassPathMalFormedException extends ClassPathException 
+{
+	public function __construct($classPath) 
+	{
 		$this->message = 'The classPath \''.$classPath.'\' is not well formed';
 		parent::__construct($this->message);
 	}

@@ -28,7 +28,8 @@ require_once dirname(__FILE__).'/../../autorun.php';
  */
 class TestLog extends UnitTestCase
 {	
-	public function testWrite() {
+	public function testWrite() 
+	{
 		Log::write(Log::ERROR, 'test log error message from TestLog');
 	}
 	

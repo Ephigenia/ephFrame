@@ -43,4 +43,4 @@ class HitCountBehavior extends ModelBehavior
 		}
 		return $this->model->saveField($field, $this->model->get($field) + $i);
 	}
-} // END HitCountBehavior class
+}

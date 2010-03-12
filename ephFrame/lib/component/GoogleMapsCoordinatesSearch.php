@@ -34,8 +34,8 @@ class_exists('HTTPRequest') or require dirname(__FILE__).'/../HTTPRequest.php';
  * @subpackage ephFrame.lib.component
  * @uses HTTPRequest
  */
-class GoogleMapsCoordinatesSearch extends AppComponent {
-
+class GoogleMapsCoordinatesSearch extends AppComponent
+{
 	/**
 	 * default api code for localhost
 	 * this can be overwritten with the apps component extended
@@ -51,11 +51,13 @@ class GoogleMapsCoordinatesSearch extends AppComponent {
 	 * @param unknown_type $apiCode
 	 * @return unknown
 	 */
-	public function apiCode($apiCode = null) {
+	public function apiCode($apiCode = null) 
+	{
 		return $this->__getOrSet('apiCode', $apiCode);
 	}
 	
-	public function generateRequest() {
+	public function generateRequest() 
+	{
 		$request = new HTTPRequest();
 		$request->data['key'] = $this->apiCode;
 		return $request;
@@ -70,7 +72,8 @@ class GoogleMapsCoordinatesSearch extends AppComponent {
 	 * @param string $zip
 	 * @return array(string) set of n arrays holding lat and lng values
 	 */
-	public function getLngLat($street, $city = null, $zip = null) {
+	public function getLngLat($street, $city = null, $zip = null) 
+	{
 		// build the search string
 		$q = $street.', '.$zip.' '.$city;
 		// prepare request
@@ -88,12 +91,12 @@ class GoogleMapsCoordinatesSearch extends AppComponent {
 			}
 		}
 		return $return;
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class GoogleMapsCoordinatesException extends ComponentException {}
+class GoogleMapsCoordinatesException extends ComponentException 
+{}

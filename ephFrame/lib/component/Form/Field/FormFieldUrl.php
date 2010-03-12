@@ -25,9 +25,9 @@ class_exists('FormFieldText') or require dirname(__FILE__).'/FormFieldText.php';
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 04.11.2008
  */
-class FormFieldUrl extends FormFieldText {
-
-	/**
+class FormFieldUrl extends FormFieldText 
+{
+{	/**
 	 * Default validation rules for urls
 	 * @var array(string)
 	 */
@@ -38,7 +38,8 @@ class FormFieldUrl extends FormFieldText {
 		)
 	);
 	
-	public function value($value = null) {
+	public function value($value = null) 
+	{
 		if (func_num_args() == 0) {
 			$val = parent::value();
 			if (!empty($val) && substr($val, 0, 7) !== 'http://') {

@@ -18,6 +18,13 @@
 /**
  * Timestampable Behavior
  * 
+ * This behavior is set to all {@link Models} within an ephFrame application
+ * and updates table fields with the current timestamp when a new row is
+ * inserted or updated.
+ * 
+ * You can change the fields that are updated passind other fieldnames using
+ * the config.
+ * 
  * @package ephFrame
  * @subpackage ephFrame.lib.model.behavior
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>

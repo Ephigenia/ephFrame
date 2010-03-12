@@ -26,9 +26,11 @@ require_once dirname(__FILE__).'/../../autorun.php';
  * @package ephFrame
  * @subpackage ephFrame.test
  */
-class TestString extends UnitTestCase {
+class TestString extends UnitTestCase 
+{
 	
-	public function testAppend() {
+	public function testAppend() 
+	{
 		$this->assertEqual(String::append('A', 'B'), 'AB');
 		$this->assertEqual(String::append('AC', 'C', true), 'AC');
 		$this->assertEqual(String::append('AC', 'c', true, true), 'ACc');
@@ -37,21 +39,25 @@ class TestString extends UnitTestCase {
 		$this->assertEqual(String::append('', '', true, true), '');
 	}
 	
-	public function testPrepend() {
+	public function testPrepend() 
+	{
 		$this->assertEqual(String::prepend('www.ephigenia.de', 'http://'), 'http://www.ephigenia.de');
 		$this->assertEqual(String::prepend('http://www.ephigenia.de', 'http://', true), 'http://www.ephigenia.de');
 		$this->assertEqual(String::prepend('B', 'A'), 'AB');
 	}
 
-	public function testLeft() {
+	public function testLeft() 
+	{
 		$this->assertEqual(String::left('Mähdrescher', 3), 'Mäh');
 	}
 		
-	public function testRight() {
+	public function testRight() 
+	{
 		$this->assertEqual(String::right('Scheiß', 2), 'iß');
 	}
 	
-	public function testToURL() {
+	public function testToURL() 
+	{
 		$this->assertEqual(String::toURL('bätmän'), 'baetmaen');
 		$this->assertEqual(String::toURL('bätmän\'s mobile is cool'), 'baetmaens-mobile-is-cool');
 		$this->assertEqual(String::toURL('bätmän\'s mobile is __cool', '_'), 'baetmaens_mobile_is_cool');
@@ -59,19 +65,23 @@ class TestString extends UnitTestCase {
 		$this->assertEqual(String::toURL('bätmän\'s mobile'.LF.' is cool', '_'), 'baetmaens_mobile_is_cool');
 	}
 	
-	public function testUpper() {
+	public function testUpper() 
+	{
 		$this->assertEqual(String::upper('Mähdrescher'), 'MÄHDRESCHER');
 	}
 
-	public function testUcFirst() {
+	public function testUcFirst() 
+	{
 		$this->assertEqual(String::ucFirst('östlich'), 'Östlich');
 	}
 
-	public function testLower() {
+	public function testLower() 
+	{
 		$this->assertEqual(String::lower('MÄHDRESCHER'), 'mähdrescher');
 	}
 	
-	public function testLcFirst() {
+	public function testLcFirst() 
+	{
 		$this->assertEqual(String::lcFirst('Ähdrescher'), 'ähdrescher');
 	}
 	
@@ -118,7 +128,8 @@ class TestString extends UnitTestCase {
 		}
 	}
 	
-	public function testSubstitute() {
+	public function testSubstitute() 
+	{
 		$expectedResult = 'You\'re seeing page 1 of 2 pages in total';
 		$expectedResultMultiple = '1 of 2 pages, you are on page 1';
 		// with associative arrays
@@ -148,13 +159,15 @@ class TestString extends UnitTestCase {
 		// not supported now
 	}
 	
-	public function testLength() {
+	public function testLength() 
+	{
 		$this->assertEqual(String::length('Waschbär'), 8);
 		$this->assertEqual(String::length('Wa    är'), 8);
 		$this->assertEqual(String::length('”'), 1);
 	}
 	
-	public function testSubstr() {
+	public function testSubstr() 
+	{
 		$t = 'Waschbär';
 		$this->assertEqual(String::substr($t, 0), $t);
 		$this->assertEqual(String::substr($t, 1), 'aschbär');
@@ -168,28 +181,33 @@ class TestString extends UnitTestCase {
 		$this->assertEqual(String::substr($t, 1, 0), '');
 	}
 	/*
-	public function testCountWords() {
+	public function testCountWords() 
+	{
 		$this->assertEqual(String::countWords('Hallo'), array('Hallo' => 1));
 	}
 	*/
 	
 	// todo add all multiline power here
-	public function testIndent() {
+	public function testIndent() 
+	{
 		// simple indenting
 		$this->assertEqual(String::indent('indent me!'), "\tindent me!");
 	}
 	
-	public function testInsert() {
+	public function testInsert() 
+	{
 		$this->assertEqual(String::insert('ADEFG', 1, 'BC'), 'ABCDEFG');
 		$this->assertEqual(String::insert('ADEFG', -4, 'BC'), 'ABCDEFG');
 	}
 	
-	public function testEachLine() {
+	public function testEachLine() 
+	{
 		$this->assertEqual(String::eachLine('Test'.LF.LF.'One'), array('Test', '', 'One'));
 		$this->assertEqual(String::eachLine('Test'.LF.LF.'One', true), array('Test', 'One'));
 	}
 	
-	public function test() {
+	public function test() 
+	{
 		$result = String::substitute('You\'re seeing page :page of :total pages', array(
 			'total' => 100,
 			'page' => 1
@@ -202,20 +220,23 @@ class TestString extends UnitTestCase {
 		$this->assertEqual($result, 'You\'re seeing page 1 of 100 pages');
 	}
 	
-	public function testEach() {
+	public function testEach() 
+	{
 		// test simple each
 		$this->assertEqual(String::each('Test'), array('T', 'e', 's', 't'));
 		// test multibyte
 		$this->assertEqual(String::each('ÄBÖ'), array('Ä', 'B', 'Ö'));
 	}
 	
-	public function testAddLineNumbers() {
+	public function testAddLineNumbers() 
+	{
 		$text = 'HALLO'.LF.'MY name is'.LF.'earl';
 		$this->assertEqual(String::addLineNumbers($text), '1 HALLO'.LF.'2 MY name is'.LF.'3 earl');
 	}
 
 	/*
-	public function testHex() {
+	public function testHex() 
+	{
 		// simple testing
 		$this->assertEqual(String::hex('A'), '41');
 		$this->assertEqual(String::hex('AB'), '4142');

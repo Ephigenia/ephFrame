@@ -30,7 +30,8 @@ class_exists('IndexedArray') or require dirname(__FILE__).'/IndexedArray.php';
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 16.07.2008
  */
-class Collection extends IndexedArray {
+class Collection extends IndexedArray 
+{
 	
 	/**
 	 * Adds one new Item to the beginning of the collection
@@ -38,7 +39,8 @@ class Collection extends IndexedArray {
 	 * @param mixed $v
 	 * @return unknown
 	 */
-	public function prepend($v) {
+	public function prepend($v) 
+	{
 		parent::prepend($v);
 		$this->unique();
 		return $this;
@@ -57,7 +59,8 @@ class Collection extends IndexedArray {
 	 * @param mixed $v
 	 * @return Collection
 	 */
-	public function add($value) {
+	public function add($value) 
+	{
 		if (func_num_args() > 1) {
 			$args = func_get_args();
 			$this->callMethod('add', $args);
@@ -76,7 +79,8 @@ class Collection extends IndexedArray {
 	 * @param array(mixed) $array
 	 * @return Collection
 	 */
-	public function fromArray(Array $data) {
+	public function fromArray(Array $data) 
+	{
 		parent::fromArray($data);
 		$this->unique();
 		return $this;
@@ -89,28 +93,31 @@ class Collection extends IndexedArray {
 	 * @param string $devider
 	 * @return Collection
 	 */
-	public function fromString($string, $devider = null) {
+	public function fromString($string, $devider = null) 
+	{
 		parent::fromString($string, $devider);
 		$this->unique();
 		return $this;
 	}
 	
-	public function range($start, $end, $stepSize = 1) {
+	public function range($start, $end, $stepSize = 1) 
+	{
 		parent::range($start, $end, $stepSize);
 		$this->unique();
 		return $this;
 	}
 	
-	public function offsetSet($index, $value) {
+	public function offsetSet($index, $value) 
+	{
 		parent::offsetSet($index, $value);
 		$this->unique();
 		return $this;
 	}
-
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class CollectionException extends IndexedArrayException {}
+class CollectionException extends IndexedArrayException 
+{}

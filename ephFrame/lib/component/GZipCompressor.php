@@ -31,8 +31,8 @@ class_exists('Compressor') or require dirname(__FILE__).'/Compressor.php';
  * @package ephFrame
  * @subpackage ephFrame.lib.component
  */
-class GZipCompressor extends Compressor {
-	
+class GZipCompressor extends Compressor 
+{
 	public $gZipAvailable = false;
 	
 	/**
@@ -41,7 +41,8 @@ class GZipCompressor extends Compressor {
 	 */
 	public $level = 9;
 	
-	public function __construct() {
+	public function __construct() 
+	{
 		// check if gzip compression can be done?
 		if (function_exists('gzcompress')) {
 			$this->gZipAvailable = true;
@@ -56,7 +57,8 @@ class GZipCompressor extends Compressor {
 	 * @param string $string
 	 * @return string
 	 */
-	public function compress($string, $level = null) {
+	public function compress($string, $level = null) 
+	{
 		if (!$this->gZipAvailable || !is_string($string)) {
 			return $string;
 		}
@@ -72,8 +74,8 @@ class GZipCompressor extends Compressor {
 	 * @return string|boolean
 	 * @todo add gzip-compressFile
 	 */
-	public function compressFile($filename, $target = null) {
+	public function compressFile($filename, $target = null) 
+	{
 		
-	}
-	
+	}	
 }

@@ -25,8 +25,8 @@ class_exists('FormField') or require dirname(__FILE__).'/FormField.php';
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 04.11.2008
  */
-class FormFieldTextarea extends FormField {
-	
+class FormFieldTextarea extends FormField 
+{
 	public $type = 'textarea';
 	
 	/**
@@ -38,7 +38,8 @@ class FormFieldTextarea extends FormField {
 		'cols' => 55,
 	);
 
-	public function __construct($name, $value = null, Array $attributes = array()) {
+	public function __construct($name, $value = null, Array $attributes = array()) 
+	{
 		parent::__construct($name, null, $attributes);
 		unset($this->attributes['type']);
 		$this->tagValue = $value;
@@ -46,22 +47,24 @@ class FormFieldTextarea extends FormField {
 		return $this;
 	}
 	
-	public function rows($rows) {
+	public function rows($rows) 
+	{
 		$this->attribute('rows', (int) $rows);
 		return $this;
 	}
 	
-	public function cols($cols) {
+	public function cols($cols) 
+	{
 		$this->attribute('cols', (int) $cols);	
 	}
 	
-	public function value($value = null) {
+	public function value($value = null) 
+	{
 		if (func_num_args() > 0) {
 			$this->tagValue = $value;
 			return $this;
 		} else {
 			return parent::value();
 		}
-	}
-	
+	}	
 }

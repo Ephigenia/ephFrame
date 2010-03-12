@@ -34,8 +34,8 @@ ephFrame::loadClass('ephFrame.lib.helper.Timer');
  * @subpackage ephFrame.lib.model.DB.MySQL
  * @version 0.2
  */
-class MySQL extends DB implements DBInterface {
-	
+class MySQL extends DB implements DBInterface 
+{
 	/**
 	 * Connect to a MySQL Server
 	 * 
@@ -49,7 +49,8 @@ class MySQL extends DB implements DBInterface {
 	 * @throws MySQLHandleConnectionException
 	 * @return DAOMySQL
 	 */
-	public function connect(DBDSN $dbdsn) {
+	public function connect(DBDSN $dbdsn) 
+	{
 		$this->DBDSN($dbdsn);
 		if (!$this->beforeConnect()) return false;
 		$this->connectionHandle = @mysql_connect($this->DBDSN->host(), $this->DBDSN->user(), $this->DBDSN->pass());
@@ -70,7 +71,8 @@ class MySQL extends DB implements DBInterface {
 	 * @throws MySQLException
 	 * @return boolean
 	 */
-	public function selectDB($dbName = null) {
+	public function selectDB($dbName = null) 
+	{
 		if ($dbName === null) $dbName = $this->DBDSN->db();
 		if (!is_string($dbName)) throw new StringExpectedException();
 		$this->checkConnection();
@@ -87,7 +89,8 @@ class MySQL extends DB implements DBInterface {
 	 * @param string $charset
 	 * @return bolean
 	 */
-	public function selectCharset($charset) {
+	public function selectCharset($charset) 
+	{
 		return $this->query('SET NAMES '.DBQuery::quote($charset));
 	}
 	
@@ -96,7 +99,8 @@ class MySQL extends DB implements DBInterface {
 	 * @param string|DBSelectQuery
 	 * @return string|DBSelectQuery
 	 */
-	public function beforeQuery($query) {
+	public function beforeQuery($query) 
+	{
 		return parent::beforeQuery($query);
 	}
 	
@@ -111,7 +115,8 @@ class MySQL extends DB implements DBInterface {
 	 * @return QueryResult
 	 * @throws MySQLException
 	 */
-	public function query($query, $cached = false) {
+	public function query($query, $cached = false) 
+	{
 		if (!($query = $this->beforeQuery($query))) {
 			return false;	
 		}
@@ -143,7 +148,8 @@ class MySQL extends DB implements DBInterface {
 	 * Returns the last id of the item that was inserted
 	 * @return integer
 	 */
-	public function lastInsertId() {
+	public function lastInsertId() 
+	{
 		$this->checkConnection();
 		return mysql_insert_id($this->connectionHandle);
 	}
@@ -153,7 +159,8 @@ class MySQL extends DB implements DBInterface {
 	 * has occured.
 	 * @return integer|boolean
 	 */
-	public function errorNo() {
+	public function errorNo() 
+	{
 		return mysql_errno();
 	}
 	
@@ -162,8 +169,8 @@ class MySQL extends DB implements DBInterface {
 	 * error has occured
 	 * @return string|boolean
 	 */
-	public function errorMessage() {
+	public function errorMessage() 
+	{
 		return mysql_error();
-	}
-	
+	}	
 }

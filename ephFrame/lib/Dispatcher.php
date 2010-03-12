@@ -26,8 +26,8 @@ class_exists('HTTPRequest') or require dirname(__FILE__).'/HTTPRequest.php';
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class Dispatcher extends Object {
-	
+class Dispatcher extends Object 
+{	
 	protected $iteration = 0;
 	
 	/**
@@ -37,7 +37,8 @@ class Dispatcher extends Object {
 	 * @param string|HTTPRequest $requestObjectOrUrl
 	 * @return Controller
 	 */
-	public function dispatch($requestObjectOrUrl = null, Array $params = array()) {
+	public function dispatch($requestObjectOrUrl = null, Array $params = array()) 
+	{
 		$this->itertation++;
 		// use original request
 		if (is_object($requestObjectOrUrl)) {
@@ -98,8 +99,7 @@ class Dispatcher extends Object {
 			return $this->dispatch('Error/directoryNotWritable', array('directory' => $e->dir));
 		}
 		return $controller;
-	}
-	
+	}	
 }
 
 /**
@@ -107,11 +107,13 @@ class Dispatcher extends Object {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class DispatcherException extends BasicException {}
+class DispatcherException extends BasicException 
+{}
 
 /**
  * Exception that is thrown on invalid dispatching parameters
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class DispatcherInvalidParamsException extends DispatcherException {}
+class DispatcherInvalidParamsException extends DispatcherException 
+{}

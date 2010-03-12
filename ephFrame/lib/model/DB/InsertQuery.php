@@ -70,4 +70,5 @@ class InsertQuery extends DBQuery
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class InsertQueryException extends DBQueryException {}
+class InsertQueryException extends DBQueryException 
+{}

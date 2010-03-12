@@ -34,8 +34,8 @@
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class Socket extends Object {
-	
+class Socket extends Object 
+{	
 	/**
 	 * Host to connect to
 	 * @var string
@@ -98,7 +98,8 @@ class Socket extends Object {
 	 * @var integer $timeout
 	 * @return Socket
 	 */
-	public function __construct($host = null, $port = null, $timeout = null) {
+	public function __construct($host = null, $port = null, $timeout = null) 
+	{
 		if ($host) $this->host = $host;
 		if ($port !== null) {
 			if (!preg_match('@\d+@', $port)) {
@@ -130,7 +131,8 @@ class Socket extends Object {
 	 * @throws SocketNotConnectedException
 	 * @return Socket
 	 */
-	public function write($string) {
+	public function write($string) 
+	{
 		$this->checkConnection();
 		if (empty($string)) return $this;
 		if (!is_string($string) && !is_numeric($string)) {
@@ -160,7 +162,8 @@ class Socket extends Object {
 	 * @param boolean $chunked set this to true to return after every read cycle
 	 * @return string
 	 */
-	public function read($bufferSize = null, $chunked = false) {
+	public function read($bufferSize = null, $chunked = false) 
+	{
 		$this->checkConnection();
 		if ($bufferSize == null) {
 			$bufferSize = $this->bufferSize;
@@ -178,7 +181,8 @@ class Socket extends Object {
 	 * Test if a connection is establised, you can also check {@link connected}
 	 * @return boolean
 	 */
-	public function connected() {
+	public function connected() 
+	{
 		return !empty($this->stream);
 	}
 	
@@ -193,7 +197,8 @@ class Socket extends Object {
 	 * $timeout seconds passed without success
 	 * @return Socket
 	 */
-	public function connect() {
+	public function connect() 
+	{
 		if (empty($this->host)) {
 			throw new SocketEmptyHostException($this);
 		}
@@ -218,14 +223,16 @@ class Socket extends Object {
 	 * Callback that can do stuff after a successfull connect.
 	 * @return mixed
 	 */
-	public function afterConnect() {
+	public function afterConnect() 
+	{
 	}
 	
 	/**
 	 * Close the currently opend stream if Socket is opened
 	 * @return Socket
 	 */
-	public function disconnect() {
+	public function disconnect() 
+	{
 		if ($this->connected()) {
 			fclose($this->stream);
 			unset($this->stream);
@@ -236,25 +243,28 @@ class Socket extends Object {
 	/**
 	 * Disconnect on object instance destruction
 	 */
-	public function __destruct() {
+	public function __destruct() 
+	{
 		$this->disconnect();
 	}
 	
 	/**
 	 * Disable cloning of Socket instances
 	 */
-	final public function __clone() {
+	final public function __clone() 
+	{
 		throw new SocketNotClonableException($this);
-	}
-	
+	}	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class SocketException extends Exception {
-	public function __construct($socket) {
+class SocketException extends Exception 
+{
+	public function __construct($socket) 
+	{
 		$this->message = 'Socket Error:'.LF.$this->message;
 		$socket->disconnect();
 		parent::__construct();
@@ -265,8 +275,10 @@ class SocketException extends Exception {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class SocketNotClonableException extends SocketException {
-	public function __construct($socket) {
+class SocketNotClonableException extends SocketException 
+{
+	public function __construct($socket) 
+	{
 		$this->message = 'Socket connections can not be cloned, sorry.';
 		parent::__construct($socket);
 	}
@@ -277,8 +289,10 @@ class SocketNotClonableException extends SocketException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class SocketEmptyHostException extends SocketException {
-	public function __construct($socket) {
+class SocketEmptyHostException extends SocketException 
+{
+	public function __construct($socket) 
+	{
 		$this->message = 'Empty host, please specify a host to connect to.';
 		parent::__construct($socket);
 	}
@@ -289,8 +303,10 @@ class SocketEmptyHostException extends SocketException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class SocketEmptyPortException extends SocketException {
-	public function __construct($socket) {
+class SocketEmptyPortException extends SocketException 
+{
+	public function __construct($socket) 
+	{
 		$this->message = 'Empty port, please specify a port to connect to.';
 		parent::__construct($socket);
 	}
@@ -301,8 +317,10 @@ class SocketEmptyPortException extends SocketException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class SocketNotConnectedException extends SocketException {
-	public function __construct($socket) {
+class SocketNotConnectedException extends SocketException 
+{
+	public function __construct($socket) 
+	{
 		$this->message = 'Not Connected';
 		parent::__construct($socket);
 	}
@@ -313,8 +331,10 @@ class SocketNotConnectedException extends SocketException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class SocketInvalidCommandException extends SocketException {
-	public function __construct($socket, $command) {
+class SocketInvalidCommandException extends SocketException 
+{
+	public function __construct($socket, $command) 
+	{
 		$this->message = 'Invalid Command ('.gettype($command).') \''.$command.'\'';
 		parent::__construct($socket);
 	}
@@ -324,8 +344,10 @@ class SocketInvalidCommandException extends SocketException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class SocketConnectErrorException extends SocketException {
-	public function __construct($socket, $errno, $errstr) {
+class SocketConnectErrorException extends SocketException 
+{
+	public function __construct($socket, $errno, $errstr) 
+	{
 		$this->message =
 			'Unable to connect to \''.$socket->host.':'.$socket->port.'\''.LF.
 			'Socket Error ('.$errno.'): '.$errstr;

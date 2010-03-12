@@ -29,23 +29,27 @@ require_once dirname(__FILE__).'/../../autorun.php';
  */
 class TestHTML extends UnitTestCase
 {
-	public function setUp() {
+	public function setUp() 
+	{
 		ephFrame::loadClass('ephFrame.lib.helper.HTML');
 	}
 	
-	public function testEmail() {
+	public function testEmail() 
+	{
 		$HTML = new HTML();
 		$this->assertEqual((string) $HTML->email('love@ephigenia.de'), '<a href="mailto:&#108;&#111;&#118;&#101;&#64;&#101;&#112;&#104;&#105;&#103;&#101;&#110;&#105;&#97;&#46;&#100;&#101;" title="&#108;&#111;&#118;&#101;&#64;&#101;&#112;&#104;&#105;&#103;&#101;&#110;&#105;&#97;&#46;&#100;&#101;">&#108;&#111;&#118;&#101;&#64;&#101;&#112;&#104;&#105;&#103;&#101;&#110;&#105;&#97;&#46;&#100;&#101;</a>');
 		$this->assertEqual((string) $HTML->email('love@ephigenia.de', 'Other Label'), '<a href="mailto:&#108;&#111;&#118;&#101;&#64;&#101;&#112;&#104;&#105;&#103;&#101;&#110;&#105;&#97;&#46;&#100;&#101;" title="Other Label">Other Label</a>');
 	}
 	
-	public function testImg() {
+	public function testImg() 
+	{
 		$HTML = new HTML();
 		$this->assertEqual((string) $HTML->img('bild.jpg'), '<img src="'.WEBROOT.'static/img/bild.jpg" alt="" />');
 		$this->assertEqual((string) $HTML->img('bild.jpg', array('class' => 'test class')), '<img class="test class" src="'.WEBROOT.'static/img/bild.jpg" alt="" />');
 	}
 	
-	public function testLink() {
+	public function testLink() 
+	{
 		$HTML = new HTML();
 		$this->assertEqual((string) $HTML->link('../', 'link'), '<a href="../" title="link">link</a>');
 		$this->assertEqual((string) $HTML->link('/', 'test'), '<a href="/" title="test">test</a>');

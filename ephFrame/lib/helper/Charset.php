@@ -28,8 +28,8 @@
  * @subpackage ephFrame.lib.helper
  * @version 0.2
  */
-class Charset extends Helper {
-	
+class Charset extends Helper 
+{	
 	/**
 	 * Checks if a string is ASCII
 	 * @param string $string
@@ -43,7 +43,6 @@ class Charset extends Helper {
 	public static $iso88591ToUtf8 = array();
 	public static $utf8replaceArr = array();
 	
-	
 	/**
 	 * Convert passed $string into ASCII Charset using iconv if
 	 * available.	
@@ -51,7 +50,8 @@ class Charset extends Helper {
 	 * @param string $string
 	 * @return string
 	 */
-	public static function toASCII($string) {
+	public static function toASCII($string)
+	{
 		$string = self::toSingleBytes($string);
 		if (function_exists('iconv')) {
 			if (self::isUTF8($string) && ($result = @iconv('UTF-8', 'ASCII//IGNORE', $string))) {
@@ -67,7 +67,8 @@ class Charset extends Helper {
 	 * Fixes wrong utf8 entities to their original entitiy
 	 * @return string
 	 */
-	public static function toUtf8($string) {
+	public static function toUtf8($string)
+	{
 		self::$iso88591ToUtf8 = array(
 			chr(228) => 'ä', chr(196) => 'Ä',
 			chr(0xF6) => 'ö', chr(0xD6) => 'Ö',
@@ -120,7 +121,8 @@ class Charset extends Helper {
 	 * @param string $string
 	 * @return string
 	 */
-	public static function toSingleBytes($string) {
+	public static function toSingleBytes($string)
+	{
 		// create charset table cache
 		if (empty(self::$utf8replaceArr)) {
 			self::$utf8replaceArr = array(
@@ -195,7 +197,8 @@ class Charset extends Helper {
 	 * @param	string	$string
 	 * @return boolean
 	 */
-	public static function isUTF8($string) {
+	public static function isUTF8($string)
+	{
 		if (function_exists('iconv')) {
 			return (@iconv('UTF-8//IGNORE', 'UTF-8//IGNORE', $string) == $string);
 		} else {
@@ -217,7 +220,8 @@ class Charset extends Helper {
 		}
 	}
 	
-	public static function encodingName($encoding) {
+	public static function encodingName($encoding)
+	{
 		switch($encoding) {
 			default:
 			case self::UTF_8:
@@ -242,7 +246,8 @@ class Charset extends Helper {
 	 * or false if no bom was found
 	 * @return string|boolean
 	 */
-	public static function BOM($string) {
+	public static function BOM($string)
+	{
 		$bom = false;
 		$strlen = strlen($string);
 		$hex = String::hex(substr($string,0,8));
@@ -264,6 +269,5 @@ class Charset extends Helper {
 			return self::BOCU_1;
 		}
 		return $bom;
-	}
-	
+	}	
 }

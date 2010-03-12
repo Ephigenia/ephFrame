@@ -42,15 +42,16 @@ ephFrame::loadClass('ephFrame.lib.URL');
  * @version 0.1
  * @subpackage ephFrame.lib.model.DB
  */
-class DBDSN extends URL {
-	
+class DBDSN extends URL 
+{
 	/**
 	 * DBDSN Constructer,
 	 * pass a string and the DBDSN is imediently parsed
 	 * @param string
 	 * @return DBDSN
 	 */
-	public function __construct($url = null) {
+	public function __construct($url = null) 
+	{
 		if (is_string($url)) {
 			parent::__construct($url);
 			$this->parsedUrl['db'] = null;
@@ -84,7 +85,8 @@ class DBDSN extends URL {
 	 * @var string
 	 * @return string
 	 */
-	public function type($type = null) {
+	public function type($type = null) 
+	{
 		if ($type !== null) $this->scheme($type);
 		return $this->scheme();
 	}
@@ -94,9 +96,9 @@ class DBDSN extends URL {
 	 * @param string $charset
 	 * @return string
 	 */
-	public function charset($charset = null) {
+	public function charset($charset = null) 
+	{
 		if ($charset !== null) $this->fragment($charset);
 		return $this->fragment();
-	}
-	
+	}	
 }

@@ -24,8 +24,8 @@
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 04.11.2008
  */
-abstract class FormField extends HTMLTag {
-	
+abstract class FormField extends HTMLTag
+{	
 	/**
 	 * Stores an instance to the form this Form Field belongs to
 	 * @var Form
@@ -79,7 +79,8 @@ abstract class FormField extends HTMLTag {
 	 * @param string $value
 	 * @param array(string) array of attributes
 	 */
-	public function __construct($name, $value = null, Array $attributes = array()) {
+	public function __construct($name, $value = null, Array $attributes = array()) 
+	{
 		$attributes['type'] = $this->type;
 		$attributes['name'] = &$name;
 		$attributes['id'] = &$name;
@@ -97,7 +98,8 @@ abstract class FormField extends HTMLTag {
 	 * Callback for custom logic
 	 * @return boolean
 	 */
-	public function afterConstruct() {
+	public function afterConstruct() 
+	{
 		return true;
 	}
 	
@@ -106,7 +108,8 @@ abstract class FormField extends HTMLTag {
 	 * @param boolean $value
 	 * @return FormField
 	 */
-	public function mandatory($value) {
+	public function mandatory($value) 
+	{
 		$this->mandatory = (bool) $value;
 		return $this;
 	}
@@ -116,12 +119,14 @@ abstract class FormField extends HTMLTag {
 	 * @param string $description
 	 * @return FormField
 	 */
-	public function description($description) {
+	public function description($description) 
+	{
 		$this->description = $description;
 		return $this;
 	}
 	
-	public function label($label) {
+	public function label($label) 
+	{
 		$this->label->tagValue = $label;
 		return $this;
 	}
@@ -132,7 +137,8 @@ abstract class FormField extends HTMLTag {
 	 * @param string	$value
 	 * @return string|FormField
 	 */
-	public function value($value = null) {
+	public function value($value = null) 
+	{
 		// set form field value
 		if (func_num_args() == 1) {
 			if ($value !== null) {
@@ -156,7 +162,8 @@ abstract class FormField extends HTMLTag {
 	 * Checks if this field has any submitted value
 	 * @return boolean
 	 */
-	public function isEmpty() {
+	public function isEmpty() 
+	{
 		$val = $this->value();
 		return empty($val);
 	}
@@ -167,7 +174,8 @@ abstract class FormField extends HTMLTag {
 	 * @param array(string)
 	 * @return FormField
 	 */
-	public function addValidationRule(Array $validationRule) {
+	public function addValidationRule(Array $validationRule) 
+	{
 		if (ArrayHelper::dimensions($validationRule) == 1) {
 			$this->validate[] = $validationRule;
 		} else {
@@ -229,7 +237,8 @@ abstract class FormField extends HTMLTag {
 		return parent::beforeRender();
 	}
 	
-	public function render() {
+	public function render() 
+	{
 		$rendered = '';
 		if (!empty($this->label->tagValue) && strtolower($this->type) !== 'hidden') {
 			$rendered .= $this->label->render();
@@ -246,16 +255,17 @@ abstract class FormField extends HTMLTag {
 		return ($this->afterRender($rendered));
 	}
 	
-	public function insertAfter(Tree $field) {
+	public function insertAfter(Tree $field) 
+	{
 		$field->form = $this->form;
 		return parent::insertAfter($field);
 	}
 	
-	public function insertBefore(Tree $field) {
+	public function insertBefore(Tree $field) 
+	{
 		$field->form = $this->form;
 		return parent::insertBefore($field);
-	}
-	
+	}	
 }
 
 /**
@@ -264,4 +274,5 @@ abstract class FormField extends HTMLTag {
  * @author Ephigenia // Marcel Eichner <love@ephigenia.de>
  * @since 26.05.2009
  */
-class FormFieldException extends BasicException {} 
+class FormFieldException extends BasicException 
+{} 

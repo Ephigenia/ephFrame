@@ -29,11 +29,13 @@
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 06.10.2008
  */
-class Inflector extends Object {
+class Inflector extends Object 
+{
 	
 	public static $instance;
 	
-	public function instance() {
+	public function instance() 
+	{
 		if (!self::$instance) {
 			self::$instance = new Inflector();
 		}

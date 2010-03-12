@@ -23,16 +23,18 @@ class_exists('FormFieldText') or require(dirname(__FILE__).'/FormFieldText.php')
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 20.02.2009
  */
-class FormFieldDate extends FormFieldText {
-	
+class FormFieldDate extends FormFieldText 
+{
 	public $format = 'd.m.Y';
 	
-	public function afterConstruct() {
+	public function afterConstruct() 
+	{
 		$this->value(date($this->format));
 		return parent::afterConstruct();
 	}
 	
-	public function value($value = null) {
+	public function value($value = null) 
+	{
 		if (func_num_args() == 0) {
 			// translate passed date to timestamp
 			return strtotime(parent::value());
@@ -46,6 +48,5 @@ class FormFieldDate extends FormFieldText {
 			$value = date($this->format, $value);
 		}
 		return parent::value($value);
-	}
-	
+	}	
 }

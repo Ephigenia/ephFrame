@@ -29,8 +29,8 @@
  * @author Marcel Eichner // Ephiagenia <love@ephigenia.de>
  * @since 03.05.2008
  */
-class I18n extends AppComponent {
-	
+class I18n extends AppComponent 
+{
 	/**
 	 * Current locale used
 	 * @var string
@@ -61,7 +61,8 @@ class I18n extends AppComponent {
 	 */
 	public $domainName = 'default';
 	
-	public function startup() {
+	public function startup() 
+	{
 		// get language from requested client header
 		if ($this->autoDetect && $acceptLanguage = $this->controller->request->header->get('accept_language')) {
 			self::$locale = $acceptLanguage;
@@ -215,14 +216,17 @@ function __n($singular, $plural, $count)
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class I18nException extends ComponentException {}
+class I18nException extends ComponentException 
+{}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class I18nDomainLocationNotFoundException extends I18nException {
-	public function __construct(I18n $I18n) {
+class I18nDomainLocationNotFoundException extends I18nException 
+{
+	public function __construct(I18n $I18n) 
+	{
 		$message = 'Unable to find textdomain \''.$I18n->domainName.'\' in \''.$I18n->domainLocation.'\'';
 		parent::__construct($message);
 	}

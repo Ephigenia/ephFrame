@@ -112,7 +112,8 @@ abstract class Controller extends Object implements Renderable
 	 * @param HTTPRequest $request
 	 * @return Controller
 	 */
-	final public function __construct(HTTPRequest $request = null) {
+	final public function __construct(HTTPRequest $request = null) 
+	{
 		// get component list from parent class and merge them with this
 		// controllers components and models ...
 		foreach ($this->__parentClasses() as $parentClass) {
@@ -145,19 +146,23 @@ abstract class Controller extends Object implements Renderable
 		return $this;
 	}
 	
-	public function beforeConstruct() {}
+	public function beforeConstruct() 
+	{}
 	
-	public function afterConstruct() {}
+	public function afterConstruct() 
+	{}
 	
 	/**
 	 * Default create action
 	 */
-	public function create() {}
+	public function create() 
+	{}
 	
 	/**
 	 * @param integer $id
 	 */
-	public function delete($id = null) {
+	public function delete($id = null) 
+	{
 		$id = (int) coalesce(@$this->params['id'], $id);
 		if ($id > 0 && isset($this->{$this->name})) {
 			if (!$entry = $this->{$this->name}->findById($id)) {
@@ -173,7 +178,8 @@ abstract class Controller extends Object implements Renderable
 	 * Standard edit action method
 	 * @param integer $id
 	 */
-	public function edit($id = null) {
+	public function edit($id = null) 
+	{
 		$id = (int) coalesce(@$this->params['id'], $id);
 		if (!empty($id) && isset($this->{$this->name})) {
 			if (!($model = $this->{$this->name}->findById($id))) {
@@ -192,7 +198,8 @@ abstract class Controller extends Object implements Renderable
 	 * Default view action
 	 * @param integer $id
 	 */
-	public function view($id = null) {
+	public function view($id = null) 
+	{
 		$id = (int) coalesce(@$this->params['id'], $id);
 		if (!empty($id) && isset($this->{$this->name})) {
 			if (!($this->{$this->name} = $this->{$this->name}->findById($id))) {
@@ -212,7 +219,8 @@ abstract class Controller extends Object implements Renderable
 	 * entries from the User Model (if assigned and working) to the view.
 	 * You can overwrite or inherit this behavior in your child classes.
 	 */
-	public function index() {
+	public function index() 
+	{
 		if (isset($this->{$this->name})) {
 			$page = intval((@$this->params['page'] > 1) ? $this->params['page'] : 1);
 			$entries = $this->{$this->name}->findAll(null, null, ($page-1) * $this->{$this->name}->perPage, $this->{$this->name}->perPage);
@@ -235,7 +243,8 @@ abstract class Controller extends Object implements Renderable
 	 * @deprecated
 	 * @return boolean
 	 */
-	public function rss() {
+	public function rss() 
+	{
 		if (isset($this->{$this->name})) {
 			$entries = $this->{$this->name}->findAll(null, null, 0, 20);
 			$entries = $this->{$this->name}->findAll(null, null, null, $this->{$this->name}->perPage);
@@ -254,7 +263,8 @@ abstract class Controller extends Object implements Renderable
 	 * @deprecated move this to component
 	 * @param string $keyword
 	 */
-	public function search($keyword = null, $fields = array()) {
+	public function search($keyword = null, $fields = array()) 
+	{
 		if (empty($keyword)) return true;
 		$searchTerm = '%'.$keyword.'%';
 		$searchTermQuoted = DBQuery::quote($searchTerm);
@@ -284,7 +294,8 @@ abstract class Controller extends Object implements Renderable
 	 * @param string $layout
 	 * @return string
 	 */
-	public function layout($layout = null) {
+	public function layout($layout = null) 
+	{
 		return $this->__getOrSet('layout', $layout);
 	}
 	
@@ -304,7 +315,8 @@ abstract class Controller extends Object implements Renderable
 		return true;
 	}
 	
-	public function addModel($modelName) {
+	public function addModel($modelName) 
+	{
 		if (func_num_args() > 1) {
 			$args = func_get_args();
 			foreach($args as $arg) $this->addModel($arg);
@@ -331,7 +343,8 @@ abstract class Controller extends Object implements Renderable
 		return true;
 	}
 	
-	public function hasModel($modelName) {
+	public function hasModel($modelName) 
+	{
 		return in_array($modelName, $this->uses);
 	}
 	
@@ -361,7 +374,8 @@ abstract class Controller extends Object implements Renderable
 	 * @param string $componentName
 	 * @return boolean
 	 */
-	public function hasComponent($componentName) {
+	public function hasComponent($componentName) 
+	{
 		return in_array($componentName, $this->components);
 	}
 	
@@ -372,7 +386,8 @@ abstract class Controller extends Object implements Renderable
 	 * only be available on some certain actions.
 	 * <code>
 	 * class TestController extends AppController {
-	 * 	public function testI28n() {
+	 * 	public function testI28n() 
+	{
 	 * 		$this->addComponent('I28n');
 	 * 	}
 	 * }
@@ -382,7 +397,8 @@ abstract class Controller extends Object implements Renderable
 	 * @param boolean $startUp Fires the startup signal to the component
 	 * @return boolean
 	 */
-	public function addComponent($componentName, $startUp = true) {
+	public function addComponent($componentName, $startUp = true) 
+	{
 		assert(is_string($componentName) && !empty($componentName));
 		if (!in_array($componentName, $this->components)) {
 			$this->components[] = $componentName;
@@ -413,7 +429,8 @@ abstract class Controller extends Object implements Renderable
 	 * get the startup signal now.
 	 * @return boolean
 	 */
-	public function startUpComponents() {
+	public function startUpComponents() 
+	{
 		foreach($this->components as $componentName) {
 			$className = ClassPath::className($componentName);
 			$this->{$className}->startup();
@@ -450,7 +467,8 @@ abstract class Controller extends Object implements Renderable
 	 * @param string $helperName Classpath or Classname of Helper Class
 	 * @return boolean
 	 */
-	public function addHelper($helperName) {
+	public function addHelper($helperName) 
+	{
 		// extract component class name
 		$className = ClassPath::className($helperName);
 		// try app and frame paths
@@ -484,7 +502,8 @@ abstract class Controller extends Object implements Renderable
 	 * @param string $formName
 	 * @return Controller
 	 */
-	public function addForm($formName) {
+	public function addForm($formName) 
+	{
 		if (!in_array($formName, $this->forms)) {
 			$this->forms[] = $formName;
 		}
@@ -520,7 +539,8 @@ abstract class Controller extends Object implements Renderable
 	 * @param mixed $value
 	 * @return Controller
 	 */
-	public function set($name, $value) {
+	public function set($name, $value) 
+	{
 		$this->data[$name] = $value;
 		return $this;
 	}
@@ -532,7 +552,8 @@ abstract class Controller extends Object implements Renderable
 	 * @param array(mixed) $params
 	 * @return boolean
 	 */
-	public function action($action, Array $params = array()) {
+	public function action($action, Array $params = array()) 
+	{
 		assert(is_string($action) && !empty($action));
 		logg(Log::VERBOSE, 'ephFrame: '.get_class($this).' set action to \''.$action.'\'');
 		$this->action = $action;
@@ -595,7 +616,8 @@ abstract class Controller extends Object implements Renderable
 	 * 
 	 * @return string
 	 */
-	public function render() {
+	public function render() 
+	{
 		// call beforeRender on Controller and Components
 		if (!$this->beforeRender()) return false;
 		foreach($this->components as $componentName) {
@@ -663,7 +685,8 @@ abstract class Controller extends Object implements Renderable
 	 *
 	 * @return boolean
 	 */
-	public function beforeRender() {
+	public function beforeRender() 
+	{
 		return true;
 	}
 	
@@ -673,7 +696,8 @@ abstract class Controller extends Object implements Renderable
 	 * @param string $action action that is to be called
 	 * @return boolean
 	 */
-	public function beforeAction() {
+	public function beforeAction() 
+	{
 		return true;
 	}
 	
@@ -682,7 +706,8 @@ abstract class Controller extends Object implements Renderable
 	 * @param string $action action that is done
 	 * @return boolean
 	 */
-	public function afterAction() {
+	public function afterAction() 
+	{
 		return true;
 	}
 	
@@ -698,7 +723,8 @@ abstract class Controller extends Object implements Renderable
 	 * @param string $content
 	 * @return string
 	 */
-	public function afterRender($content) {
+	public function afterRender($content) 
+	{
 		// if we're in debugging mode we add the sql history dump to the view
 		// content (this can be overwritten in the AppController.
 		if (Registry::get('DEBUG') >= DEBUG_VERBOSE && $this->viewClassName == 'HTMLView') {
@@ -748,7 +774,8 @@ abstract class Controller extends Object implements Renderable
 	 * @param boolean $exit exit after redirect
 	 * @return boolean
 	 */
-	public function redirect($url, $status = 'p', $exit = true) {
+	public function redirect($url, $status = 'p', $exit = true) 
+	{
 		$this->beforeRedirect($url, $status, $exit);
 		foreach($this->components as $componentName) {
 			$className = ClassPath::className($componentName);
@@ -771,7 +798,8 @@ abstract class Controller extends Object implements Renderable
 		return true;
 	}
 	
-	public function beforeRedirect($url, $status = 'p', $exit = true) {}
+	public function beforeRedirect($url, $status = 'p', $exit = true) 
+	{}
 	
 	/**
 	 * Returns the refererrer submitted by the client if found
@@ -781,7 +809,8 @@ abstract class Controller extends Object implements Renderable
 	 * @param boolean $local Use only local referers
 	 * @return string
 	 */
-	public function referer($default = false, $local = true) {
+	public function referer($default = false, $local = true) 
+	{
 		if ($this->request->referer) {
 			// return refere only if in local domain
 			if (!$local) {
@@ -799,7 +828,8 @@ abstract class Controller extends Object implements Renderable
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ControllerException extends BasicException {
+class ControllerException extends BasicException 
+{
 	
 }
 
@@ -807,8 +837,10 @@ class ControllerException extends BasicException {
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class ControllerMissingActionException extends ControllerException {
-	public function __construct(Controller $controller, $action = null) {
+class ControllerMissingActionException extends ControllerException 
+{
+	public function __construct(Controller $controller, $action = null) 
+	{
 		$message = get_class($controller).' misses ';
 		if (empty($message) && func_num_args() == 1) {
 			$message .= ' the action named '.$controller->action;
