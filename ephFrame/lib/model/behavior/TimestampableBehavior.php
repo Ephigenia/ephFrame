@@ -15,6 +15,8 @@
  * @filesource
  */
 
+class_exists('ModelBehavior') or require dirname(__FILE__).'/ModelBehavior.php';
+
 /**
  * Timestampable Behavior
  * 

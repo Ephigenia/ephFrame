@@ -17,6 +17,8 @@
  * @filesource		$HeadURL: svn+ssh://moresleep.net/home/51916/data/ephFrame/0.2/ephFrame/lib/model/behavior/PositionableBehavior.php $
  */
 
+class_exists('ModelBehavior') or require dirname(__FILE__).'/ModelBehavior.php';
+
 /**
  * Field-Increasing Behavior
  *

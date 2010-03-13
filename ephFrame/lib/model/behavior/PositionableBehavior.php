@@ -15,6 +15,8 @@
  * @filesource
  */
 
+class_exists('ModelBehavior') or require dirname(__FILE__).'/ModelBehavior.php';
+
 /**
  * Behavior for Models with position field
  * 

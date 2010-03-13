@@ -15,6 +15,8 @@
  * @filesource
  */
 
+class_exists('ModelBehavior') or require dirname(__FILE__).'/ModelBehavior.php';
+
 /**
  * Behavior that supports "flagging"-methods for a model field
  * http://en.wikipedia.org/wiki/Flag_(computing)
