@@ -82,7 +82,8 @@ class I18n extends AppComponent
 	 * @param string $locale
 	 * @return I18n|string
 	 */
-	public static function locale($locale = null, $types = array(LC_MESSAGES, LC_COLLATE, LC_TIME)) {
+	public static function locale($locale = null, $types = array(LC_MESSAGES, LC_COLLATE, LC_TIME))
+	{
 		if (func_num_args() == 0) return self::$locale;
 		self::$locale = strtolower(substr($locale, 0, 2)).'_'.strtoupper(substr($locale, 3, 5));
 		foreach((array) $types as $type) {
@@ -132,7 +133,8 @@ class I18n extends AppComponent
 	 * @param string optinal format to use instead of default format
 	 * @return string
 	 */
-	public static function number($number, $format = null) {
+	public static function number($number, $format = null)
+	{
 		return money_format(($format === null) ? self::$numberFormat : $format, $number);
 	}
 	
@@ -143,10 +145,10 @@ class I18n extends AppComponent
 	 * @param string optinal format to use instead of default format
 	 * @return string 
 	 */
-	public static function money($money, $format = null) {
+	public static function money($money, $format = null)
+	{
 		return money_format(($format === null) ? self::$numberFormat : $format, $number);
 	}
-
 }
 
 /**

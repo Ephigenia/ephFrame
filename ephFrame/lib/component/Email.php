@@ -138,7 +138,7 @@ class Email extends AppComponent implements Renderable
 		$socket = new Socket($this->smtpOptions['host'], 25, $this->smtpOptions['timeout']);
 		$socket->connect();
 		echo $socket->read(255, true);
-		die('OK');
+		die('SMTP not included')
 		flush();
 	}
 	

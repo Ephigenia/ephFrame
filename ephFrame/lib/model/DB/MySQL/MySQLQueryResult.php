@@ -86,9 +86,4 @@ class MySQLQueryResult extends QueryResult
 		}
 		return $this->numRows;
 	}
-	
-	public function __destruct()
-	{
-		die('OK');
-	}
 }

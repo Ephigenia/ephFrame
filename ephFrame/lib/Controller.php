@@ -480,9 +480,10 @@ abstract class Controller extends Object implements Renderable
 		return true;
 	}
 	
-	private function initForms() {
+	private function initForms()
+	{
 		// add form name of this controller if class is found
-		if (!in_array($this->name.'Form', $this->forms) && ClassPath::exists('app.lib.component.Form.'.$this->name.'Form')) {
+		if (empty($this->forms) && ClassPath::exists('app.lib.component.Form.'.$this->name.'Form')) {
 			$this->addForm($this->name.'Form');
 		}
 		// add all forms as objects

@@ -25,7 +25,12 @@ class_exists('FormFieldText') or require(dirname(__FILE__).'/FormFieldText.php')
  */
 class FormFieldDate extends FormFieldText 
 {
-	public $format = 'd.m.Y';
+	/**
+	 * Date format used by strftime function. Depends on the currently locale
+	 * settings. Check {@link I18n} for more information.
+	 * @var string
+	 */
+	public $format = '%x';
 	
 	public function afterConstruct() 
 	{
@@ -35,8 +40,8 @@ class FormFieldDate extends FormFieldText
 	
 	public function value($value = null) 
 	{
+		// translate passed date to timestamp
 		if (func_num_args() == 0) {
-			// translate passed date to timestamp
 			return strtotime(parent::value());
 		}
 		$value = trim($value);
@@ -45,8 +50,8 @@ class FormFieldDate extends FormFieldText
 		}
 		// convert timestamps to date in form
 		if (preg_match('@^\d+$@', $value)) {
-			$value = date($this->format, $value);
+			$value = strftime($this->format, $value);
 		}
 		return parent::value($value);
-	}	
+	}
 }

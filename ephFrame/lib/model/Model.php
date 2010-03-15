@@ -1000,13 +1000,7 @@ class Model extends Object
 			$query->select($this->name.'.'.$fieldInfo->name, $this->name.'.'.$fieldInfo->name);
 		}
 		// ordering
-		if ($order == null) {
-			$order = array();
-		}
-		if (!is_array($order) && !empty($order)) {
-			$order = array($orderder);
-		}
-		$order = array_merge($order, $this->order);
+		$order = array_merge((array) $order, $this->order);
 		// add this models
 		if (count($order) > 0) {
 			foreach($order as $fieldname => $direction) {
