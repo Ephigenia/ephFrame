@@ -294,7 +294,8 @@ class Model extends Object
 	 * Initates all models associations defined in $belongsTo, $hasMany and so on
 	 * @return boolean
 	 */
-	protected function initAssociations($bind = true) {
+	protected function initAssociations($bind = true)
+	{
 		// init models associated with this model
 		foreach($this->associationTypes as $associationType) {
 			if (!is_array($this->$associationType)) continue;
@@ -511,7 +512,8 @@ class Model extends Object
 	 * @param string $associationType
 	 * @return boolean
 	 */
-	protected function validAssociationType($associationType) {
+	protected function validAssociationType($associationType)
+	{
 		return in_array($associationType, $this->associationTypes);
 	}
 	
@@ -521,7 +523,8 @@ class Model extends Object
 	 * class.
 	 * @return string
 	 */
-	protected function tablename() {
+	protected function tablename()
+	{
 		if (empty($this->tablename) && $this->tablename !== false) {
 			$this->tablename = strtolower(Inflector::underscore(Inflector::pluralize($this->name)));
 		}
@@ -569,7 +572,7 @@ class Model extends Object
 		foreach($this->belongsTo + $this->hasOne as $modelName => $config) {
 			$this->$modelName = $model->$modelName;
 		}
-		foreach($this->hasMany as $modelName => $config) {
+		foreach($this->hasMany + $this->hasAndBelongsToMany as $modelName => $config) {
 			$modelPlural = Inflector::plural($modelName);
 			$this->{$modelPlural} = $model->$modelPlural;
 			$this->{$modelName} = $model->$modelName;
@@ -706,7 +709,8 @@ class Model extends Object
 	 * @param array(string) $data
 	 * @return boolean
 	 */
-	protected function insert() {
+	protected function insert()
+	{
 		if (!($this->beforeInsert() && $r = $this->behaviors->call('beforeInsert'))) {
 			return false;
 		}
@@ -747,7 +751,8 @@ class Model extends Object
 	 * @param array(string) $data
 	 * @return unknown
 	 */
-	protected function update() {
+	protected function update()
+	{
 		if (!($this->beforeUpdate() && $this->behaviors->call('beforeUpdate'))) return false;
 		$quotedData = array();
 		foreach($this->structure as $key => $value) {
@@ -841,7 +846,8 @@ class Model extends Object
 	 * @param integer $id
 	 * @return true
 	 */
-	protected function beforeDelete($id) {
+	protected function beforeDelete($id)
+	{
 		return true;
 	}
 	
@@ -850,7 +856,8 @@ class Model extends Object
 	 * of this is not so important.
 	 * @return boolean.
 	 */
-	protected function afterDelete() {
+	protected function afterDelete()
+	{
 		foreach($this->hasOne as $name => $config) {
 			if (!$config['dependent'] || empty($this->{$name})) continue;
 			$this->{$name}->delete();
@@ -1595,22 +1602,7 @@ class Model extends Object
 				return $this->$modelname->set($fieldname, $value);
 			}
 		} elseif (isset($this->structure[$fieldname])) {
-			// use quoting type of structure
-			switch($this->structure[$fieldname]->quoting) {
-				case ModelFieldInfo::QUOTE_BOOLEAN:
-					$this->data[$fieldname] = (bool) $value;
-					break;
-				case ModelFieldInfo::QUOTE_FLOAT:
-					$this->data[$fieldname] = (float) $value;
-					break;
-				case ModelFieldInfo::QUOTE_INTEGER:
-					$this->data[$fieldname] = (int) $value;
-					break;
-				case ModelFieldInfo::QUOTE_STRING:
-				default:
-					$this->data[$fieldname] = (string) $value;
-					break;
-			}
+			$this->data[$fieldname] = $value;
 		} elseif (is_object($value)) {
 			$this->$fieldname = $value;
 		} else {

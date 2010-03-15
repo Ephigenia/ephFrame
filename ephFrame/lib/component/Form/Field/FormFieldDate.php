@@ -34,7 +34,7 @@ class FormFieldDate extends FormFieldText
 	
 	public function afterConstruct() 
 	{
-		$this->value(date($this->format));
+		$this->value(time());
 		return parent::afterConstruct();
 	}
 	

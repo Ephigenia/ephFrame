@@ -55,7 +55,7 @@ class TimestampableBehavior extends ModelBehavior
 	public function beforeUpdate()
 	{
 		$fieldname = $this->config[$this->model->name]['update'];
-		if ($fieldname && $this->model->hasField($fieldname)) {	
+		if ($fieldname && $this->model->hasField($fieldname)) {
 			$this->model->set($fieldname, 'NOW()');
 		}
 		return true;
