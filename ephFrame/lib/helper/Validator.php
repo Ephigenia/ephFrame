@@ -97,17 +97,26 @@ class Validator extends Helper
 				return $message;
 			} elseif (isset($config['max']) && (float) $value > $config['max']) {
 				return $message;
+			} elseif (isset($config['ip']) && !Validator::IP($value)) {
+				return $message;
+			} elseif (isset($config['numeric']) && !Validator::numeric($value)) {
+				return $message;
 			}
 		}
 		return true;
 	}
 	
 	/**
-	 *	Returns true if $val is between $min and $max
+	 * Returns true if $val is between $min and $max
 	 */
 	public static function between($val, $min, $max)
 	{
 		return ($val > $min && $val < $max);
+	}
+	
+	public static function numeric($value)
+	{
+		return Validator::integer($value) || Validator::float($value);
 	}
 	
 	/**

@@ -1602,7 +1602,22 @@ class Model extends Object
 				return $this->$modelname->set($fieldname, $value);
 			}
 		} elseif (isset($this->structure[$fieldname])) {
-			$this->data[$fieldname] = $value;
+			// use quoting type of structure
+			switch($this->structure[$fieldname]->quoting) {
+				case ModelFieldInfo::QUOTE_BOOLEAN:
+					$this->data[$fieldname] = (bool) $value;
+					break;
+				case ModelFieldInfo::QUOTE_FLOAT:
+					$this->data[$fieldname] = (float) $value;
+					break;
+				case ModelFieldInfo::QUOTE_INTEGER:
+					$this->data[$fieldname] = (int) $value;
+					break;
+				case ModelFieldInfo::QUOTE_STRING:
+				default:
+					$this->data[$fieldname] = (string) $value;
+					break;
+			}
 		} elseif (is_object($value)) {
 			$this->$fieldname = $value;
 		} else {

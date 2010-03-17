@@ -47,7 +47,11 @@ class TimestampableBehavior extends ModelBehavior
 	{
 		$fieldname = $this->config[$this->model->name]['insert'];
 		if ($fieldname && $this->model->hasField($fieldname)) {	
-			$this->model->set($fieldname, 'NOW()');
+			if ($this->model->structure[$fieldname]->quoting == ModelFieldInfo::QUOTE_STRING) {
+				$this->model->set($fieldname, 'NOW()');
+			} else {
+				$this->model->set($fieldname, time());
+			}
 		}
 		return true;
 	}
@@ -56,7 +60,11 @@ class TimestampableBehavior extends ModelBehavior
 	{
 		$fieldname = $this->config[$this->model->name]['update'];
 		if ($fieldname && $this->model->hasField($fieldname)) {
-			$this->model->set($fieldname, 'NOW()');
+			if ($this->model->structure[$fieldname]->quoting == ModelFieldInfo::QUOTE_STRING) {
+				$this->model->set($fieldname, 'NOW()');
+			} else {
+				$this->model->set($fieldname, time());
+			}
 		}
 		return true;
 	}

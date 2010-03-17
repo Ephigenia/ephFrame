@@ -23,7 +23,7 @@ class_exists('FormFieldText') or require(dirname(__FILE__).'/FormFieldText.php')
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 20.02.2009
  */
-class FormFieldDate extends FormFieldText 
+class FormFieldDate extends FormFieldText
 {
 	/**
 	 * Date format used by strftime function. Depends on the currently locale
