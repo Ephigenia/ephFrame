@@ -634,7 +634,7 @@ abstract class DBQuery extends Object implements Renderable
 			if (is_array($right)) {
 				$right = 'IN ('.implode(',', array_map(array($this, 'quote'), $right) ).')';
 			// skip connector if allready there (bad workaround)	
-			} elseif ($right == null) {
+			} elseif ($right === null) {
 				$right = 'NULL';
 				$connector = ' is ';
 			}
