@@ -582,7 +582,7 @@ class Model extends Object
 	
 	/**
 	 * Returns the model data as array or just the fields from the model
-	 * that you’ve named in $fieldNames.
+	 * that you’ve named in $fieldNames or except the fields named in $except.
 	 * 
 	 * @param array(string) $fieldNames Field names to include
 	 * @param array(string) $except Field names to ignore
@@ -598,7 +598,9 @@ class Model extends Object
 		}
 		$data = array();
 		foreach((array) $fieldNames as $fieldname) {
-			if (func_num_args() >= 2 && (is_array($except) && in_array($fieldname, $fieldNames) || $except == $fieldname)) continue;
+			if ((is_array($except) && in_array($fieldname, $except)) || $except == $fieldname) {
+				continue;
+			}
 			$data[$fieldname] = $this->get($fieldname);
 		}
 		return $data;
@@ -631,11 +633,15 @@ class Model extends Object
 	/**
 	 * Save Model Data to database table
 	 * 
-	 * @param boolean $validate
-	 * @param array(string) $fieldNames
+	 * Also calls some callbacks depending on if this model entry allready
+	 * exists (checked via {@link exists}): {@link beforeInsert}/{@link beforeUpdate},
+	 * {@link beforeSave}, {@link afterInsert}/{@link afterUpdate}, {@link afterSave}
+	 * and also calling these events on all attached behaviors.
+	 * 
+	 * @param boolean $validate	set to false to skip validation
 	 * @return boolean
 	 */
-	public function save($validate = true, Array $fieldNames = array()) 
+	public function save($validate = true) 
 	{
 		if (!($this->beforeSave($this) && $this->behaviors->call('beforeSave', array($this)))) {
 			return false;
@@ -647,17 +653,27 @@ class Model extends Object
 		// create save query for this model
 		if (!$this->exists()) {
 			$this->insert();
+			$this->afterInsert();
+			$this->behaviors->call('afterInsert');
 		} else {
 			$this->update();
+			$this->afterUpdate();
+			$this->behaviors->call('afterUpdate');
 		}
 		$this->afterSave();
 		$this->behaviors->call('afterSave');;
 		return $this;
 	}
 	
-	public function saveAll($validate = true, Array $fieldNames = array())
+	/**
+	 * Save Model Data and all associated Model data present.
+	 * 
+	 * @param boolean $validate 
+	 * @return boolean
+	 */
+	public function saveAll($validate = true)
 	{
-		$saveResult = $this->save($validate, $fieldNames);
+		$saveResult = $this->save($validate);
 		if ($saveResult) {
 			// save hasOne
 			foreach($this->hasOne + $this->belongsTo as $modelName => $config) {
