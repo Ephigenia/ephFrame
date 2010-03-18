@@ -85,7 +85,7 @@ class Paginator extends AppHelper
 	 */
 	public function url($page) 
 	{
-		return String::substitute($this->url, array('page' => $page));
+		return String::substitute($this->url, array('page' => $page, 'controller' => $this->controller->name));
 	}
 	
 	/**
@@ -208,5 +208,4 @@ class Paginator extends AppHelper
 		$this->controller->data->set('Paginator', $this);
 		return parent::beforeRender();
 	}
-	
-} // END Paginator class
+}

@@ -473,10 +473,10 @@ class Model extends Object
 	 * Return default URI to existing model detail pages
 	 * @return string
 	 */
-	public function detailPageUri() 
+	public function detailPageUri(Array $params = array()) 
 	{
 		if (!$this->exists()) return false;
-		if (!$uri = Router::getRoute($this->name.'Id', array('id' => $this->id))) {
+		if (!$uri = Router::getRoute($this->name.'Id', array_merge($params, array('id' => $this->id)))) {
 			$uri = WEBROOT.lcfirst($this->name).'/'.$this->id.'/';	
 		}
 		return $uri;
@@ -582,17 +582,23 @@ class Model extends Object
 	
 	/**
 	 * Returns the model data as array or just the fields from the model
-	 * that you’ve named in $fieldNames
-	 * @param array(string) $fieldNames
+	 * that you’ve named in $fieldNames.
+	 * 
+	 * @param array(string) $fieldNames Field names to include
+	 * @param array(string) $except Field names to ignore
 	 * @return array(mixed)
 	 */
-	public function toArray(Array $fieldNames = array()) 
+	public function toArray($fieldNames = null, $except = null) 
 	{
 		if (func_num_args() == 0) {
 			return $this->data;
 		}
+		if ($fieldNames === null) {
+			$fieldNames = array_keys($this->structure);
+		}
 		$data = array();
-		foreach($fieldNames as $fieldname) {
+		foreach((array) $fieldNames as $fieldname) {
+			if (func_num_args() >= 2 && (is_array($except) && in_array($fieldname, $fieldNames) || $except == $fieldname)) continue;
 			$data[$fieldname] = $this->get($fieldname);
 		}
 		return $data;
@@ -651,7 +657,16 @@ class Model extends Object
 	
 	public function saveAll($validate = true, Array $fieldNames = array())
 	{
-		$this->save($validate, $fieldNames);
+		$saveResult = $this->save($validate, $fieldNames);
+		if ($saveResult) {
+			// save hasOne
+			foreach($this->hasOne + $this->belongsTo as $modelName => $config) {
+				if (isset($this->{$modelName})) {
+					$this->{$modelName}->set($config['foreignKey'], $this->get($this->primaryKeyName));
+					$res = $this->{$modelName}->save();
+				}
+			}
+		}
 		// save HABTM associated models
 		if (is_array($this->hasAndBelongsToMany) && $this->depth > 0) {
 			foreach($this->hasAndBelongsToMany as $modelName => $config) {

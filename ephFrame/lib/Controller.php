@@ -227,7 +227,10 @@ abstract class Controller extends Object implements Renderable
 			$this->data->set(Inflector::plural($this->name), $entries);
 			if ($this->{$this->name}->perPage > 0) {
 				$pagination = $this->{$this->name}->paginate($page);
-				$pagination['url'] = Router::getRoute($this->name.'Paged');
+				if (!($url = Router::getRoute($this->name.'Paged'))) {
+					$url = Router::getRoute('scaffold_paged', array('controller' => $this->name));
+				}
+				$pagination['url'] = $url;
 				$this->set('pagination', $pagination);
 			}
 			if (!$entries) {
