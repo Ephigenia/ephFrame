@@ -650,15 +650,11 @@ class Model extends Object
 		if ($validate && !$this->validate($this->data)) {
 			return false;
 		}
-		// create save query for this model
+		// insert or update
 		if (!$this->exists()) {
 			$this->insert();
-			$this->afterInsert();
-			$this->behaviors->call('afterInsert');
 		} else {
 			$this->update();
-			$this->afterUpdate();
-			$this->behaviors->call('afterUpdate');
 		}
 		$this->afterSave();
 		$this->behaviors->call('afterSave');;
