@@ -43,7 +43,7 @@ class FlashMessage extends AppComponent
 	{
 		if (!$this->Session->isEmpty($this->sessionVarname)) {
 			$this->controller->data->set('flashMessage', $this->Session->get($this->sessionVarname));
-			$this->reset();
+			$this->delete();
 		}
 		return parent::beforeRender();
 	}
