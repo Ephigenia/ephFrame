@@ -219,7 +219,7 @@ abstract class Controller extends Object implements Renderable
 	 * entries from the User Model (if assigned and working) to the view.
 	 * You can overwrite or inherit this behavior in your child classes.
 	 */
-	public function index() 
+	public function index()
 	{
 		if (isset($this->{$this->name})) {
 			$page = intval((@$this->params['page'] > 1) ? $this->params['page'] : 1);

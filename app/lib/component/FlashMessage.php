@@ -14,6 +14,7 @@ class FlashMessageType
 {	
 	const ERROR = 'error';
 	const HINT = 'hint';
+	const SUCCESS = 'success';
 }
 
 /**
@@ -48,7 +49,7 @@ class FlashMessage extends AppComponent
 		return parent::beforeRender();
 	}
 	
-	public function set($message, $type = FlashMessageType::HINT)
+	public function set($message, $type = FlashMessageType::SUCCESS)
 	{
 		$this->Session->set($this->sessionVarname, array(
 			'message' => $message,

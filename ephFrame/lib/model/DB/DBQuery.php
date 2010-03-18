@@ -634,6 +634,9 @@ abstract class DBQuery extends Object implements Renderable
 			if (is_array($right)) {
 				$right = 'IN ('.implode(',', array_map(array($this, 'quote'), $right) ).')';
 			// skip connector if allready there (bad workaround)	
+			} elseif ($right == null) {
+				$right = 'NULL';
+				$connector = ' is ';
 			}
 			if (preg_match('@^\s*(<|>|=|LIKE|IN)@i', $right)) {
 				$connector = ' ';
