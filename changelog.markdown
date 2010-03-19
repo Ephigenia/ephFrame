@@ -10,7 +10,7 @@ check some deprecated methods or new features.
 * New Validator options available: `numeric`, `ip`, `between`, `alphaNumeric`, `hostname`
 * New ModelBehavior: `Timestampable` that stores new timestamps or datetime values when updating or inserting new model data.
 * Added `closeTags` to StringHelper that closes all opened tags in the passed string, also included in truncate method to close all cutted tags.
-* Model->saveAll saves all other associated model data too like in hasMany, hasOne, belongsTo etc.
+* Model->saveAll finally tries to save all associated model data form all association types like hasMany, belongsTo, hasOne and hasAndBelongsToMany
 * Model->listAll now can have [modelName].[fieldname] as fieldname and also accepts array as first argument
 * `DateTime` and `Date` form fields use I18n locale settings to format the date
 

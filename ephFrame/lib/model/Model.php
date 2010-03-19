@@ -678,6 +678,14 @@ class Model extends Object
 					$res = $this->{$modelName}->save();
 				}
 			}
+			// save has many
+			foreach($this->hasMany as $modelName => $config) {
+				$plural = Inflector::plural($modelName);
+				if (!empty($this->{$plural})) foreach($this->{$plural} as $model) {
+					$model->set($config['associationKey'], $this->get($this->primaryKeyName));
+					$model->save();
+				}
+			}
 		}
 		// save HABTM associated models
 		if (is_array($this->hasAndBelongsToMany) && $this->depth > 0) {

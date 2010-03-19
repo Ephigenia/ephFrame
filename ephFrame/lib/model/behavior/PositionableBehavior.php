@@ -25,7 +25,8 @@ class_exists('ModelBehavior') or require dirname(__FILE__).'/ModelBehavior.php';
  * hirarchy. So every Model should have a 'position' field defined as integer
  * and this position field can be manipulated if the model behaves as
  * Positionable.
- * 	
+ * 
+ * @todo add config that defines some conditions that must be equel when getting positions
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 03.12.2008
  * @package ephFrame
