@@ -16,16 +16,16 @@
  */
 
 /**
- * Validate things
+ * Core Validator Class
  * 
  * Use this class to validate varios kinds of things such as {@link email}s,
  * {@link integer}s, {@link isbn} numbers or {@link URL}s.
  *
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * @since 02.05.2007
+ * @since 2007-05-02
  * @package ephFrame
  * @subpackage ephFrame.lib.helper
- * @version 0.2
+ * @version 0.2.1
  */
 class Validator extends Helper 
 {
@@ -33,10 +33,11 @@ class Validator extends Helper
 	public $callbackObject;
 	
 	/**
-	 * Creates a new validator
+	 * Creates a new {@link Validator} object
 	 * 
 	 * @param array(string) $config
-	 * @param Object $callbackObject
+	 * @param object $callbackObject
+	 * @return Validator
 	 */
 	public function __construct($config = array(), $callbackObject = null) 
 	{
@@ -64,10 +65,10 @@ class Validator extends Helper
 			if (!isset($config['message'])) {
 				$message = false;
 			} else {
-				// replace wildcards in the failmessage
 				if (!is_array($config)) {
 					$config = array('message' => $config);
 				}
+				// replace wildcards in the failmessage
 				$message = String::substitute($config['message'], array_merge($config, array(
 					'value' => $value,
 					'rule' => $ruleName,
@@ -101,6 +102,14 @@ class Validator extends Helper
 				return $message;
 			} elseif (isset($config['numeric']) && !Validator::numeric($value)) {
 				return $message;
+			} elseif (isset($config['alphaNumeric']) && !Validator::alphaNumeric($value)) {
+				return $message;
+			} elseif (isset($config['between']) && !Validator::between($value, $config['between'][0], $config['between'][1])) {
+				return $message;
+			} elseif (isset($config['in']) && !in_array($value, $config['in'])) {
+				return $message;
+			} elseif (isset($config['hostname']) && !Validator::hostname($value)) {
+				return $message;
 			}
 		}
 		return true;
@@ -108,15 +117,37 @@ class Validator extends Helper
 	
 	/**
 	 * Returns true if $val is between $min and $max
+	 * 
+	 * @param integer|float $val
+	 * @param integer|float $min
+	 * @param integer|float $max
+	 * @return boolean
 	 */
 	public static function between($val, $min, $max)
 	{
 		return ($val > $min && $val < $max);
 	}
 	
+	/**
+	 * Tests if $value string is a numeric value - a float or integer
+	 * @param mixed $value
+	 * @return boolean
+	 */
 	public static function numeric($value)
 	{
 		return Validator::integer($value) || Validator::float($value);
+	}
+	
+	const ALPHA_NUMERIC = '@^[\p{Ll}\p{Lm}\p{Lo}\p{Lt}\p{Lu}\p{Nd}]+$@mu';
+	
+	/**
+	 * Test if passed $value is alphanumeric (unicode save)
+	 * @param string $value
+	 * @return boolean
+	 */
+	public static function alphaNumeric($value)
+	{
+		return preg_match(self::ALPHA_NUMERIC, $value);
 	}
 	
 	/**
