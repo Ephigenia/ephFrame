@@ -5,12 +5,14 @@ This file should record some kind of change history of the ephFrame Framework
 Please check this file for hints after you updated the framework via svn to 
 check some deprecated methods or new features.
 
-# 2010-03-17
+# 2010-03-19
 
-* Added closeTags to String Helper that closes all opened tags in a string
-* model->listAll now can have [modelName].[fieldname] as fieldname and also accepts array as first argument
-* Added a new behavior that updates updated and created timestamp fields of a model and now can do datetime, date and timestamp fields
-* DateTime and Date form field now uses I18n locale settings
+* New Validator options available: `numeric`, `ip`, `between`, `alphaNumeric`, `hostname`
+* New ModelBehavior: `Timestampable` that stores new timestamps or datetime values when updating or inserting new model data.
+* Added `closeTags` to StringHelper that closes all opened tags in the passed string, also included in truncate method to close all cutted tags.
+* Model->saveAll saves all other associated model data too like in hasMany, hasOne, belongsTo etc.
+* Model->listAll now can have [modelName].[fieldname] as fieldname and also accepts array as first argument
+* `DateTime` and `Date` form fields use I18n locale settings to format the date
 
 # 2010-02-28
 
