@@ -58,16 +58,25 @@ class Inflector extends Object
 		}
 		$rules = array(
 			// The -ies rule: nouns ending in a y preceded by a consonant usually drop the y and add -ies
-			'/(.*['.$consonants.'])y$/' => '\\1ies',
+			'@(['.$consonants.'])y$@i' => '\\1ies',
 			// The -oes rule: most nouns ending in o preceded by a consonant also form their plurals by adding -es
-			'/(.*['.$consonants.'])o$/' => '\\1oes',
-			'/(.*)h$/'  => '\\1es',
-			'/(.*)s$/'	=> '\\1ses'
+			'@(['.$consonants.'])o$@i' => '\\1oes',
+			// other rules
+			'@s$@i' => '\\1ses',
+			// kiss, dish, witch
+			'@(ss|sh|ch)$@' => '\\1es',
+			// phase,
+			'@(se)$@i' => 'ses',
+			// judge, massage
+			'@(dge|ge)$@i' => '\\1s',
+			// calf -> calves
+			'@fs$@i' => '\\1ves',
+			// knife -> knifes
+			'@ife$@i' => '\\1ives',
 		);
 		foreach($rules as $regexp => $replace) {
-			$result = preg_replace($regexp, $replace, $string);
-			if ($result !== $string) {
-				return $result;
+			if (($plural = preg_replace($regexp, $replace, $string)) != $string) {
+				return $plural;
 			}
 		}
 		return $string.'s';
