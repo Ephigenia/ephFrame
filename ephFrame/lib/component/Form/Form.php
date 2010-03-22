@@ -516,30 +516,23 @@ class Form extends HTMLTag
 						break;
 					case 'enum':
 						// enum can be checkbox
-						if (count($modelFieldInfo->enumOptions) <= 2) {
+						if (count($modelFieldInfo->enumOptions) <= 1) {
 							$fieldInfo['value'] = true;
 							$fieldInfo['type'] = 'checkbox'; 
 						} else {
 							$fieldInfo['type'] = 'DropDown';
 							$fieldInfo['value'] = $fieldInfo->enumOptions;
 						}
+						$fieldInfo['options'] = $modelFieldInfo->enumOptions;
 						break;
 				}
 			}
 			if (!empty($fieldInfo['type']) && !empty($fieldInfo['name'])) {
-				// copy validation rules from model to form field if possible
 				unset($fieldInfo['modelFieldInfo']);
 				$field = $this->newField($fieldInfo['type'], $fieldInfo['name'], @$fieldInfo['value'], $fieldInfo);
+				// add validation rules from the model if there are any
 				if (isset($model->validate[$fieldInfo['name']])) {
 					$field->addValidationRule($model->validate[$fieldInfo['name']]);
-				}
-				if (isset($fieldInfo['options'])) {
-					$field->addOptions($fieldInfo['options']);
-				}
-				if ($fieldInfo['type'] == 'enum' && count($modelFieldInfo->enumOptions) > 2) {
-					foreach($modelFieldInfo->enumOptions as $optionValue) {
-						$field->addOption($optionValue);
-					}
 				}
 				$this->add($field);
 			}

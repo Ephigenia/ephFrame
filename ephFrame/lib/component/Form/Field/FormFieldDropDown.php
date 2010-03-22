@@ -45,6 +45,9 @@ class FormFieldDropDown extends FormField
 			$this->size = &$attributes['size'];
 		}
 		parent::__construct($name, $value, $attributes);
+		if (isset($attributes['options'])) {
+			$this->addOptions($attributes['options']);
+		}
 		$this->attributes->remove('type');
 		$this->value($value);
 		$this->afterConstruct();

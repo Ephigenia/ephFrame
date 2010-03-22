@@ -38,7 +38,7 @@ class VersionableBehavior extends ModelBehavior
 	public function beforeUpdate()
 	{
 		$fieldname = $this->config[$this->model->name]['fieldname'];
-		if ($model->hasField($fieldname)) {
+		if ($this->model->hasField($fieldname)) {
 			$this->model->set($fieldname, $this->model->get($fieldname) + 1);
 		}
 		return parent::beforeUpdate();
