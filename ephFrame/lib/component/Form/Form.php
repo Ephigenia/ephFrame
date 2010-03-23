@@ -527,6 +527,7 @@ class Form extends HTMLTag
 						break;
 				}
 			}
+			// 
 			if (!empty($fieldInfo['type']) && !empty($fieldInfo['name'])) {
 				unset($fieldInfo['modelFieldInfo']);
 				$field = $this->newField($fieldInfo['type'], $fieldInfo['name'], @$fieldInfo['value'], $fieldInfo);

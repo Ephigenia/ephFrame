@@ -515,6 +515,16 @@ class File extends FileSystemNode
 	}
 	
 	/**
+	 * Return MD5 Sum of file contents
+	 * @return string
+	 */
+	public function MD5()
+	{
+		$this->checkExistence();
+		return md5_file($this->filename());
+	}
+	
+	/**
 	 * Checks a the file for possible php tags, this is used
 	 * by some site attacks, that upload images with php code
 	 * @throws FileWithPHPTagsException
