@@ -672,7 +672,13 @@ class Model extends Object
 		$saveResult = $this->save($validate);
 		if ($saveResult) {
 			// save hasOne
-			foreach($this->hasOne + $this->belongsTo as $modelName => $config) {
+			foreach($this->hasOne as $modelName => $config) {
+				if (isset($this->{$modelName})) {
+					$this->{$modelName}->set($config['associationKey'], $this->get($this->primaryKeyName));
+					$res = $this->{$modelName}->save();
+				}
+			}
+			foreach($this->belongsTo as $modelName => $config) {
 				if (isset($this->{$modelName})) {
 					$this->{$modelName}->set($config['foreignKey'], $this->get($this->primaryKeyName));
 					$res = $this->{$modelName}->save();

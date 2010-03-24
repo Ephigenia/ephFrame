@@ -456,6 +456,7 @@ class File extends FileSystemNode
 	 * 
 	 * Write $content to a file. If the file does not exists the class will
 	 * try to create it.
+	 * 
 	 * @param string
 	 * @return File
 	 */
