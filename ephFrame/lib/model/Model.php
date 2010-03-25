@@ -680,7 +680,6 @@ class Model extends Object
 			}
 			foreach($this->belongsTo as $modelName => $config) {
 				if (isset($this->{$modelName})) {
-					$this->{$modelName}->set($config['foreignKey'], $this->get($this->primaryKeyName));
 					$res = $this->{$modelName}->save();
 				}
 			}
