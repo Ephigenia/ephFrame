@@ -1,2 +1,4 @@
+p_*
+app/tmp/log/*.log
 vendor/simpletest/*
 vendor/ephDeploy/*
