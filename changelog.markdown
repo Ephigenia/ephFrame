@@ -5,7 +5,7 @@ This file should record some kind of change history of the ephFrame Framework
 Please check this file for hints after you updated the framework via svn to 
 check some deprecated methods or new features.
 
-# 2010-03-19
+# 2010-03-25
 
 * New Validator options available: `numeric`, `ip`, `between`, `alphaNumeric`, `hostname`
 * New ModelBehavior: `Timestampable` that stores new timestamps or datetime values when updating or inserting new model data.
@@ -13,6 +13,7 @@ check some deprecated methods or new features.
 * Model->saveAll finally tries to save all associated model data form all association types like hasMany, belongsTo, hasOne and hasAndBelongsToMany
 * Model->listAll now can have [modelName].[fieldname] as fieldname and also accepts array as first argument
 * `DateTime` and `Date` form fields use I18n locale settings to format the date
+* New Form Field for Float values: `FormFieldFloat`
 
 # 2010-02-28
 
