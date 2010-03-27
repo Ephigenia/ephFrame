@@ -33,6 +33,8 @@ class ErrorController extends AppController
 {	
 	public $viewClassName = 'HTMLView';
 	
+	public $layout = 'error';
+	
 	public function beforeRender()
 	{
 		if (Registry::get('DEBUG') < DEBUG_DEVELOPMENT) {

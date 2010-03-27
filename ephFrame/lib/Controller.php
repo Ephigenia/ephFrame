@@ -283,7 +283,7 @@ abstract class Controller extends Object implements Renderable
 			}
 			$page = (isset($this->params['page'])) ? $this->params['page'] : 1;
 			$pagination = $this->{$this->name}->paginate($page, null, $conditions);
-			$pagination['url'] = Router::getRoute(lcfirst($this->name).'SearchPaged', array('term' => $keyword));
+			$pagination['url'] = Router::getRoute(lcfirst($this->name).'SearchPaged', array('q' => $keyword));
 			$this->set('pagination', $pagination);
 			$results = $this->{$this->name}->findAll($conditions, null, ($page-1) * $this->{$this->name}->perPage, $this->{$this->name}->perPage);
 			$this->set(Inflector::plural($this->name), $results);
