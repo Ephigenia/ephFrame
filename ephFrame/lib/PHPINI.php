@@ -14,7 +14,7 @@ class PHPINI
 	 * @return mixed
 	 */
 	public static function get($varname) {
-		$value = ini_get('upload_max_filesize');
+		$value = ini_get($varname);
 		if (!$value) {
 			return false;
 		}
