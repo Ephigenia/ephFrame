@@ -533,7 +533,7 @@ abstract class Controller extends Object implements Renderable
 	 * </code>
 	 * Then you can access the variable like this:
 	 * <code>
-	 * Username: <?= $UserName; ?> (<a href="/logout/">logout</a>)
+	 * Username: <?php echo $UserName; ?> (<a href="/logout/">logout</a>)
 	 * </code>
 	 * 
 	 * Variables that you’ve allready set to a value will be overwritten, you

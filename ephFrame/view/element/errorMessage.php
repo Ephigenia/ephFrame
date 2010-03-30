@@ -1,3 +1,3 @@
 <p class="error">
-	<?= @$message ?>
+	<?php echo @$message ?>
 </p>
