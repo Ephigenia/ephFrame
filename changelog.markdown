@@ -5,7 +5,7 @@ This file should record some kind of change history of the ephFrame Framework
 Please check this file for hints after you updated the framework via svn to 
 check some deprecated methods or new features.
 
-# 2010-03-25
+# 2010-03-30
 
 * New Validator options available: `numeric`, `ip`, `between`, `alphaNumeric`, `hostname`
 * New ModelBehavior: `Timestampable` that stores new timestamps or datetime values when updating or inserting new model data.
@@ -14,6 +14,8 @@ check some deprecated methods or new features.
 * Model->listAll now can have [modelName].[fieldname] as fieldname and also accepts array as first argument
 * `DateTime` and `Date` form fields use I18n locale settings to format the date
 * New Form Field for Float values: `FormFieldFloat`
+* Changed all php short open tags to php echo, short open tags not on per default since php 5.3
+* PHPINI::set does not fail but return false if ini_set is disabled
 
 # 2010-02-28
 

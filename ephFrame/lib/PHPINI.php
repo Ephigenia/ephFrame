@@ -9,11 +9,13 @@
 class PHPINI
 {
 	/**
+	 * Tries to read a $varname from the php ini and returns it’s value
 	 * 
 	 * @param string $varname
-	 * @return mixed
+	 * @return string|boolean|integer
 	 */
-	public static function get($varname) {
+	public static function get($varname)
+	{
 		$value = ini_get($varname);
 		if (!$value) {
 			return false;
@@ -40,7 +42,18 @@ class PHPINI
 		return $value;
 	}
 	
-	public static function set($name, $value) {
+	/**
+	 * Tries to write a config variable. If ini_set is disabled false is
+	 * returned
+	 * @param string $name
+	 * @param mixed $value
+	 * @return boolean
+	 */
+	public static function set($name, $value)
+	{
+		if (!function_exists('ini_set')) {
+			return false;
+		}
 		return ini_set($name, $value);
 	}	
 }
