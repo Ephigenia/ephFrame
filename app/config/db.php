@@ -47,11 +47,10 @@
  * class DBConfig {
  * 	public $default = 'mysql://defaultconfig';
  * 	public $ephigenia = 'mysql://ephigeniaconfig';
- * 	public function __construct() 
-	{
+ * 	public function __construct() {
  * 		if (preg_match('@([a-z0-9_~-]+)\.@i', $_SERVER['SERVER_NAME'], $found) && isset($this->$found[1])) {
  * 	$this->default = $this->$found[1];
- * }
+ * 	}
  * }
  * </code>
  * 

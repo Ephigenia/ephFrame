@@ -1,8 +1,7 @@
 <h2>Congratulations!</h2>
 <p>
 	You’ve made it! It seemes like you successfully installed and configured ephFrame on this server!<br />
-	<br />
-	If you need some help: <a href="http://code.marceleichner.de/project/ephFrame" title="visit project page of ephFrame">code.marceleichner.de/project/ephFrame/</a><br />
+	If you need some help: <a href="http://code.marceleichner.de/project/ephFrame" title="visit project page of ephFrame">code.marceleichner.de/project/ephFrame/</a>
 </p>
 
 <?php
@@ -29,7 +28,7 @@ if (defined('SALT') && SALT === 'priotaseloukeadotraeuocrailaejot') {
 }
 ?>
 <p class="hint">
-	You can modify this view by changing the layout '/app/view/layout/default.php' template file
-	or create your own content file by creating the file '/app/view/app/index.php' which is always
+	You can modify this view by changing the layout <q>/app/view/layout/default.php</q> template file
+	or create your own content file by creating the file <q>/app/view/app/index.php</q> which is always
 	the index page of ephFrame applications.
 </p>
