@@ -15,19 +15,12 @@
  * @filesource
  */
 
-loadHelper('Sanitize');
-
 /**
- * Browser detection class
- * 
- * originally taken frome a side project<br />
- * <br />
- * check wikipedia entry for more information:
- * {@link http://en.wikipedia.org/wiki/User_agent}
+ * Browser Negotiation Component class
  * 
  * Usage in controller:
  * <code>
- * 	$this->set('Browser', $this->Browser->render());
+ * $this->set('Browser', $this->Browser->render());
  * </code>
  * 
  * @TODO add newsreaders
@@ -39,7 +32,7 @@ loadHelper('Sanitize');
  * @package ephFrame
  * @subpackage ephFrame.lib.component
  */
-class Browser extends AppComponent implements Renderable 
+class Browser extends AppComponent
 {
 	public $name;
 	
@@ -53,7 +46,7 @@ class Browser extends AppComponent implements Renderable
 	 */
 	private $data = array(
 		// portable & mobile devices
-		array('Safari (iPhone)', array('iphone'), BrowserTypes::PHONE)
+		array('Safari (iPhone)', array('iphone'), BrowserTypes::MOBILE_DEVICE),
 		array('Internet Explorer Mobile', array('windows cE', 'smartphone'), BrowserTypes::MOBILE_DEVICE),
 		array('BlackBerry', array('blackberry'), BrowserTypes::MOBILE_DEVICE),
 		array('Android', array('android'), BrowserTypes::MOBILE_DEVICE),
@@ -91,9 +84,19 @@ class Browser extends AppComponent implements Renderable
 		array('Emacs', array('emacs'), BrowserTypes::TEXT_BASED),
 	);
 	
+	/**
+	 * Tests for a specific browser type
+	 * 
+	 * @param integer $type
+	 * @return boolean
+	 */
+	public function isType($type)
+	{
+		return $this->type == $type;
+	}
 	
 	/**
-	 * Enter description here...
+	 * Auto-detect browser on controller startup
 	 * @return Browser
 	 */
 	public function startup() 
@@ -110,38 +113,37 @@ class Browser extends AppComponent implements Renderable
 		return $this->afterRender(trim($this->name.' '.$this->version));
 	}
 	
-	private function fromUserAgent($userAgentString) {
-		Sanitize::panic($userAgentString);
+	private function fromUserAgent($userAgentString)
+	{
 		// detect browser
 		foreach($this->data as $data) {
 			$browserName = $data[0];
 			// collect regexp for browser matching
-			if (!isset($data[1]) || isset($data[1]) && $data[1] == true) {
+			if (!isset($data[1]) || isset($data[1]) && $data[1] === true) {
 				$regexps = strtolower($browserName);
-			} elseif (!is_array($data[1])) {
-				$regexps = array($data[1]);
 			} else {
 				$regexps = $data[1];
 			}
-			// go through regexps and find a matching browser
-			foreach($regexps as $regexp) {
-				if (!preg_match('@'.$regexp.'@i', $regexp)) continue;
+			// iterate over browser regexps
+			foreach((array) $regexps as $regexp) {
+				if (!preg_match('@'.preg_quote($regexp, '@').'@i', $userAgentString)) continue;
 				// match
 				$this->name = $browserName;
+				// set browser type from match
 				if (isset($data[2])) {
 					$this->type = $data[2];
 				}
+				break;
 			}
 		}
-		// get browser version with regexp if browser != safari 
-		if ($this->name !== 'Safari') {
-			if (stristr($userAgentString, 'msie')) {
-				$this->version = preg_match_first('@MSIE[\/| ]([\\d]+\.?([\\d]+))@i');
-			} else {
-				$this->version = preg_match_first('@'.$this->name.'[\/| ]([\\d]+\.?([\\d]+))@i');
-			}
-		// Safari Version detection
+		// get browser version
+		if (stristr($userAgentString, 'msie')) {
+			$version = preg_match_first($userAgentString, '@MSIE[\/| ]([\\d]+\.?([\\d]+))@i');
 		} else {
+			$version = preg_match_first($userAgentString, '@'.$this->name.'[\/| ]([\\d]+\.?([\\d]+))@i');
+		}
+		// Safari Version detection
+		if ($this->name == 'Safari') {
 			$version = (float) $version;
 			if ($version >= 523.1) {
 				$version = '3.0.4';
@@ -181,10 +183,14 @@ class Browser extends AppComponent implements Renderable
 				$version = '1.0';
 			}
 		}
+		$this->version = $version;
+		return $this->render();
 	}	
 }
 
 /**
+ * Different Browser Types
+ * 
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de
  * @since 2009-09-29
  * @package ephFrame
@@ -192,17 +198,13 @@ class Browser extends AppComponent implements Renderable
  */
 class BrowserTypes 
 {
-	
-	const DEFAULT = BrowserTypes::BROWSER;
-	
 	const BROWSER = 1;
 	const MOBILE_DEVICE = 2;
-	const PHONE = 4;
-	const TEXT_BASED = 8;
-	const VIDEO_GAME_CONSOLE = 16;
+	const MOBILE = 2;
+	const TEXT_BASED = 4;
+	const VIDEO_GAME_CONSOLE = 8;
 	const OTHER = 255;
-	
-} // END BrowserTypes class
+}
 
 /**
  * @package ephFrame
