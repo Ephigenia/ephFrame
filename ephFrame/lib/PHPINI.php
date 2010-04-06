@@ -21,8 +21,9 @@ class PHPINI
 			return false;
 		}
 		// try to see file size in var
-		if (preg_match('@(\d+(.\d+)?)\s*(m|kb|g)@i', $value, $found)) {
-			switch(strtolower($found[3])) {
+		if (preg_match('@^(\d+(.\d+)?)\s*(m|kb|g)?@i', $value, $found)) {
+			$value = (float) $found[1];
+			if (isset($found[3])) switch(strtolower($found[3])) {
 				case 'm':
 					$value = (float) $found[1] * MEGABYTE;
 					break;
@@ -34,9 +35,9 @@ class PHPINI
 					break;
 			}
 		// parse true/false values
-		} elseif (preg_match('@(true|yes|1)@i', $value)) {
+		} elseif (preg_match('@^(true|yes|1)$@i', $value)) {
 			$value = true;
-		} elseif (preg_match('@(false|no|0)@i', $value)) {
+		} elseif (preg_match('@^(false|no|0)$@i', $value)) {
 			$value = false;
 		}
 		return $value;
