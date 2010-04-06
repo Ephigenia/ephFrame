@@ -82,7 +82,7 @@ class SluggableBehavior extends ModelBehavior
 		extract($config);
 		// 
 		$conditions = array(
-			$Model->name.'.'.$name => DBQuery::quote($slug),
+			$Model->name.'.'.$name.' LIKE '.DBQuery::quote($slug.'%'),
 		);
 		if ($Model->exists()) {
 			$conditions[] = $Model->name.'.'.$Model->primaryKeyName.' <> '.$Model->id;
