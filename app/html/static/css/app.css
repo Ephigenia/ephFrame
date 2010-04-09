@@ -16,10 +16,8 @@ a, a:visited {
 }
 
 q, blockquote { quotes:"\201C" "\201D" "\2018" "\2019"; }
-body.en_EN q:before { content: '“' }
-body.en_EN q:after { content: '”' }
-body.de_DE q:before, body q:before { content: '„' }
-body.de_DE q:after, body q:after { content: '“' }
+body q:before { content: '„' }
+body q:after { content: '“' }
 
 h1 {
 	font-size: 2.5em;

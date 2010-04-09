@@ -6,6 +6,6 @@
 <?php if (class_exists('Registry') && Registry::get('DEBUG') > DEBUG_PRODUCTION) { ?>
 <p class="hint">
 	You can customize this error message by creating your own 401.php file in:<br />
-	<q><?php echo VIEW_DIR ?>error/401.php</q>
+	<code><?php echo VIEW_DIR ?>error/401.php</code>
 </p>
 <?php } ?>

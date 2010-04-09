@@ -26,6 +26,7 @@ class_exists('ModelBehavior') or require dirname(__FILE__).'/ModelBehavior.php';
  * field values. See the {@link defaultConfig} array for description.
  * 
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @author Uli Schöberl <uli@aplusplus.org>
  * @since 2010-02-17
  * @package ephFrame
  * @subpackage ephFrame.lib.model.behaviors

@@ -162,7 +162,9 @@ class Log extends AppComponent
 		if ($level <= self::$level) {
 			$logFile = new File(self::logFileName($level));
 			if (!$logFile->exists()) {
-				$logFile->create();
+				try {
+					$logFile->create();
+				} catch (FileNotWriteableException $e) {}
 			}
 			if ($logFile->writable()) {
 				$logFile->append(self::getInstance()->createLogMessage($message));

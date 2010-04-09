@@ -5,8 +5,9 @@ This file should record some kind of change history of the ephFrame Framework
 Please check this file for hints after you updated the framework via svn to 
 check some deprecated methods or new features.
 
-# 2010-03-30
+# 2010-04-09
 
+* Updated the default application index page and changed some default style sheets
 * New Validator options available: `numeric`, `ip`, `between`, `alphaNumeric`, `hostname`
 * New ModelBehavior: `Timestampable` that stores new timestamps or datetime values when updating or inserting new model data.
 * Added `closeTags` to StringHelper that closes all opened tags in the passed string, also included in truncate method to close all cutted tags.
