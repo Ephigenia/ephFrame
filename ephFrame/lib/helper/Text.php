@@ -81,6 +81,7 @@ class Text extends Helper
 	public static function highlight($text, $keyword, $replace = '<em class="keyword">$1</em>')
 	{
 		$text = preg_replace('@('.preg_quote($keyword, '@').'(?!([^<]+)?>))@i', $replace, $text);
+		return $text;
 	}
 	/**
 	 * Replace urls in a string with html links
