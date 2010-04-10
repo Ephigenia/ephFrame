@@ -65,16 +65,25 @@ class I18n extends AppComponent
 	{
 		// get language from requested client header
 		if ($this->autoDetect && $acceptLanguage = $this->controller->request->header->get('accept_language')) {
-			self::$locale = $acceptLanguage;
+			$this->locale($acceptLanguage);
 		// default language defined in the /app/config/config.php
 		} elseif ($defaultLanguage = Registry::read('I18n.language')) {
-			self::$locale = $defaultLanguage;
+			$this->locale($defaultLanguage);
 		}
 		$this->domainLocation = APP_ROOT.'/locale/';
 		$this->controller->data->set(get_class($this), $this);
 		self::locale(self::$locale);
 		$this->domain($this->domainLocation, $this->domainName, $this->domainEncoding);
 		return $this;
+	}
+	
+	public static function normalizeLocale($locale)
+	{
+		$locale = strtolower(substr($locale, 0, 2)).'_'.strtoupper(substr($locale, 3, 2));
+		if (strlen($locale) == 3) {
+			$locale .= strtoupper($locale);
+		}
+		return $locale;
 	}
 	
 	/**
@@ -85,7 +94,7 @@ class I18n extends AppComponent
 	public static function locale($locale = null, $types = array(LC_MESSAGES, LC_COLLATE, LC_TIME))
 	{
 		if (func_num_args() == 0) return self::$locale;
-		self::$locale = strtolower(substr($locale, 0, 2)).'_'.strtoupper(substr($locale, 3, 5));
+		self::$locale = self::normalizeLocale($locale);
 		foreach((array) $types as $type) {
 			putenv('LC_ALL='.self::$locale);
 			setlocale($type, self::$locale);
