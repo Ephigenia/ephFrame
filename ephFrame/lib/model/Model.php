@@ -127,6 +127,12 @@ class Model extends Object
 	protected $modelStructureCache;
 	
 	/**
+	 * Cache Queries from this model?
+	 * @var boolean
+	 */
+	protected $cacheQueries = false;
+	
+	/**
 	 * Defalut find conditions that is used on every select query
 	 * @var array(string)
 	 */
@@ -776,7 +782,7 @@ class Model extends Object
 		}
 		$q = new InsertQuery($this->tablename, $quotedData);		
 		$db = DBConnectionManager::getInstance()->get($this->useDBConfig);
-		$db->query($q);
+		$db->query($q, $this->cacheQueries);
 		$this->set($this->primaryKeyName, $db->lastInsertId());
 		$this->afterInsert();
 		$this->behaviors->call('afterInsert');
@@ -864,7 +870,7 @@ class Model extends Object
 		}
 		if (!$this->beforeDelete($id) || !$this->behaviors->call('beforeDelete', array($id))) return false;
 		$db = DBConnectionManager::getInstance()->get($this->useDBConfig);
-		$db->query(new DeleteQuery($this->tablename, array($this->primaryKeyName => $id)));
+		$db->query(new DeleteQuery($this->tablename, array($this->primaryKeyName => $id)), $this->cacheQueries);
 		$this->afterDelete();
 		$this->behaviors->call('afterDelete');
 		$this->reset();
@@ -1211,7 +1217,7 @@ class Model extends Object
 	public function query($query, $depth = null) 
 	{
 		if ($db = DBConnectionManager::getInstance()->get($this->useDBConfig)) {
-			$result = $db->query($query);
+			$result = $db->query($query, $this->cacheQueries);
 			return $this->createSelectResultList($result, false, $depth);
 		}
 		return $r;
