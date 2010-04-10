@@ -799,7 +799,7 @@ class Model extends Object
 			if (!isset($this->data[$key])) continue;
 			$quotedData[$key] = DBQuery::quote($this->data[$key], $this->structure[$key]->quoting);
 		}
-		$q = new UpdateQuery($this->tablename, $quotedData, array($this->primaryKeyName => $this->data[$this->primaryKeyName]));
+		$q = new UpdateQuery($this->tablename, $quotedData, array($this->primaryKeyName => DBQuery::quote($this->data[$this->primaryKeyName], $this->structure[$this->primaryKeyName]->quoting)));
 		$this->query($q);
 		$this->afterUpdate();
 		$this->behaviors->call('afterUpdate');
