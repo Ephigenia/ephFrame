@@ -255,6 +255,13 @@ class Model extends Object
 		$this->__mergeParentProperty('behaviors');
 		$this->__mergeParentProperty('uses');
 		
+		// add models from uses array
+		if (is_array($this->uses) && count($this->uses) > 0) {
+			foreach($this->uses as $modelName) {
+				$this->bind($modelName);
+			}
+		}
+		
 		// call afterconstruct on model and behaviors
 		$this->afterConstruct();
 		
