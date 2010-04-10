@@ -33,6 +33,56 @@ class_exists('Validator') or require dirname(__FILE__).'/Validator.php';
 class Text extends Helper 
 {
 	/**
+	 * Other Helpers used by this Helper
+	 * @var array(string)
+	 */
+	public $helpers = array(
+		'HTML',
+	);
+	
+	/**
+	 * Trims a $text till the <!--more--> marks like in wordpress and replaces
+	 * it with the optional $label and using $title as link title
+	 * 
+	 * <code>
+	 * echo $Text->more($BlogPost->text, $BlogPost->detailPageUri(), 'more …');
+	 * </code>
+	 * 
+	 * @param string $text
+	 * @param string $url link targeting url
+	 * @param string $label
+	 * @param string $title
+	 * @return string Returns the resulting string
+	 */
+	public function more($text, $url, $label = false, $title = null)
+	{
+		$regexp = '@<!--(.+)-->.*@is';
+		if (preg_match($regexp, $text, $found)) {
+			if (!empty($found[1]) && !in_array(strtolower($found[1]), array('more', 'mehr'))) {
+				$label = $found[1];
+			}
+			$replace = $this->HTML->link($url, $label, array('title' => $title, 'class' => 'more'));
+			$text = preg_replace($regexp, $replace, $text);
+		}
+		return $text;
+	}
+	/**
+	 * Wrap $word in $text into a passed tag
+	 * 
+	 * Example highlighting a search query string in a website
+	 * <code>
+	 * 	echo $Text->highlight($BlogPost->text, $query, '<em class="q">$1</em>');
+	 * </code>
+	 * 
+	 * @param string $text
+	 * @param string $keyword
+	 * @return string
+	 */
+	public static function highlight($text, $keyword, $replace = '<em class="keyword">$1</em>')
+	{
+		$text = preg_replace('@('.preg_quote($keyword, '@').'(?!([^<]+)?>))@i', $replace, $text);
+	}
+	/**
 	 * Replace urls in a string with html links
 	 * @param string $text
 	 * @param array(string) $attributes
