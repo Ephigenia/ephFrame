@@ -33,7 +33,7 @@ class ErrorController extends AppController
 {	
 	public $viewClassName = 'HTMLView';
 	
-	public $layout = 'error';
+	public $layout = 'default';
 	
 	public function beforeRender()
 	{
