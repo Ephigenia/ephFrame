@@ -500,7 +500,7 @@ class Form extends HTMLTag
 					case 'varchar': case 'int': case 'float':
 						$fieldInfo['type'] = 'text';
 						if ($modelFieldInfo->type == 'varchar') {
-							$fieldInfo['maxLength'] = $modelFieldInfo->length;
+							$fieldInfo['maxlength'] = $modelFieldInfo->length;
 						}
 						break;
 					case 'blob': case 'text': case 'mediumtext': case 'mediumblob':

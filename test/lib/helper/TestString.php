@@ -87,14 +87,47 @@ class TestString extends UnitTestCase
 	public function testTruncate()
 	{
 		$tests = array(
+			// html closing
 			array(
-				array('This is a test', 4),
-				'This',
+				array('ABC<i>DEF</i>G', 4),
+				'ABC',
 			),
-			// test if html tags are closed again
 			array(
-				array('This <strong>Bold Text</strong> is short', 18),
-				'This <strong>Bold</strong>',
+				array('ABC<strong>DEF</strong>G', 7),
+				'ABC<strong>DEF</strong>',
+			),
+			array(
+				array('ABC<i>DEF</i>G', 7),
+				'ABC<i>DEF</i>',
+			),
+			// other simpler rules
+			array(
+				array('ABC DEFGHIJKLMNOP', 4, '-'),
+				'ABC-',
+			),
+			array(
+				array('ABC DEFGHIJKLMNOP', 5, '-'),
+				'ABC-',
+			),
+			array(
+				array('ABC D EFGHIJKLMNOP', 6),
+				'ABC D',
+			),
+			array(
+				array('ABC D EFGHIJKLMNOP', 7, '-'),
+				'ABC D-',
+			),
+			array(
+				array('ABCDEFGHIJKLMNOP', 3),
+				'ABC',
+			),
+			array(
+				array('ABCDEFGHIJKLMNOP', 4, '-'),
+				'ABC-',
+			),
+			array(
+				array('ABCDEFGHIJKLMNOP', 4, '--'),
+				'AB--',
 			),
 		);
 		foreach($tests as $test) {
@@ -109,14 +142,26 @@ class TestString extends UnitTestCase
 				array('This is a test'),
 				'This is a test',
 			),
+			// short tags
+			array(
+				array('This <i>is a test'),
+				'This <i>is a test</i>',
+			),
+			array(
+				array('This <i>is'),
+				'This <i>is</i>',
+			),
+			// longer tags
 			array(
 				array('This <strong>Bold'),
 				'This <strong>Bold</strong>',
 			),
+			// tags with attributes
 			array(
 				array('This <a href="http://www.marceleichner.de" target="_blank">Bold'),
 				'This <a href="http://www.marceleichner.de" target="_blank">Bold</a>',
 			),
+			// encapsulated tags
 			array(
 				array('This <strong><a href="http://www.marceleichner.de" target="_blank">Bold</strong>'),
 				'This <strong><a href="http://www.marceleichner.de" target="_blank">Bold</strong></a>',
@@ -234,8 +279,8 @@ class TestString extends UnitTestCase
 		$this->assertEqual(String::hex('AB'), '4142');
 		$this->assertEqual(String::hex(chr(1)), '01');
 		// testing not-usage of spacer at the end, and spacer at all
-		$this->assertEqual(String::hex(chr(1).' ', ' '), '01 20');
-		// testing line break
-		$this->assertEqual(String::hex('ABCDEFG', 'X', 3), '01'.LF.'42');
+		$this->assertEqual(String::hex('AB', ' '), '41 42');
+		$this->assertEqual(String::hex('AB', 'X'), '41X42');
+		$this->assertEqual(String::hex('ABC', 'X'), '41X42X43');
 	}
 }

@@ -29,7 +29,6 @@
 require_once dirname(__FILE__).'/autorun.php';
 
 $helperTests = new GroupTest('ephFrame Framework Unit Test');
-
 // ephFrame Helper Tests
 $helperTests->addTestFile('lib/helper/TestCharset.php');
 $helperTests->addTestFile('lib/helper/TestHTML.php');
@@ -57,7 +56,6 @@ $helperTests->addTestFile('lib/TestInflector.php');
 if (isset($_SERVER['HTTP_HOST'])) {
 	$helperTests->addTestFile('lib/TestImage.php');
 }
-
 // test components
 $helperTests->addTestFile('lib/component/TestSearchQueryParser.php');
 $helperTests->addTestFile('lib/component/TestWikiText.php');

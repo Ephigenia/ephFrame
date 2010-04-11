@@ -506,32 +506,34 @@ class String extends Helper
 	{
 		$strLength = self::length($string);
 		if ($strLength <= $length) return $string;
-		$endStrLength = self::length($end);
-		if ($endStrLength == 0) {
-			$lengthToCut = $length;
-		} else {
-			$lengthToCut = $length - $endStrLength;
-		}
-		$truncated = '';
-		$lastSpace = 0;
+		$length -= self::length($end);
+		$truncatePos = 0;
+		$inTag = false;
 		for ($i = 0; $i < $strLength; $i++) {
 			$char = self::substr($string, $i, 1);
-			if ($calculateWidths) {
-				$lengthToCut += self::charWidth($char);
-			}
-			if (preg_match('/\s/', $char)) {
-				$lastSpace = $i;
-			}
-			if ($i >= $lengthToCut) {
+			if ($truncatePos >= $length) {
 				break;
+			} elseif ($char == '<') {
+				$lastSpace = $i;
+				$inTag = true;
+			} elseif ($char == '>') {
+				$inTag = false;
+			} elseif (!$inTag) {
+				if (preg_match('/\s/', $char)) {
+					$lastSpace = $i;
+				}
+				if (!$calculateWidths) {
+					$truncatePos += 1;
+				} else {
+					$truncatePos = self::charWidth($char);
+				}
 			}
 		}
-		if ($lastSpace == 0 || $force) {
-			$truncated = String::substr($string, 0, $lengthToCut);
+		if (empty($lastSpace) || $force) {
+			$truncated = String::substr($string, 0, $truncatePos);
 		} else {
 			$truncated = String::substr($string, 0, $lastSpace);
 		}
-		// clean up tags
 		return self::closeTags($truncated.$end);
 	}
 	
@@ -864,7 +866,7 @@ class String extends Helper
 				$return .= LF;
 			}
 		}
-		return $return;
+		return trim($return, $spacer);
 	}
 	
 	/**

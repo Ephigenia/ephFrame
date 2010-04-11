@@ -45,6 +45,5 @@ class TestSanitizer extends UnitTestCase
 		foreach($filenames as $test => $result) {
 			$this->assertEqual(Sanitizer::filename($test), $result);
 		}
-		exit;
 	}	
 }

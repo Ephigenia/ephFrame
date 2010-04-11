@@ -32,7 +32,6 @@ if (!class_exists('ephFrame')) {
 	require (dirname(__FILE__).'/../ephFrame/'.'startup.php');
 }
 error_reporting(E_ALL);
-
 // create a reporter, testing if we're in a server enviorenment
 // and create a text reporter if we're not on a server
 // called in a console/terminal enviorenment we go for the text
@@ -41,7 +40,7 @@ if (isset($_SERVER['SERVER_ADDR'])) {
 	header('Content-Type: text/html; charset=utf-8');
 	class ephFrameTestHTMLReporter extends HtmlReporter {
 		public function _getCss() 
-	{
+		{
 			return parent::_getCss().'
 			body, html {
 				font-family: Pragmata, Monaco, Courier;
