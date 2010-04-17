@@ -46,10 +46,10 @@ class Browser extends AppComponent
 	 */
 	private $data = array(
 		// portable & mobile devices
+		array('Android', array('android'), BrowserTypes::MOBILE_DEVICE),
 		array('Safari (iPhone)', array('iphone'), BrowserTypes::MOBILE_DEVICE),
 		array('Internet Explorer Mobile', array('windows cE', 'smartphone'), BrowserTypes::MOBILE_DEVICE),
 		array('BlackBerry', array('blackberry'), BrowserTypes::MOBILE_DEVICE),
-		array('Android', array('android'), BrowserTypes::MOBILE_DEVICE),
 		// gaming consoles and portables
 		array('Nintendo Wii', array('nintendo wii'), BrowserTypes::VIDEO_GAME_CONSOLE),
 		array('Playstation Portable', true, BrowserTypes::VIDEO_GAME_CONSOLE),
@@ -132,10 +132,11 @@ class Browser extends AppComponent
 				// set browser type from match
 				if (isset($data[2])) {
 					$this->type = $data[2];
-				}
-				break;
+				}	
+				break 2;
 			}
 		}
+		
 		// get browser version
 		if (stristr($userAgentString, 'msie')) {
 			$version = preg_match_first($userAgentString, '@MSIE[\/| ]([\\d]+\.?([\\d]+))@i');
@@ -143,7 +144,7 @@ class Browser extends AppComponent
 			$version = preg_match_first($userAgentString, '@'.$this->name.'[\/| ]([\\d]+\.?([\\d]+))@i');
 		}
 		// Safari Version detection
-		if ($this->name == 'Safari') {
+		if ($this->name == 'Safari' || $this->name == 'Android') {
 			$version = (float) $version;
 			if ($version >= 523.1) {
 				$version = '3.0.4';
@@ -155,7 +156,7 @@ class Browser extends AppComponent
 				$version = '2.0.3';
 			} elseif ($version > 412.5) {
 				$version = '2.0.2';
-			} elseif ($verison == 412.5) {
+			} elseif ($version == 412.5) {
 				$version = '2.0.1';
 			} elseif ($version > 312.6) {
 				$version = '2.0';
