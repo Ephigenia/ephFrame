@@ -46,15 +46,21 @@ class PHPINI
 	/**
 	 * Tries to write a config variable. If ini_set is disabled false is
 	 * returned
-	 * @param string $name
+	 * @param string|array(string) $name
 	 * @param mixed $value
 	 * @return boolean
 	 */
-	public static function set($name, $value)
+	public static function set($name, $value = null)
 	{
 		if (!function_exists('ini_set')) {
 			return false;
 		}
-		return ini_set($name, $value);
+		if (is_array($name)) {
+			foreach($name as $k => $v) {
+				self::set($k, $v);
+			}
+		} else {
+			return ini_set($name, $value);
+		}
 	}	
 }

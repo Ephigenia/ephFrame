@@ -127,8 +127,21 @@ class Router extends Hash
 				continue;
 			}
 			$this->params = array_merge($this->params, $routeData);
-			$this->controller = $this->params['controllerPrefix'].ucfirst(coalesce(@$match[0]['controller'], @$this->params['controller']));
-			$this->action = coalesce(@$match[0]['action'], @$this->params['action']);
+			if (isset($this->params['controllerPrefix'])) {
+				$this->controller = $this->params['controllerPrefix'];
+			} else {
+				$this->controller = '';
+			}
+			if (isset($match[0]['controller'])) {
+				$this->controller .= ucfirst($match[0]['controller']);
+			} elseif (!empty($this->params['controller'])) {
+				$this->controller .= $this->params['controller'];
+			}
+			if (!empty($match[0]['action'])) {
+				$this->action = $match[0]['action'];
+			} else {
+				$this->action = @$this->params['action'];
+			}
 			// add controller action prefix
 			if (!empty($routeData['prefix'])) {
 				$this->action = $routeData['prefix'].ucFirst($this->action);

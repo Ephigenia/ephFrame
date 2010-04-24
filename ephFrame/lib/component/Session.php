@@ -68,19 +68,29 @@ class Session extends Hash
 	 */
 	public function init(Controller $controller) 
 	{
-		$this->start();
-		$this->data = &$_SESSION;
 		if ($sessionName = Registry::get('Session.name')) {
 			$this->name = $sessionName;
 		}
 		// get sesion lifetime from config
 		if ($sessionLifetime = Registry::get('Session.ttl')) {
 			$this->ttl = $sessionLifetime;
-			PHPINI::set('session.cookie_lifetime', $this->ttl);
-			PHPINI::set('session.gc_maxlifetime', $this->ttl);
 		} else {
 			$this->ttl = PHPINI::get('session.gc_maxlifetime');
 		}
+		// set secure cookie if we are using SSL
+		if (!empty($_SERVER['HTTPS'])) {
+			PHPINI::set('session.cookie_secure', true);
+		}
+		// set some ini
+		PHPINI::set(array(
+			'session.cookie_lifetime' => $this->ttl,
+			'session.gc_maxlifetime' => $this->ttl,
+			'session.use_trans_sid' => false,
+			'url_rewriter.tags' => false,
+			'session.use_cookies' => true,
+		));
+		$this->start();
+		$this->data = &$_SESSION;
 		// register session save
 		// todo use session_set_save_handler to register current session class
 		return parent::init($controller);
@@ -143,7 +153,7 @@ class Session extends Hash
 	 */
 	public function beforeRender() 
 	{
-		$this->Cookie->set($this->name(), $this->id(), $this->ttl);
+		// $this->Cookie->set($this->name(), $this->id(), $this->ttl);
 		return parent::beforeRender();
 	}
 	
@@ -180,6 +190,6 @@ class SessionStartException extends SessionException
 {
 	public function __construct() 
 	{
-		parent::__construct('Unable to start session: \''.error_get_last().'\'');
+		parent::__construct('Unable to start session: \''.var_export(error_get_last(), true).'\'');
 	}
 }
