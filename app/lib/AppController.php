@@ -50,6 +50,18 @@ class AppController extends Controller
 		}
 		return parent::beforeRender();
 	}
+	
+	public function test() {
+		ephFrame::loadClass('ephFrame.lib.Image');
+		ephFrame::loadClass('ephFrame.lib.ImageSaturationFilter');
+		$img = new Image(FRAME_ROOT.'../test/tmp/Blue_Box_in_museum.jpg');
+		$img->resize(100,100);
+		$filter = new ImageSaturationFilter();
+		$img->applyFilter($filter);
+		header('Content-Type: image/jpg');
+		echo $img->render(100);
+		exit;
+	}
 }
 
 /**

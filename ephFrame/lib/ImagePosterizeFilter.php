@@ -17,6 +17,7 @@
 
 // load parent class
 interface_exists('ImageFilter') or require dirname(__FILE__).'/ImageFilter.php';
+class_exists('ImageColorFilter') or require dirname(__FILE__).'/ImageColorFilter.php';
 
 /**
  * Image Posterize Filter
@@ -30,13 +31,12 @@ interface_exists('ImageFilter') or require dirname(__FILE__).'/ImageFilter.php';
  * echo $img->render(100);
  * </code>
  * 
- * @todo extend this filter from a new class called ImageColorFilter
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 28.12.2007
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class ImagePosterize extends Object implements ImageFilter 
+class ImagePosterize extends ImageColorFilter implements ImageFilter 
 {
 	/**
 	 * desired dark color

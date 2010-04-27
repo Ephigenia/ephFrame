@@ -19,7 +19,10 @@
 interface_exists('ImageFilter') or require dirname(__FILE__).'/ImageFilter.php';
 
 /**
- * Example Image Sharpen Filter
+ * Image Sharpening Filter
+ * 
+ * Image filter that can sharpen image information. Play with the filter
+ * arguments to get different results.
  * 
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 27.04.2009

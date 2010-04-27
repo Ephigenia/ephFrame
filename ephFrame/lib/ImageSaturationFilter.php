@@ -17,9 +17,10 @@
 
 // load parent class
 interface_exists('ImageFilter') or require dirname(__FILE__).'/ImageFilter.php';
+class_exists('ImageColorFilter') or require dirname(__FILE__).'/ImageColorFilter.php';
 
 /**
- * Experimental Saturation Image Filter
+ * Saturation Image Filter
  * 
  * This class converts all colors in an image to grey values by reducing
  * the hue value to 0.<br />
@@ -36,14 +37,13 @@ interface_exists('ImageFilter') or require dirname(__FILE__).'/ImageFilter.php';
  * echo $img->render(100);
  * </code>
  * 
- * @todo extend this filter from a new class called ImageColorFilter
  * @todo add adjustment filter for saturation strength
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 13.10.2007
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class ImageSaturationFilter extends Object implements ImageFilter 
+class ImageSaturationFilter extends ImageColorFilter implements ImageFilter 
 {
 	/**
 	 * Runs the filter on a {@link Image}

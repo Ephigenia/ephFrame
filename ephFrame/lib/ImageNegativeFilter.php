@@ -17,17 +17,19 @@
 
 // load parent class
 interface_exists('ImageFilter') or require dirname(__FILE__).'/ImageFilter.php';
+class_exists('ImageColorFilter') or require dirname(__FILE__).'/ImageColorFilter.php';
 
 /**
- * Experimental Negative Filter for Images
+ * Image Negative Filter
  * 
- * @todo extend this filter from a new class called ImageColorFilter
+ * Converts all colors in an image to their negative value like on photos.
+ * 
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 28.12.2007
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class ImageNegativeFilter extends ImageFilter implements ImageFilter 
+class ImageNegativeFilter extends ImageColorFilter implements ImageFilter 
 {
 	public $cache = array();
 	
