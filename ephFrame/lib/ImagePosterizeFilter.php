@@ -19,29 +19,43 @@
 interface_exists('ImageFilter') or require dirname(__FILE__).'/ImageFilter.php';
 
 /**
- * Experimental pure black & white filter
+ * Image Posterize Filter
  * 
- * This class converts an image to pure black & white colors depending on
- * the luma value of the color.
- * <br />
+ * Will convert all colors in an image to two colors depending on the luma value.
  * <code>
- * $greyFilter = new ImageBWFilter();
+ * $imageFilter = new ImagePosterizeFilter();
  * $img = new Image('webroot/static/img/Blue_Box_in_museum.jpg');
  * $img->header();
- * $img->applyFilter($bwFilter);
+ * $img->applyFilter($imageFilter);
  * echo $img->render(100);
  * </code>
  * 
+ * @todo extend this filter from a new class called ImageColorFilter
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 28.12.2007
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class ImageBWFilter extends Object implements ImageFilter 
+class ImagePosterize extends Object implements ImageFilter 
 {
+	/**
+	 * desired dark color
+	 * @var integer
+	 */
 	public $black = 0;
+	
+	/**
+	 * desired light color
+	 * @var integer
+	 */
 	public $white = 16777215;
+	
+	/**
+	 * treshold value for filtering
+	 * @var float
+	 */
 	public $treshold = 0.5;
+	
 	private $cache = array();
 	
 	/**
@@ -55,8 +69,8 @@ class ImageBWFilter extends Object implements ImageFilter
 		$imgHeight = $image->height() - 1;
 		$imgHandle = $image->handle();
 		// backwards iteration seemes to be faster in php
-		for ($x = $imgWidth; $x > 0; $x--) {
-			for ($y = $imgHeight; $y > 0; $y--) {
+		for ($x = $imgWidth; $x >= 0; $x--) {
+			for ($y = $imgHeight; $y >= 0; $y--) {
 				// imagecolorat returns the big int for the color we can 
 				// use that for getting r,g,b values
 				$rgb = imagecolorat($imgHandle, $x, $y);

@@ -32,7 +32,7 @@ ephFrame::loadClass('ephFrame.lib.Controller');
  * @subpackage app.lib
  */
 class AppController extends Controller
-{	
+{
 	public $helpers = array(
 		'HTML',
 	);

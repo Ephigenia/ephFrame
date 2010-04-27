@@ -21,12 +21,13 @@ interface_exists('ImageFilter') or require dirname(__FILE__).'/ImageFilter.php';
 /**
  * Experimental Negative Filter for Images
  * 
+ * @todo extend this filter from a new class called ImageColorFilter
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 28.12.2007
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class ImageNegativeFilter extends Object implements ImageFilter 
+class ImageNegativeFilter extends ImageFilter implements ImageFilter 
 {
 	public $cache = array();
 	
@@ -41,8 +42,8 @@ class ImageNegativeFilter extends Object implements ImageFilter
 		$imgHeight = $image->height() - 1;
 		$imgHandle = $image->handle();
 		// backwards iteration seemes to be faster in php
-		for ($x = $imgWidth; $x > 0; $x--) {
-			for ($y = $imgHeight; $y > 0; $y--) {
+		for ($x = $imgWidth; $x >= 0; $x--) {
+			for ($y = $imgHeight; $y >= 0; $y--) {
 				// imagecolorat returns the big int for the color we can 
 				// use that for getting r,g,b values
 				$rgb = imagecolorat($imgHandle, $x, $y);

@@ -19,7 +19,7 @@
 interface_exists('ImageFilter') or require dirname(__FILE__).'/ImageFilter.php';
 
 /**
- * Experimental grey filter for images
+ * Experimental Saturation Image Filter
  * 
  * This class converts all colors in an image to grey values by reducing
  * the hue value to 0.<br />
@@ -29,19 +29,21 @@ interface_exists('ImageFilter') or require dirname(__FILE__).'/ImageFilter.php';
  * in a cache.<br />
  * <br />
  * <code>
- * $greyFilter = new ImageGreyFilter();
+ * $imageFilter = new ImageGreyFilter();
  * $img = new Image('webroot/static/img/Blue_Box_in_museum.jpg');
  * $img->header();
- * $img->applyFilter($greyFilter);
+ * $img->applyFilter($imageFilter);
  * echo $img->render(100);
  * </code>
  * 
+ * @todo extend this filter from a new class called ImageColorFilter
+ * @todo add adjustment filter for saturation strength
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 13.10.2007
  * @package ephFrame
  * @subpackage ephFrame.lib
  */
-class ImageGreyFilter extends Object implements ImageFilter 
+class ImageSaturationFilter extends Object implements ImageFilter 
 {
 	/**
 	 * Runs the filter on a {@link Image}
@@ -55,8 +57,8 @@ class ImageGreyFilter extends Object implements ImageFilter
 		$imgHandle = $image->handle();
 		$cache = array();
 		// backwards iteration seemes to be faster in php
-		for ($x = $imgWidth; $x > 0; $x--) {
-			for ($y = $imgHeight; $y > 0; $y--) {
+		for ($x = $imgWidth; $x >= 0; $x--) {
+			for ($y = $imgHeight; $y >= 0; $y--) {
 				// imagecolorat returns the big int for the color we can 
 				// use that for getting r,g,b values
 				$rgb = imagecolorat($imgHandle, $x, $y);
