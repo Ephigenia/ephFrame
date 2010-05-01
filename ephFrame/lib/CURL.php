@@ -190,7 +190,6 @@ class CURL extends Object
 				curl_setopt($this->handle, CURLOPT_POST, true);
 				curl_setopt($this->handle, CURLOPT_POSTFIELDS, http_build_query($this->data));
 			} else {
-				$this->url .= '?'.http_build_query($this->data);
 				curl_setopt($this->handle, CURLOPT_HTTPGET, true);
 			}
 		}
@@ -222,7 +221,11 @@ class CURL extends Object
 		if (empty($this->url)) {
 			throw new CURLEmptyURLException();
 		}
-		curl_setopt($this->handle, CURLOPT_URL, $this->url);
+		if ($this->method === self::METHOD_GET) {
+			curl_setopt($this->handle, CURLOPT_URL, $this->url.'?'.http_build_query($this->data));
+		} else {
+			curl_setopt($this->handle, CURLOPT_URL, $this->url);
+		}
 		curl_setopt($this->handle, CURLOPT_COOKIESESSION, true);
 		return curl_exec($this->handle);
 	}
