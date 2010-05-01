@@ -57,7 +57,8 @@ class GoogleGeoCodingAPI extends CURL
 	
 	/**
 	 * Either Search for a lat,lng pair or a address search string
-	 * and return found addresses as array
+	 * and return found addresses as array.
+	 * 
 	 * @param string|float $address
 	 * @param float $lng
 	 * @return array(string)
@@ -76,6 +77,11 @@ class GoogleGeoCodingAPI extends CURL
 		return $this->resultJSONtoArray($results);
 	}
 	
+	/**
+	 * Formats the Google JSON Result to a nice array with less information
+	 * @param string $json
+	 * @return array(string)
+	 */
 	private function resultJSONtoArray($json)
 	{
 		// additonal field mappings, googlename => alias name
@@ -89,7 +95,11 @@ class GoogleGeoCodingAPI extends CURL
 		foreach($json as $index => $found) {
 			$address = array(
 				'formatted_address' => $found->formatted_address,
+				'lat' => $found->geometry->location->lat,
+				'lng' => $found->geometry->location->lng,
+				'location_type' => $found->geometry->location_type,
 			);
+			// address data
 			foreach($found->address_components as $addressComponent) {
 				$type = $addressComponent->types[0];
 				$value = $addressComponent->long_name;
