@@ -24,7 +24,7 @@ class_exists('HTTPRequest') or require dirname(__FILE__).'/../HTTPRequest.php';
  * A simple example:
  * <code>
  * $search = new GoogleMapsCoordinatesSearch();
- * $result = $search->getLngLat('Kopernikusstr. 8', 'Berlin', '10245);
+ * $result = $search->getLngLat('Kopernikusstr. 8', 'Berlin', '10245');
  * var_dump($result)
  * </code>
  * 
@@ -34,7 +34,7 @@ class_exists('HTTPRequest') or require dirname(__FILE__).'/../HTTPRequest.php';
  * @subpackage ephFrame.lib.component
  * @uses HTTPRequest
  */
-class GoogleMapsCoordinatesSearch extends AppComponent
+class GoogleMapsCoordinatesSearch
 {
 	/**
 	 * default api code for localhost
@@ -43,6 +43,10 @@ class GoogleMapsCoordinatesSearch extends AppComponent
 	 */ 
 	public $apiCode = 'ABQIAAAAaNrWTb-P8LseAxAETioNsxT2yXp_ZAY8_ufC3CFXhHIE1NvwkxQ-SGBYJDWJx7xTqkKjF-xgveMI9A';
 	
+	/**
+	 * URL where request are sent to
+	 * @var string
+	 */
 	public $apiURL = 'http://maps.google.com/maps/geo';
 	
 	/**
@@ -79,7 +83,7 @@ class GoogleMapsCoordinatesSearch extends AppComponent
 		// prepare request
 		$request = $this->generateRequest();
 		$request->data['q'] = $q;
-		$request->data['output'] = 'csv';
+		$request->data['output'] = 'json';
 		// send request
 		$answer = $request->send($this->apiURL);
 		// parse the answer csv code, the list comes from google

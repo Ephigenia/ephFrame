@@ -112,14 +112,19 @@ class CURL extends Object
 	
 	/**
 	 * Curl wrapper constructor
-	 * @
+	 * @param string $url
+	 * @param array(string) $options
+	 * @return CURL
 	 */
 	public function __construct($url = null, Array $options = array()) 
 	{
+		if (!CURL::available()) {
+			throw new CURLNotAvailableException();
+		}
 		if ($url !== null) {
-			$this->handle = curl_init($url);
 			$this->url = $url;
 		}
+		$this->handle = curl_init($this->url);
 		if (!empty($options)) {
 			$this->fromArray($options);
 		}
@@ -138,10 +143,36 @@ class CURL extends Object
 	}
 	
 	/**
-	 * Tests if CURL is available in this php version
+	 * Set multiple CURL_OPTIONS at once
+	 * 
+	 * @param array(string)
+	 * @return CURL
+	 */
+	public function params(Array $params = array())
+	{
+		curl_setopt_array($this->handle, $params);
+		return $this;
+	}
+	
+	/**
+	 * Set a single CURL_OPTION
+	 * 
+	 * @param string $option
+	 * @param mixed $value
+	 * @return CURL
+	 */
+	public function set($option, $value)
+	{
+		curl_setopt($this->handle, $option, $value);
+		return $this;
+	}
+	
+	/**
+	 * Tests if CURL is available in this php build
 	 * @return boolean
 	 */
-	public static function available() {
+	public static function available()
+	{
 		return function_exists('curl_init');
 	}
 	
@@ -152,7 +183,7 @@ class CURL extends Object
 	 * @param boolean $header return/print response headers as well
 	 * @return boolean|string
 	 */
-	public function exec($buffered = true, $headers = false) 
+	public function exec($buffered = true) 
 	{
 		if (!empty($this->data)) {
 			if ($this->method === self::METHOD_POST) {
@@ -184,14 +215,8 @@ class CURL extends Object
 			curl_setopt($this->handle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 			curl_setopt($this->handle, CURLOPT_USERPWD, implode(':', $this->auth));
 		}
-		if (count($this->headers) > 0) {
-			curl_setopt($this->handle, CURLOPT_HTTPHEADER, $this->headers);
-		}
 		if ($buffered) {
 			curl_setopt($this->handle, CURLOPT_RETURNTRANSFER, $buffered);
-		}
-		if ($headers) {
-			curl_setopt($this->handle, CURLOPT_HEADER, true);
 		}
 		// check if url set
 		if (empty($this->url)) {
@@ -206,19 +231,23 @@ class CURL extends Object
 	{
 		curl_close($this->handle);
 	}
-	
 }
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class CURLException extends BasicException 
-{}
+class CURLException extends BasicException {}
+
+/**
+ * Thrown if curl_init is not available in this php build
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception
+ */
+class CURLNotAvailableException extends CURLEmptyURLException {}
 
 /**
  * @package ephFrame
  * @subpackage ephFrame.lib.exception
  */
-class CURLEmptyURLException extends CURLException 
-{}
+class CURLEmptyURLException extends CURLException {}
