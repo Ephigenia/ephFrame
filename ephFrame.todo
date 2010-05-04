@@ -1,11 +1,10 @@
 To-Do-List for ephFrame
 ==============================================================================
 
-Bugs:
-- when using bind() in afterConstruct in model the tablename used in the query gets wrong, it's some other models tablename not the one assinged to it (hasOne)
+This file should record a todo list for the ephFrame framework. I recommend editing it with Textmate and the Tasks Bundle active. It’s also some kind of Roadmap to the framework.
 
-Documentation:
-- Check Documentation and refresh todo-list
+Known Bugs:
+- when using bind() in afterConstruct in model the tablename used in the query gets wrong, it's some other models tablename not the one assinged to it (hasOne)
 
 General:
 - make db table prefix config in db.php
@@ -15,8 +14,8 @@ General:
 Behaviors:
 ✓ Add Sluggable Behavior
 - Add UniqueID Behavior
-- add/remove behaviors on the fly
-- ->trigger
+✓ add/remove behaviors on the fly (via $model->behaviors->addBehavior)
+✓ ->trigger
 
 Configuration:
 - create Environments usages that include hosts, user names, system and php version to create configs that are valid in an automaticall detected environment

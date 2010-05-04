@@ -122,6 +122,7 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable
 	
 	/**
 	 * Same as {@link hasBehavior}
+	 * 
 	 * @param string	$name
 	 * @return boolean
 	 */
@@ -132,6 +133,7 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable
 	
 	/**
 	 * Removes a behavior from this model by $behaviorName
+	 * 
 	 * @param string $behaviorName
 	 * @return boolean
 	 */
@@ -145,7 +147,15 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable
 		return true;
 	}
 	
-	public function call($methodName, Array $args = array()) 
+	/**
+	 * Trigger a method call on all behaviors if available passing $args as
+	 * arguments.
+	 * 
+	 * @param string $methodName
+	 * @param array(string) $args
+	 * @return mixed
+	 */
+	public function trigger($methodName, Array $args = array()) 
 	{
 		foreach($this->behaviors as $behavior) {
 			if (!method_exists($behavior, $methodName)) continue;
@@ -163,7 +173,7 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable
 		if (method_exists($this, $methodName)) {
 			return $this->callMethod($methodName, $args);
 		}
-		return $this->call($methodName, $args);
+		return $this->trigger($methodName, $args);
 	}
 	
 	/**

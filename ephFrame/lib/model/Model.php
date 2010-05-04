@@ -276,7 +276,7 @@ class Model extends Object
 		
 		// initialize model behaviors
 		$this->behaviors = new ModelBehaviorHandler($this, $this->behaviors);
-		$this->behaviors->call('afterConstruct');
+		$this->behaviors->afterConstruct($this);
 		// load inital data from array data or primary id
 		if (is_array($id)) {
 			$this->fromArray($id, is_array($fieldNames) ? $fieldNames : array());
@@ -670,7 +670,7 @@ class Model extends Object
 			$this->update();
 		}
 		$this->afterSave();
-		$this->behaviors->call('afterSave');;
+		$this->behaviors->afterSave($this, $validate);
 		return $this;
 	}
 	
@@ -764,7 +764,7 @@ class Model extends Object
 	 */
 	protected function insert()
 	{
-		if (!($this->beforeInsert() && $r = $this->behaviors->call('beforeInsert'))) {
+		if (!($this->beforeInsert() && $r = $this->behaviors->beforeInsert($this))) {
 			return false;
 		}
 		$quotedData = array();
@@ -785,7 +785,7 @@ class Model extends Object
 		$db->query($q, $this->cacheQueries);
 		$this->set($this->primaryKeyName, $db->lastInsertId());
 		$this->afterInsert();
-		$this->behaviors->call('afterInsert');
+		$this->behaviors->afterInsert($this);
 		return true;
 	}
 	
@@ -806,7 +806,7 @@ class Model extends Object
 	 */
 	protected function update()
 	{
-		if (!($this->beforeUpdate() && $this->behaviors->call('beforeUpdate'))) return false;
+		if (!($this->beforeUpdate() && $this->behaviors->beforeUpdate($this))) return false;
 		$quotedData = array();
 		foreach($this->structure as $key => $value) {
 			if (!isset($this->data[$key])) continue;
@@ -815,7 +815,7 @@ class Model extends Object
 		$q = new UpdateQuery($this->tablename, $quotedData, array($this->primaryKeyName => DBQuery::quote($this->data[$this->primaryKeyName], $this->structure[$this->primaryKeyName]->quoting)));
 		$this->query($q);
 		$this->afterUpdate();
-		$this->behaviors->call('afterUpdate');
+		$this->behaviors->afterUpdate();
 		return true;
 	}
 	
@@ -868,7 +868,7 @@ class Model extends Object
 		} else {
 			$id = (int) $id;
 		}
-		if (!$this->beforeDelete($id) || !$this->behaviors->call('beforeDelete', array($id))) return false;
+		if (!$this->beforeDelete($id) || !$this->behaviors->beforeDelete($this, $id)) return false;
 		$db = DBConnectionManager::getInstance()->get($this->useDBConfig);
 		$db->query(new DeleteQuery($this->tablename, array($this->primaryKeyName => $id)), $this->cacheQueries);
 		$this->afterDelete();
@@ -891,17 +891,6 @@ class Model extends Object
 			$this->query($deleteQuery);
 		}
 		return $this;
-	}
-	
-	/**
-	 * Callback called before {@link delete} starts deleting, this should
-	 * return false to stop the deleting process.
-	 * @param integer $id
-	 * @return true
-	 */
-	protected function beforeDelete($id)
-	{
-		return true;
 	}
 	
 	/**

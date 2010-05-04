@@ -18,7 +18,7 @@
 class_exists('ModelBehavior') or require dirname(__FILE__).'/ModelBehavior.php';
 
 /**
- * Behavior
+ * Versionable Behavior
  * 
  * @package ephFrame
  * @subpackage ephFrame.lib.model.behavior
