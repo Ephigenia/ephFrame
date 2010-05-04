@@ -84,14 +84,18 @@ class Text extends Helper
 		return $text;
 	}
 	/**
-	 * Replace urls in a string with html links
+	 * Replace URLs with HTML-Tags
+	 * 
+	 * Replaces all found urls (http/https/ftp/nntp) with an html link tag. You
+	 * can pass additional attributes of the tag with $attributes.
+	 * 
 	 * @param string $text
-	 * @param array(string) $attributes
+	 * @param array(string) $attributes key=value pairs for attributes
 	 * @return string
 	 */
 	public static function autoURLs($text, $attributes = '')
 	{
-		$text = preg_replace('@(?<!href="|">)((?:http|https|ftp|nntp)://[^ <]+)@i', '<a href="\1" rel="external" '.$attributes.'>\1</a>', $text);
+		$text = preg_replace('@(?<!href="|">|src=")((?:http|https|ftp|nntp)://[^ <]+)@i', '<a href="\1" rel="external" '.$attributes.'>\1</a>', $text);
 		return $text;
 	}
 	
