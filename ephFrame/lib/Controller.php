@@ -389,15 +389,14 @@ abstract class Controller extends Object implements Renderable
 	 * only be available on some certain actions.
 	 * <code>
 	 * class TestController extends AppController {
-	 * 	public function testI28n() 
-	{
+	 * 	public function testI28n() {
 	 * 		$this->addComponent('I28n');
 	 * 	}
 	 * }
 	 * </code>
 	 * 
 	 * @param string $componentName
-	 * @param boolean $startUp Fires the startup signal to the component
+	 * @param boolean $startUp Also fire the startup signal to the component
 	 * @return boolean
 	 */
 	public function addComponent($componentName, $startUp = true) 

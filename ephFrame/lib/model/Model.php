@@ -656,7 +656,7 @@ class Model extends Object
 	 */
 	public function save($validate = true) 
 	{
-		if (!($this->beforeSave($this) && $this->behaviors->call('beforeSave', array($this)))) {
+		if (!($this->beforeSave($this) && $this->behaviors->beforeSave($this))) {
 			return false;
 		}
 		// validate model data first
@@ -872,7 +872,7 @@ class Model extends Object
 		$db = DBConnectionManager::getInstance()->get($this->useDBConfig);
 		$db->query(new DeleteQuery($this->tablename, array($this->primaryKeyName => $id)), $this->cacheQueries);
 		$this->afterDelete();
-		$this->behaviors->call('afterDelete');
+		$this->behaviors->afterDelete($this);
 		$this->reset();
 		return true;
 	}
