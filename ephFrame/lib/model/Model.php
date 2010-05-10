@@ -278,7 +278,7 @@ class Model extends Object
 		// load inital data from array data or primary id
 		if (is_array($id)) {
 			$this->fromArray($id, is_array($fieldNames) ? $fieldNames : array());
-		} elseif (is_int($id) && !$this->fromId($id)) {
+		} elseif ((is_int($id) || is_string($id)) && !$this->fromId($id)) {
 			return false;
 		}
 		return $this;
@@ -578,7 +578,7 @@ class Model extends Object
 		if (!$model = $this->findBy($this->primaryKeyName, $id)) {
 			return false;
 		}
-		$this->set($this->primaryKeyName, (int) $id);
+		$this->set($this->primaryKeyName, $id);
 		$this->data = $model->toArray();
 		foreach($this->belongsTo + $this->hasOne as $modelName => $config) {
 			$this->$modelName = $model->$modelName;

@@ -607,7 +607,8 @@ class Form extends HTMLTag
 			if ($field = $this->fieldset->childWithAttribute('name', $fieldName)) {
 				$id = $field->value();
 				if (!empty($id)) {
-					$model->$modelName = new $config['class']((int)$id);
+					if (preg_match('/\d+/', $id)) $id = (int) $id;
+					$model->$modelName = new $config['class']($id);
 				} else {
 					$model->$modelName = null;	
 				}

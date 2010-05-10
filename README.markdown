@@ -20,7 +20,7 @@ Features:
 * Different Behaviors
 	* Flagable (Flag-Columns)
 	* HitCount (Increasing Columns)
-	* NestedSet
+	* NestedSet (Trees)
 	* Positionable (Sorting)
 	* Sluggable (URIs)
 	* Timestampable (Update, Created-Auto-Columns)
