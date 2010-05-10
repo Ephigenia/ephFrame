@@ -61,7 +61,7 @@ class ModelStructureCache extends Object
 				$this->structure[$fieldName] = new ModelFieldInfo();
 				$this->structure[$fieldName]->fromJson($fieldInfoArr);
 			}
-			Log::write(Log::VERBOSE, $this->model->name.' structure loaded from model structure cache.');
+			Log::write(Log::VERBOSE, get_class($this).': '.$this->model->name.' structure loaded from model structure cache.');
 			self::$cache[$this->model->name] = $this->structure;
 			return $this->structure;
 		}

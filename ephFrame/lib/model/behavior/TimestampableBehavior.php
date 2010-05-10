@@ -39,7 +39,9 @@ class TimestampableBehavior extends ModelBehavior
 	 * @var array(string)
 	 */
 	protected $defaultConfig = array(
+		// name of table field that should be updated when inserted
 		'insert' => 'created',
+		// name of table field that should be updated on update data
 		'update' => 'updated',
 	);
 

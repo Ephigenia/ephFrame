@@ -38,7 +38,7 @@ class ErrorController extends AppController
 	public function beforeRender()
 	{
 		if (Registry::get('DEBUG') < DEBUG_DEVELOPMENT) {
-			$this->set('url', $this->request->uri);
+			$this->data->set('url', $this->request->uri);
 			$this->response->header->statusCode = 404;
 			$this->action('404');
 		}
@@ -47,39 +47,39 @@ class ErrorController extends AppController
 	
 	public function directoryNotWritable()
 	{
-		die(var_dump($this->params));
+		$this->data->set('dir', $this->params['directory']);
 	}
 	
 	public function missingController($controller)
 	{
-		$this->set('controllerName', coalesce($controller, 'unknown'));
+		$this->data->set('controllerName', coalesce($controller, 'unknown'));
 	}
 	
 	public function themeNotFound($theme)
 	{
 		$this->theme = false;
-		$this->set('theme', $theme);
+		$this->data->set('theme', $theme);
 	}
 	
 	public function missingLayoutFile($filename, $layout)
 	{
-		$this->set('layout', $layout);
-		$this->set('filename', $filename);
+		$this->data->set('layout', $layout);
+		$this->data->set('filename', $filename);
 		$this->layout = 'default';
 	}
 	
 	public function missingView($filename) 
 	{
-		$this->set('filename', $filename);
+		$this->data->set('filename', $filename);
 	}
 	
 	public function missingTable() 
 	{
-		$this->set('tablename', $this->params['tablename']);
+		$this->data->set('tablename', $this->params['tablename']);
 	}
 	
 	public function missingDB() 
 	{
-		$this->set('databaseName', $this->params['databaseName']);
+		$this->data->set('databaseName', $this->params['databaseName']);
 	}
 }

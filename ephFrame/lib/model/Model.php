@@ -267,12 +267,10 @@ class Model extends Object
 				$this->bind($modelName);
 			}
 		}
-		
-		// call afterconstruct on model and behaviors
-		$this->afterConstruct();
-		
 		// initialize model bindings
 		$this->initAssociations($id);
+		// call afterconstruct on model and behaviors
+		$this->afterConstruct();
 		
 		// initialize model behaviors
 		$this->behaviors = new ModelBehaviorHandler($this, $this->behaviors);
@@ -738,14 +736,14 @@ class Model extends Object
 	 */
 	public function beforeSave() 
 	{
-		// check if associate models defined
-		foreach($this->belongsTo + $this->hasOne as $modelName => $config) {
-			if (!isset($this->{$modelName})) {
+		// update model keys
+		foreach($this->belongsTo as $modelName => $config) {
+			if (!isset($this->{$modelName}) || !($this->{$modelName} instanceof Model)) {
 				continue;
 			}
 			$model = $this->{$modelName};
-			if ($model instanceof Model && !$model->isEmpty($this->{$modelName}->primaryKeyName)) {
-				$this->set(Inflector::delimeterSeperate($modelName.'_'.$model->primaryKeyName, '_', true), $model->get($model->primaryKeyName));
+			if (!$model->isEmpty($model->primaryKeyName)) {
+				$this->set($config['associationKey'], $model->get($model->primaryKeyName));
 			}
 		}
 		return true;

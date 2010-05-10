@@ -32,15 +32,28 @@ class VersionableBehavior extends ModelBehavior
 	 * @var array(string)
 	 */
 	protected $defaultConfig = array(
-		'fieldname' => 'revision',
+		'field' => 'revision',
 	);
 	
+	/**
+	 * Before Update Callback
+	 * @return boolean
+	 */
 	public function beforeUpdate()
 	{
-		$fieldname = $this->config[$this->model->name]['fieldname'];
+		$fieldname = $this->config[$this->model->name]['field'];
 		if ($this->model->hasField($fieldname)) {
 			$this->model->set($fieldname, $this->model->get($fieldname) + 1);
 		}
 		return parent::beforeUpdate();
+	}
+	
+	public function beforeInsert()
+	{
+		$fieldname = $this->config[$this->model->name]['field'];
+		if ($this->model->hasField($fieldname)) {
+			$this->model->set($fieldname, 1);
+		}
+		return true;
 	}
 }

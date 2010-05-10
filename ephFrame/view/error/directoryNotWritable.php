@@ -1,7 +1,7 @@
 <?php if (empty($dir)) $dir = '[noname]'; ?>
 <h1>Unwritable Directory: <q><?php echo $dir ?></q></h1>
 <p class="error">
-	Please make the directory <code><?php echo APP_CONTROLLER_DIR.$missingControllerName.'.php' ?></code>
+	Please make the directory <code><?php echo $dir ?></code>
 	writable for the application.
 </p>
 

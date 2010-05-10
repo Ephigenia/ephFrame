@@ -43,8 +43,8 @@ class PositionableBehavior extends ModelBehavior
 	 * Name of the field that stores the current position
 	 * @var integer
 	 */
-	protected $config = array(
-		// field that should be used
+	protected $defaultConfig = array(
+		// name of the field that stores the position value
 		'field' => 'position',
 	);
 	
