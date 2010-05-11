@@ -10,6 +10,7 @@ check some deprecated methods or new features.
 * Model hasOne/belongsTo was wrong when getting primary key values from associated models. Maybe you need to adjust your associations from belongsTo to hasOne now
 * Model constructor accepts strings as primary keys now
 * Positionable Behavior can be configured now
+* Multiple DropDown Fields can select multiple values at once by calling select
 
 # 2010-04-10
 

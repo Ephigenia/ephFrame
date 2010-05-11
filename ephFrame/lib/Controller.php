@@ -363,7 +363,8 @@ abstract class Controller extends Object implements Renderable
 	 * all components receive the startup signal.
 	 * @return boolean
 	 */
-	protected function initComponents() {
+	protected function initComponents()
+	{
 		logg(Log::VERBOSE_SILENT, 'ephFrame: '.get_class($this).' adds components: \''.implode(', ', $this->components).'\'');
 		// add and init every component set in in {@link components}
 		foreach ($this->components as $componentName) {

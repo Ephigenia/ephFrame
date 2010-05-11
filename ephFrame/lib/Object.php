@@ -133,7 +133,8 @@ abstract class Object
 				foreach($value as $index => $var) {
 					if (in_array($var, $this->$varname)) continue;
 					if (is_int($index)) {
-						array_unshift($this->$varname, $var);
+						$this->{$varname}[] = $var;
+						// array_unshift($this->$varname, $var);
 					} elseif (!isset($this->{$varname}[$index])) {
 						$this->{$varname}[$index] = $var;
 					} elseif (is_array($this->{$varname}[$index]) && is_array($var)) {

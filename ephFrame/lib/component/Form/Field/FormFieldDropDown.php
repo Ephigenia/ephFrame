@@ -81,7 +81,7 @@ class FormFieldDropDown extends FormField
 			if (is_array($value)) {
 				foreach($value as $key => $val) {
 					foreach($this->children as $child) {
-						if ($child->attributes->value != $val) {
+						if (!$this->attributes->multiple && $child->attributes->value != $val) {
 							$child->attributes->remove('selected');
 							continue;
 						}
@@ -90,7 +90,7 @@ class FormFieldDropDown extends FormField
 				}	
 			} else {
 				foreach($this->children as $child) {
-					if ($child->attributes->value != $value) {
+					if (!$this->attributes->multiple && $child->attributes->value != $value) {
 						$child->attributes->remove('selected');
 						continue;
 					}

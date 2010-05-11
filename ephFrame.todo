@@ -20,6 +20,7 @@ Configuration:
 Model:
 - make toModel accept filter arguments
 - include transactional model
+- automatic serialisation of array key values (or behavior?)
 
 Console:
 - Create createApp Task as console job (Shell script?)
