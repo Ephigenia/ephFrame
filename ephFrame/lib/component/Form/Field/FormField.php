@@ -204,9 +204,9 @@ abstract class FormField extends HTMLTag
 		}
 		if (empty($value) && $this->mandatory) {
 			if (function_exists('__')) {
-				$this->error = __('<q>:1</q> is not optional.', coalesce($this->attributes->label, $this->attributes->name));
+				$this->error = __('<q>:1</q> is required.', coalesce($this->attributes->label, $this->attributes->name));
 			} else {
-				$this->error = coalesce($this->attributes->label, $this->attributes->name).' is not optional.';
+				$this->error = coalesce($this->attributes->label, $this->attributes->name).' is required.';
 			}
 		} else {
 			$validator = new Validator($this->validate, $this);
@@ -225,8 +225,8 @@ abstract class FormField extends HTMLTag
 		if (!$this->attributes->get('class') || !strpos($this->attributes->get('class'), $this->attributes->name)) {
 			$this->attributes->appendTo('class', ' '.$this->attributes->name);
 		}
-		if ($this->mandatory && (!$this->attributes->get('class') || !strpos($this->attributes->get('class'), 'mandatory'))) {
-			$this->attributes->appendTo('class', ' mandatory');
+		if ($this->mandatory && (!$this->attributes->get('class') || !strpos($this->attributes->get('class'), 'required'))) {
+			$this->attributes->appendTo('class', ' required');
 		}
 		if (!$this->validate() && $this->form->submitted() && (!$this->attributes->get('class') || !strpos($this->attributes->get('class'), 'error'))) {
 			$this->attributes->appendTo('class', ' error');

@@ -275,7 +275,7 @@ abstract class Controller extends Object implements Renderable
 			$this->set('keyword', $keyword);
 			$conditions = array();
 			foreach($this->{$this->name}->structure as $fieldInfo) {
-				if (count($fields) > 0 && !in_array($fieldInfo->name, $fields)) continue;
+				if (count($fields) > 0 && !in_array($fieldInfo->name, (array) $fields)) continue;
 				$conditions[] = $this->{$this->name}->name.'.'.$fieldInfo->name.' LIKE '.$searchTermQuoted.' OR';
 			}
 			if (empty($conditions)) {
@@ -539,11 +539,11 @@ abstract class Controller extends Object implements Renderable
 	 * Variables that you’ve allready set to a value will be overwritten, you
 	 * can use {@link append} to append to variables.
 	 *
-	 * @param string $name
+	 * @param string|array(string) $name name of view variable or a complete array with varname => value as entries
 	 * @param mixed $value
 	 * @return Controller
 	 */
-	public function set($name, $value) 
+	public function set($name, $value = null) 
 	{
 		$this->data[$name] = $value;
 		return $this;

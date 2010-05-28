@@ -186,7 +186,7 @@ class JavaScript extends AppComponent implements Renderable
 			}
 			$tag = new HTMLTag('script', array(
 				'type' => 'text/javascript',
-				'src' => $filename
+				'src' => $filename,
 			));
 			$rendered .= $tag->render().LF;
 		}
@@ -217,7 +217,6 @@ class JavaScript extends AppComponent implements Renderable
 		if ($controller instanceof Controller) return true;
 		// add themed dir if theme is set in controller
 		if (!empty($this->controller->theme)) {
-			$this->addFile($this->controller->theme);
 			array_unshift($this->dirs, 'static/theme/'.$this->controller->theme.'/js/');
 		}
 		// filter files that don't exist

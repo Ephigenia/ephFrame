@@ -11,6 +11,7 @@ check some deprecated methods or new features.
 * Model constructor accepts strings as primary keys now
 * Positionable Behavior can be configured now
 * Multiple DropDown Fields can select multiple values at once by calling select
+* You can use compact to set view variables like in CakePHP
 
 # 2010-04-10
 
