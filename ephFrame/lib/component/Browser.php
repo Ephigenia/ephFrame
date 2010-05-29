@@ -99,12 +99,12 @@ class Browser extends AppComponent
 	 * Auto-detect browser on controller startup
 	 * @return Browser
 	 */
-	public function startup() 
+	public function init(Controller $controller) 
 	{
 		if (isset($_SERVER['HTTP_USER_AGENT'])) {
 			$this->fromUserAgent($_SERVER['HTTP_USER_AGENT']);
 		}
-		return $this;
+		return parent::init($controller);
 	}
 	
 	public function render() 
@@ -200,7 +200,7 @@ class Browser extends AppComponent
 class BrowserTypes 
 {
 	const BROWSER = 1;
-	const MOBILE_DEVICE = 2;
+	const MOBILE_DEVICE = 2; // old alias
 	const MOBILE = 2;
 	const TEXT_BASED = 4;
 	const VIDEO_GAME_CONSOLE = 8;
@@ -222,6 +222,6 @@ class BrowserNotFoundException extends BrowserException
 {
 	public function __construct($id) 
 	{
-		parent::__construct('No Browser found with the given id');	
+		parent::__construct('No Browser found with the given id.');	
 	}
 }

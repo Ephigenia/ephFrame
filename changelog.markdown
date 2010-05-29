@@ -5,6 +5,11 @@ This file should record some kind of change history of the ephFrame Framework
 Please check this file for hints after you updated the framework via svn to 
 check some deprecated methods or new features.
 
+# 2010-05-28
+
+* mandatory fields do not get the 'mandatory' class anymore, they get 'required' class instead
+* theme js and css files not included automatically
+
 # 2010-05-10
 
 * Model hasOne/belongsTo was wrong when getting primary key values from associated models. Maybe you need to adjust your associations from belongsTo to hasOne now

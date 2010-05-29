@@ -166,10 +166,11 @@ class Validator extends Helper
 	 
 	/**
 	 * Regular Expression for Email Validation
-	 * note that this regexp gets almost all wrong email addies, except those
-	 * with double dots or dots at the end or start of the local part.
+	 * picked from {@link http://fightingforalostcause.net/misc/2006/compare-email-regex.php}
+	 * @author James Watts
+	 * @author Francisco Jose Martin Moreno
 	 */
-	const EMAIL = '/^[a-z0-9!#$%&\'*+\/=?^_`{|}~.-]{1,64}@([a-zA-Z0-9][-a-zA-Z0-9]*[a-zA-Z0-9]\.)+([a-zA-Z0-9]{2,5})$/i';
+	const EMAIL = '/^([\w\!\#$\%\&\'\*\+\-\/\=\?\^\`{\|\}\~]+\.)*[\w\!\#$\%\&\'\*\+\-\/\=\?\^\`{\|\}\~]+@((((([a-z0-9]{1}[a-z0-9\-]{0,62}[a-z0-9]{1})|[a-z])\.)+[a-z]{2,6})|(\d{1,3}\.){3}\d{1,3}(\:\d{1,5})?)$/i';
 	
 	/**
 	 * Validates a email addy using regular expression
