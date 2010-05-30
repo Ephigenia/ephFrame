@@ -91,11 +91,13 @@ abstract class View extends Hash implements Renderable
 		return parent::__construct();
 	}
 	
-	protected function templateFileBasename() {
+	protected function templateFileBasename()
+	{
 		return lcfirst($this->path).DS.preg_replace('@\.php$@', '', lcfirst($this->name)).'.'.$this->extension;
 	}
 	
-	protected function templateSearchPaths() {
+	protected function templateSearchPaths()
+	{
 		if ($this->theme) {
 			$searchPaths[] = VIEW_THEME_DIR.$this->theme.DS;
 		}
@@ -104,7 +106,8 @@ abstract class View extends Hash implements Renderable
 		return $searchPaths;
 	}
 	
-	protected function templateFilename() {
+	protected function templateFilename()
+	{
 		if ($this->theme && !is_readable(VIEW_THEME_DIR.$this->theme)) {
 			throw new ThemeNotFoundException($this, $this->theme);
 		}

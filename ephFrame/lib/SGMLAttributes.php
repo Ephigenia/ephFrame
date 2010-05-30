@@ -140,7 +140,7 @@ class SGMLAttributes extends Hash
 		$rendered = preg_replace('@&(?!(amp;|#\d{2,}))@i', '&amp;', $rendered);
 		$rendered = strtr($rendered, array('>' => '&gt;', '<' => '&lt;'));
 		$rendered = strtr($rendered, array('"' => '&quot;'));
-		$rendered = String::stripBrakes($rendered);
+		$rendered = trim(String::stripBrakes($rendered));
 		return $rendered;
 	}
 	

@@ -60,7 +60,7 @@ class PHPINI
 				self::set($k, $v);
 			}
 		} else {
-			return ini_set($name, $value);
+			return @ini_set($name, $value);
 		}
 	}	
 }

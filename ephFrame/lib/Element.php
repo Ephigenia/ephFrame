@@ -42,7 +42,7 @@ class_exists('View') or require dirname(__FILE__).'/View.php';
  * @subpackage ephFrame.lib
  */
 class Element extends View
-{	
+{
 	public function __construct($name, Array $data = array())
 	{	
 		return parent::__construct('element', $name, $data);

@@ -691,6 +691,7 @@ abstract class Controller extends Object implements Renderable
 	 */
 	public function beforeRender() 
 	{
+		$this->data->set('theme', $this->theme);
 		return true;
 	}
 	
@@ -729,26 +730,6 @@ abstract class Controller extends Object implements Renderable
 	 */
 	public function afterRender($content) 
 	{
-		// if we're in debugging mode we add the sql history dump to the view
-		// content (this can be overwritten in the AppController.
-		if (Registry::get('DEBUG') >= DEBUG_VERBOSE && $this->viewClassName == 'HTMLView') {
-			$compileTime = ephFrame::compileTime(6);
-			$debugOutput = 'Compile Time: '.$compileTime.'s ';
-			if (class_exists('QueryHistory')) {
-				$queryTime = QueryHistory::getInstance()->timeTotal(3);
-				$queryCompilePercent = round($queryTime / $compileTime * 100);
-				$debugOutput .= '('.$queryTime.'s/'.$queryCompilePercent.'% querytime, '.QueryHistory::getInstance()->count().' queries)';
-			}
-			$debugOutput .= LF.'Memory Usage: '.ephFrame::memoryUsage(true).' ('.ephFrame::memoryUsage().' Bytes)'.LF.LF;
-			if (class_exists('QueryHistory')) {
-				$debugOutput .= '<div class="queryHistory">'.QueryHistory::getInstance()->render().'</div>';
-			}
-			if ($this->viewClassName == 'HTMLView') {
-				$content .= '<pre class="debugOutput">'.nl2br($debugOutput).'</pre>';	
-			} else {
-				$content .= $debugOutput;
-			}
-		}
 		return $content;
 	}
 	

@@ -87,7 +87,6 @@ abstract class FormField extends HTMLTag
 		if (empty($this->label) && $this->label !== false) {
 			$this->label = ucwords(preg_replace('/_+/', ' ', $name)).':';
 		}
-		$this->label = new HTMLTag('label', array('for' => $name), $this->label);
 		parent::__construct($this->tagName, $attributes);
 		$this->value($value);
 		$this->afterConstruct();
@@ -127,7 +126,7 @@ abstract class FormField extends HTMLTag
 	
 	public function label($label) 
 	{
-		$this->label->tagValue = $label;
+		$this->label = $label;
 		return $this;
 	}
 	
@@ -240,8 +239,9 @@ abstract class FormField extends HTMLTag
 	public function render() 
 	{
 		$rendered = '';
-		if (!empty($this->label->tagValue) && strtolower($this->type) !== 'hidden') {
-			$rendered .= $this->label->render();
+		if (!empty($this->label) && $this->type != 'hidden') {
+			$labelTag = new HTMLTag('label', array('for' => $this->attributes->name), $this->label);
+			$rendered .= $labelTag->render();
 		}
 		if ($this->type == 'checkbox') {
 			$rendered = parent::render().$rendered;

@@ -130,7 +130,7 @@ class Form extends HTMLTag
 		return $this;
 	}
 	
-	public function beforeRender() 
+	public function renderOpenTag()
 	{
 		// add multipart form data if file field in the form
 		if (!($this->attributes->hasKey('enctype'))) {
@@ -142,7 +142,12 @@ class Form extends HTMLTag
 				}
 			}
 		}
-		// add error and success messages at the top of the form
+		return parent::renderOpenTag();
+	}
+	
+	public function beforeRender() 
+	{
+		// auto add error and success messages
 		if ($this->submitted()) {
 			// error messages
 			if (!$this->validate() && !isset($this->errorsDone)) {

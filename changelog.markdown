@@ -9,6 +9,7 @@ check some deprecated methods or new features.
 
 * mandatory fields do not get the 'mandatory' class anymore, they get 'required' class instead
 * theme js and css files not included automatically
+* Completely moved the debug output to an element that is included in the application’s layout
 
 # 2010-05-10
 
