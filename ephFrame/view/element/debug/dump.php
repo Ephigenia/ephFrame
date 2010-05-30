@@ -4,7 +4,6 @@
  */
 if (Registry::get('DEBUG') < DEBUG_VERBOSE && get_class($this) !== 'HTMLView') continue;
 
-$compileTime = ephFrame::compileTime(4);
 if (class_exists('QueryHistory')) {
 	$queriesTotal = QueryHistory::getInstance()->count();
 	$queriesTime = QueryHistory::getInstance()->timeTotal(3);
@@ -19,7 +18,7 @@ if (class_exists('QueryHistory')) {
 	<dl>
 		<dt>Compile Time<dt>
 		<dd>
-			<?php echo $compileTime ?>s
+			<?php echo ephFrame::compileTime(4) ?>s
 		</dd>
 		<dt>Memory Usage</dt>
 		<dd>

@@ -119,14 +119,16 @@ abstract class View extends Hash implements Renderable
 					throw new ViewFileNotReadableException($this, $templateFilename);
 				}
 				return $templateFilename;
+			} else {
+				$notFound[] = $templateFilename;
 			}
 		}
 		if (preg_match('@/element/@', $templateFilename)) {
-			throw new ElementFileNotFoundException($this, $templateFilename);;
+			throw new ElementFileNotFoundException($this, $notFound[0]);
 		} elseif (preg_match('@/layout/@', $templateFilename)) {
-			throw new LayoutFileNotFoundException($this, $templateFilename);;
+			throw new LayoutFileNotFoundException($this, $notFound[0]);
 		} else {
-			throw new ViewFileNotFoundException($this, $templateFilename);;
+			throw new ViewFileNotFoundException($this, $notFound[0]);;
 		}
 	}
 	

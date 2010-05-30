@@ -6,7 +6,12 @@
 		<?php
 		if (isset($MetaTags)) echo String::indent($MetaTags->render(), 2, TAB, 1);
 		if (isset($CSS)) {
-			$CSS->addFiles('reset', 'app', 'form');
+			$CSS->addFiles(array(
+				'reset',
+				'app', 
+				'form',
+				'debug',
+			);
 			echo String::indent($CSS->render(), 2, TAB, 1);
 		}
         ?>
@@ -25,7 +30,7 @@
 				© 2008+ <a href="http://www.ephigenia.de/" title="Marcel Eichner // Ephigenia" rel="external">Marcel Eichner // Ephigenia</a>,
 				licensed under <a href="http://www.opensource.org/licenses/mit-license.php" rel="external" title="MIT License">MIT License</a>
 			</div>
-			<?php echo  $this->element('debug/dump'); ?>
+			<?php echo $this->element('debug/dump'); ?>
 		</div>
 		<?php if (isset($JavaScript)) echo String::indent($JavaScript->render(), 2, TAB, 1).LF; ?>
 	</body>
