@@ -38,6 +38,20 @@ class I18n extends AppComponent
 	public static $locale = 'de_DE';
 	
 	/**
+	 * Language part of the {@link locale} string, contains lowercase language
+	 * code
+	 * @var string
+	 */
+	public static $language = 'de';
+	
+	/**
+	 * country part of the {@link locale} string, contains lowercase country
+	 * code
+	 * @var string
+	 */
+	public static $country = 'de';
+	
+	/**
 	 * Location of locale files
 	 * @var string
 	 */
@@ -70,7 +84,7 @@ class I18n extends AppComponent
 		} elseif ($defaultLanguage = Registry::read('I18n.language')) {
 			$this->locale($defaultLanguage);
 		}
-		$this->domainLocation = APP_ROOT.'/locale/';
+		$this->domainLocation = APP_ROOT.$this->domainLocation;
 		$this->controller->data->set(get_class($this), $this);
 		self::locale(self::$locale);
 		$this->domain($this->domainLocation, $this->domainName, $this->domainEncoding);
@@ -95,6 +109,9 @@ class I18n extends AppComponent
 	{
 		if (func_num_args() == 0) return self::$locale;
 		self::$locale = self::normalizeLocale($locale);
+		// set country and language 
+		self::$language = substr(self::$locale,0,2);
+		self::$country = strtolower(substr(self::$locale,3,2));
 		foreach((array) $types as $type) {
 			putenv('LC_ALL='.self::$locale);
 			setlocale($type, self::$locale);

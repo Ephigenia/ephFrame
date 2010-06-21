@@ -728,7 +728,7 @@ abstract class Controller extends Object implements Renderable
 	 * @param string $content
 	 * @return string
 	 */
-	public function afterRender($content) 
+	public function afterRender($content)
 	{
 		return $content;
 	}

@@ -85,7 +85,7 @@ abstract class FormField extends HTMLTag
 		$attributes['name'] = &$name;
 		$attributes['id'] = &$name;
 		if (empty($this->label) && $this->label !== false) {
-			$this->label = ucwords(preg_replace('/_+/', ' ', $name)).':';
+			$this->label = ucwords(preg_replace('/_+/', ' ', $name));
 		}
 		parent::__construct($this->tagName, $attributes);
 		$this->value($value);
@@ -203,7 +203,7 @@ abstract class FormField extends HTMLTag
 		}
 		if (empty($value) && $this->mandatory) {
 			if (function_exists('__')) {
-				$this->error = __('<q>:1</q> is required.', coalesce($this->attributes->label, $this->attributes->name));
+				$this->error = __('Formfield <q>:1</q> is required.', coalesce($this->attributes->label, $this->attributes->name));
 			} else {
 				$this->error = coalesce($this->attributes->label, $this->attributes->name).' is required.';
 			}

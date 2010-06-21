@@ -143,7 +143,7 @@ class Model extends Object
 	 * is used
 	 * @var integer
 	 */
-	public $perPage = null;
+	public $perPage = 25;
 	
 	/**
 	 * Default Order Command for every select query

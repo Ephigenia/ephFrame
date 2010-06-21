@@ -153,7 +153,7 @@ class Session extends Hash
 	 */
 	public function beforeRender() 
 	{
-		// $this->Cookie->set($this->name(), $this->id(), $this->ttl);
+		$this->controller->set('Session', $this);
 		return parent::beforeRender();
 	}
 	

@@ -14,7 +14,7 @@ if (!class_exists('QueryHistory')) return false;
 				<th>Query</th>
 			</tr>
 		</thead>
-		<tbody>
+		<tbody style="overflow-y: scroll; height: 300px;">
 			<?php foreach(QueryHistory::getInstance()->data as $i => $Query) { ?>
 			<tr class="pre">
 				<td><?php echo $i+1; ?></td>
