@@ -34,7 +34,7 @@ class HTMLTag extends SGMLTag
 	 * Switch this to off to generate HTML Valid tags, important for tags
 	 * with no content
 	 */
-	public $XHTML = true;
+	public static $XHTML = true;
 
 	public function renderOpenTag() 
 	{
