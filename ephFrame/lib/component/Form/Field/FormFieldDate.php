@@ -30,7 +30,7 @@ class FormFieldDate extends FormFieldText
 	 * settings. Check {@link I18n} for more information.
 	 * @var string
 	 */
-	public $format = '%x';
+	public $format = '%m/%d/%Y';
 	
 	public function afterConstruct() 
 	{

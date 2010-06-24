@@ -29,5 +29,5 @@ class FormFieldDateTime extends FormFieldDate
 	 * Override parents date/time format with hours and seconds on it
 	 * @var string
 	 */
-	public $format = '%x %H:%M';
+	public $format = '%m/%d/%Y %H:%M';
 }
