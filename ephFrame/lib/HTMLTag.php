@@ -29,6 +29,12 @@ class_exists('SGMLTag') or require dirname(__FILE__).'/SGMLTag.php';
 class HTMLTag extends SGMLTag 
 {	
 	public $noShortTags = array('script', 'textarea', 'a');
+	
+	/**
+	 * Switch this to off to generate HTML Valid tags, important for tags
+	 * with no content
+	 */
+	public $XHTML = true;
 
 	public function renderOpenTag() 
 	{
@@ -36,7 +42,7 @@ class HTMLTag extends SGMLTag
 		$rendered = $this->tagIndent().self::OPEN.$this->tagName;
 		if (count($this->attributes) > 0) $rendered .= ' '.$this->attributes->render();
 		if (empty($this->tagValue) && !$this->hasChildren() && strcasecmp($this->tagName, 'script') !== 0
-			&& !in_array($this->tagName, $this->noShortTags)) $rendered .= ' /';
+			&& !in_array($this->tagName, $this->noShortTags) && HTMLTag::$XHTML) $rendered .= ' /';
 		$rendered .= self::CLOSE;
 		return $rendered;
 	}
