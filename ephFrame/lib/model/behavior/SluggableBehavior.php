@@ -58,7 +58,7 @@ class SluggableBehavior extends ModelBehavior
 		// name of model fields that are used to search for slug collisions
 		'uniqueFields' => array(),
 		// update slug on every save
-		// true = create slug on every save
+		// true = create slug on every save when slug is empty
 		// false = do not create slug on every save, slug only created when empty
 		'autoUpdate' => false,
 		
