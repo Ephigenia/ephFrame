@@ -192,14 +192,14 @@ class PositionableBehavior extends ModelBehavior
 			case self::MOVE_DIRECTION_UP:
 				if ($tmpImage = $this->previous($additionalConditions, false)) {
 					$tmpPosition = $tmpImage->get($fieldname);
-					$tmpImage->saveField($this->positionFieldName, $this->model->get($fieldname));
+					$tmpImage->saveField($fieldname, $this->model->get($fieldname));
 					$this->model->saveField($fieldname, $tmpPosition);
 				}
 				break;
 			case self::MOVE_DIRECTION_DOWN:
 				if ($tmpImage = $this->next($additionalConditions, false)) {
 					$tmpPosition = $tmpImage->get($fieldname);
-					$tmpImage->saveField($this->positionFieldName, $this->model->get($fieldname));
+					$tmpImage->saveField($fieldname, $this->model->get($fieldname));
 					$this->model->saveField($fieldname, $tmpPosition);
 				}
 				break;
