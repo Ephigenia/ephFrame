@@ -32,8 +32,6 @@ class MetaTags extends Hash implements Renderable
 		'keywords' => array(''),
 		'description' => '',
 		'robots' => array('index', 'follow'),
-		'imagetoolbar' => 'no',
-		'MSSmartTagsPreventParsing' => true,
 		'content-type' => 'text/html; charset=utf-8'
 	);
 	
