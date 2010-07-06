@@ -15,7 +15,7 @@
  * @filesource
  */
 
-class_exists('FormFieldText') or require(dirname(__FILE__).'/FormFieldText.php');
+class_exists('FormFieldText') or require(dirname(__FILE__).'/FormFieldNumber.php');
 
 /**
  * Form Field for float values
@@ -25,7 +25,7 @@ class_exists('FormFieldText') or require(dirname(__FILE__).'/FormFieldText.php')
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 2010-03-25
  */
-class FormFieldFloat extends FormFieldText 
+class FormFieldFloat extends FormFieldNumber 
 {
 	/**
 	 * Default validation rules for emails, should be emails

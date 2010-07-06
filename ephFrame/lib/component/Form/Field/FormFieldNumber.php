@@ -18,15 +18,16 @@
 class_exists('FormFieldText') or require(dirname(__FILE__).'/FormFieldText.php');
 
 /**
- * Email Form Field Text
+ * Form Field for integer like values
+ * 
  * @package ephFrame
  * @subpackage ephFrame.lib.component.Form.Field
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
- * @since 04.11.2008
+ * @since 2010-07-06
  */
-class FormFieldEmail extends FormFieldText 
+class FormFieldNumber extends FormFieldText
 {
-	public $type = 'email';
+	public $type = 'number';
 	
 	/**
 	 * Default validation rules for emails, should be emails
@@ -34,8 +35,8 @@ class FormFieldEmail extends FormFieldText
 	 */
 	public $validate = array(
 		'valid' => array(
-			'regexp' => Validator::EMAIL,
-			'message' => 'The email adress you\'ve entered seemes to be invalid. Please enter a valid email adress.'
+			'regexp' => Validator::INTEGER,
+			'message' => 'The value you’ve entered seemes not to be a valid float value.',
 		)
-	);	
+	);
 }
