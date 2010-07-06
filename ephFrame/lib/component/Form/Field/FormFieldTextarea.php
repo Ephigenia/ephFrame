@@ -42,7 +42,6 @@ class FormFieldTextarea extends FormField
 	{
 		parent::__construct($name, null, $attributes);
 		unset($this->attributes['type']);
-		$this->tagValue = $value;
 		$this->tagName = $this->type;
 		return $this;
 	}
