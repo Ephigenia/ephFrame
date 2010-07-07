@@ -232,10 +232,10 @@ abstract class SGMLTag extends Tree implements Traversable
 	 * @param boolean $escaped
 	 * @return string
 	 */
-	public function renderValue($escaped) 
+	public function renderValue($escaped = false) 
 	{
 		if ($escaped) {
-			return htmlentities($this->tagValue);
+			return htmlentities($this->tagValue, ENT_QUOTES, 'UTF-8');
 		} else {
 			return $this->tagValue;
 		}

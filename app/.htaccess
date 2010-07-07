@@ -1,10 +1,8 @@
 # this .htaccess file will silently redirect users to the html folder
 # where additional rewrite actions happen
 # ----------------------------------------------------------------------------
-<IfModule mod_rewrite.c>
-	RewriteEngine On
-	# Sometimes RewriteBase is needed to set correct document root to /
-	# RewriteBase /
-	RewriteRule ^$		html/	[L]
-	RewriteRule (.*)	html/$1	[L]
-</IfModule>
+RewriteEngine On
+# Sometimes RewriteBase is needed to set correct document root to /
+# RewriteBase /
+RewriteRule ^$		html/	[L]
+RewriteRule (.*)	html/$1	[L]

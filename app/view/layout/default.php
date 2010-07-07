@@ -2,16 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 	<head>
 		<title><?php echo @$pageTitle ?></title>
-		<!--[if IE 8]><meta http-equiv="X-UA-Compatible" content="IE=7" /><![endif]-->
 		<?php
 		if (isset($MetaTags)) echo String::indent($MetaTags->render(), 2, TAB, 1);
 		if (isset($CSS)) {
 			$CSS->addFiles(array(
 				'reset',
 				'app', 
-				'form',
 				'debug',
-			);
+			));
 			echo String::indent($CSS->render(), 2, TAB, 1);
 		}
         ?>
@@ -27,7 +25,8 @@
 				<?php echo @$content ?>
 			</div>
 			<div id="footer">
-				© 2008+ <a href="http://www.ephigenia.de/" title="Marcel Eichner // Ephigenia" rel="external">Marcel Eichner // Ephigenia</a>,
+				© 2008+ <a href="http://code.marceleichner.de/projects/ephFrame/" rel="external" title="ephFrame">ephFrame <?php echo ephFrame::VERSION ?></a>
+				by <a href="http://www.ephigenia.de/" title="Ephigenia M. Eichner" rel="external">Ephigenia M. Eichner</a>,
 				licensed under <a href="http://www.opensource.org/licenses/mit-license.php" rel="external" title="MIT License">MIT License</a>
 			</div>
 			<?php echo $this->element('debug/dump'); ?>

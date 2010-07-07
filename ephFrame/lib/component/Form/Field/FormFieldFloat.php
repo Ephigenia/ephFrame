@@ -15,7 +15,7 @@
  * @filesource
  */
 
-class_exists('FormFieldText') or require(dirname(__FILE__).'/FormFieldNumber.php');
+class_exists('FormFieldNumber') or require(dirname(__FILE__).'/FormFieldNumber.php');
 
 /**
  * Form Field for float values

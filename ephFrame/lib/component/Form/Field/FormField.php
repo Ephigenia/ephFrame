@@ -233,7 +233,11 @@ abstract class FormField extends HTMLTag
 		if ($value = $this->value()) {
 			$this->value($value);
 		}
-		$this->tagValue = htmlentities($this->tagValue);
+		$this->tagValue = strtr($this->tagValue, array(
+			'&' => '&amp;',
+			'>' => '&gt;',
+			'<' => '&lt;',
+		));
 		return parent::beforeRender();
 	}
 	
