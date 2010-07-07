@@ -42,14 +42,6 @@ class AppController extends Controller
 		'JavaScript',
 		'MetaTags',
 	);
-	
-	public function beforeRender() 
-	{
-		if (Registry::get('DEBUG') > DEBUG_PRODUCTION) {
-			$this->CSS->addFile('debug');
-		}
-		return parent::beforeRender();
-	}
 }
 
 /**
