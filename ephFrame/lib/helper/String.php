@@ -315,7 +315,7 @@ class String extends Helper
 	{
 		$template = (string) $template;
 		// if empty template or no marks found
-		if (empty($template) || !preg_match_all('/:([a-z0-9\.\-_]+)?/i', $template, $found)) {
+		if (empty($template) || !preg_match_all('/:([a-z0-9\-_]+)?/i', $template, $found)) {
 			return $template;
 		}
 		// multiple arguments caled

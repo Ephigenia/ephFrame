@@ -70,6 +70,13 @@ class Model extends Object
 	public $name;
 	
 	/**
+	 * Name of the field of the model that should be used when the model
+	 * is casted a string
+	 * @var string
+	 */
+	public $displayField = false;
+	
+	/**
 	 * Table that this models uses, usually automaticly generated from the
 	 * Models name, set this to false if the model does not use any table
 	 * @var string
@@ -487,7 +494,9 @@ class Model extends Object
 	public function detailPageUri(Array $params = array()) 
 	{
 		if (!$this->exists()) return false;
-		if (!$uri = Router::getRoute($this->name.'Id', array_merge($params, array('id' => $this->id)))) {
+		$params = array_merge($params, array('id' => $this->id));
+		$params = array_merge(array('controller' => $this->name, 'action' => 'view'), $params);
+		if (!$uri = Router::getRoute('scaffold_actions', $params)) {
 			$uri = WEBROOT.lcfirst($this->name).'/'.$this->id.'/';	
 		}
 		return $uri;
@@ -615,6 +624,15 @@ class Model extends Object
 			$data[$fieldname] = $this->get($fieldname);
 		}
 		return $data;
+	}
+	
+	public function __toString()
+	{
+		if (!empty($this->displayField)) {
+			return $this->get($this->displayField);
+		} else {
+			return parent::__toString();
+		}
 	}
 	
 	/**
@@ -976,7 +994,7 @@ class Model extends Object
 	 * @param array(string) $fieldNames
 	 * @return boolean
 	 */
-	public function validate($data = array(), $fieldNames = array()) 
+	public function validate($data = array(), Array $fieldNames = array()) 
 	{
 		if (func_num_args() == 0) {
 			$data = $this->data;

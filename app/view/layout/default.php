@@ -29,7 +29,6 @@
 			by <a href="http://www.ephigenia.de/" title="Ephigenia M. Eichner" rel="external">Ephigenia M. Eichner</a>,
 			licensed under <a href="http://www.opensource.org/licenses/mit-license.php" rel="external" title="MIT License">MIT License</a>
 		</div>
-		<?php echo $this->element('debug/dump'); ?>
 	</div>
 	<?php
 	if (isset($JavaScript)) {
@@ -38,7 +37,8 @@
 			'app',
 		));
 		echo $JavaScript->render();
-	}	
+	}
+	echo $this->element('debug/dump');
 	?>
 </body>
 </html>

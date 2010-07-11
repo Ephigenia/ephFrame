@@ -149,11 +149,31 @@ class HTTPRequest extends Component
 	 */
 	public function hostname() 
 	{
-		// determine host name if possible
 		if (empty($this->hostname)) {
 			$this->hostname = gethostbyaddr($this->host);
 		}
 		return $this->hostname;
+	}
+	
+	/**
+	 * Returns the refererrer submitted by the client if found
+	 * Set $local to true to only use internal urls (external urls will be
+	 * ignored)
+	 * @param string $default default referer returned on empty referers
+	 * @param boolean $local Use only local referers
+	 * @return string
+	 */
+	public function referer($default = false, $local = true) 
+	{
+		if ($this->referer) {
+			// return refere only if in local domain
+			if (!$local) {
+				return $this->referer;
+			} elseif (preg_match('/^(http:\/\/|)'.str_replace('.', '\.', $_SERVER['HTTP_HOST']).'/', $this->referer)) {
+				return $this->referer;
+			}
+		}
+		return $default;
 	}
 	
 	private function autofill()

@@ -93,7 +93,9 @@ abstract class Controller extends Object implements Renderable
 	 * Array of components used by this controller
 	 * @var array(string)
 	 */
-	public $components = array('Session');
+	public $components = array(
+		'Session',
+	);
 	
 	/**
 	 * array of helper names used in the view when rendered
@@ -152,46 +154,53 @@ abstract class Controller extends Object implements Renderable
 	public function afterConstruct() 
 	{}
 	
-	/**
-	 * Default create action
-	 */
 	public function create() 
-	{}
-	
-	/**
-	 * @param integer $id
-	 */
-	public function delete($id = null) 
 	{
-		$id = (int) coalesce(@$this->params['id'], $id);
-		if ($id > 0 && isset($this->{$this->name})) {
-			if (!$entry = $this->{$this->name}->findById($id)) {
-				$this->name = 'error';
-				$this->action('404', array());
+		$form = $this->{$this->name.'Form'};
+		if (isset($form) && $form->ok()) {
+			$this->form->toModel($this->{$this->name});
+			if ($this->{$this->name}->save()) {
+				$this->FlashMessage->set(__('Successfully created a new :1.', $this->name), FlashMessageType::SUCCESS);
+				return $this->{$this->name};
+			} else {
+				$form->errors = $model->validationErrors();
 				return false;
 			}
-			return $entry->delete();
 		}
+		return true;
 	}
 	
-	/**
-	 * Standard edit action method
-	 * @param integer $id
-	 */
+	public function delete($id = null) 
+	{
+		if (!($model = $this->view((int) coalesce(@$this->params['id'], $id)))) {
+			return false;
+		}
+		if ($model->delete()) {
+			$this->FlashMessage->set(__('Successfully deleted :1.', $model->name), FlashMessageType::SUCCESS);
+		} else {
+			$this->FlashMessage->set(__('Error while deleting :1.', $model->name), FlashMessageType::ERROR);
+		}
+		return $this->redirect(Router::uri('scaffold', array('controller' => $this, 'action' => 'index')));
+	}
+	
 	public function edit($id = null) 
 	{
-		$id = (int) coalesce(@$this->params['id'], $id);
-		if (!empty($id) && isset($this->{$this->name})) {
-			if (!($model = $this->{$this->name}->findById($id))) {
-				return false;
-			}
-			$this->data->set($this->name, $model);
-			// if form is also attached, fill form data
-			if (isset($this->{$this->name.'Form'})) {
-				$this->{$this->name.'Form'}->fillModel($model);
-			}
-			return $model;
+		if (!($model = $this->view((int) coalesce(@$this->params['id'], $id)))) {
+			return false;
 		}
+		$form = $this->{$this->name.'Form'};
+		if ($form->ok()) {
+			if ($form->toModel($model) && $model->save()) {
+				$this->FlashMessage->set(__('Successfully saved changes.'), FlashMessageType::SUCCESS);
+				return $model;
+			} else {
+				$form->errors = $model->validationErrors();
+				$this->FlashMessage->set(__('Error while saving changes in :1.', $this->name), FlashMessageType::ERROR);
+			}
+		} else {
+			$form->fromModel($this->{$this->name});
+		}
+		return $model;
 	}
 	
 	/**
@@ -201,14 +210,11 @@ abstract class Controller extends Object implements Renderable
 	public function view($id = null) 
 	{
 		$id = (int) coalesce(@$this->params['id'], $id);
-		if (!empty($id) && isset($this->{$this->name})) {
-			if (!($this->{$this->name} = $this->{$this->name}->findById($id))) {
-				return false;
-			} else {
-				$this->data->set($this->name, $this->{$this->name});
-				return $this->{$this->name};
-			}
+		if (!($this->{$this->name} = $this->{$this->name}->findById($id))) {
+			return false;
 		}
+		$this->data->set($this->name, $this->{$this->name});
+		return $this->{$this->name};
 	}
 	
 	/**
@@ -227,7 +233,7 @@ abstract class Controller extends Object implements Renderable
 			$this->data->set(Inflector::plural($this->name), $entries);
 			if ($this->{$this->name}->perPage > 0) {
 				$pagination = $this->{$this->name}->paginate($page);
-				if (!($url = Router::getRoute($this->name.'Paged'))) {
+				if (!($url = Router::getRoute($this->{$this->name}->name.'Paged'))) {
 					$url = Router::getRoute('scaffold_paged', array('controller' => $this->name));
 				}
 				$pagination['url'] = $url;
@@ -238,26 +244,6 @@ abstract class Controller extends Object implements Renderable
 			}
 			return $entries;
 		}
-	}
-	
-	/**
-	 * Default RSS Action tries to provide a Set of entries of the associated
-	 * model from this controller in the view.
-	 * @deprecated
-	 * @return boolean
-	 */
-	public function rss() 
-	{
-		if (isset($this->{$this->name})) {
-			$entries = $this->{$this->name}->findAll(null, null, 0, 20);
-			$entries = $this->{$this->name}->findAll(null, null, null, $this->{$this->name}->perPage);
-			$this->set(Inflector::plural($this->name), $entries);
-			$this->set('RSSURL', Registry::get('WEBROOT_URL').$this->request->get('__url'));
-			$this->layout = 'rss';
-			$this->viewClassName = 'XMLView';
-			Registry::set('DEBUG', DEBUG_DEVELOPMENT);
-		}
-		return true;
 	}
 	
 	/**
@@ -293,22 +279,13 @@ abstract class Controller extends Object implements Renderable
 	}
 	
 	/**
-	 * Sets or returns the view layout name assigned to this controller
-	 * @param string $layout
-	 * @return string
-	 */
-	public function layout($layout = null) 
-	{
-		return $this->__getOrSet('layout', $layout);
-	}
-	
-	/**
 	 * Initiates all models associated by the {@link models} array to this
 	 * controller and tries to establish a database connection using the
 	 * data from /app/config/db.php
 	 * @return boolean
 	 */
-	private function initModels() {
+	private function initModels()
+	{
 		if (!in_array($this->name, $this->uses)) {
 			$this->uses[] = $this->name;
 		}
@@ -432,7 +409,7 @@ abstract class Controller extends Object implements Renderable
 	 * get the startup signal now.
 	 * @return boolean
 	 */
-	public function startUpComponents() 
+	protected function startUpComponents() 
 	{
 		foreach($this->components as $componentName) {
 			$className = ClassPath::className($componentName);
@@ -446,7 +423,7 @@ abstract class Controller extends Object implements Renderable
 	 * of the controller and returns true.
 	 * @return boolean
 	 */
-	private function initHelpers() {
+	protected function initHelpers() {
 		assert(is_array($this->helpers));
 		foreach($this->helpers as $helperName) {
 			$this->addHelper($helperName);
@@ -761,7 +738,9 @@ abstract class Controller extends Object implements Renderable
 	 */
 	public function redirect($url, $status = 'p', $exit = true) 
 	{
-		$this->beforeRedirect($url, $status, $exit);
+		if ($this->beforeRedirect($url, $status, $exit)) {
+			return false;
+		}
 		foreach($this->components as $componentName) {
 			$className = ClassPath::className($componentName);
 			$this->{$className}->beforeRedirect($url, $status, $exit);
@@ -783,30 +762,16 @@ abstract class Controller extends Object implements Renderable
 		return true;
 	}
 	
-	public function beforeRedirect($url, $status = 'p', $exit = true) 
-	{}
-	
 	/**
-	 * Returns the refererrer submitted by the client if found
-	 * Set $local to true to only use internal urls (external urls will be
-	 * ignored)
-	 * @param string $default default referer returned on empty referers
-	 * @param boolean $local Use only local referers
-	 * @return string
+	 * Callback that is called right before the {@link redirect] action
+	 * sends the redirect header.
+	 * You can implement on-redirect logic here
+	 * @return boolean
 	 */
-	public function referer($default = false, $local = true) 
+	public function beforeRedirect($url, $status = 'p', $exit = true) 
 	{
-		if ($this->request->referer) {
-			// return refere only if in local domain
-			if (!$local) {
-				return $this->request->referer;
-			} elseif (preg_match('/^(http:\/\/|)'.str_replace('.', '\.', $_SERVER['HTTP_HOST']).'/', $this->request->referer)) {
-				return $this->request->referer;
-			}
-		}
-		return $default;
+		return true;
 	}
-
 }
 
 /**
@@ -814,9 +779,7 @@ abstract class Controller extends Object implements Renderable
  * @subpackage ephFrame.lib.exception
  */
 class ControllerException extends BasicException 
-{
-	
-}
+{ }
 
 /**
  * @package ephFrame

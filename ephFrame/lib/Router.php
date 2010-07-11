@@ -97,11 +97,11 @@ class Router extends Hash
 	public function addScaffoldRoutes() 
 	{
 		// add some default scaffolding routes
-		Router::addRoute('scaffold_view', ':controller/(?P<id>\d+)/', array('action' => 'view'));
-		Router::addRoute('scaffold_actions', ':controller/(?P<id>\d+)/:action/?');
-		Router::addRoute('scaffold_paged', ':controller/page-:page/?');
-		Router::addRoute('scaffold_create', ':controller/:action/?');
-		Router::addRoute('scaffold_search', ':controller/search/:searchTerm', array('action' => 'search'));
+		Router::addRoute('scaffold_view', ':controller/(?P<id>\d+)', array('action' => 'view'));
+		Router::addRoute('scaffold_actions', ':controller/(?P<id>\d+)/:action');
+		Router::addRoute('scaffold_paged', ':controller/page-:page');
+		Router::addRoute('scaffold', ':controller/:action', array('action' => 'index'));
+		Router::addRoute('scaffold_search', ':controller/search/:q', array('action' => 'search'));
 		Router::addRoute('scaffold_controller', ':controller');
 		// only set root route if not existent allready
 		if (!Router::getInstance()->hasKey('root')) {

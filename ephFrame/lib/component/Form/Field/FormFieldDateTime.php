@@ -25,6 +25,8 @@ class_exists('FormFieldDate') or require(dirname(__FILE__).'/FormFieldDate.php')
  */
 class FormFieldDateTime extends FormFieldDate 
 {
+	// public $type = 'datetime';
+	
 	/**
 	 * Override parents date/time format with hours and seconds on it
 	 * @var string

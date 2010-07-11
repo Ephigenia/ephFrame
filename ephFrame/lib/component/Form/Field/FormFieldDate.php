@@ -25,7 +25,7 @@ class_exists('FormFieldText') or require(dirname(__FILE__).'/FormFieldText.php')
  */
 class FormFieldDate extends FormFieldText
 {
-	public $type = 'date';
+	// public $type = 'date';
 	
 	/**
 	 * Date format used by strftime function. Depends on the currently locale

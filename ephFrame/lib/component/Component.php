@@ -100,7 +100,8 @@ abstract class Component extends Object implements ephFrameComponent
 	 * 
 	 * @return true
 	 */
-	protected function initComponents() {
+	protected function initComponents()
+	{
 		// init components used by this component
 		foreach ($this->components as $componentName) {
 			$componentClassName = ClassPath::className($componentName);
@@ -114,7 +115,8 @@ abstract class Component extends Object implements ephFrameComponent
 		return true;
 	}
 	
-	protected function initHelpers() {
+	protected function initHelpers()
+	{
 		foreach($this->helpers as $HelperName) {
 			$className = ClassPath::className($HelperName);
 			if (!class_exists($className)) {
