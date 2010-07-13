@@ -158,7 +158,7 @@ abstract class Controller extends Object implements Renderable
 	{
 		$form = $this->{$this->name.'Form'};
 		if (isset($form) && $form->ok()) {
-			$this->form->toModel($this->{$this->name});
+			$form->toModel($this->{$this->name});
 			if ($this->{$this->name}->save()) {
 				$this->FlashMessage->set(__('Successfully created a new :1.', $this->name), FlashMessageType::SUCCESS);
 				return $this->{$this->name};
@@ -463,17 +463,19 @@ abstract class Controller extends Object implements Renderable
 	private function initForms()
 	{
 		// add form name of this controller if class is found
-		if (empty($this->forms) && ClassPath::exists('app.lib.component.Form.'.$this->name.'Form')) {
+		if (empty($this->forms) && $this->forms !== false && ClassPath::exists('app.lib.component.Form.'.$this->name.'Form')) {
 			$this->addForm($this->name.'Form');
 		}
-		// add all forms as objects
-		foreach($this->forms as $formName) {
-			$this->addForm($formName);
-		}
-		// startup and init all forms
-		foreach($this->forms as $formName) {
-			$this->{$formName}->startup($this);
-			$this->{$formName}->configure();
+		if (is_array($this->forms)) {
+			// add all forms as objects
+			foreach($this->forms as $formName) {
+				$this->addForm($formName);
+			}
+			// startup and init all forms
+			foreach($this->forms as $formName) {
+				$this->{$formName}->startup($this);
+				$this->{$formName}->configure();
+			}
 		}
 		return $this;
 	}
@@ -555,7 +557,7 @@ abstract class Controller extends Object implements Renderable
 				$beforeActionResult &= $this->data->get($className)->beforeAction($action);
 			}
 			// call beforeAction on every form
-			foreach($this->forms as $FormName) {
+			if (is_array($this->forms)) foreach($this->forms as $FormName) {
 				$beforeActionResult &= $this->{$FormName}->beforeAction($action);
 			}
 			if ($beforeActionResult) {
