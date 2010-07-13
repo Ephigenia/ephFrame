@@ -172,7 +172,7 @@ abstract class Controller extends Object implements Renderable
 	
 	public function delete($id = null) 
 	{
-		if (!($model = $this->view((int) coalesce(@$this->params['id'], $id)))) {
+		if (!($model = $this->{$this->name}->findById($id))) {
 			return false;
 		}
 		if ($model->delete()) {
@@ -185,9 +185,10 @@ abstract class Controller extends Object implements Renderable
 	
 	public function edit($id = null) 
 	{
-		if (!($model = $this->view((int) coalesce(@$this->params['id'], $id)))) {
+		if (!($model = $this->{$this->name}->findById($id))) {
 			return false;
 		}
+		$this->data->set($this->name, $model);
 		$form = $this->{$this->name.'Form'};
 		if ($form->ok()) {
 			if ($form->toModel($model) && $model->save()) {
@@ -198,7 +199,7 @@ abstract class Controller extends Object implements Renderable
 				$this->FlashMessage->set(__('Error while saving changes in :1.', $this->name), FlashMessageType::ERROR);
 			}
 		} else {
-			$form->fromModel($this->{$this->name});
+			$form->fromModel($model);
 		}
 		return $model;
 	}
@@ -487,7 +488,7 @@ abstract class Controller extends Object implements Renderable
 	 */
 	public function addForm($formName) 
 	{
-		if (!in_array($formName, $this->forms)) {
+		if (is_array($this->forms) && !in_array($formName, $this->forms)) {
 			$this->forms[] = $formName;
 		}
 		if (!class_exists($formName)) {
