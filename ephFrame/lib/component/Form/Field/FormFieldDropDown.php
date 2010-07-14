@@ -77,29 +77,31 @@ class FormFieldDropDown extends FormField
 	
 	public function value($value = null) 
 	{
-		if (func_num_args() == 1) {
-			if (is_array($value)) {
-				foreach($value as $key => $val) {
-					foreach($this->children as $child) {
-						if (!$this->attributes->multiple && $child->attributes->value != $val) {
-							$child->attributes->remove('selected');
-							continue;
-						}
-						$child->attributes->set('selected', 'selected');
-					}
-				}	
-			} else {
+		if (func_num_args() == 0) {
+			return parent::value();
+		} elseif (func_num_args() > 1) {
+			$value = func_get_args();
+		}
+		if (is_array($value)) {
+			foreach($value as $key => $val) {
 				foreach($this->children as $child) {
-					if (!$this->attributes->multiple && $child->attributes->value != $value) {
+					if (!$this->attributes->multiple && $child->attributes->value != $val) {
 						$child->attributes->remove('selected');
 						continue;
 					}
 					$child->attributes->set('selected', 'selected');
 				}
+			}	
+		} else {
+			foreach($this->children as $child) {
+				if (!$this->attributes->multiple && $child->attributes->value != $value) {
+					$child->attributes->remove('selected');
+					continue;
+				}
+				$child->attributes->set('selected', 'selected');
 			}
-			return $this;
 		}
-		return parent::value();
+		return $this;
 	}
 	
 	public function select($value) 

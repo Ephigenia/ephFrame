@@ -100,7 +100,7 @@ class ClassPath extends Object
 			} elseif (strncasecmp($translatedPath, 'app', 3) == 0) {
 				$translatedPath = APP_ROOT.substr($translatedPath, 4);
 			} elseif (strncasecmp($translatedPath, 'vendor', 6) == 0) {
-				$translatedPath = VENDOR_ROOT.substr($translatedPath, 7);
+				$translatedPath = APP_VENDOR_DIR.substr($translatedPath, 7);
 			} else {
 				throw new ClassPathMalFormedException($classPath);
 			}

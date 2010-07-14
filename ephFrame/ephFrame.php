@@ -41,7 +41,8 @@ final class ephFrame
 	 * This is the first object method ever called in the framework
 	 * initiates all important stuff and so on - ne wa!
 	 */
-	public static function singleton() {
+	public static function singleton()
+	{
 		if (empty(self::$instance)) {
 			self::checkRegisterGlobals();
 			require (FRAME_ROOT.'config/constants.php');
@@ -82,7 +83,8 @@ final class ephFrame
 	 * Checks for register global initate set in the php config
 	 * if this is on the app will grump you for that :D
 	 */
-	public static function checkRegisterGlobals() {
+	public static function checkRegisterGlobals()
+	{
 		if (ini_get('register_globals') === true) {
 			die ('ephFrame will not work when register globals is enabled in php.ini.');
 		}
@@ -95,7 +97,8 @@ final class ephFrame
 	 * that if the DEBUG level is set to Production, then every
 	 * error will be ignored
 	 */
-	public static function setErrorReporting() {
+	public static function setErrorReporting()
+	{
 		if (Registry::get('DEBUG') > DEBUG_PRODUCTION) {
 			if (Registry::get('DEBUG') == DEBUG_VERBOSE) {
 				Log::$level = Log::VERBOSE;
@@ -120,7 +123,8 @@ final class ephFrame
 	 * @param string $componentName
 	 * @return boolean
 	 */
-	public static function loadComponent($componentName) {
+	public static function loadComponent($componentName)
+	{
 		$className = ucFirst($componentName);
 		if (ClassPath::exists('ephFrame.lib.component.'.$className)) {
 			loadClass('ephFrame.lib.component.'.$className);
@@ -138,7 +142,8 @@ final class ephFrame
 	 * @param string $helperName
 	 * @return boolean
 	 */
-	public static function loadHelper($helperName) {
+	public static function loadHelper($helperName)
+	{
 		$className = ucFirst($helperName);
 		if (ClassPath::exists('ephFrame.lib.helper.'.$className)) {
 			loadClass('ephFrame.lib.helper.'.$className);
@@ -167,7 +172,8 @@ final class ephFrame
 	 * @param string $classPath
 	 * @return true
 	 */
-	public static function loadClass($classPath) {
+	public static function loadClass($classPath)
+	{
 		if (empty($classPath)) throw new StringExpectedException();
 		$className = ClassPath::className($classPath);
 		if (!class_exists($className)) {
@@ -183,7 +189,8 @@ final class ephFrame
 	 * @return boolean
 	 * @throws ephFrameInterfaceFileFoundButNotLoadedException
 	 */
-	public static function loadInterface($interfacePath) {
+	public static function loadInterface($interfacePath)
+	{
 		if (empty($interfacePath)) throw new StringExpectedException();
 		$interfaceName = ClassPath::className($interfacePath);
 		if (!interface_exists($interfaceName)) {
@@ -198,7 +205,8 @@ final class ephFrame
 	 * @throws ephFrameClassFileNotFoundException
 	 * @return string	loaded filename class or interface name
 	 */
-	public static function loadFrameWorkFile($path) {
+	public static function loadFrameWorkFile($path)
+	{
 		$translatedPath = ClassPath::translatePath($path);
 		if (!ClassPath::exists($path)) throw new ephFrameClassFileNotFoundException($path);
 		require $translatedPath;
@@ -210,7 +218,8 @@ final class ephFrame
 	 * @param	integer	$precision
 	 * @return float
 	 */
-	public static function compileTime($precision = 4) {
+	public static function compileTime($precision = 4)
+	{
 		return round(microtime(true) - COMPILE_START, $precision);
 	}
 	
@@ -219,7 +228,8 @@ final class ephFrame
 	 * @param boolean $humanized
 	 * @return integer
 	 */
-	public static function memoryUsage($humanized = false) {
+	public static function memoryUsage($humanized = false)
+	{
 		$usage = 0;
 		if (function_exists('memory_get_usage')) {
 			$usage = memory_get_usage();
