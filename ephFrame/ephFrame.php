@@ -105,7 +105,8 @@ final class ephFrame
 			} elseif (Registry::get('DEBUG') > DEBUG_VERBOSE) {
 				Log::$level = Log::VERBOSE_SILENT;
 			}
-			if (Registry::defined('ERROR_REPORTING')) {
+			$error_reporting = Registry::get('ERROR_REPORTING');
+			if (!is_null($error_reporting)) {
 				error_reporting(Registry::get('ERROR_REPORTING'));
 			} else {
 				error_reporting(E_ALL + E_STRICT);
