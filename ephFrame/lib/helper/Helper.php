@@ -15,6 +15,8 @@
  * @filesource
  */
 
+class_exists('Object') or require dirname(__FILE__).'/../Object.php';
+
 /**
  * Abstract Helper Class
  * 

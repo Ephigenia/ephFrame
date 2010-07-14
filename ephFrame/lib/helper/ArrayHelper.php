@@ -15,6 +15,8 @@
  * @filesource
  */
 
+class_exists('Helper') or require dirname(__FILE__).'/../Helper.php';
+
 /**
  * Array Helper for Array Manipulation
  * 
@@ -174,38 +176,39 @@ class ArrayHelper extends Helper
 	}
 	
 	/**
-	 * Extracts a value from an array defined by the given path.
-	 * Use this for arrays with more than one dimension. If the path
-	 * was not found null is returned
-	 * <code>
-	 * $arr = array('table1' => array('row' => 'I\'m a test'));
-	 * echo ArrayHelper::extract($arr, 'table1/row/');
-	 * </code>
-	 * Some malformed paths are corrected such as:
-	 * //table1/row///
-	 * /table1///
+	 * Extract values from arrays using path notation
 	 * 
-	 * You can also extract values with the normal array notation with
-	 * cornered brakets like this:
+	 * Examples:
 	 * <code>
-	 * echo ArrayHelper::extract($arr, 'table1[row]');
+	 * $arr = array(
+	 * 	'Application' => array(
+	 * 		'id' => '123123',
+	 * 		'key' => 'asdbbcd',
+	 * 	),
+	 * );
+	 * // echoes '123123'
+	 * echo ArrayHelper::extract($arr, 'Application.key');
+	 * // using optional different path seperator
+	 * echo ArrayHelper::extract($arr, 'Application/key', '/);
 	 * </code>
-	 * @param Array $arr
-	 * @param String $path
+	 * 
+	 * @param array $arr
+	 * @param string $path Path to the desired value, seperated by $seperator
+	 * @param string $seperator optional differnet character for path seperation
 	 * @return mixed
 	 */
-	public static function extract($arr, $path)
+	public static function extract($arr, $path, $seperator = '.')
 	{
 		if (!is_array($arr)) return false;
 		$path = preg_replace(
-			array('/\[+/', '/\]+/', '/\/{2,}/', '/^\/|\/$/'),
-			array('/', '', '/', ''),
+			array('/\[+/', '/\]+/', '/\\'.$seperator.'{2,}/', '/^\\'.$seperator.'|\\'.$seperator.'$/'),
+			array($seperator, '', $seperator, ''),
 			$path);
-		$first = substr($path, 0, strpos($path, '/'));
+		$first = substr($path, 0, strpos($path, $seperator));
 		if (empty($first) && isset($arr[$path])) {
 			return $arr[$path];
 		} elseif (isset($arr[$first])) {
-			$nextPath = substr($path, strpos($path, '/') + 1);
+			$nextPath = substr($path, strpos($path, $seperator) + 1);
 			return self::extract($arr[$first], $nextPath);
 		}
 		return null;
