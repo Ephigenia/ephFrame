@@ -5,6 +5,15 @@ This file should record some kind of change history of the ephFrame Framework
 Please check this file for hints after you updated the framework via svn to 
 check some deprecated methods or new features.
 
+# 2010-07-14
+
+* Configure can now set variables with paths. Like `Configure::set('Application.id', '123123') set it in an array
+* Added Integer and Float Form Fields
+* Controller->referer moved to Request component, update your code
+* removed some rules from standard .htaccess file
+* debug dump refactored
+* SGML Helper has sstatic switch for XHTML/HTML Output
+
 # 2010-05-28
 
 * mandatory fields do not get the 'mandatory' class anymore, they get 'required' class instead

@@ -5,8 +5,8 @@ class_exists('ConsoleDrawing') or require dirname(__FILE__).'/../ConsoleDrawing.
 /**
  * ephFrame: <http://code.marceleichner.de/project/ephFrame/>
  * Copyright (c) 2007+, Ephigenia M. Eichner
- *                      Kopernikusstr. 8
- *                      10245 Berlin
+ *                      Brunnenstr. 10
+ *                      10119 Berlin
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
