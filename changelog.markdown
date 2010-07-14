@@ -7,7 +7,7 @@ check some deprecated methods or new features.
 
 # 2010-07-14
 
-* Configure can now set variables with paths. Like `Configure::set('Application.id', '123123') set it in an array
+* Registry can now set variables with paths. Like `Registry::set('Application.id', '123123') set it in an array
 * Added Integer and Float Form Fields
 * Controller->referer moved to Request component, update your code
 * removed some rules from standard .htaccess file

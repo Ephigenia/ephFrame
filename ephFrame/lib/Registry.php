@@ -46,7 +46,6 @@ class Registry extends Object
 		$regexp = coalesce($regexp, 'default');
 		// @todo implement better set method
 		$path = explode('.', $key);
-		var_dump($path);
 		switch (count($path)) {
 			case 1:
 			default:
