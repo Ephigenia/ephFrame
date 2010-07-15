@@ -94,7 +94,7 @@ class Model extends Object
 	 * Stores the data from the table row
 	 * @var array(mixed)
 	 */
-	public $data = array();
+	protected $data = array();
 	
 	/**
 	 * stores an instance of a DB Access object after model initializisation
