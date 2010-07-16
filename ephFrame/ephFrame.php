@@ -62,8 +62,8 @@ final class ephFrame
 			require (FRAME_ROOT.'config/config.php');
 			require (FRAME_LIB_DIR.'Renderable.php');
 			// project include stuff (some config variables can be overwritten there)
-			include (APP_ROOT.'config/config.php');
-			include (APP_ROOT.'config/db.php');
+			// include user config files if available
+			self::loadEnvironmentConfig();
 			class_exists('AppComponent') or require APP_LIB_DIR.'component/AppComponent.php';
 			class_exists('AppHelper') or require APP_LIB_DIR.'helper/AppHelper.php';
 			require (FRAME_LIB_DIR.'component/Log.php');
@@ -77,6 +77,24 @@ final class ephFrame
 			logg(Log::VERBOSE_SILENT, 'ephFrame: successfully loaded, now going to dispatcher');
 		}
 		return self::$instance;
+	}
+	
+	public static function loadEnvironmentConfig()
+	{
+		$configCascade = array(
+			APP_ROOT.'config/config.php',
+			APP_ROOT.'config/db.php',
+			// user configuration files
+			APP_ROOT.'config/user/default.php',
+			APP_ROOT.'config/user/'.basename(strtolower(@get_current_user())).'.php',
+			// host configurations
+			APP_ROOT.'config/host/default.php',
+			APP_ROOT.'config/host/'.basename(@$_SERVER['HTTP_HOST']).'.php',
+		);
+		foreach($configCascade as $filename) {
+			if (file_exists($filename) && is_readable($filename)) require $filename;
+		}
+		return true;
 	}
 	
 	/**
