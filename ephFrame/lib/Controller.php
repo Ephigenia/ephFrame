@@ -741,7 +741,7 @@ abstract class Controller extends Object implements Renderable
 	 */
 	public function redirect($url, $status = 'p', $exit = true) 
 	{
-		if ($this->beforeRedirect($url, $status, $exit)) {
+		if (!$this->beforeRedirect($url, $status, $exit)) {
 			return false;
 		}
 		foreach($this->components as $componentName) {
