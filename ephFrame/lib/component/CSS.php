@@ -234,4 +234,9 @@ class CSS extends AppComponent implements Renderable
 		}
 		return parent::beforeRender($controller);
 	}
+	
+	public function __toString()
+	{
+		return $this->render();
+	}
 }

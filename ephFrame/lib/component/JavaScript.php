@@ -236,7 +236,12 @@ class JavaScript extends AppComponent implements Renderable
 			$this->files = new Collection($compressedFilename);
 		}
 		return true;
-	}		
+	}
+	
+	public function __toString()
+	{
+		return $this->render();
+	}
 }
 
 /**

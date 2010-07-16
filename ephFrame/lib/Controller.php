@@ -189,17 +189,19 @@ abstract class Controller extends Object implements Renderable
 			return false;
 		}
 		$this->data->set($this->name, $model);
-		$form = $this->{$this->name.'Form'};
-		if ($form->ok()) {
-			if ($form->toModel($model) && $model->save()) {
-				$this->FlashMessage->set(__('Successfully saved changes.'), FlashMessageType::SUCCESS);
-				return $model;
+		if (isset($this->{$this->name.'Form'})) {
+			$form = $this->{$this->name.'Form'};
+			if ($form->ok()) {
+				if ($form->toModel($model) && $model->save()) {
+					$this->FlashMessage->set(__('Successfully saved changes.'), FlashMessageType::SUCCESS);
+					return $model;
+				} else {
+					$form->errors = $model->validationErrors();
+					$this->FlashMessage->set(__('Error while saving changes in :1.', $this->name), FlashMessageType::ERROR);
+				}
 			} else {
-				$form->errors = $model->validationErrors();
-				$this->FlashMessage->set(__('Error while saving changes in :1.', $this->name), FlashMessageType::ERROR);
+				$form->fromModel($model);
 			}
-		} else {
-			$form->fromModel($model);
 		}
 		return $model;
 	}
