@@ -23,7 +23,13 @@ class Scaffold extends Component
 			$this->model = &$this->controller->{$this->controller->name};
 		}
 		if (isset($this->model) && !isset($this->form)) {
-			$this->form = &$this->controller->{$this->model->name.'Form'};
+			try {
+				$this->controller->addForm($this->model->name.'Form');
+				$this->form = &$this->controller->{$this->model->name.'Form'};
+				$this->controller->data->set('form', $this->form);
+			} catch (ephFrameClassFileNotFoundException $e) {
+			
+			}
 		}
 		return parent::startUp();
 	}
@@ -44,6 +50,7 @@ class Scaffold extends Component
 		$pagination['url'] = $url;
 		$this->controller->data->set('pagination', $pagination);
 		$this->controller->data->set(Inflector::plural($this->model->name), $entries);
+		$this->controller->data->set('data', $entries);
 		if (!$entries) {
 			return true;
 		}
@@ -52,11 +59,11 @@ class Scaffold extends Component
 	
 	public function create()
 	{
-		if (isset($this->form) && isset($this->Model) && $this->form->ok()) {
+		if (isset($this->form) && isset($this->model) && $this->form->ok()) {
 			$this->form->toModel($this->model);
 			if ($this->model->save()) {
 				if (isset($this->controller->FlashMessage)) {
-					$this->FlashMessage->set(__('Successfully created :1.', $this->model), FlashMessageType::SUCCESS);
+					$this->controller->FlashMessage->set(__('Successfully created :1.', $this->model), FlashMessageType::SUCCESS);
 				}
 				return $this->model;
 			} else {
@@ -75,12 +82,16 @@ class Scaffold extends Component
 		if (isset($this->form)) {
 			$this->form->fromModel($model);
 			if ($this->form->ok()) {
-				if ($form->toModel($model) && $model->save()) {
-					$this->FlashMessage->set(__('Successfully saved changes.'), FlashMessageType::SUCCESS);
+				if ($this->form->toModel($model) && $model->save()) {
+					if (isset($this->controller->FlashMessage)) {
+						$this->controller->FlashMessage->set(__('Successfully saved changes.'), FlashMessageType::SUCCESS);
+					}
 					return $model;
 				} else {
-					$form->errors = $model->validationErrors();
-					$this->FlashMessage->set(__('Error while saving changes in :1.', $model->name), FlashMessageType::ERROR);
+					$this->form->errors = $model->validationErrors();
+					if (isset($this->controller->FlashMessage)) {
+						$this->controller->FlashMessage->set(__('Error while saving changes in :1.', $model->name), FlashMessageType::ERROR);
+					}
 				}
 			}
 		}
@@ -93,6 +104,7 @@ class Scaffold extends Component
 			return false;
 		}
 		$this->controller->data->set($this->model->name, $this->model);
+		$this->controller->data->set('data', $this->model);
 		return $this->model;
 	}
 	
@@ -104,9 +116,9 @@ class Scaffold extends Component
 		$result = $model->delete();
 		if (isset($this->controller->FlashMessage)) {
 			if ($result) {
-				$this->FlashMessage->set(__('Successfully deleted :1.', $model), FlashMessageType::SUCCESS);
+				$this->controller->FlashMessage->set(__('Successfully deleted :1.', $model), FlashMessageType::SUCCESS);
 			} else {
-				$this->FlashMessage->set(__('Error while deleting :1.', $model), FlashMessageType::ERROR);
+				$this->controller->FlashMessage->set(__('Error while deleting :1.', $model), FlashMessageType::ERROR);
 			}
 		}
 		return $this->controller->redirect(Router::uri('scaffold', array('controller' => $this->controller->name, 'action' => 'index')));

@@ -440,16 +440,18 @@ abstract class Controller extends Object implements Renderable
 	 */
 	public function addForm($formName) 
 	{
-		if (is_array($this->forms) && !in_array($formName, $this->forms)) {
-			$this->forms[] = $formName;
-		}
 		if (!class_exists($formName)) {
 			ephFrame::loadClass('app.lib.component.Form.'.$formName);
 		}
-		$this->{$formName} = new $formName();
-		$this->{$formName}->init($this);
-		if ($this->action !== 'index') {
-			$this->{$formName}->startup($this)->configure();
+		if (!isset($this->{$formName})) {
+			if (is_array($this->forms) && !in_array($formName, $this->forms)) {
+				$this->forms[] = $formName;
+			}
+			$this->{$formName} = new $formName();
+			$this->{$formName}->init($this);
+			if ($this->action !== 'index') {
+				$this->{$formName}->startup($this)->configure();
+			}
 		}
 		logg(Log::VERBOSE_SILENT, 'ephFrame: '.get_class($this).' loaded form '.$formName.'');
 		return $this;
@@ -511,19 +513,19 @@ abstract class Controller extends Object implements Renderable
 			// beforecallbacks
 			$beforeActionResult = true;
 			foreach($callbackObjects as $object) {
-				$beforeActionResult &= $object->beforeAction($this->action);
+				$beforeActionResult &= $object->beforeAction($action);
 			}
-			logg(Log::VERBOSE, 'ephFrame: '.get_class($this).'->before'.ucFirst($this->action).'()');
+			logg(Log::VERBOSE, 'ephFrame: '.get_class($this).'->before'.ucFirst($action).'()');
 			if ($beforeActionResult && method_exists($this, 'before'.ucFirst($action))) {
 				$beforeActionResult &= $this->callMethod('before'.ucFirst($action), $arguments);
 			}
 			// call action
-			if (!$beforeActionResult || $this->callMethod($this->action, $arguments) === false) {
+			if (!$beforeActionResult || $this->callMethod($action, $arguments) === false) {
 				$this->name = 'error';
 				$this->action('404', array());
 			}
 			// after action callbacks
-			logg(Log::VERBOSE, 'ephFrame: '.get_class($this).'->after'.ucFirst($this->action).'()');
+			logg(Log::VERBOSE, 'ephFrame: '.get_class($this).'->after'.ucFirst($action).'()');
 			if (method_exists($this, 'after'.ucFirst($action))) {
 				$this->callMethod('after'.ucFirst($action));
 			}

@@ -604,7 +604,10 @@ class Form extends HTMLTag
 			if (!empty($ignore) && in_array($fieldname, $ignore)) continue;
 			if (!empty($fields) && !in_array($fieldname, $fields)) continue;
 			if ($model->hasField($fieldname)) {
-				$model->set($fieldname, $formField->value());
+				$value = $formField->value();
+				if ($value !== false) {
+					$model->set($fieldname, $value);
+				}
 			}
 		}
 		foreach($model->belongsTo + $model->hasMany as $modelName => $config) {
