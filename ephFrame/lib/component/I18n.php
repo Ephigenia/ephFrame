@@ -75,20 +75,19 @@ class I18n extends AppComponent
 	 */
 	public $domainName = 'default';
 	
-	public function startup() 
+	public function startUp() 
 	{
 		// get language from requested client header
 		if ($this->autoDetect && $acceptLanguage = $this->controller->request->header->get('accept_language')) {
 			$this->locale($acceptLanguage);
 		// default language defined in the /app/config/config.php
-		} elseif ($defaultLanguage = Registry::read('I18n.language')) {
+		} elseif ($defaultLanguage = Registry::get('I18n.language')) {
 			$this->locale($defaultLanguage);
 		}
 		$this->domainLocation = APP_ROOT.$this->domainLocation;
-		$this->controller->data->set(get_class($this), $this);
 		self::locale(self::$locale);
 		$this->domain($this->domainLocation, $this->domainName, $this->domainEncoding);
-		return $this;
+		return parent::startUp();
 	}
 	
 	public static function normalizeLocale($locale)
