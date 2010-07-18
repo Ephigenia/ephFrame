@@ -57,7 +57,7 @@ class DBDSN extends URL
 			$this->parsedUrl['db'] = null;
 			$this->parsedUrl['type'] = null;
 		} else {
-			foreach(array('charset' => 'fragment', 'db' => 'path', 'socket' => 'host') as $old => $new) {
+			foreach(array('charset' => 'fragment', 'db' => 'path', 'socket' => 'host', 'type' => 'scheme') as $old => $new) {
 				if (isset($url[$old])) {
 					$url[$new] = $url[$old];
 				}
@@ -72,7 +72,8 @@ class DBDSN extends URL
 	 * @param string
 	 * @var string
 	 */
-	function db($db = null) {
+	public function db($db = null)
+	{
 		if ($db === null) {
 			$path = $this->path();
 			return str_replace('/', '', $path);

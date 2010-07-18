@@ -257,7 +257,10 @@ class Model extends Object
 		// get DB Instance if tablename is set
 		if ($this->tablename !== false) {
 			$this->DB = DBConnectionManager::getInstance()->get($this->useDBConfig);
-			// create structure array by reading structure from database
+			if (empty($this->tablenamePrefix)) {
+				$this->tablenamePrefix = Registry::get('DB.tablenamePrefix');
+				$this->tablename();
+			}
 			$this->loadStructure();
 		}
 		

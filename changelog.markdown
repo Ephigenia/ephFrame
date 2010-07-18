@@ -5,6 +5,13 @@ This file should record some kind of change history of the ephFrame Framework
 Please check this file for hints after you updated the framework via svn to 
 check some deprecated methods or new features.
 
+# 2010-07-18
+
+* DB.tablenamePrefix is used in an ephFrame application as table name prefix
+* Configs can be put into /config/[username].php or /config/[hostname].php
+* Scaffold component does controller scaffolding now, include Scaffold
+  component in all controllers to have te old scaffolding behavior
+
 # 2010-07-14
 
 * Registry can now set variables with paths. Like `Registry::set('Application.id', '123123') set it in an array

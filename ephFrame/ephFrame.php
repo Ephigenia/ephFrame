@@ -83,16 +83,20 @@ final class ephFrame
 	{
 		$configCascade = array(
 			APP_ROOT.'config/config.php',
-			APP_ROOT.'config/db.php',
 			// user configuration files
 			APP_ROOT.'config/user/default.php',
 			APP_ROOT.'config/user/'.basename(strtolower(@get_current_user())).'.php',
+			APP_ROOT.'config/user/'.basename(strtolower(@get_current_user())).'.db.php',
 			// host configurations
 			APP_ROOT.'config/host/default.php',
 			APP_ROOT.'config/host/'.basename(@$_SERVER['HTTP_HOST']).'.php',
+			APP_ROOT.'config/host/'.basename(@$_SERVER['HTTP_HOST']).'.db.php',
 		);
 		foreach($configCascade as $filename) {
 			if (file_exists($filename) && is_readable($filename)) require $filename;
+		}
+		if (!class_exists('DBConfig')) {
+			include APP_ROOT.'config/db.php';
 		}
 		return true;
 	}
