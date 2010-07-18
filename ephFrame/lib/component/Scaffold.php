@@ -28,7 +28,6 @@ class Scaffold extends Component
 				$this->form = &$this->controller->{$this->model->name.'Form'};
 				$this->controller->data->set('form', $this->form);
 			} catch (ephFrameClassFileNotFoundException $e) {
-			
 			}
 		}
 		return parent::startUp();

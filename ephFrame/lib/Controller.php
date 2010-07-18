@@ -496,7 +496,7 @@ abstract class Controller extends Object implements Renderable
 		$this->action = $action;
 		$this->params = array_merge($params);
 		$this->data->set('action', $this->action);
-		$arguments = array_diff_key($params, array('controller' => 0, 'action' => 0, 'path' => 0, 'controllerPrefix' => 0, 'prefix' => 0));
+		$arguments = array_diff_key($params, array('controller' => 0, 'action' => 0, 'path' => 0, 'controllerPrefix' => 0, 'prefix' => 0, 'layout' => 0));
 		foreach (array('layout', 'theme') as $v) {
 			if (isset($this->params[$v])) $this->{$v} = $this->params[$v];
 		}
