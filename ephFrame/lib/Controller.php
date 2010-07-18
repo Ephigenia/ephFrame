@@ -93,9 +93,7 @@ abstract class Controller extends Object implements Renderable
 	 * Array of components used by this controller
 	 * @var array(string)
 	 */
-	public $components = array(
-		'Session',
-	);
+	public $components = array();
 	
 	/**
 	 * array of helper names used in the view when rendered
@@ -119,7 +117,6 @@ abstract class Controller extends Object implements Renderable
 		// get component list from parent class and merge them with this
 		// controllers components and models ...
 		foreach ($this->__parentClasses() as $parentClass) {
-			$parentClassVars = get_class_vars($parentClass);
 			$this->__mergeParentProperty('uses');
 			$this->__mergeParentProperty('components');
 			$this->__mergeParentProperty('helpers');
@@ -156,54 +153,26 @@ abstract class Controller extends Object implements Renderable
 	
 	public function create() 
 	{
-		$form = $this->{$this->name.'Form'};
-		if (isset($form) && $form->ok()) {
-			$form->toModel($this->{$this->name});
-			if ($this->{$this->name}->save()) {
-				$this->FlashMessage->set(__('Successfully created a new :1.', $this->name), FlashMessageType::SUCCESS);
-				return $this->{$this->name};
-			} else {
-				$form->errors = $model->validationErrors();
-				return false;
-			}
+		if (isset($this->Scaffold)) {
+			return $this->Scaffold->create();
 		}
 		return true;
 	}
 	
 	public function delete($id = null) 
 	{
-		if (!($model = $this->{$this->name}->findById($id))) {
-			return false;
+		if (isset($this->Scaffold)) {
+			$this->Scaffold->delete($id);
 		}
-		if ($model->delete()) {
-			$this->FlashMessage->set(__('Successfully deleted :1.', $model->name), FlashMessageType::SUCCESS);
-		} else {
-			$this->FlashMessage->set(__('Error while deleting :1.', $model->name), FlashMessageType::ERROR);
-		}
-		return $this->redirect(Router::uri('scaffold', array('controller' => $this, 'action' => 'index')));
+		return true;
 	}
 	
 	public function edit($id = null) 
 	{
-		if (!($model = $this->{$this->name}->findById($id))) {
-			return false;
+		if (isset($this->Scaffold)) {
+			return $this->Scaffold->edit($id);
 		}
-		$this->data->set($this->name, $model);
-		if (isset($this->{$this->name.'Form'})) {
-			$form = $this->{$this->name.'Form'};
-			if ($form->ok()) {
-				if ($form->toModel($model) && $model->save()) {
-					$this->FlashMessage->set(__('Successfully saved changes.'), FlashMessageType::SUCCESS);
-					return $model;
-				} else {
-					$form->errors = $model->validationErrors();
-					$this->FlashMessage->set(__('Error while saving changes in :1.', $this->name), FlashMessageType::ERROR);
-				}
-			} else {
-				$form->fromModel($model);
-			}
-		}
-		return $model;
+		return true;
 	}
 	
 	/**
@@ -212,12 +181,10 @@ abstract class Controller extends Object implements Renderable
 	 */
 	public function view($id = null) 
 	{
-		$id = (int) coalesce(@$this->params['id'], $id);
-		if (!($this->{$this->name} = $this->{$this->name}->findById($id))) {
-			return false;
+		if (isset($this->Scaffold)) {
+			return $this->Scaffold->view($id);
 		}
-		$this->data->set($this->name, $this->{$this->name});
-		return $this->{$this->name};
+		return true;
 	}
 	
 	/**
@@ -230,23 +197,10 @@ abstract class Controller extends Object implements Renderable
 	 */
 	public function index()
 	{
-		if (isset($this->{$this->name})) {
-			$page = intval((@$this->params['page'] > 1) ? $this->params['page'] : 1);
-			$entries = $this->{$this->name}->findAll(null, null, ($page-1) * $this->{$this->name}->perPage, $this->{$this->name}->perPage);
-			$this->data->set(Inflector::plural($this->name), $entries);
-			if ($this->{$this->name}->perPage > 0) {
-				$pagination = $this->{$this->name}->paginate($page);
-				if (!($url = Router::getRoute($this->{$this->name}->name.'Paged'))) {
-					$url = Router::getRoute('scaffold_paged', array('controller' => $this->name));
-				}
-				$pagination['url'] = $url;
-				$this->set('pagination', $pagination);
-			}
-			if (!$entries) {
-				return true;
-			}
-			return $entries;
+		if (isset($this->Scaffold)) {
+			return $this->Scaffold->index();
 		}
+		return true;
 	}
 	
 	/**
@@ -298,6 +252,11 @@ abstract class Controller extends Object implements Renderable
 		return true;
 	}
 	
+	public function hasModel($name)
+	{
+		return in_array($name, $this->uses);
+	}
+	
 	public function addModel($modelName) 
 	{
 		if (func_num_args() > 1) {
@@ -305,7 +264,6 @@ abstract class Controller extends Object implements Renderable
 			foreach($args as $arg) $this->addModel($arg);
 			return true;
 		}
-		assert(is_string($modelName) && !empty($modelName));
 		$classPath = $modelName;
 		if (strpos($modelName, ClassPath::$classPathDevider) === false) {
 			$classPath = 'App.lib.model.'.$modelName;
@@ -326,11 +284,6 @@ abstract class Controller extends Object implements Renderable
 		return true;
 	}
 	
-	public function hasModel($modelName) 
-	{
-		return in_array($modelName, $this->uses);
-	}
-	
 	/**
 	 * Initiate Components
 	 * 
@@ -346,21 +299,20 @@ abstract class Controller extends Object implements Renderable
 	protected function initComponents()
 	{
 		logg(Log::VERBOSE_SILENT, 'ephFrame: '.get_class($this).' adds components: \''.implode(', ', $this->components).'\'');
-		// add and init every component set in in {@link components}
-		foreach ($this->components as $componentName) {
-			$this->addComponent($componentName, false);
+		foreach ($this->components as $name) {
+			$this->addComponent($name, false);
 		}
 		return true;
 	}
 	
 	/**
 	 * Tests if this controller has a {@link Component} attached
-	 * @param string $componentName
+	 * @param string $name
 	 * @return boolean
 	 */
-	public function hasComponent($componentName) 
+	public function hasComponent($name) 
 	{
-		return in_array($componentName, $this->components);
+		return in_array($name, $this->components);
 	}
 	
 	/**
@@ -376,31 +328,28 @@ abstract class Controller extends Object implements Renderable
 	 * }
 	 * </code>
 	 * 
-	 * @param string $componentName
+	 * @param string $component
 	 * @param boolean $startUp Also fire the startup signal to the component
 	 * @return boolean
 	 */
-	public function addComponent($componentName, $startUp = true) 
+	public function addComponent($name, $startUp = true) 
 	{
-		assert(is_string($componentName) && !empty($componentName));
-		if (!in_array($componentName, $this->components)) {
-			$this->components[] = $componentName;
+		if (!$this->hasComponent($name)) {
+			$this->components[] = $name;
 		}
-		// extract component class name
-		$className = ClassPath::className($componentName);
-		// try app and frame paths
-		if (!class_exists($className)) {
-			ephFrame::loadComponent($componentName);
-		}
+		$class = ClassPath::className($name);
 		// attach component to controller
-		if (!isset($this->$className)) {
-			$this->{$componentName} = new $className();
-			$this->{$componentName}->controller = $this;
-			if (method_exists($this->{$componentName}, 'init')) {
-				$this->{$className}->init($this);
+		if (!isset($this->{$class})) {
+			if (!class_exists($class)) {
+				ephFrame::loadComponent($name);
+			}
+			$this->{$class} = new $class();
+			$this->{$class}->controller = $this;
+			if (method_exists($this->{$class}, 'init')) {
+				$this->{$class}->init($this);
 			}
 			if ($startUp) {
-				$this->{$className}->startup();
+				$this->{$class}->startup();
 			}
 		}
 		return true;
@@ -414,9 +363,10 @@ abstract class Controller extends Object implements Renderable
 	 */
 	protected function startUpComponents() 
 	{
-		foreach($this->components as $componentName) {
-			$className = ClassPath::className($componentName);
-			$this->{$className}->startup();
+		foreach($this->components as $name) {
+			logg(LOG::VERBOSE, get_class($this).' component '.$name.'->startUp()');
+			$class = ClassPath::className($name);
+			$this->{$class}->startup();
 		}
 		return true;
 	}
@@ -426,8 +376,8 @@ abstract class Controller extends Object implements Renderable
 	 * of the controller and returns true.
 	 * @return boolean
 	 */
-	protected function initHelpers() {
-		assert(is_array($this->helpers));
+	protected function initHelpers()
+	{
 		foreach($this->helpers as $helperName) {
 			$this->addHelper($helperName);
 		}
@@ -534,63 +484,51 @@ abstract class Controller extends Object implements Renderable
 	/**
 	 * Sets an other action for this controller, this affects the view that
 	 * is used and also calls the method that has the same name as the action
+	 * 
 	 * @param string $action
 	 * @param array(mixed) $params
 	 * @return boolean
 	 */
 	public function action($action, Array $params = array()) 
 	{
-		assert(is_string($action) && !empty($action));
-		logg(Log::VERBOSE, 'ephFrame: '.get_class($this).' set action to \''.$action.'\'');
 		$this->action = $action;
-		$this->set('action', $this->action);
-		$this->params = $params;
-		// check params for special keys like layout, theme etc
+		$this->params = array_merge($params);
+		$this->data->set('action', $this->action);
+		$arguments = array_diff_key($params, array('controller' => 0, 'action' => 0, 'path' => 0, 'controllerPrefix' => 0, 'prefix' => 0));
 		foreach (array('layout', 'theme') as $v) {
 			if (isset($this->params[$v])) $this->{$v} = $this->params[$v];
 		}
-		if (method_exists($this, $action)) {
-			// call beforeaction on every component and helpers
+		logg(Log::VERBOSE, 'ephFrame: '.get_class($this).'->'.$this->action.'()');
+		if (method_exists($this, $this->action)) {
+			$callbackObjects = array();
+			foreach(array_merge($this->components, $this->forms) as $classPath) {
+				$callbackObjects[] = $this->{ClassPath::className($classPath)};
+			}
+			foreach($this->helpers as $classPath) {
+				$callbackObjects[] = $this->data->get(ClassPath::className($classPath));
+			}
+			$callbackObjects[] = $this;
+			// beforecallbacks
 			$beforeActionResult = true;
-			foreach($this->components as $componentName) {
-				$beforeActionResult &= $this->{$componentName}->beforeAction($action);
+			foreach($callbackObjects as $object) {
+				$beforeActionResult &= $object->beforeAction($this->action);
 			}
-			foreach($this->helpers as $helperName) {
-				$className = ClassPath::className($helperName);
-				$beforeActionResult &= $this->data->get($className)->beforeAction($action);
-			}
-			// call beforeAction on every form
-			if (is_array($this->forms)) foreach($this->forms as $FormName) {
-				$beforeActionResult &= $this->{$FormName}->beforeAction($action);
-			}
-			if ($beforeActionResult) {
-				$beforeActionResult &= $this->beforeAction();
-			}
+			logg(Log::VERBOSE, 'ephFrame: '.get_class($this).'->before'.ucFirst($this->action).'()');
 			if ($beforeActionResult && method_exists($this, 'before'.ucFirst($action))) {
-				$beforeActionResult &= $this->callMethod('before'.ucFirst($action), $this->params);
+				$beforeActionResult &= $this->callMethod('before'.ucFirst($action), $arguments);
 			}
-			if (!$beforeActionResult) {
+			// call action
+			if (!$beforeActionResult || $this->callMethod($this->action, $arguments) === false) {
 				$this->name = 'error';
 				$this->action('404', array());
-			} else {
-				$arguments = array_diff_key($params, array('controller' => 0, 'action' => 0, 'path' => 0, 'controllerPrefix' => 0, 'prefix' => 0));
-				if ($this->callMethod($action, $arguments) === false) {
-					$this->name = 'error';
-					$this->action('404', array());
-				}
 			}
-			// call controller after[ActionName] if possible
-			if (method_exists($this,'after'.ucFirst($action))) {
+			// after action callbacks
+			logg(Log::VERBOSE, 'ephFrame: '.get_class($this).'->after'.ucFirst($this->action).'()');
+			if (method_exists($this, 'after'.ucFirst($action))) {
 				$this->callMethod('after'.ucFirst($action));
 			}
-			// Call 'afterAction' on controller, components, helpers and forms
-			$this->afterAction($action);
-			foreach($this->components as $componentName) {
-				$this->{$componentName}->afterAction($action);
-			}
-			foreach($this->helpers as $helperName) {
-				$className = ClassPath::className($helperName);
-				$this->data->get($className)->afterAction($action);
+			foreach(array_reverse($callbackObjects) as $object) {
+				$object->afterAction($this->action);
 			}
 		}
 		return true;

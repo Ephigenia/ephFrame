@@ -81,7 +81,6 @@ class SluggableBehavior extends ModelBehavior
 	protected function makeUnique($slug, Model $Model, Array $config = array())
 	{
 		extract($config);
-		// 
 		$conditions = array(
 			$Model->name.'.'.$name.' LIKE '.DBQuery::quote($slug.'%'),
 		);
@@ -126,7 +125,7 @@ class SluggableBehavior extends ModelBehavior
 		// get field values used in the slug
 		$parts = array();
 		foreach((array) $fields as $fieldname) {
-			$parts[] = $Model->data[$fieldname];
+			$parts[] = $Model->get($fieldname);
 		}
 		// call callback with created slug
 		$slug = implode($config['glue'], array_filter($parts));

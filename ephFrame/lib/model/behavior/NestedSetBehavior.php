@@ -74,7 +74,7 @@ class NestedSetBehavior extends ModelBehavior
 	 */
 	public function level()
 	{
-		if (!isset($this->model->data['level'])) {
+		if (!$this->model->hasField('level')) {
 			$this->model->set('level', count($this->path(false, 0)));
 		}
 		return $this->model->level;

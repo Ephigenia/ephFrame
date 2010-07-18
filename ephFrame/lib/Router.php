@@ -119,7 +119,7 @@ class Router extends Hash
 	public function parse($url)
 	{
 		$url = (string) $url;
-		Log::write(LOG::VERBOSE, get_class($this).': parse url: \''.$url.'\'');
+		Log::write(LOG::VERBOSE, get_class($this).': parsing \''.$url.'\'');
 		$this->addScaffoldRoutes(); // @todo move this somewhere else
 		// go through routes and try to find a matching route
 		foreach(self::getInstance() as $routeName => $routeData) {
@@ -157,7 +157,7 @@ class Router extends Hash
 			break;
 		}
 		if (isset($match[0][0])) { //  && Registry::get('DEBUG') > DEBUG_DEVELOPMENT}) {
-			Log::write(Log::VERBOSE, get_class($this).': parsing result: '.$this->controller.'Controller->'.$this->action);
+			Log::write(Log::VERBOSE, get_class($this).': result '.$this->controller.'Controller->'.$this->action);
 		} else {
 			Log::write(Log::VERBOSE, get_class($this).': no matching route found.');
 			$this->controller = 'Error';

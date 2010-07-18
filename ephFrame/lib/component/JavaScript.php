@@ -200,12 +200,12 @@ class JavaScript extends AppComponent implements Renderable
 				$plain = $compressor->compress($plain);
 				$jQuery = $compressor->compress($jQuery);
 			}
-			$jsSource = '//<![CDATA['.LF.
+			$jsSource = '/* <![CDATA[ */'.LF.
 				$plain.
 				LF.'$(document).ready(function() {'.LF.
 				$jQuery.LF.
 				'});'.LF.
-				'//]]>';
+				'/* ]]> */';
 			$jsScriptTag = new HTMLTag('script', array('type' => 'text/javascript'), $jsSource);
 			$rendered .= $jsScriptTag->render();
 		}

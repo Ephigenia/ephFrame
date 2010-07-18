@@ -6,4 +6,3 @@ RewriteEngine On
 # RewriteBase /
 RewriteRule ^$		html/	[L]
 RewriteRule (.*)	html/$1	[L]
-

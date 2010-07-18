@@ -120,6 +120,11 @@ class Form extends HTMLTag
 		return true;
 	}
 	
+	public function afterAction()
+	{
+		return true;
+	}
+	
 	/**
 	 * Manual inherit Component init method, see docu in {@link Component}.
 	 * @return boolean
@@ -464,7 +469,6 @@ class Form extends HTMLTag
 		if (empty($ignore)) {
 			$ignore = array('id');
 		}
-		
 		// just display these fields (ordered)
 		$fieldInfos = array();
  		if (count($fields) > 0) {
@@ -551,10 +555,10 @@ class Form extends HTMLTag
 	{
 		if (!$this->submitted()) {
 			// only fill with model data if form was not submitted
-			foreach($model->structure as $fieldInfo) {
+			foreach($model->structure as $fieldname => $fieldInfo) {
 				if (!($field = $this->fieldset->childWithAttribute('name', $fieldInfo->name))) continue;
 				// checkboxes need special treatment
-				if ($field->type == 'checkbox' && (in_array($fieldInfo->type, array('char', 'enum')))) {
+				if ($field->type == 'checkbox') {
 					$field->value(true);
 					if ($model->get($fieldInfo->name)) {
 						$field->checked(true);
