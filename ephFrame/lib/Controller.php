@@ -500,25 +500,25 @@ abstract class Controller extends Object implements Renderable
 		foreach (array('layout', 'theme') as $v) {
 			if (isset($this->params[$v])) $this->{$v} = $this->params[$v];
 		}
-		logg(Log::VERBOSE, 'ephFrame: '.get_class($this).'->'.$this->action.'()');
-		if (method_exists($this, $this->action)) {
-			$callbackObjects = array();
-			foreach(array_merge($this->components, $this->forms) as $classPath) {
-				$callbackObjects[] = $this->{ClassPath::className($classPath)};
-			}
-			foreach($this->helpers as $classPath) {
-				$callbackObjects[] = $this->data->get(ClassPath::className($classPath));
-			}
-			$callbackObjects[] = $this;
-			// beforecallbacks
-			$beforeActionResult = true;
-			foreach($callbackObjects as $object) {
-				$beforeActionResult &= $object->beforeAction($action);
-			}
-			logg(Log::VERBOSE, 'ephFrame: '.get_class($this).'->before'.ucFirst($action).'()');
-			if ($beforeActionResult && method_exists($this, 'before'.ucFirst($action))) {
-				$beforeActionResult &= $this->callMethod('before'.ucFirst($action), $arguments);
-			}
+		$callbackObjects = array();
+		foreach(array_merge($this->components, $this->forms) as $classPath) {
+			$callbackObjects[] = $this->{ClassPath::className($classPath)};
+		}
+		foreach($this->helpers as $classPath) {
+			$callbackObjects[] = $this->data->get(ClassPath::className($classPath));
+		}
+		$callbackObjects[] = $this;
+		// beforecallbacks
+		$beforeActionResult = true;
+		foreach($callbackObjects as $object) {
+			$beforeActionResult &= $object->beforeAction($action);
+		}
+		logg(Log::VERBOSE, 'ephFrame: '.get_class($this).'->before'.ucFirst($action).'()');
+		if ($beforeActionResult && method_exists($this, 'before'.ucFirst($action))) {
+			$beforeActionResult &= $this->callMethod('before'.ucFirst($action), $arguments);
+		}
+		if (method_exists($this, $action)) {
+			logg(Log::VERBOSE, 'ephFrame: '.get_class($this).'->'.$this->action.'()');		
 			// call action
 			if (!$beforeActionResult || $this->callMethod($action, $arguments) === false) {
 				$this->name = 'error';
@@ -529,9 +529,9 @@ abstract class Controller extends Object implements Renderable
 			if (method_exists($this, 'after'.ucFirst($action))) {
 				$this->callMethod('after'.ucFirst($action));
 			}
-			foreach(array_reverse($callbackObjects) as $object) {
-				$object->afterAction($this->action);
-			}
+		}
+		foreach(array_reverse($callbackObjects) as $object) {
+			$object->afterAction($this->action);
 		}
 		return true;
 	}
@@ -673,7 +673,7 @@ abstract class Controller extends Object implements Renderable
 	 * // for example direct to user login and exit
 	 * $this->redirect('/user/login/', null, true);
 	 * // skip to an other url
-	 * $this->redirect('http://code.nomoresleep.net/', 'p', true);
+	 * $this->redirect('http://code.marceleichner.de/', 'p', true);
 	 * </code>
 	 * 
 	 * @param string $url
@@ -690,13 +690,15 @@ abstract class Controller extends Object implements Renderable
 			$className = ClassPath::className($componentName);
 			$this->{$className}->beforeRedirect($url, $status, $exit);
 		}
-		if (!class_exists('HTTPStatusCode')) ephFrame::loadClass('ephFrame.lib.HTTPStatusCode');
-		if ($url !== null) {
-			header('Location: '.$url, true);
-		}
+		header('Location: '.$url, true);
 		if (!empty($status)) {
-			if (in_array($status, array('p', 'permanent', 'perm'))) $status = 301;
-			if (in_array($status, array('t', 'tmp', 'temporary'))) $status = 307;
+			class_exists('HTTPStatusCode') or ephFrame::loadClass('ephFrame.lib.HTTPStatusCode');
+			if (in_array($status, array('p', 'permanent', 'perm'))) {
+				$status = 301;
+			}
+			if (in_array($status, array('t', 'tmp', 'temporary'))) {
+				$status = 307;
+			}
 			if (isset(HTTPStatusCode::$statusCodes[$status])) {
 				header(sprintf('HTTP/1.1 %s %s;', $status, HTTPStatusCode::$statusCodes[$status]), true);	
 			}

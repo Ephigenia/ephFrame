@@ -41,7 +41,6 @@ class Scaffold extends Component
 		$page = intval((@$this->params['page'] > 1) ? $this->params['page'] : 1);
 		$perPage = $this->model->perPage;
 		$entries = $this->model->findAll(null, null, ($page-1) * $perPage, $perPage);
-		
 		$pagination = $this->model->paginate($page);
 		if (!($url = Router::getRoute($this->model->name.'Paged'))) {
 			$url = Router::getRoute('scaffold_paged', array('controller' => $this->model->name));
