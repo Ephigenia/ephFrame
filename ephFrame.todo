@@ -13,9 +13,8 @@ Behaviors:
 ✓ ->trigger
 
 Configuration:
-- make beforeRender etc callbacks for helpers and components?
-- make db table prefix config in db.php
-- create Environments usages that include hosts, user names, system and php version to create configs that are valid in an automaticall detected environment
+✓ make db table prefix config in db.php
+✓ create Environments usages that include hosts, user names, system and php version to create configs that are valid in an automaticall detected environment
 
 Model:
 - make toModel accept filter arguments

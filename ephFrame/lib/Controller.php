@@ -517,12 +517,12 @@ abstract class Controller extends Object implements Renderable
 		if ($beforeActionResult && method_exists($this, 'before'.ucFirst($action))) {
 			$beforeActionResult &= $this->callMethod('before'.ucFirst($action), $arguments);
 		}
-		if (method_exists($this, $action)) {
-			logg(Log::VERBOSE, 'ephFrame: '.get_class($this).'->'.$this->action.'()');		
+		if (!method_exists($this, $action)) {
+			logg(Log::VERBOSE, 'ephFrame: '.get_class($this).'->'.$this->action.'() not found');
+		} else {
 			// call action
 			if (!$beforeActionResult || $this->callMethod($action, $arguments) === false) {
-				$this->name = 'error';
-				$this->action('404', array());
+				return $this->error('error404');
 			}
 			// after action callbacks
 			logg(Log::VERBOSE, 'ephFrame: '.get_class($this).'->after'.ucFirst($action).'()');
@@ -533,7 +533,20 @@ abstract class Controller extends Object implements Renderable
 		foreach(array_reverse($callbackObjects) as $object) {
 			$object->afterAction($this->action);
 		}
-		return true;
+		return $this;
+	}
+	
+	public function error($action)
+	{
+		$params = array();
+		if (class_exists('AppErrorController')) {
+			$errorController = new AppErrorController($this->request);
+		} else {
+			ephFrame::loadClass('ephFrame.lib.ErrorController');
+			$errorController = new ErrorController($this->request);
+		}
+		$errorController->action($action, $params);
+		return $errorController;
 	}
 	
 	/**
@@ -554,7 +567,7 @@ abstract class Controller extends Object implements Renderable
 			$className = ClassPath::className($helperName);
 			$this->data->get($className)->beforeRender($this);
 		}
-		// load view class if available
+		// use view class to render controller result
 		if (!strpos($this->viewClassName, '.')) {
 			ephFrame::loadClass('ephFrame.lib.'.$this->viewClassName);
 		} else {
@@ -562,6 +575,8 @@ abstract class Controller extends Object implements Renderable
 		}
 		// render the view part
 		$view = new $this->viewClassName($this->name, $this->action, $this->data);
+		// @todo refactor the usage of theme here
+		// @todo also refactor the usage of content type and view classes
 		$view->theme = $this->theme;
 		if (!$this->response->header->isEmpty('Content-Type')) {
 			$view->contentType = $this->response->header->get('Content-Type');

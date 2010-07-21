@@ -64,6 +64,7 @@ class Dispatcher extends Object
 			if ($controllerName == 'ErrorController') {
 				$controllerClassPath = 'ephFrame.lib.ErrorController';
 			} else {
+				logg(Log::ERROR, 'Dispatcher: missing controller: '.$controllerName);
 				return $this->dispatch('Error/MissingController', array('controllerName' => $controllerName));
 			}
 		}
@@ -76,14 +77,18 @@ class Dispatcher extends Object
 			$controller->action($router->action, $router->params);
 			echo $controller->render();
 		} catch (LayoutFileNotFoundException $e) {
+			logg(Log::ERROR, __CLASS__.': layout file not found: '.$e->filename);
 			return $this->dispatch('Error/MissingLayoutFile', array('filename' => $e->filename, 'layout' => $controller->layout));
 		} catch (ViewFileNotFoundException $e) {
+			logg(Log::ERROR, __CLASS__.': view not found: '.$e->filanem);
 			return $this->dispatch('Error/MissingView', array('filename' => $e->filename, 'missingController' => $router->controller, 'missingAction' => $router->action));
 		} catch (ThemeNotFoundException $e) {
+			logg(Log::ERROR, __CLASS__.': theme not found '.$e->theme);
 			return $this->dispatch('Error/ThemeNotFound', array($e->theme));
 		// missing database tables
 		} catch (MySQLTableNotFoundException $e) {
 			if ($router->controller !== 'Error' && $router->action !== 'MissingTable') {
+				logg(Log::VERBOSE_SILENT, __CLASS__.': Missing database table'.$e->tablename);
 				return $this->dispatch('Error/MissingTable', array('tablename' => $e->tablename));
 			} else {
 				throw $e;

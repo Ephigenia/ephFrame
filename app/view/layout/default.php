@@ -1,18 +1,24 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title><?php echo @$pageTitle ?></title>
+	<title><?php
+		if (empty($pageTitle)) {
+			echo $pageTitle;
+		} else {
+			echo '[no title]';
+		}
+	?></title>
 	<?php
 	if (isset($MetaTags)) echo String::indent($MetaTags->render(), 2, TAB, 1);
 	if (isset($CSS)) {
 		$CSS->addFiles(array(
 			'reset',
-			'app', 
+			'app',
 			'debug',
 		));
-		echo $CSS->render();
+		echo $CSS;
 	}
-       ?>
+	?>
 	<link rel="shortcut icon" type="image/ico" href="<?php echo WEBROOT ?>favicon.ico" />
 </head>
 <body>
@@ -36,7 +42,7 @@
 			'http://code.jquery.com/jquery-1.4.2.min.js',
 			'app',
 		));
-		echo $JavaScript->render();
+		echo $JavaScript;
 	}
 	echo $this->element('debug/dump');
 	?>

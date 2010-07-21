@@ -156,12 +156,13 @@ class Router extends Hash
 			}
 			break;
 		}
-		if (isset($match[0][0])) { //  && Registry::get('DEBUG') > DEBUG_DEVELOPMENT}) {
+		if (isset($match[0][0])) {
 			Log::write(Log::VERBOSE, get_class($this).': result '.$this->controller.'Controller->'.$this->action);
 		} else {
 			Log::write(Log::VERBOSE, get_class($this).': no matching route found.');
 			$this->controller = 'Error';
-			$this->action = '404';
+			$this->action = 'error';
+			$this->params['status'] = 404;
 		}
 		return $this;
 	}

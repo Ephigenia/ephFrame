@@ -5,6 +5,6 @@
 <?php if (class_exists('Registry') && Registry::get('DEBUG') > DEBUG_PRODUCTION) { ?>
 <p class="hint">
 	You can customize this error message by creating your own 404.php file in:<br />
-	<code><?php echo VIEW_DIR ?>error/404.php</code>
+	<code><?php echo VIEW_DIR ?>error/<?php echo basename(__FILE__); ?>.php</code>
 </p>
 <?php } ?>

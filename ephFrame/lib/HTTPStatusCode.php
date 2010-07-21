@@ -100,7 +100,7 @@ class HTTPStatusCode extends Object
 	 * Create a 404 response header status message
 	 * <code>
 	 * // should echo 'HTTP/1.0 404 Not Found
-	 * echo HttpStatusCode::header(404, '1.0');
+	 * header(HttpStatusCode::header(404, '1.0'));
 	 * </code>
 	 * 
 	 * @param string|integer $code

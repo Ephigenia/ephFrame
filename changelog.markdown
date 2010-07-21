@@ -5,6 +5,14 @@ This file should record some kind of change history of the ephFrame Framework
 Please check this file for hints after you updated the framework via svn to 
 check some deprecated methods or new features.
 
+# 2009-07-21
+
+* Error handling reworked, response from every controller with
+`$this->error(404)` to show an error page.
+* Error action loading ErrorController or AppErrorController if available
+* Default model missing, table missing etc. error message texts changed
+* fixed scaffold component reading `page` parameter (no paging possible)
+
 # 2010-07-18
 
 * DB.tablenamePrefix is used in an ephFrame application as table name prefix
@@ -114,7 +122,7 @@ check some deprecated methods or new features.
 * HTTPHeader renders array of headers when passed to send
 * Mandatory fields that are not from a model get mandatory = false now
 
-# 2009-11-18 #
+# 2009-11-18
 * changed code.ephigeniad.de to code.marceleichner.de
 * CURL uses CONNECTTIMEOUT now
 * I18n sets locale for usage in dates with LC_ALL as default
@@ -122,7 +130,7 @@ check some deprecated methods or new features.
 * Session name is also stored in Session.name in config now
 * Model->findAllby adds modelname to fieldname if field is column of model
 
-# 2009-11-04 #
+# 2009-11-04
 * Form->addField accepts label = false in the attributes to disable label usage
 * String::substitue does not use \p{L} unicode class for replacement anymore
 * Rendering and View filename finding in View Class refactored
@@ -132,18 +140,18 @@ check some deprecated methods or new features.
 * Javascript helper loads external urls before local files
 * Fixed bug in IndexedArray->rand when returning 1 random element
 
-# 2009-10-21 #
+# 2009-10-21
 * added beforeRedirect callback that is called on every component before redirect headers are send in the controller, note that afterRender is _not_ called when a redirect is called
 * removed $glue parameter from File->append
 * Model->toArray accepts first parameter with fieldnames in it that will be used in array creation
 
-# 2009-10-11 #
+# 2009-10-11
 * ->unbind('all') removes all bindings from a model
 * Directories can be created by simply calling ->create on them
 * Image->resizeTo renamed to resize and Image->stretchResizeTo will be renamed to resizeCrop
 * Dir->delete can delete directories recursivly
 
-# 2009-10-08 #
+# 2009-10-08
 * Fixed function call with reference in HTTPRequest and Cookie Class
 * Added Paginator Helper that makes pagintion easier to use!
 * Added and changed docu for HTML Helper
@@ -155,27 +163,27 @@ check some deprecated methods or new features.
 * Helpers now can access controller by $this->controller if set
 * HTML Helper uses $theme from controller to link images right
 
-# 2009-09-17 #
+# 2009-09-17
 * Dynamic Binding with bind() works again with aliases
 * Some Email and CSV class related fixes
 
-# 2009-09-11 #
+# 2009-09-11
 * now php 5.3 compatible
   removed depreciated function calls (split -> explode)
   set_magic_quotes_runtime
 * fixed bug where email validation fails on emails like l.name@host.com
 
-# 2009-09-03 #
+# 2009-09-03
 * Model COnditions like this array('User.id' => array('1','2','5')) will create a IN (1,2,5) query (no properly quoting yet!)
 * Added Email Component from ephFrame 0.1 refactored
 * Email Component logs emails to log directory if $delivery is set to 'debug' for testing
 * Email can send UTF8 subjects now including german umlauts! (tested on OSX Mail and Webmail mobileme.com and iPhone)
 * Email Component attach files that are not there:->attach($filename, $content)
 
-# 2009-08-29 #
+# 2009-08-29
 * added up and low as alias for upper and lower in String helper
 
-# 2009-08-21 #
+# 2009-08-21
 * moves isEmpty to core.php file so that the method is available everywhere
  also changed logic to it returns the first argument passed that is not empty() and renamed it to coalesce (removed old coalesce method)
 * added whitelist filter to Hash class that removes all keys that are not in the whitelist of keys
@@ -184,12 +192,12 @@ check some deprecated methods or new features.
 * added Time::nice and niceShort method to replace timeAgoInWords soon
 * styles of simpletest changed a bit
 
-# 2009-08-13 #
+# 2009-08-13
 * added Text Helper that replaces URLs and Emails in Text automatically with links
 * added Security Component that limits actions to specific HTTP Methods
 * dramatically decreased memory and compile time usage in model class that makes everything up to 50% faster
 
-# 2009-08-12 #
+# 2009-08-12
 * fixed missing created update field when inserting new model entries with multiple behaviors
 * added theming, which includes js/css search in theme directory
 * fixed js packer to append line-feed at end of packed js files
@@ -230,7 +238,7 @@ check some deprecated methods or new features.
 * added String::ifEmpty for default echo
 * model name which is alias used in every query possible
 
-# 2009-05-25 #
+# 2009-05-25
 * added model behaviors callable from every model
 * controller actions can return false to render 404 page
 * added NestedSetBehavior, FlagableBehavior and PositionableBehavior
@@ -248,7 +256,7 @@ check some deprecated methods or new features.
 * app/config/paths.php included before frameworks paths.php
 * Routes reusable with their names and parameters
 
-# 2008-10-26 #
+# 2008-10-26
 * changed the controller order actions to create components again
 * created ModelStructureCache to handle the save and load stuff of a model (refactoring)
 * modelfieldinfo now stores length (also float) and types correctly
@@ -263,7 +271,7 @@ check some deprecated methods or new features.
 * Session loads up correctly (removed double load in controller)
 * query history now skips the results part if there was just one
 
-# 2008-10-24 #
+# 2008-10-24
 * form adds default action now, WEBROOT+current url
 * form fields now save their validate status (error message in formfield->error)
 * added form field password 
@@ -275,7 +283,7 @@ check some deprecated methods or new features.
 * introducing appForm standrad form class for applications
 * javascript addFile now acts like addFiles with multiple arguments
 
-# 2008-10-23 #
+# 2008-10-23
 * controller send now content type from view class
 * added xml view class
 * added simple rss action for controller
@@ -284,7 +292,7 @@ check some deprecated methods or new features.
 * added readme.txt dummy file
 * added absolute url to registry
 
-# 2008-10-21 #
+# 2008-10-21
 * started rewrite of Form and FormField classes (new validator class)
 * model uses the new validator class now
 * added structure.sql file to /app/config/ to store table structures
@@ -292,7 +300,7 @@ check some deprecated methods or new features.
 * changed HTTPRequest to handle POST / GET Vars depending on the Request-Method
 * fixed bug in model cache loading
 
-# 2008-10-20 #
+# 2008-10-20
 * added validation array that validates model data before saving
 * added third parameter for save to save only specific fields of the model
 * fixed/enhanced creation of resulting model set lists and single returns when retreiving model data

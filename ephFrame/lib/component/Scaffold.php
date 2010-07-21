@@ -38,7 +38,7 @@ class Scaffold extends Component
 		if (!isset($this->model)) {
 			return true;
 		}
-		$page = intval((@$this->params['page'] > 1) ? $this->params['page'] : 1);
+		$page = intval((@$this->controller->params['page'] > 1) ? $this->controller->params['page'] : 1);
 		$perPage = $this->model->perPage;
 		$entries = $this->model->findAll(null, null, ($page-1) * $perPage, $perPage);
 		$pagination = $this->model->paginate($page);

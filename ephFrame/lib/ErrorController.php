@@ -15,14 +15,8 @@
  * @filesource
  */
 
-class_exists('AppController') or require APP_LIB_DIR.'AppController.php';
-
 /**
  * Error Controller
- * 
- * This controller is automatically called on any exception that happens
- * in the application that is not catched. See the index.php file in the
- * webroot folder.
  * 
  * @package app
  * @subpackage app.lib.controller
@@ -30,19 +24,27 @@ class_exists('AppController') or require APP_LIB_DIR.'AppController.php';
  * @since 02.11.2007
  */
 class ErrorController extends AppController
-{	
-	public $viewClassName = 'HTMLView';
-	
+{
 	public $layout = 'default';
+	
+	public $components = array(
+		'CSS',
+	);
 	
 	public function beforeRender()
 	{
-		if (Registry::get('DEBUG') < DEBUG_DEVELOPMENT) {
-			$this->data->set('url', $this->request->uri);
-			$this->response->header->statusCode = 404;
-			$this->action('404');
+		// always display 404 page in production mode
+		if (empty($this->params['status']) && Registry::get('DEBUG') <= DEBUG_PRODUCTION) {
+			$this->error(404);
 		}
 		return parent::beforeRender();
+	}
+	
+	public function error($statusCode, $message = null)
+	{
+		$this->response->header->statusCode = (int) $statusCode;
+		$this->data->set('url', $this->request->uri);
+		$this->action = 'error'.$statusCode;
 	}
 	
 	public function directoryNotWritable()
