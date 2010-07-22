@@ -104,7 +104,7 @@ class I18n extends AppComponent
 	 * @param string $locale
 	 * @return I18n|string
 	 */
-	public static function locale($locale = null, $types = array(LC_MESSAGES, LC_COLLATE, LC_TIME))
+	public static function locale($locale = null, $types = array(LC_COLLATE, LC_TIME))
 	{
 		if (func_num_args() == 0) return self::$locale;
 		self::$locale = self::normalizeLocale($locale);
