@@ -522,7 +522,7 @@ abstract class Controller extends Object implements Renderable
 		} else {
 			// call action
 			if (!$beforeActionResult || $this->callMethod($action, $arguments) === false) {
-				return $this->error('error404');
+				return $this->error(404);
 			}
 			// after action callbacks
 			logg(Log::VERBOSE, 'ephFrame: '.get_class($this).'->after'.ucFirst($action).'()');
@@ -536,16 +536,20 @@ abstract class Controller extends Object implements Renderable
 		return $this;
 	}
 	
-	public function error($action)
+	public function error($statusCode, $message = null)
 	{
-		$params = array();
-		if (class_exists('AppErrorController')) {
-			$errorController = new AppErrorController($this->request);
-		} else {
-			ephFrame::loadClass('ephFrame.lib.ErrorController');
-			$errorController = new ErrorController($this->request);
+		$params = func_get_args();
+		// load error controller either from app or ephframe’s error controller
+		if (!class_exists('ErrorController')) {
+			if (ClassPath::exists('App.lib.controller.AppErrorController')) {
+				ephFrame::loadClass('App.lib.controller.AppErrorController');
+			} else {
+				ephFrame::loadClass('ephFrame.lib.ErrorController');
+			}
 		}
-		$errorController->action($action, $params);
+		$errorController = new ErrorController($this->request);
+		$errorController->theme = $this->theme;
+		$errorController->action('error', $params);
 		return $errorController;
 	}
 	

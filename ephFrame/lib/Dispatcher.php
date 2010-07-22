@@ -74,13 +74,17 @@ class Dispatcher extends Object
 		}
 		try {
 			$controller = new $controllerName($request);
-			$controller->action($router->action, $router->params);
-			echo $controller->render();
+			$c = $controller->action($router->action, $router->params);
+			if ($c instanceof Controller) {
+				echo $c->render();
+			} else {
+				echo $controller->render();
+			}
 		} catch (LayoutFileNotFoundException $e) {
 			logg(Log::ERROR, __CLASS__.': layout file not found: '.$e->filename);
 			return $this->dispatch('Error/MissingLayoutFile', array('filename' => $e->filename, 'layout' => $controller->layout));
 		} catch (ViewFileNotFoundException $e) {
-			logg(Log::ERROR, __CLASS__.': view not found: '.$e->filanem);
+			logg(Log::ERROR, __CLASS__.': views not found: '.$e->filename);
 			return $this->dispatch('Error/MissingView', array('filename' => $e->filename, 'missingController' => $router->controller, 'missingAction' => $router->action));
 		} catch (ThemeNotFoundException $e) {
 			logg(Log::ERROR, __CLASS__.': theme not found '.$e->theme);
@@ -101,7 +105,7 @@ class Dispatcher extends Object
 			die('check db connection string, invalid login');
 		} catch (ModelStructureCacheDirNotWritableException $e) {
 			return $this->dispatch('Error/directoryNotWritable', array('directory' => $e->dir));
-		}
+		}	
 		return $controller;
 	}	
 }

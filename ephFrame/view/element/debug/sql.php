@@ -8,9 +8,9 @@ if (!class_exists('QueryHistory')) return false;
 	<table>
 		<thead>
 			<tr>
-				<th>#</th>
-				<th>n</th>
-				<th>t</th>
+				<th style="width: 20px;">#</th>
+				<th style="width: 20px;">n</th>
+				<th style="width: 40px;">t</th>
 				<th>Query</th>
 			</tr>
 		</thead>

@@ -25,10 +25,14 @@
  */
 class ErrorController extends AppController
 {
-	public $layout = 'default';
+	public $layout = 'error';
 	
 	public $components = array(
 		'CSS',
+	);
+	
+	public $helpers = array(
+		'HTML',
 	);
 	
 	public function beforeRender()

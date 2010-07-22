@@ -1,8 +1,6 @@
 <?php
-/**
- * 
- */
-if (Registry::get('DEBUG') < DEBUG_VERBOSE && get_class($this) !== 'HTMLView') continue;
+
+if (Registry::get('DEBUG') <= DEBUG_PRODUCTION) return true;
 
 if (class_exists('QueryHistory')) {
 	$queriesTotal = QueryHistory::getInstance()->count();
@@ -39,7 +37,7 @@ if (class_exists('QueryHistory')) {
 		} ?>
 	</div>
 	<script type="text/javascript" charset="utf-8">
-		$(document).ready(function() {
+		(function($) {
 			$("#debugDump a.toggle").toggle(
 				function () {
 					$('#debugDumpContent').slideDown();
@@ -48,6 +46,6 @@ if (class_exists('QueryHistory')) {
 					$('#debugDumpContent').slideUp();
 				}
 			);
-		});
+		})(jQuery);
 	</script>
 </div>
