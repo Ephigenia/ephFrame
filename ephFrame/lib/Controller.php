@@ -550,7 +550,7 @@ abstract class Controller extends Object implements Renderable
 		$errorController = new ErrorController($this->request);
 		$errorController->theme = $this->theme;
 		$errorController->action('error', $params);
-		return $errorController;
+		die($errorController->render());
 	}
 	
 	/**
