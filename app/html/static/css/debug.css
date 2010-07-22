@@ -10,7 +10,7 @@
 	color: #000000;
 }
 #debugDump {
-	font: normal normal normal 11px/14px "Lucida Sans Unicode", "Lucida Grande", Monospace, Monaco, Verdana, Arial, Sans Serif;
+	font: normal normal normal 11px/14px "Lucida Sans Unicode", "Lucida Grande", Verdana, Arial, Sans Serif;
 	clear: both;
 	text-align: left;
 	border: 1px solid #e6db55;
@@ -45,7 +45,7 @@
 #debugDump pre,
 #debugDump .pre {
 	white-space: normal;
-	font: normal normal normal 11px/13px 'Pragmata','Monaco','Courier New',Courier,monospace;
+	font: normal normal normal 11px/13px 'Pragmata', 'Monaco', 'Monospace', 'Courier New', Courier;
 }
 
 /**
