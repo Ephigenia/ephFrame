@@ -97,8 +97,10 @@ final class ephFrame
 		}
 		// host configurations
 		$configCascade[] = APP_ROOT.'config/host/default.php';
-		$configCascade[] = APP_ROOT.'config/host/'.basename(@$_SERVER['HTTP_HOST']).'.php';
-		$configCascade[] = APP_ROOT.'config/host/'.basename(@$_SERVER['HTTP_HOST']).'.db.php';
+		if (!empty($_SERVER['HTTP_HOST'])) {
+			$configCascade[] = APP_ROOT.'config/host/'.basename(@$_SERVER['HTTP_HOST']).'.php';
+			$configCascade[] = APP_ROOT.'config/host/'.basename(@$_SERVER['HTTP_HOST']).'.db.php';
+		}
 		foreach($configCascade as $filename) {
 			if (file_exists($filename) && is_readable($filename)) require $filename;
 		}

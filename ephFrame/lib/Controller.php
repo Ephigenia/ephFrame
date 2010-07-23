@@ -133,8 +133,6 @@ abstract class Controller extends Object implements Renderable
 				$this->name = get_class($this);
 			}
 		}
-		// set controller name in the view
-		$this->set('controller', $this->name);
 		// init components and helpers
 		$this->initComponents();
 		$this->initModels();
@@ -259,27 +257,26 @@ abstract class Controller extends Object implements Renderable
 	
 	public function addModel($modelName) 
 	{
-		if (func_num_args() > 1) {
-			$args = func_get_args();
-			foreach($args as $arg) $this->addModel($arg);
-			return true;
-		}
-		$classPath = $modelName;
-		if (strpos($modelName, ClassPath::$classPathDevider) === false) {
-			$classPath = 'App.lib.model.'.$modelName;
-			$modelName = ClassPath::className($classPath);
-		}
-		try {
-			if (!class_exists($modelName)) {
-				ephFrame::loadClass($classPath);
+		$modelNames = func_get_args();
+		foreach($modelNames as $modelName) {
+			if (strpos($modelName, ClassPath::$classPathDevider) === false) {
+				$classPath = 'App.lib.model.'.$modelName;
+				$modelName = ClassPath::className($classPath);
+			} else {
+				$classPath = $modelName;
 			}
-			if (is_subclass_of($modelName, 'Model')) {
+			try {
+				if (!class_exists($modelName)) {
+					ephFrame::loadClass($classPath);
+				}
 				$this->{$modelName} = new $modelName();
-				$this->{$modelName}->init($this);
-				logg(Log::VERBOSE_SILENT, 'ephFrame: '.get_class($this).' loaded model \''.$modelName.'\'');
+				if ($this->{$modelName} instanceOf Model) {
+					$this->{$modelName}->init($this);
+					logg(Log::VERBOSE_SILENT, 'ephFrame: '.get_class($this).' loaded model \''.$modelName.'\'');
+				}
+			} catch (ephFrameClassFileNotFoundException $e) {
+				if ($modelName != $this->name) throw $e;
 			}
-		} catch (ephFrameClassFileNotFoundException $e) {
-			if ($modelName != $this->name) throw $e;
 		}
 		return true;
 	}
@@ -496,6 +493,7 @@ abstract class Controller extends Object implements Renderable
 		$this->action = $action;
 		$this->params = array_merge($params);
 		$this->data->set('action', $this->action);
+		$this->data->set('controller', $this->name);
 		$arguments = array_diff_key($params, array('controller' => 0, 'action' => 0, 'path' => 0, 'controllerPrefix' => 0, 'prefix' => 0, 'layout' => 0));
 		foreach (array('layout', 'theme') as $v) {
 			if (isset($this->params[$v])) $this->{$v} = $this->params[$v];
