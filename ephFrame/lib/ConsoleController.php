@@ -86,7 +86,8 @@ class ConsoleController extends Controller
 		$this->quit();
 	}
 	
-	protected function init() {
+	protected function init()
+	{
 		$this->showHello();
 		if (!empty($this->optParse->options['help'])) {
 			$this->console->out(LF);
@@ -96,7 +97,8 @@ class ConsoleController extends Controller
 		return true;
 	}
 	
-	protected function main() {
+	protected function main()
+	{
 		return true;
 	}
 	

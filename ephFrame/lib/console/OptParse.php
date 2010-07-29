@@ -260,7 +260,8 @@ class OptParse extends Object
 		return array($this->options, $this->arguments);
 	}
 	
-	private function getOptionDefinition($name) {
+	private function getOptionDefinition($name)
+	{
 		foreach($this->config as $i => $optionInfo) {
 			if ((is_array($optionInfo['short']) && in_array($name, $optionInfo['short']))
 				|| (is_array($optionInfo['long']) && in_array($name, $optionInfo['long']))

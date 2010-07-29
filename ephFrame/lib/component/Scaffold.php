@@ -22,7 +22,12 @@ class Scaffold extends Component
 			) {
 			$this->model = &$this->controller->{$this->controller->name};
 		}
-		if (isset($this->model) && !isset($this->form)) {
+		return parent::startUp();
+	}
+	
+	public function beforeAction($action = null)
+	{
+		if (in_array($action, array('create', 'edit')) && isset($this->model) && !isset($this->form)) {
 			try {
 				$this->controller->addForm($this->model->name.'Form');
 				$this->form = &$this->controller->{$this->model->name.'Form'};
@@ -30,7 +35,7 @@ class Scaffold extends Component
 			} catch (ephFrameClassFileNotFoundException $e) {
 			}
 		}
-		return parent::startUp();
+		return parent::beforeAction();
 	}
 	
 	public function index()
@@ -38,9 +43,9 @@ class Scaffold extends Component
 		if (!isset($this->model)) {
 			return true;
 		}
-		$page = intval((@$this->controller->params['page'] > 1) ? $this->controller->params['page'] : 1);
+		$page = intval(@$this->controller->params['page']) > 0 ? $this->controller->params['page'] : 1;
 		$perPage = $this->model->perPage;
-		$entries = $this->model->findAll(null, null, ($page-1) * $perPage, $perPage);
+		$entries = $this->model->findAll(null, null, ($page - 1) * $perPage, $perPage);
 		$pagination = $this->model->paginate($page);
 		if (!($url = Router::getRoute($this->model->name.'Paged'))) {
 			$url = Router::getRoute('scaffold_paged', array('controller' => $this->model->name));

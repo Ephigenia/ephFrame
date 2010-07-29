@@ -140,7 +140,7 @@ class Cookie extends AppComponent
 			}
 		}
 		if (empty($this->domain) && isset($_SERVER['HTTP_HOST'])) {
-			$this->domain = $_SERVER['HTTP_HOST'];
+			$this->domain = '.'.$_SERVER['HTTP_HOST'];
 		}
 		return $this; 
 	}
@@ -189,7 +189,7 @@ class Cookie extends AppComponent
 	 * @param boolean $httpOnly	 
 	 * @throws StringExpectedException on invalid varname or value
 	 */
-	public function write($varname, $value, $ttl = null, $path = null, $domain = null, $flags = null) 
+	public function write($varname, $value, $ttl = null, $path = null, $domain = null, $flags = self::FLAG_HTTPONLY) 
 	{
 		if (!is_string($varname) || strlen($varname) == 0) throw new StringExpectedException();
 		$this->data[$varname] = $value;
@@ -207,7 +207,7 @@ class Cookie extends AppComponent
 	 * Alias for {@link write}
 	 * @return Cookie
 	 */
-	public function set($varname, $value, $ttl = null, $path = null, $domain = null, $flags = null) 
+	public function set($varname, $value, $ttl = null, $path = null, $domain = null, $flags = self::FLAG_HTTPONLY) 
 	{
 		return $this->write($varname, $value, $ttl, $path, $domain, $flags);
 	}
@@ -278,7 +278,7 @@ class Cookie extends AppComponent
 			} else {
 				$death = time() + $ttl;
 			}
-			$domain = (isset($cookieData['domain'])) ? $cookieData['domain'] : null;
+			$domain = (isset($cookieData['domain'])) ? $cookieData['domain'] : $this->domain;
 			$secure = (isset($cookieData['flags'])) ? $cookieData['flags'] & self::FLAG_SECURE : false;
 			$httpOnly = (isset($cookieData['flags'])) ? $cookieData['flags'] & self::FLAG_HTTPONLY : false;
 			$value = @$cookieData['value'];

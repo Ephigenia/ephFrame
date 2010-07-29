@@ -631,11 +631,18 @@ class Model extends Object
 	
 	public function __toString()
 	{
-		if (!empty($this->displayField)) {
-			return $this->get($this->displayField);
-		} else {
+		if (empty($this->displayField)) {
 			return parent::__toString();
 		}
+		if (is_array($this->displayField)) {
+			$template = ':'.implode(' :', $this->displayField);
+		} else {
+			$template = $this->displayField;
+		}
+		if (strchr($template, ':')) {
+			return String::substitute($this->displayField, $this->toArray());
+		}
+		return $this->get($this->displayField);
 	}
 	
 	/**

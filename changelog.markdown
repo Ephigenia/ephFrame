@@ -5,13 +5,17 @@ This file should record some kind of change history of the ephFrame Framework
 Please check this file for hints after you updated the framework via svn to 
 check some deprecated methods or new features.
 
-# 2009-07-21
+# 2009-07-29
 
+* Cookies use current HTTP_HOST as default domain if no domain set
+* Cookies set HTTP_ONLY Flag as default
 * Error handling reworked, response from every controller with
 `$this->error(404)` to show an error page.
 * Error action loading ErrorController or AppErrorController if available
 * Default model missing, table missing etc. error message texts changed
 * fixed scaffold component reading `page` parameter (no paging possible)
+* `Model->displayField` can be an array or a template using `:fieldname`
+notation so you can use this in more various ways to display model entries
 
 # 2010-07-18
 

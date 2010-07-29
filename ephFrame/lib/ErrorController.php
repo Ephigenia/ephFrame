@@ -48,7 +48,12 @@ class ErrorController extends AppController
 	{
 		$this->response->header->statusCode = (int) $statusCode;
 		$this->data->set('url', $this->request->uri);
-		$this->action = 'error'.$statusCode;
+		$this->data->set('message', $message);
+		if (is_int($statusCode)) {
+			$this->action = 'error'.$statusCode;
+		} else {
+			$this->action = $statusCode;
+		}
 	}
 	
 	public function directoryNotWritable()

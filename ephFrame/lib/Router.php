@@ -78,7 +78,8 @@ class Router extends Hash
 	/**
 	 * @return DBConnectionManager
 	 */
-	public static function getInstance() {
+	public static function getInstance()
+	{
 		if (self::$instance === null) {
 			self::$instance = new Router();
 		}
@@ -173,7 +174,8 @@ class Router extends Hash
 	 * @param string $routeTemplate
 	 * @return string
 	 */
-	private function createRouteRegexp($routeTemplate) {
+	private function createRouteRegexp($routeTemplate)
+	{
 		$regexp = trim($routeTemplate);
 		// return root uri for empty templates
 		if ($regexp == '/' || $regexp == '') {
@@ -217,7 +219,8 @@ class Router extends Hash
 	 * @param boolean $permanent return permanent url or just the uri part
 	 * @return string|boolean 	false if route name could not be found, otherwise the resulting uri
 	 */
-	public static function getRoute($routeName = null, $params = array(), $permanent = false) {
+	public static function getRoute($routeName = null, $params = array(), $permanent = false)
+	{
 		$router = self::getInstance();
 		// get current uri
 		if ($routeName == null) {
@@ -241,11 +244,13 @@ class Router extends Hash
 		return $uri;
 	}
 	
-	public static function url($routeName = null, $params = array()) {
+	public static function url($routeName = null, $params = array())
+	{
 		return self::getRoute($routeName, $params, true);
 	}
 	
-	public static function uri($routeName = null, $params = array()) {
+	public static function uri($routeName = null, $params = array())
+	{
 		return self::getRoute($routeName, $params, false);
 	}
 	
@@ -256,7 +261,8 @@ class Router extends Hash
 	 * @param string $path uri for the route, including param regexps
 	 * @param array(string) $params default resulting parameters
 	 */
-	public static function addRoute($routeName = null, $path, Array $params = array()) {
+	public static function addRoute($routeName = null, $path, Array $params = array())
+	{
 		$router = self::getInstance();
 		// default route parameters
 		$default = array(

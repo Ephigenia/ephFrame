@@ -523,9 +523,10 @@ abstract class Controller extends Object implements Renderable
 				return $this->error(404);
 			}
 			// after action callbacks
-			logg(Log::VERBOSE, 'ephFrame: '.get_class($this).'->after'.ucFirst($action).'()');
-			if (method_exists($this, 'after'.ucFirst($action))) {
-				$this->callMethod('after'.ucFirst($action));
+			$afterCallbackName = 'after'.ucFirst($action);
+			if (method_exists($this, $afterCallbackName)) {
+				logg(Log::VERBOSE, 'ephFrame: '.get_class($this).'->'.$afterCallbackName.'()');
+				$this->callMethod($afterCallbackName, $arguments);
 			}
 		}
 		foreach(array_reverse($callbackObjects) as $object) {

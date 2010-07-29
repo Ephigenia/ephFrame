@@ -87,6 +87,19 @@ class ObjectSet extends IndexedArray
 	}
 	
 	/**
+	 * Implode all objects $property value with $glue
+	 * @param string $glue
+	 * @param string $property
+	 * @return string
+	 */
+	public function implodeProperty($glue = ',', $property)
+	{
+		$r = array();
+		foreach($this as $obj) $r[] = $obj->{$property};
+		return implode($glue, $r);
+	}
+	
+	/**
 	 * Adds an other object to the ObjectSet
 	 * @param object $object
 	 * @return ObjectSet

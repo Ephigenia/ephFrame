@@ -208,6 +208,26 @@ class NestedSetBehavior extends ModelBehavior
 	}
 	
 	/**
+	 * like {@link tree} but returning an nested array
+	 */
+	public function nestedTree($depth = null, $depthModel = null)
+	{
+		$collection = $this->tree($depth, $depthModel);
+		$tree = array();
+		$parents = array();
+		foreach($collection as $Node) {
+			$Node->children = new ObjectSet(get_class($Node));
+			$parents[$Node->id] = $Node;
+			if ((int) $Node->level - $this->model->level <= $this->model->level) {
+				$tree[] = $Node;
+			} else {
+				$parents[$Node->parent_id]->children[] = $Node;
+			}
+		}
+		return $tree[0];
+	}
+	
+	/**
 	 * Returns the parent node of the current node if there’s any
 	 *
 	 * This will return the Model that acts as parent for the current node if

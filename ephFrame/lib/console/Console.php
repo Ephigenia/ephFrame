@@ -164,7 +164,7 @@ class Console extends Object
 	 * Quits PHP Process with an error code, just like in shell scripts
 	 * @param integer $errorCode
 	 */
-	public function exit($errorCode)
+	public function quit($errorCode)
 	{
 		die($errorCode);
 	}
