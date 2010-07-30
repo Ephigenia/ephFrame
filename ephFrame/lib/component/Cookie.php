@@ -77,38 +77,37 @@
 class Cookie extends AppComponent 
 {	
 	/**
-	 * Use this when setting a cockie for http only
+	 * flag for setting HTTP_ONLY cookies
 	 * @var integer
 	 */
-	const FLAG_HTTPONLY 	= 1;
+	const FLAG_HTTPONLY = 1;
 	
 	/**
-	 * Use when setting a cookie
+	 * use secure setting when setting cookie
 	 * @var integer
 	 */
-	const FLAG_SECURE 	= 2;
+	const FLAG_SECURE = 2;
 	
 	/**
-	 * Standard Expiration Time for new create cookies
-	 * that have no duration
+	 * default time to life for new cookies
 	 * @var integer
 	 */
 	public $ttl = WEEK;
 	
 	/**
-	 * Domain for newly created cookies
+	 * default path setting for new cookies
 	 * @var string
 	 */
 	public $path = '/';
 	
 	/**
-	 * Domain that is used by default when saving cookies
+	 * default domain setting for new cookies
 	 * @var string
 	 */
 	public $domain;
 	
 	/**
-	 * Stores all cookies	
+	 * internal storage for all cookies
 	 * @var array(string)
 	 */
 	public $data = array();
@@ -132,26 +131,6 @@ class Cookie extends AppComponent
 			$this->domain = '.'.$_SERVER['HTTP_HOST'];
 		}
 		return $this; 
-	}
-	
-	/**
-	 * Sets or returns new domain for new variables
-	 * @param string	
-	 * @return Cookie|string
-	 */
-	public function domain($domain = null) 
-	{
-		return parent::__getOrSet('domain', $domain);
-	}
-	
-	/**
-	 * Sets or returns the default path for new cookies
-	 * @param string
-	 * @return Cookie|string
-	 */
-	public function path($path = null) 
-	{
-		return parent::__getOrSet('path', $path);
 	}
 	
 	/**

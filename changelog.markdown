@@ -5,10 +5,13 @@ This file should record some kind of change history of the ephFrame Framework
 Please check this file for hints after you updated the framework via svn to 
 check some deprecated methods or new features.
 
-# 2009-07-29
+# 2009-07-30
 
 * Cookies use current HTTP_HOST as default domain if no domain set
 * Cookies set HTTP_ONLY Flag as default
+* Cookies removed write and read method alias and reworked internal handling
+of cookie set, just set instantly, not saved and set when beforeRender was
+called, this makes cookie component much easier to understand and use
 * Error handling reworked, response from every controller with
 `$this->error(404)` to show an error page.
 * Error action loading ErrorController or AppErrorController if available
