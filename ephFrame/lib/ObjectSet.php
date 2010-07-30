@@ -94,9 +94,14 @@ class ObjectSet extends IndexedArray
 	 */
 	public function implodeProperty($glue = ',', $property)
 	{
+		return implode($glue, $this->extractProperty($property));
+	}
+	
+	public function extractProperty($property)
+	{
 		$r = array();
 		foreach($this as $obj) $r[] = $obj->{$property};
-		return implode($glue, $r);
+		return $r;
 	}
 	
 	/**

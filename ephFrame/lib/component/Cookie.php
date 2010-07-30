@@ -33,8 +33,7 @@
  * <code>
  * class ExampleController extends AppController {
  * 	public $components = array('Cookie');
- * 	public function login() 
-	{
+ * 	public function login() {
  * 		if ($this->params['username'] == 'alpha' && $this->params['password'] == 'gamma') {
  * 			$this->Cookie->set('welcomeMessage', 'Hi Baby!');
  * 		}
@@ -44,7 +43,7 @@
  *
  * <code>
  * // set a permanent login cookie that lats one week
- * $this->Cookie->write('permanentKey', md5('salt' + $User->id), WEEK);
+ * $this->Cookie->set('permanentKey', md5('salt' + $User->id), WEEK);
  * </code>
  * 
  * Saving Arrays
@@ -52,8 +51,8 @@
  * You can create nested cookies by using the array notation for their name.
  * See the example:
  * <code>
- * $this->Cookie->write('User[id]', 1);
- * $this->Cookie->write('User[name]', 'Ephigenia');
+ * $this->Cookie->set('User[id]', 1);
+ * $this->Cookie->set('User[name]', 'Ephigenia');
  * </code>
  * 
  * Cookies for subdomains only and every subdomain
@@ -73,7 +72,7 @@
  * @since 02.05.2007
  * @package ephFrame
  * @subpackage ephFrame.lib.helper
- * @version 0.1
+ * @version 0.2
  */
 class Cookie extends AppComponent 
 {	
@@ -109,22 +108,10 @@ class Cookie extends AppComponent
 	public $domain;
 	
 	/**
-	 * Enable/disable all cookie data on class destruct
-	 * @var boolean
-	 */
-	public $autosave = true;
-	
-	/**
 	 * Stores all cookies	
 	 * @var array(string)
 	 */
 	public $data = array();
-	
-	/**
-	 * Saves all cookies that should be written
-	 * @var array(string)
-	 */
-	protected $saveData = array();
 	
 	/**
 	 * Cookie Constructor
@@ -134,11 +121,13 @@ class Cookie extends AppComponent
 	{
 		parent::__construct();
 		$this->data = &$_COOKIE;
+		// deserialize arrays
 		foreach($this->data as $k => $v) {
 			if (is_string($v) && substr($v, 0, 2) == 'a:') {
 				$this->data[$k] = unserialize(stripslashes($v));
 			}
 		}
+		// set domain to current domain as default
 		if (empty($this->domain) && isset($_SERVER['HTTP_HOST'])) {
 			$this->domain = '.'.$_SERVER['HTTP_HOST'];
 		}
@@ -189,27 +178,25 @@ class Cookie extends AppComponent
 	 * @param boolean $httpOnly	 
 	 * @throws StringExpectedException on invalid varname or value
 	 */
-	public function write($varname, $value, $ttl = null, $path = null, $domain = null, $flags = self::FLAG_HTTPONLY) 
+	public function set($name, $value, $ttl = null, $path = null, $domain = null, $flags = self::FLAG_HTTPONLY) 
 	{
-		if (!is_string($varname) || strlen($varname) == 0) throw new StringExpectedException();
-		$this->data[$varname] = $value;
-		$this->saveData[$varname] = array(
-			'value' => $value,
-			'ttl' => $ttl,
-			'path' => $path,
-			'domain' => $domain,
-			'flags' => (int) $flags
+		if ($ttl === null) {
+			$ttl = $this->ttl;
+		}
+		if (is_string($ttl)) {
+			$death = strtotime($ttl);
+		} else {
+			$death = time() + $ttl;
+		}
+		return setcookie(
+			(string) $name,
+			is_array($value) ? serialize($value) : $value,
+			$death,
+			$path === null ? $this->path : $path,
+			$domain === null ? $this->domain : $domain,
+			(bool) ($flags & self::FLAG_SECURE),
+			(bool) ($flags & self::FLAG_HTTPONLY)
 		);
-		return $this;
-	}
-	
-	/**
-	 * Alias for {@link write}
-	 * @return Cookie
-	 */
-	public function set($varname, $value, $ttl = null, $path = null, $domain = null, $flags = self::FLAG_HTTPONLY) 
-	{
-		return $this->write($varname, $value, $ttl, $path, $domain, $flags);
 	}
 	
 	/**
@@ -217,9 +204,9 @@ class Cookie extends AppComponent
 	 * @param string	$varname
 	 * @return boolean
 	 */
-	public function defined($varname) 
+	public function defined($name) 
 	{
-		return isset($this->data[$varname]);
+		return isset($this->data[$name]);
 	}
 	
 	/**
@@ -229,23 +216,12 @@ class Cookie extends AppComponent
 	 * @param	string $varname
 	 * @return string|integer
 	 */
-	public function read($varname) 
+	public function get($name) 
 	{
-		if ($this->defined($varname)) {
-			if (empty($this->data[$varname])) return false;
-			return $this->data[$varname];
+		if ($this->defined($name)) {
+			return $this->data[$name];
 		}
 		return false;
-	}
-	
-	/**
-	 * Alias for {@link read}
-	 * @param string $varname
-	 * @return mixed
-	 */
-	public function get($varname) 
-	{
-		return $this->read($varname);
 	}
 	
 	/**
@@ -253,63 +229,14 @@ class Cookie extends AppComponent
 	 * @param string	$cookiename
 	 * @return boolean
 	 */
-	public function delete($cookiename) 
+	public function delete($name) 
 	{
-		if ($this->defined($cookiename)) {
-			$this->saveData[$cookiename]['ttl'] = -1;
-			unset($this->data[$cookiename]);
-			unset($_COOKIE[$cookiename]);
+		if ($this->defined($name)) {
+			unset($this->data[$name]);
+			setcookie($name, false, -1, '/');
 		}
 		return $this;
 	}
-	
-	/**
-	 * Saves all cookies that are new and returns the number of cookies saved
-	 * @return integer
-	 */
-	public function save() 
-	{
-		$debug = false;
-		foreach ($this->saveData as $cookieName => $cookieData) {
-			$path = (isset($cookieData['path'])) ? $cookieData['path'] : $this->path;
-			$ttl = (isset($cookieData['ttl'])) ? $cookieData['ttl'] : $this->ttl;
-			if (is_string($ttl)) {
-				$death = strtotime($ttl);
-			} else {
-				$death = time() + $ttl;
-			}
-			$domain = (isset($cookieData['domain'])) ? $cookieData['domain'] : $this->domain;
-			$secure = (isset($cookieData['flags'])) ? $cookieData['flags'] & self::FLAG_SECURE : false;
-			$httpOnly = (isset($cookieData['flags'])) ? $cookieData['flags'] & self::FLAG_HTTPONLY : false;
-			$value = @$cookieData['value'];
-			if (!empty($debug)) {
-				echo '<pre>setting '.$cookieName.': '.$cookieData['value'].' (ttl: '.$ttl.' - till: '.date('d.m.Y H:i', $death).')</pre>';
-			}
-			if (is_array($value)) {
-				$value = serialize($value);
-			}
-			setcookie($cookieName, $value, $death, $path, $domain, $secure, $httpOnly);
-		}
-		if (!empty($debug)) die('debug set to true in Cookie->save()');
-		$count = count($this->saveData);
-		$this->saveData = array();
-		return $count;
-	}
-	
-	public function beforeRender() 
-	{
-		if ($this->autosave) {
-			$this->save();
-		}
-		return parent::beforeRender();
-	}
-	
-	public function __destruct() 
-	{
-		if ($this->autosave && count($this->saveData) > 0 && !headers_sent()) {
-			$this->save();
-		}
-	}	
 }
 
 /**

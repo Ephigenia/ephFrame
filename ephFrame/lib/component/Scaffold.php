@@ -51,6 +51,7 @@ class Scaffold extends Component
 			$url = Router::getRoute('scaffold_paged', array('controller' => $this->model->name));
 		}
 		$pagination['url'] = $url;
+		$this->controller->{Inflector::pluralize($this->model->name)} = $entries;
 		$this->controller->data->set('pagination', $pagination);
 		$this->controller->data->set(Inflector::plural($this->model->name), $entries);
 		$this->controller->data->set('data', $entries);
