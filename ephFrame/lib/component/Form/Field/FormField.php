@@ -201,11 +201,13 @@ abstract class FormField extends HTMLTag
 		if (func_num_args() == 0) {
 			$value = $this->value();
 		}
-		if (empty($value) && $this->mandatory) {
-			if (function_exists('__')) {
-				$this->error = __('Formfield <q>:1</q> is required.', coalesce($this->attributes->label, $this->attributes->name));
-			} else {
-				$this->error = coalesce($this->attributes->label, $this->attributes->name).' is required.';
+		if (empty($value)) {
+			if ($this->mandatory) {
+				if (function_exists('__')) {
+					$this->error = __('Formfield <q>:1</q> is required.', coalesce($this->attributes->label, $this->attributes->name));
+				} else {
+					$this->error = coalesce($this->attributes->label, $this->attributes->name).' is required.';
+				}
 			}
 		} else {
 			$validator = new Validator($this->validate, $this);

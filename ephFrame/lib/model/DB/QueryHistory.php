@@ -42,7 +42,8 @@ class QueryHistory extends Object implements Countable, Renderable
 	 */
 	public static $instance;
 	
-	public static function getInstance() {
+	public static function getInstance()
+	{
   		if (self::$instance === null) {
   			$classname = __CLASS__;
   			self::$instance = new $classname();
@@ -56,7 +57,8 @@ class QueryHistory extends Object implements Countable, Renderable
 	 * @param QueryResult $result
 	 * @param Timer $timer
 	 */
-	public static function add($query, $result, Timer $timer) {
+	public static function add($query, $result, Timer $timer)
+	{
 		$history = self::getInstance();
 		$history->data[] = array(
 			'query' => $query,
@@ -149,7 +151,6 @@ class QueryHistory extends Object implements Countable, Renderable
 	
 	public function __toString() 
 	{
-		echo 'QueryHistory Render reached';
 		return $this->render();
 	}	
 }

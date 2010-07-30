@@ -1403,7 +1403,7 @@ class Model extends Object
 	public function findAll($conditions = null, $order = null, $offset = 0, $count = null, $depth = null) 
 	{
 		if (!($query = $this->beforeFind($this->createSelectQuery($conditions, $order, $offset, $count, $depth)))) return false;
-		if ($r = $this->query($query)) {
+		if ($r = $this->query($query, $depth)) {
 			return $this->afterFind($r);
 		}
 		return false;
