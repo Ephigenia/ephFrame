@@ -5,8 +5,9 @@ This file should record some kind of change history of the ephFrame Framework
 Please check this file for hints after you updated the framework via svn to 
 check some deprecated methods or new features.
 
-# 2009-07-30
+# 2009-08-02
 
+* Image class now can create images from image raw source via fromString
 * Cookies use current HTTP_HOST as default domain if no domain set
 * Cookies set HTTP_ONLY Flag as default
 * Cookies removed write and read method alias and reworked internal handling

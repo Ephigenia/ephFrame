@@ -156,14 +156,18 @@ class HTML extends AppHelper
 	 */
 	public function image($src, Array $attributes = array()) 
 	{
+		if ($src == false) {
+			return false;
+		}
 		if (strpos($src, '/') !== 0 && substr($src, 0, 7) !== 'http://') {
+			$searchPaths[] = $src;
 			if ($this->controller instanceof Controller && $this->controller->theme) {
 				$searchPaths[] = STATIC_DIR.'theme/'.$this->controller->theme.'/img/'.$src;
 			}
 			$searchPaths[] = STATIC_DIR.'img/'.$src;
 			$src = WEBROOT.$searchPaths[count($searchPaths)-1];
 			foreach($searchPaths as $filename) {
-				if (!file_exists($filename)) continue;
+				if (!is_file($filename)) continue;
 				$src = WEBROOT.$filename;
 				break;
 			}

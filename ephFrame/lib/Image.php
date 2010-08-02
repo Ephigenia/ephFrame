@@ -158,11 +158,14 @@ class Image extends File implements Renderable
 			$this->handle = $filename;
 		// create from filename // if file not found throw an exception
 		} elseif (is_string($filenameWidthOrHandle)) {
-			parent::__construct($filenameWidthOrHandle);
-			$this->checkExistence();
-			//if (!$this->exists()) throw new FileNotFoundException($this);
-		} else  {
-			assert($filenameWidthOrHandle > 0 && $height > 0);
+			if (strlen($filenameWidthOrHandle) < 255) {
+				parent::__construct($filenameWidthOrHandle);
+				$this->checkExistence();
+			} else {
+				$this->fromString($filenameWidthOrHandle);
+			}
+		// create new image with $width and $height
+		} elseif ($filenameWidthOrHandle && $height)  {
 			$this->width = abs((int) $filenameWidthOrHandle);
 			$this->height = abs((int) $height);
 			$this->createHandle();
@@ -170,6 +173,14 @@ class Image extends File implements Renderable
 				$this->createColor($backgroundColor);
 			}
 		}
+		return $this;
+	}
+	
+	public function fromString($string)
+	{
+		$this->handle = imagecreatefromstring($string);
+		$this->width = imagesx($this->handle);
+		$this->height = imagesy($this->handle);
 		return $this;
 	}
 	
@@ -1004,7 +1015,8 @@ class Image extends File implements Renderable
 	 * @param $channels
 	 * @return integer
 	 */
-	public static function calculateMemoryUsage($width, $height, $bits = 8, $channels = 3, $fudgeFactor = 1.65) {
+	public static function calculateMemoryUsage($width, $height, $bits = 8, $channels = 3, $fudgeFactor = 1.65)
+	{
 		return $width * $height * $bits * $channels / 8 * $fudgeFactor;
 	}
 

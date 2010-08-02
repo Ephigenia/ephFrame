@@ -65,6 +65,7 @@ class ModelBehavior extends Object
 		if (is_array($config) && $this->defaultConfig) {
 			$this->config[$model->name] = array_merge($this->defaultConfig, $config);
 		}
+		$this->afterConstruct();
 		return $this;
 	}
 	
@@ -113,3 +114,5 @@ class ModelBehavior extends Object
 		return true;
 	}	
 }
+
+class ModelBehaviorException extends ModelException {}
