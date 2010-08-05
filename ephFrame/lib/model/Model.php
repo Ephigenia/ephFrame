@@ -1744,13 +1744,14 @@ class Model extends Object
 			$this->modelStructureCache->save($this->structure);
 		}
 		unset($db);
-		// creating all key indexes in th edata array and fill them with null
+		// creating all key indexes in the data array and fill them with null
 		// or their default value from the field info
 		foreach($this->structure as $fieldName => $fieldInfo) {
-			//if (array_key_exists($fieldName, $this->data)) continue;
-			if (isset($fieldInfo->default)) {
+			if (array_key_exists($fieldName, $this->data)) {
+				continue;
+			} elseif (isset($fieldInfo->default)) {
 				$this->data[$fieldName] = $fieldInfo->default;
-			} elseif (!isset($this->data[$fieldName])) {
+			} else {
 				$this->data[$fieldName] = null;
 			}
 		}

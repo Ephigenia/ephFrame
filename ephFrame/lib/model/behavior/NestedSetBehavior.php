@@ -183,6 +183,7 @@ class NestedSetBehavior extends ModelBehavior
 			$q->where($this->model->name.'.lft > '.$this->model->lft.'');
 			$q->where($this->model->name.'.rgt < '.$this->model->rgt.'');
 		}
+
 		// optimize query by using level field if possible
 		if ($this->model->hasField('level')) {
 			if ($depth > 0) {
