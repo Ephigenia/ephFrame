@@ -125,6 +125,10 @@ class Scaffold extends Component
 				$this->controller->FlashMessage->set(__('Error while deleting :1.', $model), FlashMessageType::ERROR);
 			}
 		}
+	}
+	
+	public function afterDelete()
+	{
 		return $this->controller->redirect(Router::uri('scaffold', array('controller' => $this->controller->name, 'action' => 'index')));
 	}
 }

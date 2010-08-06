@@ -491,18 +491,24 @@ abstract class Controller extends Object implements Renderable
 	public function action($action, Array $params = array()) 
 	{
 		$this->action = $action;
-		$this->params = array_merge($params);
+		// additional parameters
+		$this->params = array_merge($this->params, $params);
+		// action and controller name set for view
 		$this->data->set('action', $this->action);
 		$this->data->set('controller', $this->name);
-		$arguments = array_diff_key($params, array('controller' => 0, 'action' => 0, 'path' => 0, 'controllerPrefix' => 0, 'prefix' => 0, 'layout' => 0));
 		foreach (array('layout', 'theme') as $v) {
 			if (isset($this->params[$v])) $this->{$v} = $this->params[$v];
 		}
+		$arguments = array_diff_key($params, array('controller' => 0, 'action' => 0, 'path' => 0, 'controllerPrefix' => 0, 'prefix' => 0, 'layout' => 0));
+		// callback objects
 		$callbackObjects = array();
-		foreach(array_merge($this->components, $this->forms) as $classPath) {
+		foreach($this->components as $classPath) {
 			$callbackObjects[] = $this->{ClassPath::className($classPath)};
 		}
-		foreach($this->helpers as $classPath) {
+		if (is_array($this->forms)) foreach($this->forms as $formName) {
+			$callbackObjects[] = $this->$formName;
+		}
+		if (is_array($this->helpers)) foreach($this->helpers as $classPath) {
 			$callbackObjects[] = $this->data->get(ClassPath::className($classPath));
 		}
 		$callbackObjects[] = $this;

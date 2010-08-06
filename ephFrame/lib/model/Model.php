@@ -297,7 +297,7 @@ class Model extends Object
 	/**
 	 * callback called after model finished constructing and init
 	 */
-	public function afterConstruct() 
+	protected function afterConstruct() 
 	{
 		return true;
 	}
@@ -374,7 +374,7 @@ class Model extends Object
 				get_class($bind) == $modelAlias
 				|| $bind->name == $modelAlias
 				|| isset($this->{$modelAlias})
-				|| isset($bind->{$modelAlias})
+				// || isset($bind->{$modelAlias}) @TODO seemes to be buggy
 			)) {
 			$this->{$modelAlias} = $bind;
 		} else {
@@ -420,7 +420,7 @@ class Model extends Object
 					$config['foreignKey'] = ucFirst($this->name).'.'.$this->primaryKeyName;
 					break;
 				case 'hasAndBelongsToMany':
-					$config['foreignKey'] = Inflector::underscore($this->name.'_'.$this->primaryKeyName);
+					$config['foreignKey'] = ucFirst($this->name).'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName);
 					break;
 			}
 		// add model name to foreignkeys with no model name like user_id
@@ -440,7 +440,7 @@ class Model extends Object
 					$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
 					break;
 				case 'hasMany':
-					$config['associationKey'] = Inflector::underscore($this->name.'_'.$this->primaryKeyName);
+					$config['associationKey'] = $this->{$modelAlias}->name.'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName);
 					break;
 			}
 		} elseif (strpos($config['associationKey'], '.') === false) {
@@ -508,25 +508,6 @@ class Model extends Object
 	public function detailPageURL() 
 	{
 		return trim(Registry::get('WEBROOT_URL'), '/').$this->detailPageUri();
-	}
-	
-	/**
-	 * Returns unique id string for a model entry
-	 * @param integer $length
-	 * @return string
-	 */
-	public function uniqueId($length = 8) 
-	{
-		return substr(md5(SALT.$this->id), 0, $length);
-	}
-	
-	/**
-	 * Alias for {@link detailPageUri}
-	 * @return string
-	 */
-	public function permaLink() 
-	{
-		return $this->detailPageUri();
 	}
 	
 	/**
@@ -762,7 +743,7 @@ class Model extends Object
 	 * Called before insert or update action takes places
 	 * @return boolean
 	 */
-	public function beforeSave() 
+	protected function beforeSave() 
 	{
 		// update model keys
 		foreach($this->belongsTo as $modelName => $config) {
@@ -777,7 +758,7 @@ class Model extends Object
 		return true;
 	}
 	
-	public function afterSave() 
+	protected function afterSave() 
 	{
 		return true;
 	}
@@ -815,12 +796,12 @@ class Model extends Object
 		return true;
 	}
 	
-	public function beforeInsert() 
+	protected function beforeInsert() 
 	{
 		return true;
 	}
 	
-	public function afterInsert() 
+	protected function afterInsert() 
 	{
 		return true;
 	}
@@ -857,7 +838,7 @@ class Model extends Object
 		return $this;
 	}
 	
-	public function beforeUpdate() 
+	protected function beforeUpdate() 
 	{
 		// set created date if there's any
 		if (!$this->exists()) {
@@ -866,7 +847,7 @@ class Model extends Object
 		return true;
 	}
 	
-	public function afterUpdate() 
+	protected function afterUpdate() 
 	{
 		return true;
 	}
@@ -1282,7 +1263,7 @@ class Model extends Object
 	 * @param string|Query $query
 	 * @return boolean|Query
 	 */
-	public function beforeFind($query) 
+	protected function beforeFind($query) 
 	{
 		return $query;
 	}
@@ -1292,7 +1273,7 @@ class Model extends Object
 	 * @param mixed $results
 	 * @return mixed
 	 */
-	public function afterFind($results) 
+	protected function afterFind($results) 
 	{
 		return $results;
 	}
@@ -1712,10 +1693,13 @@ class Model extends Object
 	public function reset() 
 	{
 		if (is_array($this->structure)) {
-			foreach($this->structure as $fieldInfo) {
-				$this->data[$fieldInfo->name] = null;
-				if ($fieldInfo->primary) {
-					$this->primaryKeyName = $fieldInfo->name;
+			foreach($this->structure as $fieldName => $fieldInfo) {
+				if (isset($this->data[$fieldName])) {
+					continue;
+				} elseif (isset($fieldInfo->default)) {
+					$this->data[$fieldName] = $fieldInfo->default;
+				} else {
+					$this->data[$fieldName] = null;
 				}
 			}
 		} else {
@@ -1743,33 +1727,9 @@ class Model extends Object
 			}
 			$this->modelStructureCache->save($this->structure);
 		}
-		unset($db);
-		// creating all key indexes in the data array and fill them with null
-		// or their default value from the field info
-		foreach($this->structure as $fieldName => $fieldInfo) {
-			if (array_key_exists($fieldName, $this->data)) {
-				continue;
-			} elseif (isset($fieldInfo->default)) {
-				$this->data[$fieldName] = $fieldInfo->default;
-			} else {
-				$this->data[$fieldName] = null;
-			}
-		}
+		$this->reset();
 		return $this;
 	}
-	
-	/**
-	 * Returns an array of all fieldnames of this model
-	 * @return array(string)
-	 */
-	public function fieldNames() 
-	{
-		$fieldNames = array();
-		foreach($this->structure as $fieldInfo) {
-			$fieldNames[] = $fieldInfo->name;
-		}
-		return $fieldNames;
-	}	
 }
 
 /**

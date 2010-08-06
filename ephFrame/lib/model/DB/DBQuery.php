@@ -148,7 +148,7 @@ abstract class DBQuery extends Object implements Renderable
 	{
 		$this->select = new Hash();
 		$this->tables = new Collection();
-		$this->join = new Collection();
+		$this->join = new Hash();
 		$this->having = new Collection();
 		$this->groupBy = new Collection();
 		$this->orderBy = new Collection();
@@ -333,7 +333,7 @@ abstract class DBQuery extends Object implements Renderable
 		if (!is_array($conditions)) {
 			$conditions = array($conditions);
 		}
-		$this->join->add(array($tablename, $alias, $type, $conditions));
+		$this->join->add($alias, array($tablename, $alias, $type, $conditions));
 		return $this;
 	}
 	
