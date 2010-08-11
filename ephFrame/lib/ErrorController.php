@@ -72,9 +72,8 @@ class ErrorController extends AppController
 		$this->data->set('theme', $theme);
 	}
 	
-	public function missingLayoutFile($filename, $layout)
+	public function missingLayoutFile($filename)
 	{
-		$this->data->set('layout', $layout);
 		$this->data->set('filename', $filename);
 		$this->layout = 'default';
 	}

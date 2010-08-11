@@ -216,6 +216,7 @@ class HTTPRequest extends Component
 				}
 			}
 		}
+		return true;
 	}
 	
 	/**

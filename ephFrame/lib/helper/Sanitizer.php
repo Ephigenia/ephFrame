@@ -54,6 +54,7 @@ class Sanitizer extends Helper
 	const INT = 32;
 	const FLOAT = 64;
 	const FILENAME = 128;
+	const TRIM = 512;
 	
 	const CLEAN_CARRIAGE = 1;
 	const CLEAN_SPACES = 2;
@@ -112,6 +113,7 @@ class Sanitizer extends Helper
 			}
 			return $var;
 		}
+		if ($flags & self::TRIM) $var = trim($var);
 		if ($flags & self::PANIC) $var = self::panic($var);
 		if ($flags & self::PARANOID) $var = self::paranoid($var);
 		if ($flags & self::SQL) $var = self::sql($var);

@@ -82,7 +82,7 @@ class Dispatcher extends Object
 			}
 		} catch (LayoutFileNotFoundException $e) {
 			logg(Log::ERROR, __CLASS__.': layout file not found: '.$e->filename);
-			return $this->dispatch('Error/MissingLayoutFile', array('filename' => $e->filename, 'layout' => $controller->layout));
+			return $this->dispatch('Error/MissingLayoutFile', array('filename' => $e->filename));
 		} catch (ViewFileNotFoundException $e) {
 			logg(Log::ERROR, __CLASS__.': views not found: '.$e->filename);
 			return $this->dispatch('Error/MissingView', array('filename' => $e->filename, 'missingController' => $router->controller, 'missingAction' => $router->action));

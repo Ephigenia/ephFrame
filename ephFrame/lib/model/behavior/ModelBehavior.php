@@ -64,12 +64,14 @@ class ModelBehavior extends Object
 		$this->model = $model;
 		if (is_array($config) && $this->defaultConfig) {
 			$this->config[$model->name] = array_merge($this->defaultConfig, $config);
+		} else {
+			$this->config[$model->name] = $config;
 		}
 		$this->afterConstruct();
 		return $this;
 	}
 	
-	public function afterConstruct()
+	protected function afterConstruct()
 	{
 		return true;
 	}

@@ -605,7 +605,15 @@ class Model extends Object
 			if ((is_array($except) && in_array($fieldname, $except)) || $except == $fieldname) {
 				continue;
 			}
-			$data[$fieldname] = $this->get($fieldname);
+			if (strstr($fieldname, '.') === false) {
+				if (isset($this->data[$fieldname])) {
+					$data[$fieldname] = $this->data[$fieldname];
+				} else {
+					$data[$fieldname] = false;
+				}
+			} else {
+				$data[$fieldname] = $this->get($fieldname);
+			}
 		}
 		return $data;
 	}
@@ -1647,8 +1655,8 @@ class Model extends Object
 	{
 		list($modelname, $fieldname) = Inflector::splitModelAndFieldName($fieldname);
 		if (!empty($modelname) && $modelname !== $this->name) {
-			if (isset($this->$modelname) && $this->$modelname instanceof Model) {
-				return $this->$modelname->set($fieldname, $value);
+			if (isset($this->{$modelname}) && $this->{$modelname} instanceof Model) {
+				return $this->{$modelname}->set($fieldname, $value);
 			}
 		} elseif (isset($this->structure[$fieldname])) {
 			// use quoting type of structure
@@ -1668,7 +1676,7 @@ class Model extends Object
 					break;
 			}
 		} elseif (is_object($value)) {
-			$this->$fieldname = $value;
+			$this->{$fieldname} = $value;
 		} else {
 			$this->data[$fieldname] = $value;
 		}
