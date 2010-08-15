@@ -74,7 +74,7 @@ class GoogleGeoCodingAPI extends CURL
 		if (!$results = $this->exec()) {
 			return false;
 		}
-		return $this->resultJSONtoArray($results);
+		return $this->resultJSONtoArray($results->body);
 	}
 	
 	/**
@@ -117,7 +117,7 @@ class GoogleGeoCodingAPI extends CURL
 	public function exec($buffered = true)
 	{
 		if ($result = parent::exec($buffered)) {
-			$obj = json_decode($result);
+			$obj = json_decode($result->body);
 			if ($obj->status == 'OK') {
 				return $obj->results;
 			}

@@ -125,7 +125,7 @@ abstract class Controller extends Object implements Renderable
 		}
 		$this->beforeConstruct();
 		$this->data = new Hash($this->data);
-		$this->request = !empty($request) ? $request : new HTTPRequest;
+		$this->request = !empty($request) ? $request : new HTTPRequest();
 		$this->response = new HTTPResponse();
 		$this->response->enableRenderHeaders = false;
 		if (empty($this->name)) {
@@ -226,7 +226,11 @@ abstract class Controller extends Object implements Renderable
 			$pagination = $this->{$this->name}->paginate($page, null, $conditions);
 			$pagination['url'] = Router::getRoute(lcfirst($this->name).'SearchPaged', array('q' => $keyword));
 			$this->set('pagination', $pagination);
-			$results = $this->{$this->name}->findAll($conditions, null, ($page-1) * $this->{$this->name}->perPage, $this->{$this->name}->perPage);
+			$results = $this->{$this->name}->findAll(array(
+				'conditions' => $conditions,
+				'offset' => ($page-1) * $this->{$this->name}->perPage,
+				'limit' => $this->{$this->name}->perPage,
+			));
 			$this->set(Inflector::plural($this->name), $results);
 			return $results;
 		}

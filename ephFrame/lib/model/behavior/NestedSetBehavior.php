@@ -166,7 +166,7 @@ class NestedSetBehavior extends ModelBehavior
 	public function tree($depth = null, $depthModel = null)
 	{
 		if ($this->model->exists() && !$this->hasChildren()) return new IndexedArray();
-		$q = $this->model->createSelectQuery(null, null, null, null, $depthModel);
+		$q = $this->model->createSelectQuery(array('depth' => $depthModel));
 		$q->addComment($this->model->name.'->'.get_class($this).'->depth(depth: '.$depth.', depthModel: '.$depthModel.')');
 		$q->select('COUNT(p.id)-1 AS level');
 		// general conditions
@@ -277,7 +277,7 @@ class NestedSetBehavior extends ModelBehavior
 		if (!empty($this->cachedPath)) {
 			return $this->cachedPath;
 		}
-		$q = $this->model->createSelectQuery(null, null, null, null, 0);
+		$q = $this->model->createSelectQuery(array('depth' => 0));
 		$q->where($this->model->lft.' BETWEEN '.$this->model->name.'.lft AND '.$this->model->name.'.rgt');
 		if (!$includeCurrent) {
 			$q->where($this->model->name.'.'.$this->model->primaryKeyName.' <> '.$this->model->get($this->model->primaryKeyName));

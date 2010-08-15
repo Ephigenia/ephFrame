@@ -57,7 +57,7 @@ class PositionableBehavior extends ModelBehavior
 	{
 		$newPosition = 0;
 		$fieldname = $this->config[$this->model->name]['field'];
-		if ($lastModel = $this->model->findOne(null, array($this->model->name.'.position DESC'))) {
+		if ($lastModel = $this->model->find(array('order' => array($this->model->name.'.position' => DBQuery::ORDER_DEVC))) {
 			$newPosition = (int) $lastModel->get($fieldname) + 1;
 		}
 		$this->model->set($fieldname, $newPosition);
@@ -91,7 +91,10 @@ class PositionableBehavior extends ModelBehavior
 		$conditions = $this->collectModelConditions();
 		$conditions->push($this->model->name.'.'.$fieldname.' > '.$this->model->position);
 		$conditions->appendFromArray($additionalConditions);
-		$result = $this->model->find($conditions->toArray(), array($this->model->name.'.'.$fieldname.' ASC'));
+		$result = $this->model->find(array(
+			'conditions' => $conditions->toArray(),
+			'order' => array($this->model->name.'.'.$fieldname.' ASC',
+		));
 		if (!$result && $looped) {
 			return $this->first($additionalConditions);
 		} else {
@@ -112,7 +115,10 @@ class PositionableBehavior extends ModelBehavior
 		$conditions = $this->collectModelConditions();
 		$conditions->push($this->model->name.'.'.$fieldname.' < '.$this->model->get($fieldname));
 		$conditions->appendFromArray($additionalConditions);
-		$result = $this->model->find($conditions->toArray(), array($this->model->name.'.'.$fieldname.' DESC'));
+		$result = $this->model->find(array(
+			'conditions' => $conditions->toArray(),
+			'order' => array($this->model->name.'.'.$fieldname.' DESC')
+		));
 		if (!$result && $looped) {
 			return $this->this->last($additionalConditions);
 		} else {
@@ -133,7 +139,10 @@ class PositionableBehavior extends ModelBehavior
 		$conditions = $this->collectModelConditions();
 		$conditions->push($this->model->name.'.'.$fieldname.' < '.$this->model->get($fieldname));
 		$conditions->appendFromArray($additionalConditions);
-		return $this->model->find($conditions->toArray(), array($this->model->name.'.'.$fieldname.' ASC'));
+		return $this->model->find(array(
+			'conditions' => $conditions->toArray(),
+			'order' => array($this->model->name.'.'.$fieldname.' ASC'),
+		));
 	}
 	
 	/**
@@ -149,7 +158,10 @@ class PositionableBehavior extends ModelBehavior
 		$conditions = $this->collectModelConditions();
 		$conditions->push($this->model->name.'.'.$fieldname.' > '.$this->model->get($fieldname));
 		$conditions->appendFromArray($additionalConditions);
-		return $this->model->find($conditions->toArray(), array($this->model->name.'.'.$fieldname.' DESC'));
+		return $this->model->find(array(
+			'conditions' => $conditions->toArray(),
+			array($this->model->name.'.'.$fieldname.' DESC'),
+		));
 	}
 	
 	/**

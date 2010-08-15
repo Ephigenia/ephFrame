@@ -1044,24 +1044,33 @@ class Model extends Object
 	 * @param integer $depth depth of model associations to use in select query
 	 * @return SelectQuery
 	 */
-	public function createSelectQuery($conditions = array(), $order = null, $offset = 0, $count = null, $depth = null) 
+	public function createSelectQuery(Array $params = array()) 
 	{
-		if ($depth === null) {
-			$depth = $this->depth;
-		}
-		// prepare conditions
-		if ($conditions == null) {
-			$conditions = array();
-		} elseif (!is_array($conditions)) {
-			$conditions = array($conditions);
-		}
-		$conditions = array_merge($this->findConditions, $conditions);
+		$defaults = array(
+			'order' => array(),
+			'offset' => 0,
+			'limit' => 0,
+			'conditions' => array(),
+			'depth' => $this->depth,
+			'group' => array(),
+			'fields' => array_keys($this->structure),
+		);
+		$params = array_merge($defaults, $params);
+		extract($params);
+
+		$conditions = array_merge($this->findConditions, (array) $conditions);
 		$query = new SelectQuery();
 		$query->table($this->tablename, $this->name);
 		$query->where->fromArray($conditions);
+		if ($limit !== null) {
+			$query->count((int) $limit);
+		}
+		if ($offset > 0) {
+			$query->offset((int) $offset);
+		}
 		// add fields from this table
-		foreach($this->structure as $fieldInfo) {
-			$query->select($this->name.'.'.$fieldInfo->name, $this->name.'.'.$fieldInfo->name);
+		foreach($fields as $name) {
+			$query->select($this->name.'.'.$name, $this->name.'.'.$name);
 		}
 		// ordering
 		$order = array_merge((array) $order, $this->order);
@@ -1084,14 +1093,8 @@ class Model extends Object
 				$query->orderBy($fieldname, $direction);
 			}
 		}
-		// count and limit
-		if ($count !== null) {
-			$query->count((int) $count);
-		}
-		if ($offset > 0) {
-			$query->offset((int) $offset);
-		}
-		// belongsto / has one
+		
+		// Add join statements for assigned models
 		if ($depth >= 0) {
 			foreach($this->belongsTo as $modelAlias => $config) {
 				$this->belongsTo[$modelAlias]['associationKey'] = $this->name.strrchr($config['associationKey'], '.');
@@ -1103,6 +1106,9 @@ class Model extends Object
 				$joinConditions = $config['conditions'];
 				$joinConditions[$config['associationKey']] = $config['foreignKey'];
 				$query->join($this->{$modelName}->tablename, ucFirst($modelName), DBQuery::JOIN_LEFT, $joinConditions);
+				if (isset($config['limit'])) {
+					$query->groupBy($config['associationKey']);
+				}
 			}
 			// HABTM
 			$tmpR = $query->render();
@@ -1117,6 +1123,9 @@ class Model extends Object
 					$config['joinTable'].'.'.Inflector::underscore($modelName).'_'.$this->{$modelName}->primaryKeyName => $modelName.'.'.$this->{$modelName}->primaryKeyName
 				));
 			}
+		}
+		if (!empty($group)) foreach((array) $group as $groupBy) {
+			$query->groupBy($groupBy);
 		}
 		return $query;
 	}
@@ -1174,7 +1183,13 @@ class Model extends Object
 						$config['associationKey'] => $primaryKeyValue
 					));
 					if ($this->{$modelName} instanceof Model) {
-						$associatedData = $this->{$modelName}->findAll($joinConditions, null, 0, $config['count'], $depth - 1);
+						$params = array(
+							'conditions' => $joinConditions,
+							'offset' => 0,
+							'limit' => $config['count'],
+							'depth' => $depth -1,
+						);
+						$associatedData = $this->{$modelName}->findAll($params);
 					}
 					if (empty($associatedData)) {
 						$associatedData = new ObjectSet($config['class']);
@@ -1238,30 +1253,18 @@ class Model extends Object
 	 * </code>
 	 *
 	 * @param string|array $conditions
-	 * @param array $order
 	 * @return Model|boolean
 	 */
-	public function find($conditions = array(), $order = null, $depth = null) 
+	public function find(Array $params = array()) 
 	{
-		$query = $this->createSelectQuery($conditions, $order, null, null, $depth);
-		if (!$this->beforeFind($query)) return false;
-		if ($r = $this->query($query, $depth)) {
-			return $this->afterFind($r[0]);
+		$params['limit'] = 1;
+		$query = $this->createSelectQuery($params);
+		$query = $this->beforeFind($query);
+		if (!$query) {
+			return false;
 		}
-		return false;
-	}
-	
-	/**
-	 * Finds one entry from the model with the matching conditions and order rules
-	 * @param array(string)|string $conditions
-	 * @param array(string)|string $order
-	 * @param integer	$depth
-	 * @return Model|boolean
-	 */
-	public function findOne($conditions, $order = null, $depth = null) 
-	{
-		if ($ret = $this->findAll($conditions, $order, 0, 1, $depth)) {
-			return $ret[0];
+		if ($r = $this->query($query, @$params['depth'])) {
+			return $this->afterFind($r[0]);
 		}
 		return false;
 	}
@@ -1305,12 +1308,12 @@ class Model extends Object
 	 * $User->findBy('lastlogin', null);
 	 * </code>
 	 * 
-	 * @param string 	$fieldname
-	 * @param string 	$value
-	 * @param integer $depth
+	 * @param string $fieldname
+	 * @param string $value
+	 * @param array(string) additional query parameters
 	 * @return Model|boolean
 	 */
-	public function findBy($fieldname, $value = null, $depth = null) 
+	public function findBy($fieldname, $value = null, Array $params = array()) 
 	{
 		// if no fieldname passed and just single argument use this as id
 		if (func_num_args() == 1) {
@@ -1325,7 +1328,15 @@ class Model extends Object
 		} else {
 			$value = DBQuery::quote($value);
 		}
-		return $this->find(array($fieldname => $value), null, $depth);
+		$defaults = array(
+			'offset' => 0,
+			'limit' => 1,
+			'conditions' => array(
+				$fieldname => $value
+			),
+		);
+		$params = array_merge($defaults, $params);
+		return $this->find($params);
 	}
 	
 	/**
@@ -1344,19 +1355,29 @@ class Model extends Object
 	 * $dropDown->addOptions($User->listAll('%User.name% (%User.email%)', null, array('name DESC'));
 	 * </code>
 	 *
-	 * @param $conditions
+	 * @param string $fieldname
+	 * @param array(string) $params
 	 * @return array(string)
 	 */
-	public function listAll($fieldname, $conditions = array(), $order = array(), $offset = 0, $count = null, $depth = 0) 
+	public function listAll($fieldname = null, Array $params = array()) 
 	{
 		$list = array();
-		if (!($r = $this->query($this->createSelectQuery($conditions, $order, $offset, $count, $depth), $depth))) {
+		if (empty($fieldname)) {
+			$fieldname = $this->displayField;
+		}
+		$query = $this->createSelectQuery($params);
+		$query = $this->beforeFind($query);
+		if (!$query) {
+			return $list;
+		}
+		$result = $this->query($query, @$params['depth']);
+		if (!$result) {
 			return $list;
 		}
 		if (is_array($fieldname)) {
 			$fieldname = ArrayHelper::implodef($fieldname, ' ', ':%2$s');
 		}
-		foreach ($r as $obj) {
+		foreach ($result as $obj) {
 			if (strpos($fieldname, ':') !== false) {
 				$arr = $obj->toArray();
 				foreach($obj->belongsTo + $obj->hasOne + $obj->hasMany as $modelName => $config) foreach($obj->{$modelName}->toArray() as $k => $v) {
@@ -1384,16 +1405,17 @@ class Model extends Object
 	 * </code>
 	 * 
 	 * @param array(string)|string $conditions
-	 * @param array(string)|string $order
-	 * @param integer $count Number of model items to return
-	 * @param integer $offset Offset to select from
 	 * @return IndexedArray(Model)|boolean
 	 */
-	public function findAll($conditions = null, $order = null, $offset = 0, $count = null, $depth = null) 
+	public function findAll(Array $params = array()) 
 	{
-		if (!($query = $this->beforeFind($this->createSelectQuery($conditions, $order, $offset, $count, $depth)))) return false;
-		if ($r = $this->query($query, $depth)) {
-			return $this->afterFind($r);
+		$query = $this->createSelectQuery($params);
+		$query = $this->beforeFind($query);
+		if (!$query) {
+			return false;
+		}
+		if ($result = $this->query($query, @$params['depth'])) {
+			return $this->afterFind($result);
 		}
 		return false;
 	}
@@ -1406,7 +1428,7 @@ class Model extends Object
 	 */
 	public function hasAny($conditions) 
 	{
-		return ($this->findOne($conditions) !== false);
+		return $this->findOne($conditions) !== false;
 	}
 	
 	/**
@@ -1414,9 +1436,12 @@ class Model extends Object
 	 * @param array(string) $conditions
 	 * @return IndexedArray(Model)|boolean
 	 */
-	public function findAllRandom($conditions = null, $count = 0, $depth = null) 
+	public function findAllRandom(Array $params = array()) 
 	{
-		return $this->findAll($conditions, array('RAND()'), 0, $count, $depth);
+		$defaults = array(
+			'order' => array('RAND()'),
+		);
+		return $this->findAll(array_merge($defaults, $params));
 	}
 	
 	/**
@@ -1424,22 +1449,31 @@ class Model extends Object
 	 * @param array(string) $conditions
 	 * @return Model|boolean
 	 */
-	public function findRandom($conditions = null) 
+	public function findRandom($conditions = null)
 	{
-		return $this->find($conditions, array('RAND()'));
+		$defaults = array(
+			'limit' => 1,
+		);
+		$params = array_merge($params, $defaults);
+		return $this->findAllRandom($params);
 	}
 	
 	/**
 	 * Returns the number of entries found
-	 * @param array(string) $conditions
-	 * @param integer $offset
-	 * @param integer $count
+	 * @param array(string) $params
 	 * @return integer
 	 */
-	public function countAll($conditions = null, $offset = null, $count = null) 
+	public function countAll(Array $params = array()) 
 	{
-		$query = $this->createSelectQuery($conditions, array(), $offset, $count, null, null);
-		$query->select = new Hash(array('COUNT(*)' => 'count'));
+		$defaults = array(
+			'depth' => 0,
+		);
+		$query = $this->createSelectQuery(array_merge($defaults, $params));
+		if (!empty($params['group'])) {
+			$query->select = new Hash(array('COUNT(DISTINCT('.implode(',', $params['group']).'))' => 'count'));
+		} else {
+			$query->select = new Hash(array('COUNT(*)' => 'count'));
+		}
 		if (!($result = $this->query($query))) {
 			return false;
 		}
@@ -1459,7 +1493,7 @@ class Model extends Object
 		$page = abs((int) $page); $perPage = abs((int) $perPage);
 		if ($page <= 0) $page = 1;
 		if ($perPage == 0) $perPage = $this->perPage;
-		$total = $this->countAll($conditions);
+		$total = $this->countAll(array('conditions' => $conditions));
 		if (!$perPage) {
 			$lastPage = 1;
 		} else {

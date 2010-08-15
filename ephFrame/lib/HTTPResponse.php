@@ -101,15 +101,11 @@ class HTTPResponse extends Object implements Renderable
 	 * @return string Content part of the message
 	 */
 	private function parse($raw) {
-		// get the content part from the response if found, otherwise
-		// the hole raw data is the content
-		if (!preg_match('/[\r\n]{3,}(.*)/s', $raw, $found)) {
-			$this->body = $raw;
-			return $raw;
+		$this->header = new HTTPHeader($raw);
+		$parts = preg_split('/\x0D\x0A\x0D\x0A/s', $raw);
+		if (count($parts) > 1) {
+			$this->body = $parts[count($parts)-1];
 		}
-		$this->body = trim($found[1]);
-		// okay, we know that we got some header infos here, parse 'em!
-		$this->header->parse($raw);
 		return $this->body;
 	}
 	

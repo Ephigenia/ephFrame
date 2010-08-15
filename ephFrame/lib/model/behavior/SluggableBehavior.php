@@ -98,7 +98,7 @@ class SluggableBehavior extends ModelBehavior
 				$conditions[$fieldname] = DBQuery::quote($Model->get($fieldname));
 			}
 		}
-		$collisions = $Model->listAll($name, $conditions, null, null, null, -1);
+		$collisions = $Model->listAll($name, array('conditions' => $conditions, 'depth' => -1));
 		if (count($collisions) > 0) {
 			$freeSlot = 1;
 			do {

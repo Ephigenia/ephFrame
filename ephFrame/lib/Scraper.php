@@ -31,7 +31,7 @@ class Scraper extends CURL
 	{
 		$this->url = is_null($url) ? $this->url : $url;
 		$this->followLocation = true;
-		return $this->exec(true, false);
+		return $this->exec(true)->body;
 	}
 	
 	public static function scrape($url = null)

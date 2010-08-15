@@ -41,7 +41,7 @@ class Validator extends Helper
 	 */
 	public function __construct($config = array(), $callbackObject = null) 
 	{
-		$this->config = $config;
+		$this->config = (array) $config;
 		$this->callbackObject = $callbackObject;
 		return $this;
 	}
@@ -57,6 +57,10 @@ class Validator extends Helper
 	{
 		// single line string rules are callbacks!
 		foreach($this->config as $ruleName => $config) {
+			if (is_int($ruleName)) {
+				$ruleName = $config;
+				$config = array($config => true);
+			}
 			// allowEmpty Rule
 			if (isset($config['allowEmpty']) && $config['allowEmpty'] === true && empty($value)) {
 				return true;

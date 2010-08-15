@@ -178,7 +178,8 @@ abstract class DBQuery extends Object implements Renderable
 	 * @param string $type other type to use while quoting
 	 * @return string
 	 */
-	public static function quote($val, $type = null) {
+	public static function quote($val, $type = null)
+	{
 		if ($type === null) {
 			$type = gettype($val);
 		}
@@ -206,7 +207,7 @@ abstract class DBQuery extends Object implements Renderable
 					}
 					break;
 				case 'string':
-					$quoted = '\''.mysql_real_escape_string(stripslashes($val)).'\'';
+					$quoted = '\''.mysql_real_escape_string($val).'\'';
 					break;
 				// non scalar values are not added, but their variable type
 				default:
@@ -638,7 +639,7 @@ abstract class DBQuery extends Object implements Renderable
 				$right = 'NULL';
 				$connector = ' is ';
 			}
-			if (preg_match('@^\s*(<|>|=|LIKE|IN)@i', $right)) {
+			if (preg_match('@^\s*(<|>|=|LIKE|IN)@i', $right) || preg_match('@<>@', $left)) {
 				$connector = ' ';
 			}
 			// todo create cool condition array that can map all conditions possible

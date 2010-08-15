@@ -239,20 +239,6 @@ class ArrayHelper extends Helper
 	}
 	
 	/**
-	 * Strips slashes from every array value and returns the array
-	 * @param array() $array
-	 * @return array()
-	 */
-	public static function stripslashes($array)
-	{
-		if (!is_array($array)) {
-			return stripslashes($array);
-		} else {
-			return array_map('stripslashes', $array);
-		}
-	}
-	
-	/**
 	 * Returns all Objects from an array of objects that have the
 	 * given type
 	 * @param array $input

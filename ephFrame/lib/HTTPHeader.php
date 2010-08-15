@@ -70,7 +70,7 @@ class HTTPHeader extends Hash
 		if (is_array($initialHeaderDataOrString)) {
 			parent::__construct($initialHeaderDataOrString);
 		} elseif (is_string($initialHeaderDataOrString)) {
-			$this->parse($initialHeaderDataOrString);
+			$this->data = $this->parse($initialHeaderDataOrString);
 		}
 		return $this;
 	}
@@ -112,7 +112,7 @@ class HTTPHeader extends Hash
 			$this->statusCode = (int) $found[1];
 		}
 		// parse header parts of raw message if there are any:
-		$parsedHeader = array();
+		$parsed = array();
 		if (preg_match_all($this->headerRegExp, $rawHeader, $foundHeaders, PREG_SET_ORDER)) {
 			foreach($foundHeaders as $index => $headerData) {
 				$headerData[2] = trim($headerData[2]);
@@ -121,7 +121,7 @@ class HTTPHeader extends Hash
 				$parsed[$headerData[1]] = trim($headerData[2]);
 			}
 		}
-		return $parsedHeader;
+		return $parsed;
 	}
 	
 	/**

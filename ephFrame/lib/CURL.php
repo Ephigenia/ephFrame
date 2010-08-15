@@ -194,6 +194,8 @@ class CURL extends Object
 			}
 		}
 		curl_setopt($this->handle, CURLOPT_FOLLOWLOCATION, (bool) $this->followLocation);
+		curl_setopt($this->handle, CURLOPT_COOKIESESSION, true);
+		curl_setopt($this->handle, CURLOPT_HEADER, true);
 		if (isset($this->timeout)) {
 			curl_setopt($this->handle, CURLOPT_TIMEOUT, (int) $this->timeout);
 			curl_setopt($this->handle, CURLOPT_CONNECTTIMEOUT, (int) $this->timeout);
@@ -214,9 +216,6 @@ class CURL extends Object
 			curl_setopt($this->handle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
 			curl_setopt($this->handle, CURLOPT_USERPWD, implode(':', $this->auth));
 		}
-		if ($buffered) {
-			curl_setopt($this->handle, CURLOPT_RETURNTRANSFER, $buffered);
-		}
 		// check if url set
 		if (empty($this->url)) {
 			throw new CURLEmptyURLException();
@@ -226,8 +225,13 @@ class CURL extends Object
 		} else {
 			curl_setopt($this->handle, CURLOPT_URL, $this->url);
 		}
-		curl_setopt($this->handle, CURLOPT_COOKIESESSION, true);
-		return curl_exec($this->handle);
+		if ($buffered) {
+			curl_setopt($this->handle, CURLOPT_RETURNTRANSFER, $buffered);
+			$response = curl_exec($this->handle);
+			return new HTTPResponse($response);
+		} else {
+			return curl_exec($this->handle);
+		}
 	}
 	
 	public function __destroy() 

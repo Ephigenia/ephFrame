@@ -194,14 +194,16 @@ class Twitter extends CURL
 	 * Send Twitter Request and receive Answer including check for errors
 	 * @return object
 	 */
-	private function sendAndReceive() {
+	private function sendAndReceive()
+	{
 		if (!$response = $this->exec()) throw new TwitterException();
-		$response = json_decode($response);
+		$response = json_decode($response->body);
 		$this->checkResponseError($response);
 		return $response;
 	}
 	
-	private function checkResponseError($response) {
+	private function checkResponseError($response)
+	{
 		if (!isset($response->error)) return false;
 		if (preg_match('/could not authenticate you/i', $response->error)) {
 			throw new TwitterAuthentificationException($response);

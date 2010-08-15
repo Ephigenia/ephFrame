@@ -5,7 +5,15 @@ This file should record some kind of change history of the ephFrame Framework
 Please check this file for hints after you updated the framework via svn to 
 check some deprecated methods or new features.
 
-# 2009-08-05
+# 2010-08-14
+
+* CURL responds with a real HTTPResponse class that contains headers and the 
+response body
+* Model findAll and createSelectQuery accept array of parameters making it 
+more flexible in use and not such a big list of method parameters, you should
+check all your projects and modify the findAll and find calls on models
+
+# 2010-08-05
 
 * Model default data values are used before database table’s default, so you
 can define default values of a model entry by setting them in $data
