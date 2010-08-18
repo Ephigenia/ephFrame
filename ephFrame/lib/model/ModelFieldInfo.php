@@ -73,7 +73,7 @@ class ModelFieldInfo extends Object
 	protected $quoteMap = array(
 		self::QUOTE_STRING 	=> array('char', 'varchar', 'blob', 'tinyblob', 'mediumblob', 'text', 'mediumtext', 'tinytext', 'date', 'date', 'time', 'datetime'),
 		self::QUOTE_INTEGER	=> array('int', 'bigint', 'timestamp', 'year', 'smallint', 'mediumint', 'bigint'),
-		self::QUOTE_FLOAT 	=> array('float', 'double'),
+		self::QUOTE_FLOAT 	=> array('float', 'double', 'real'),
 		self::QUOTE_BOOLEAN	=> array('bool') 
 	);
 	

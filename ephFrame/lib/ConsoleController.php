@@ -102,18 +102,18 @@ class ConsoleController extends Controller
 		return true;
 	}
 	
-	public function showHello() 
+	protected function showHello() 
 	{
 		return true;
 	}
 	
-	public function showHelp() 
+	protected function showHelp() 
 	{
 		$this->console->out($this->optParse->usage($this->consoleWidth));
 		return true;
 	}
 	
-	public function boxedMessage($message) 
+	protected function boxedMessage($message) 
 	{
 		return 
 			WACS_ULCORNER.str_repeat(WACS_HLINE, $this->consoleWidth-2).WACS_URCORNER.LF.
@@ -121,7 +121,7 @@ class ConsoleController extends Controller
 			WACS_LLCORNER.str_repeat(WACS_HLINE, $this->consoleWidth-2).WACS_LRCORNER.LF;
 	}
 	
-	public function quit() 
+	protected function quit() 
 	{
 		exit;
 	}

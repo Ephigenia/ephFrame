@@ -420,7 +420,7 @@ class Model extends Object
 					$config['foreignKey'] = ucFirst($this->name).'.'.$this->primaryKeyName;
 					break;
 				case 'hasAndBelongsToMany':
-					$config['foreignKey'] = ucFirst($this->name).'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName);
+					$config['foreignKey'] = $config['with'].'.'.Inflector::underscore($this->primaryKeyName);
 					break;
 			}
 		// add model name to foreignkeys with no model name like user_id
@@ -1204,9 +1204,9 @@ class Model extends Object
 					// add maybe missing tableprefix @todo clean this tableprefix usage everywhere
 				 	$conditions = array_merge($config['conditions'], array(
 						$config['foreignKey'] => $model->get($model->primaryKeyName),
-						$config['with'].'.'.$modelName.'_'.$this->{$modelName}->primaryKeyName => $modelName.'.id'
+						$config['with'].'.'.Inflector::underscore($modelName).'_'.$this->{$modelName}->primaryKeyName => $modelName.'.id'
 					));
-					$query = $this->{$modelName}->createSelectQuery(null, $config['order']);
+					$query = $this->{$modelName}->createSelectQuery($config);
 					$query->select->prepend($this->name.$modelName.'.*');
 					$query->join($config['joinTable'], $this->name.$modelName, DBQuery::JOIN, $conditions);
 					$query->orderBy->add($config['order']);
@@ -1449,7 +1449,7 @@ class Model extends Object
 	 * @param array(string) $conditions
 	 * @return Model|boolean
 	 */
-	public function findRandom($conditions = null)
+	public function findRandom(Array $params = array())
 	{
 		$defaults = array(
 			'limit' => 1,
@@ -1467,13 +1467,14 @@ class Model extends Object
 	{
 		$defaults = array(
 			'depth' => 0,
+			'field' => '*',
 		);
+		$params = array_merge($defaults, $params);
 		$query = $this->createSelectQuery(array_merge($defaults, $params));
-		if (!empty($params['group'])) {
-			$query->select = new Hash(array('COUNT(DISTINCT('.implode(',', $params['group']).'))' => 'count'));
-		} else {
-			$query->select = new Hash(array('COUNT(*)' => 'count'));
+		if (!empty($params['group']) && empty($params['field'])) {
+			$params['field'] = 'DISTINCT('.implode(',', $params['group']).')';	
 		}
+		$query->select = new Hash(array('COUNT('.$params['field'].')' => 'count'));
 		if (!($result = $this->query($query))) {
 			return false;
 		}
@@ -1526,26 +1527,25 @@ class Model extends Object
 	 * </code>
 	 * 
 	 * @todo implement that $value can be an array and the query uses $fieldname in (item, item) ...
-	 * @param mixed $fieldname
-	 * @param mixed $value
-	 * @param array(string) $order
-	 * @param integer $offset
-	 * @param integer $count
-	 * @param integer $depth depth of model recursion (0-2);
+	 * @param string $fieldname
+	 * @param string|integer $value
+	 * @param array(string) Additional Query Paramaeters
 	 * @return IndexedArray(Model)|boolean
 	 */
-	public function findAllBy($fieldname, $value = null, $order = null, $offset = 0, $count = null, $depth = null) 
+	public function findAllBy($fieldname, $value = null, Array $params = array()) 
 	{
-		if ($this->hasField($fieldname)) {
-			$value = DBQuery::quote($value, $this->structure[$fieldname]->quoting);
-			if (strchr($fieldname, '.') == false) {
-				$fieldname = $this->name.'.'.$fieldname;
+		if (!is_array($value)) {
+			if ($this->hasField($fieldname)) {
+				$value = DBQuery::quote($value, $this->structure[$fieldname]->quoting);
+				if (strchr($fieldname, '.') == false) {
+					$fieldname = $this->name.'.'.$fieldname;
+				}
+			} else {
+				$value = DBQuery::quote($value);
 			}
-		} else {
-			$value = DBQuery::quote($value);
 		}
-		$conditions = array($fieldname => $value);
-		return $this->findAll($conditions, $order, $offset, $count, $depth);
+		$params['conditions'][$fieldname] = $value;
+		return $this->findAll($params);
 	}
 	
 	/**
@@ -1560,7 +1560,11 @@ class Model extends Object
 	{
 		// catch findAllBy[fieldname] calls
 		if (preg_match('/(findAll(By)?)(.+)/i', $methodName, $found)) {
-			return $this->findAllBy(Inflector::delimeterSeperate($found[3], null, true), $args[0]);
+			if (isset($args[1])) {
+				return $this->findAllBy(Inflector::delimeterSeperate($found[3], null, true), $args[0], $args[1]);
+			} else {
+				return $this->findAllBy(Inflector::delimeterSeperate($found[3], null, true), $args[0]);
+			}
 		// catch findBy[fieldname] calls 
 		} elseif (preg_match('/find(By)?(.+)/i', $methodName, $found)) {
 			array_unshift($args, Inflector::delimeterSeperate($found[2], null, true));
@@ -1789,8 +1793,8 @@ class ModelInvalidAssociationTypeException extends ModelException
 {
 	public function __construct(Model $model, $associationType) 
 	{
-		$messge = 'Invalid association type detected: ’'.$associationType.'’ in Model '.$model->name.' (class: '.get_class($model).')';
-		parent::construct($message);
+		$message = 'Invalid association type detected: ’'.$associationType.'’ in Model '.$model->name.' (class: '.get_class($model).')';
+		parent::__construct($model, $message);
 	}
 }
 

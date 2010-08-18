@@ -57,7 +57,11 @@ class PositionableBehavior extends ModelBehavior
 	{
 		$newPosition = 0;
 		$fieldname = $this->config[$this->model->name]['field'];
-		if ($lastModel = $this->model->find(array('order' => array($this->model->name.'.position' => DBQuery::ORDER_DEVC))) {
+		if ($lastModel = $this->model->find(array(
+				'order' => array(
+					$this->model->name.'.position' => DBQuery::ORDER_DESC,
+				),
+			))) {
 			$newPosition = (int) $lastModel->get($fieldname) + 1;
 		}
 		$this->model->set($fieldname, $newPosition);
@@ -93,8 +97,9 @@ class PositionableBehavior extends ModelBehavior
 		$conditions->appendFromArray($additionalConditions);
 		$result = $this->model->find(array(
 			'conditions' => $conditions->toArray(),
-			'order' => array($this->model->name.'.'.$fieldname.' ASC',
-		));
+			'order' => array(
+				$this->model->name.'.'.$fieldname => DBQuery::ORDER_ASC,
+		)));
 		if (!$result && $looped) {
 			return $this->first($additionalConditions);
 		} else {
