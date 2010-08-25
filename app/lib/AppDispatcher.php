@@ -15,8 +15,6 @@
  * @filesource
  */
 
-Library::load('ephFrame.lib.core.Dispatcher');
-
 /**
  * Parent class for App's Dispatcher
  * 

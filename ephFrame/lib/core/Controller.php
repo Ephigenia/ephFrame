@@ -283,7 +283,7 @@ abstract class Controller extends Object
 		if (!isset($this->components[$name])) {
 			try {
 				$classname = Library::load($name);
-			} catch (ClassPathMalformedException $e) {
+			} catch (BasicException $e) {
 				try {
 					$classname = Library::load('app.lib.component.'.$name);
 				} catch (LibraryFileNotFoundException $e) {
@@ -355,14 +355,14 @@ abstract class Controller extends Object
 			// add all forms as objects
 			foreach($this->forms as $index => $formName) {
 				unset($this->forms[$index]);
-				$this->addForm($formName);
+				$this->addForm($formName, false);
 			}
 			foreach($this->forms as $Form) {
-				$Form->startup($this)->configure();
+				$Form->startup($this);
 			}
 		} elseif (ClassPath::exists('app.lib.component.Form.'.$this->name.'Form')) {
 			$this->addForm($this->name.'Form');
-			$this->{$this->name.'Form'}->startUp($this)->configure();
+			$this->{$this->name.'Form'}->startUp($this);
 		}
 		return $this;
 	}
@@ -372,18 +372,20 @@ abstract class Controller extends Object
 	 * @param string $name
 	 * @return Form
 	 */
-	public function addForm($name) 
+	public function addForm($name, $startUp = true) 
 	{
 		if (!isset($this->forms[$name])) {
 			try {
-				$classname = Library::load($name);
-			} catch (ClassPathMalformedException $e) {
-				$classname = Library::load('App.lib.component.form.'.$name);
+				$Form = Library::create($name);
+			} catch (Exception $e) {
+				$Form = Library::create('App.lib.component.form.'.$name);
 			}
-			$classname = ClassPath::className($name);
-			$this->{$classname} = new $classname($name);;
-			$this->{$classname}->init($this);
-			$this->forms[$name] = $this->{$name};
+			$Form->init($this);
+			if ($startUp) {
+				$Form->startUp()->configure();
+			}
+			$this->{get_class($Form)} = $Form;
+			$this->forms[get_class($Form)] = $Form;
 		}
 		return $this->forms[$name];
 	}

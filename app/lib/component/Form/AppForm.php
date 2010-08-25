@@ -15,8 +15,6 @@
  * @filesource
  */
 
-Library::load('ephFrame.lib.component.Form.Form');
-
 /**
  * Mother Class for all Application Forms
  * 

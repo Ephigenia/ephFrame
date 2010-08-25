@@ -48,7 +48,7 @@ class ClassPath
 	const REGEXP_FRAME_PATH = '/^(frame|ephframe)/i';
 	
 	// regexp for valid classpath
-	const VALID_CLASS_PATH = '/^([a-zA-Z]+[a-zA-Z0-9_-]*\\.*)+$/';
+	const VALID_CLASS_PATH = '@^([a-z][a-z0-9_.-]+)[a-z0-9]$@i';
 	
 	/**
 	 * Extracts the class/interface name from a class path
@@ -80,9 +80,11 @@ class ClassPath
 	public static function translatePath($classPath, $ignoreCache = false)
 	{
 		if (!isset(self::$cache[$classPath]) || $ignoreCache === true) {
-			$classPath = preg_replace('@[^A-Za-z0-9_. -]+@', '', $classPath);
+			$classPath = preg_replace('@[^a-z0-9_.-]@i', '', $classPath);
 			// check for valid classPath
-			if (!preg_match(self::VALID_CLASS_PATH, $classPath)) throw new ClassPathMalFormedException($classPath); 
+			if (!preg_match(self::VALID_CLASS_PATH, $classPath)) {
+				throw new ClassPathMalFormedException($classPath);
+			}
 			$translatedPath = str_replace('.', DS, $classPath);
 			// replace ephFrame, Vendor root with the constants
 			if (preg_match(self::REGEXP_FRAME_PATH, $translatedPath)) {

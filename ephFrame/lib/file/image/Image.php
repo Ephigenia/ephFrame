@@ -15,7 +15,7 @@
  * @filesource
  */
 
-class_exists('File') or require dirname(__FILE__).'/File.php';
+class_exists('File') or require dirname(__FILE__).'/../File.php';
 class_exists('Color') or require dirname(__FILE__).'/Color.php';
 
 /**

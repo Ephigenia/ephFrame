@@ -107,10 +107,9 @@ class Browser extends AppComponent
 		return parent::init($controller);
 	}
 	
-	public function render() 
+	public function __toString() 
 	{
-		if (!$this->beforeRender()) return false;
-		return $this->afterRender(trim($this->name.' '.$this->version));
+		return trim($this->name.' '.$this->version);
 	}
 	
 	private function fromUserAgent($userAgentString)
@@ -185,7 +184,7 @@ class Browser extends AppComponent
 			}
 		}
 		$this->version = $version;
-		return $this->render();
+		return $this;
 	}	
 }
 

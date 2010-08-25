@@ -59,14 +59,19 @@ final class ephFrame
 			require (FRAME_LIB_DIR.'util/Registry.php');
 			require (FRAME_ROOT.'config/config.php');
 			self::loadEnvironmentConfig();
+			Library::load('ephFrame.lib.core.component.Component');
 			class_exists('AppComponent') or require APP_LIB_DIR.'component/AppComponent.php';
 			require (FRAME_LIB_DIR.'component/Log.php');
+			self::setErrorReporting();
+			Library::load('ephFrame.lib.component.Form.Form');
+			Library::load('ephFrame.lib.core.Controller');
 			class_exists('AppController') or require APP_LIB_DIR.'AppController.php';
+			Library::load('ephFrame.lib.model.Model');
 			class_exists('AppModel') or require APP_LIB_DIR.'model/AppModel.php';
 			if (file_exists(APP_LIB_DIR.'component/Form/AppForm.php') && !class_exists('AppForm')) {
 				require APP_LIB_DIR.'component/Form/AppForm.php';
 			}
-			self::setErrorReporting();
+			Library::load('ephFrame.lib.core.Dispatcher');
 			logg(Log::VERBOSE_SILENT, 'ephFrame: successfully loaded, now going to dispatcher');
 		}
 		return self::$instance;

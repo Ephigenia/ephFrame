@@ -385,7 +385,7 @@ class Form extends HTMLTag
 				$this->config[] = $possibleModelName;
 			}
 		}
-		// add models 
+		// add models
 		if (!empty($this->config)) {
 			// catch $this->configureModel = 'User';
 			if (!is_array($this->config)) {
