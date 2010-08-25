@@ -389,6 +389,22 @@ abstract class Controller extends Object
 	}
 	
 	/**
+	 * Called everytime a controller gets a new action. called before the action
+	 * is called and after all component are called.
+	 * @param string $action action that is to be called
+	 * @return boolean
+	 */
+	public function beforeAction() 
+	{
+		if (method_exists($this, 'before'.ucFirst($this->action))) {
+			if (!$this->callMethod('before'.ucFirst($this->action))) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
 	 * Sets an other action for this controller, this affects the view that
 	 * is used and also calls the method that has the same name as the action
 	 * 
@@ -409,14 +425,27 @@ abstract class Controller extends Object
 		}
 		$arguments = array_diff_key($params, array('controller' => 0, 'action' => 0, 'path' => 0, 'controllerPrefix' => 0, 'prefix' => 0, 'layout' => 0));
 		// before action, action and after action
-		$beforeActionResult = $this->callback('beforeAction', array($action, $params));
-		if (method_exists($this, $action)) {
-			if (!$beforeActionResult || $this->callMethod($action, $arguments) === false) {
-				return $this->error(404);
-			}
+		if (!$beforeActionResult = $this->callback('beforeAction', array($action, $params))) {
+			return $this->error(404);
+		}
+		if (method_exists($this, $action) && $this->callMethod($action, $arguments) === false) {
+			return $this->error(404);
 		}
 		$this->callback('afterRender', array($this->action));
 		return $this;
+	}
+	
+	/**
+	 * Called after action is done
+	 * @param string $action action that is done
+	 * @return boolean
+	 */
+	public function afterAction() 
+	{
+		if (method_exists($this, 'after'.ucFirst($this->action))) {
+			$this->callMethod('after'.ucFirst($this->action));
+		}
+		return true;
 	}
 	
 	public function error($statusCode)
@@ -487,35 +516,6 @@ abstract class Controller extends Object
 			$this->data->set(get_class($object), $object);
 		}
 		$this->data->set('theme', $this->theme);
-		return true;
-	}
-	
-	/**
-	 * Called everytime a controller gets a new action. called before the action
-	 * is called and after all component are called.
-	 * @param string $action action that is to be called
-	 * @return boolean
-	 */
-	public function beforeAction() 
-	{
-		if (method_exists($this, 'before'.ucFirst($this->action))) {
-			if (!$this->callMethod('before'.ucFirst($this->action))) {
-				return false;
-			}
-		}
-		return true;
-	}
-	
-	/**
-	 * Called after action is done
-	 * @param string $action action that is done
-	 * @return boolean
-	 */
-	public function afterAction() 
-	{
-		if (method_exists($this, 'after'.ucFirst($this->action))) {
-			$this->callMethod('after'.ucFirst($this->action));
-		}
 		return true;
 	}
 	

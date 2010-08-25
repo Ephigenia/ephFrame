@@ -93,10 +93,10 @@ abstract class Component extends Object
 		$controller->registerCallback('afterAction', array($this, 'afterAction'));
 		$controller->registerCallback('beforeRedirect', array($this, 'beforeRedirect'));
 		foreach($this->helpers as $helper) {
-			$this->{$helper} = $controller->addHelper($helper);
+			$this->{$helper} = $this->controller->addHelper($helper);
 		}
 		foreach($this->components as $component) {
-			$this->{$component} = $controller->addComponent($component);
+			$this->{$component} = $this->controller->addComponent($component);
 		}
 		return $this;
 	}

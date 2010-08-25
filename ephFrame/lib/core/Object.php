@@ -80,7 +80,9 @@ abstract class Object
 			return $result;
 		}
 		foreach($this->callbacks[$method] as $callback) {
-			$result = call_user_func_array(array($callback[0], $callback[1]), $arguments);
+			if (!($result = call_user_func_array(array($callback[0], $callback[1]), $arguments))) {
+				return $result;
+			}
 		}
 		return $result;
 	}

@@ -36,23 +36,13 @@ abstract class Helper extends Object
 	public function __construct($controller = null) 
 	{
 		$this->controller = $controller;
-		$controller->registerCallback('beforeRender', array($this, 'beforeRender'));
-		$controller->registerCallback('afterRender', array($this, 'afterRender'));
+		$this->controller->registerCallback('beforeRender', array($this, 'beforeRender'));
+		$this->controller->registerCallback('afterRender', array($this, 'afterRender'));
 		$this->__mergeParentProperty('helpers');
-		$this->initHelpers();
-		return $this;
-	}
-	
-	protected function initHelpers()
-	{
-		foreach($this->helpers as $HelperName) {
-			$className = ClassPath::className($HelperName);
-			if (!class_exists($className)) {
-				loadHelper($HelperName);
-			}
-			$this->{$className} = new $className();
+		foreach($this->helpers as $helper) {
+			$this->{$helper} = $this->controller->addHelper($helper);
 		}
-		return true;
+		return $this;
 	}
 	
 	public function beforeRender() 
