@@ -383,9 +383,6 @@ abstract class Controller extends Object
 			$classname = ClassPath::className($name);
 			$this->{$classname} = new $classname($name);;
 			$this->{$classname}->init($this);
-			if ($this->action !== 'index') {
-				$this->{$classname}->startup($this)->configure();
-			}
 			$this->forms[$name] = $this->{$name};
 		}
 		return $this->forms[$name];
@@ -412,7 +409,7 @@ abstract class Controller extends Object
 		}
 		$arguments = array_diff_key($params, array('controller' => 0, 'action' => 0, 'path' => 0, 'controllerPrefix' => 0, 'prefix' => 0, 'layout' => 0));
 		// before action, action and after action
-		$beforeActionResult = $this->callback('beforeAtion', array($action, $params));
+		$beforeActionResult = $this->callback('beforeAction', array($action, $params));
 		if (method_exists($this, $action)) {
 			if (!$beforeActionResult || $this->callMethod($action, $arguments) === false) {
 				return $this->error(404);

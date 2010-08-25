@@ -22,7 +22,7 @@ if (class_exists('QueryHistory')) {
 			</dd>
 			<dt>Memory Usage</dt>
 			<dd>
-				<?php echo ephFrame::memoryUsage(true) ?> (<?php echo ephFrame::memoryUsage() ?> Bytes)
+				<?php echo ephFrame::memoryUsage() ?> Bytes
 			</dd>
 			<?php if (!empty($queriesTotal)) { ?>
 			<dt>SQL-Queries</dt>

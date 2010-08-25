@@ -96,18 +96,8 @@ class Form extends HTMLTag
 		return parent::__construct('form', $attributes);
 	}
 	
-	/**
-	 * Manual inherit Component startup method to use in sub classes, see docu
-	 * in {@link Component}.
-	 * @return boolean
-	 */
-	public function startup() 
+	public function startUp()
 	{
-		// set form variable for view
-		if (isset($this->controller)) {
-			$this->controller->data->set(get_class($this), $this);
-			$this->attributes->action = Router::uri();
-		}
 		return $this;
 	}
 	
@@ -117,21 +107,27 @@ class Form extends HTMLTag
 	 */
 	public function beforeAction() 
 	{
-		return true;
+		return $this;
 	}
 	
 	public function afterAction()
 	{
-		return true;
+		return $this;
 	}
 	
 	/**
-	 * Manual inherit Component init method, see docu in {@link Component}.
-	 * @return boolean
+	 * This is called right after a controller constructed a new Component.
+	 * @param Controller $controller
+	 * @return Component
+	 * @final 
 	 */
 	public function init(Controller $controller) 
 	{
 		$this->controller = $controller;
+		$controller->registerCallback('beforeRender', array($this, 'beforeRender'));
+		$controller->registerCallback('afterRender', array($this, 'afterRender'));
+		$controller->registerCallback('beforeAction', array($this, 'beforeAction'));
+		$controller->registerCallback('afterAction', array($this, 'afterAction'));
 		return $this;
 	}
 	
@@ -152,6 +148,8 @@ class Form extends HTMLTag
 	
 	public function beforeRender() 
 	{
+		$this->attributes->action = Router::uri();
+		$this->controller->data->set(get_class($this), $this);
 		// auto add error and success messages
 		if ($this->submitted()) {
 			// error messages
@@ -377,9 +375,7 @@ class Form extends HTMLTag
 	 */
 	public function configure() 
 	{
-		// backwards compatibility when configure was named configureMOdel
-		// @DEPRECIATED & @OLD
-		if (isset($this->configureModel)) {
+		if (isset($this->configureModel)) { // backward compatibility
 			$this->config = array_merge($this->config, $this->configureModel);
 		}
 		// add model for a form if missing
@@ -424,9 +420,9 @@ class Form extends HTMLTag
 					} else {
 						Log::write(Log::VERBOSE, get_class($this).': missing model to configure in controller: '.$modelName);
 					}
-				} // if
-			} // foreach
-		} // if
+				}
+			}
+		}
 		$this->afterConfig();
 		return true;
 	}
@@ -625,20 +621,6 @@ class Form extends HTMLTag
 		}
 		return $model;
 	}
-	
-	/**
-	 * Returns all names of all form fields in the form
-	 * @return array(string)
-	 */
-	public function fieldNames() 
-	{
-		$fieldNames = array();
-		foreach($this->fieldset->children() as $formField) {
-			if (!$formField instanceof FormField) continue;
-			$fieldNames[] = $formField->attributes->name;
-		}
-		return $fieldNames;
-	}	
 }
 
 /**
