@@ -16,8 +16,8 @@
  */
 
 // PHP Version Check, ephFrame would need 5.1.6!
-if ((int) str_pad(preg_replace('@[^\d]+@', '', phpversion()), 6, '0', STR_PAD_RIGHT) < 516000) { 
-	die ('The php version installed ('.phpversion().') does not work with ephFrame. Minimum php version is 5.1.6');
+if ((int) str_pad(preg_replace('@[^\d]+@', '', phpversion()), 6, '0', STR_PAD_RIGHT) < 516000) {
+	die (sprintf('The PHP version installed (%s) does not work with ephFrame. Minimum php version is 5.1.6', phpversion()));
 }
 
 define('DS', DIRECTORY_SEPARATOR);
@@ -26,10 +26,8 @@ define('DS', DIRECTORY_SEPARATOR);
 if (!defined('FRAME_ROOT')) {
 	define('FRAME_ROOT', dirname(realpath(__FILE__)).'/');
 }
-
-// find ephFrame.php in the ephFrame lib dir, if fail die
-if(!file_exists(FRAME_ROOT.'ephFrame.php')) {
-	die ('Unable to find ephFrame, please set FRAME_ROOT to the ephFrame directory.');
+if (ini_get('register_globals') === true) {
+	die ('ephFrame will not work when register globals is enabled in php.ini.');
 }
 
 // unset all variables coming from global vars or whatever
@@ -43,6 +41,8 @@ if(function_exists('set_magic_quotes_runtime')) {
 }
 
 // ephFrame Basic Stuff
-require FRAME_ROOT.'lib/exception/BasicException.php';
-require FRAME_ROOT.'ephFrame.php';
-ephFrame::singleton();
+if(!file_exists(FRAME_ROOT.'lib/core/ephFrame.php')) {
+	die ('Unable to find ephFrame, please set FRAME_ROOT to the ephFrame directory.');
+}
+require FRAME_ROOT.'lib/core/ephFrame.php';
+ephFrame::init();

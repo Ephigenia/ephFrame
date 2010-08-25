@@ -16,8 +16,8 @@
  */
 
 // load classes that are used
-class_exists('ArrayHelper') or require dirname(__FILE__).'/../helper/ArrayHelper.php';
-class_exists('File') or require dirname(__FILE__).'/../File.php';
+class_exists('ArrayHelper') or require dirname(__FILE__).'/../util/ArrayHelper.php';
+class_exists('File') or require dirname(__FILE__).'/../file/File.php';
 
 /**
  * A class for logging messages to files
@@ -132,7 +132,8 @@ class Log extends AppComponent
 	 * Returns an instance of Log
 	 * @return Log
 	 */
-	public static function getInstance() {
+	public static function instance()
+	{
   		if (!self::$instance) {
   			$classname = __CLASS__;
   			self::$instance = new $classname();
@@ -157,7 +158,8 @@ class Log extends AppComponent
   	 * @message message that should be logged
   	 * @return boolean true on success
   	 */
-	public static function write($level, $message) {
+	public static function write($level, $message)
+	{
 		// log message only if level is higher or equal current reporting level
 		if ($level <= self::$level) {
 			$logFile = new File(self::logFileName($level));
@@ -167,7 +169,7 @@ class Log extends AppComponent
 				} catch (FileNotWriteableException $e) {}
 			}
 			if ($logFile->writable()) {
-				$logFile->append(self::getInstance()->createLogMessage($message));
+				$logFile->append(self::instance()->createLogMessage($message));
 			}
 		}
 		return true;

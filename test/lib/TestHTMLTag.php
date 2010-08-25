@@ -30,7 +30,7 @@ class TestHTMLTag extends UnitTestCase
 {
 	public function setUp() 
 	{
-		loadClass('ephFrame.lib.HTMLTag');
+		Library::load('ephFrame.lib.util.HTMLTag');
 	}
 	
 	public function testRender() 

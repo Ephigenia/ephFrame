@@ -20,7 +20,7 @@ class_exists('DB') or require dirname(__FILE__).'/../DB.php';
 class_exists('MySQLException') or require dirname(__FILE__).'/MySQLException.php';
 class_exists('MySQLQueryResult') or require dirname(__FILE__).'/MySQLQueryResult.php';
 class_exists('DBQuery') or require dirname(__FILE__).'/DBQuery.php';
-ephFrame::loadClass('ephFrame.lib.helper.Timer');
+Library::load('ephFrame.lib.util.Timer');
 
 /**
  * MySQL Database-Access-Object (DAO)
@@ -75,7 +75,6 @@ class MySQL extends DB implements DBInterface
 	public function selectDB($dbName = null) 
 	{
 		if ($dbName === null) $dbName = $this->DBDSN->db();
-		if (!is_string($dbName)) throw new StringExpectedException();
 		$this->checkConnection();
 		if (!mysql_select_db($dbName, $this->connectionHandle)) {
 			logg(Log::VERBOSE_SILENT, 'ephFrame: MySQL failed to use DB \''.$this->DBDSN->db().'\'');

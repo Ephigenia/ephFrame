@@ -15,7 +15,7 @@
  * @filesource
  */
 
-ephFrame::loadClass('ephFrame.lib.model.DB.QueryResult');
+class_exists('QueryResult') or require dirname(__FILE__).'/../QueryResult.php';
 
 /**
  * Integration for MySQL Results

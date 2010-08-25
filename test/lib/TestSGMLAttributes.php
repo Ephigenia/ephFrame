@@ -30,7 +30,7 @@ class TestSGMLAttributes extends UnitTestCase
 {
 	public function setUp() 
 	{
-		ephFrame::loadClass('ephFrame.lib.SGMLAttributes');
+		Library::load('ephFrame.lib.util.SGMLAttributes');
 	}
 	
 	public function testRender() 

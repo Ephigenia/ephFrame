@@ -30,7 +30,7 @@ class TestSeachQueryParser extends UnitTestCase
 {	
 	public function setUp() 
 	{
-		loadClass('ephFrame.lib.component.SearchQueryParser');
+		Library::load('ephFrame.lib.component.SearchQueryParser');
 	}
 	
 	public function test() 

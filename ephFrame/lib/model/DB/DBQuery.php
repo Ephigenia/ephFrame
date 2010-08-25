@@ -15,7 +15,7 @@
  * @filesource
  */
 
-ephFrame::loadClass('ephFrame.lib.Collection');
+Library::load('ephFrame.lib.util.Collection');
 
 /**
  * Abstract DB Query Class
@@ -35,7 +35,7 @@ ephFrame::loadClass('ephFrame.lib.Collection');
  * @uses Collection
  * @uses Hash
  */
-abstract class DBQuery extends Object implements Renderable
+abstract class DBQuery extends Object
 {	
 	const ORDER_ASC = 'ASC';
 	const ORDER_DESC = 'DESC';
@@ -121,7 +121,7 @@ abstract class DBQuery extends Object implements Renderable
 	public function __construct($verb = null, $table = null, $conditions = array(), $values = array()) 
 	{
 		if ($verb !== null) $this->verb($verb);
-		ephFrame::loadClass('ephFrame.lib.component.Collection');
+		Library::load('ephFrame.lib.component.Collection');
 		$this->reset();
 		// initial values
 		if ($table !== null) {
@@ -316,7 +316,6 @@ abstract class DBQuery extends Object implements Renderable
 		} else {
 			$tablename = trim($tablename);
 			$alias = trim($alias);
-			assert(is_string($tablename) && !empty($tablename));
 			$this->tables->add(array($tablename, $alias));
 		}
 		return $this;
@@ -347,8 +346,6 @@ abstract class DBQuery extends Object implements Renderable
 	public function verb($verb = null) 
 	{
 		if (func_num_args() == 0) return $this->verb;
-		if (empty($verb)) throw new StringExpectedException();
-		assert(is_string($verb) && !empty($verb));
 		$this->verb = strtoupper($verb);
 		return $this;
 	}
@@ -368,7 +365,6 @@ abstract class DBQuery extends Object implements Renderable
 	public function value($fieldname, $value) 
 	{
 		$fieldname = trim($fieldname);
-		assert(is_string($fieldname) && !empty($fieldname));
 		$this->values->add($fieldname, $value);
 		return $this;
 	}
@@ -397,7 +393,6 @@ abstract class DBQuery extends Object implements Renderable
 	public function groupBy($fieldname) 
 	{
 		$fieldname = trim($fieldname);
-		assert(is_string($fieldname) && !empty($fieldname));
 		$this->groupBy->add($fieldname);
 		return $this;
 	}
@@ -425,7 +420,6 @@ abstract class DBQuery extends Object implements Renderable
 	{
 		$fieldname = trim($fieldname);
 		$direction = trim($direction);
-		assert(is_string($fieldname) && !empty($fieldname));
 		$this->orderBy->add($fieldname.($direction !== null ? ' '.$direction : ''));
 		return $this;
 	}
@@ -615,7 +609,8 @@ abstract class DBQuery extends Object implements Renderable
 	 * @param array(string) $where
 	 * @return string
 	 */
-	protected function renderWhere($whereConditions = array(), $quote = false) {
+	protected function renderWhere($whereConditions = array(), $quote = false)
+	{
 		if (func_num_args() == 0) {
 			$whereConditions = $this->where;
 		}
@@ -639,7 +634,7 @@ abstract class DBQuery extends Object implements Renderable
 				$right = 'NULL';
 				$connector = ' is ';
 			}
-			if (preg_match('@^\s*(<|>|=|LIKE|IN)@i', $right) || preg_match('@<>@', $left)) {
+			if (preg_match('@^\s*(<|>|=|LIKE|IN)@i', $right) || preg_match('@[<>]$@', $left)) {
 				$connector = ' ';
 			}
 			// todo create cool condition array that can map all conditions possible

@@ -30,7 +30,7 @@ class TestObjectSet extends UnitTestCase
 {
 	public function setUp() 
 	{
-		ephFrame::loadClass('ephFrame.lib.ObjectSet');
+		Library::load('ephFrame.lib.util.ObjectSet');
 	}
 	
 	public function testGeneral() 

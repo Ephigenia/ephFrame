@@ -213,22 +213,17 @@ class NestedSetBehavior extends ModelBehavior
 	 */
 	public function nestedTree($depth = null, $depthModel = null)
 	{
-		$collection = $this->tree($depth, $depthModel);
 		$tree = array();
+		$data = $this->tree($depth, $depthModel);
 		$parents = array();
-		$samelevel = true;
-		foreach($collection as $Node) {
+		foreach($data as $Node) {
 			$Node->children = new ObjectSet(get_class($Node));
 			$parents[$Node->id] = $Node;
-			if ((int) $Node->level - $this->model->level <= $this->model->level) {
+			if ($Node->level - $this->model->level == 1) {
 				$tree[] = $Node;
 			} else {
-				$samelevel = false;
 				$parents[$Node->parent_id]->children[] = $Node;
 			}
-		}
-		if (isset($tree[0]) && !$samelevel) {
-			return $tree[0];
 		}
 		return $tree;
 	}

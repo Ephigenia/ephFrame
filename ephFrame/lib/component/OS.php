@@ -34,7 +34,7 @@
  * @package ephFrame
  * @subpackage ephFrame.lib.component
  */
-class OS extends AppComponent implements Renderable 
+class OS extends AppComponent
 {	
 	public $name = 'unknown';
 	public $id	= 0;

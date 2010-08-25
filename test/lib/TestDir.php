@@ -30,7 +30,7 @@ class TestDir extends UnitTestCase
 {	
 	public function setUp() 
 	{
-		loadClass('ephFrame.lib.Dir');
+		Library::load('ephFrame.lib.file.Dir');
 	}
 	
 	public function testRead() 

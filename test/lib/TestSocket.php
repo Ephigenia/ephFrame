@@ -35,7 +35,7 @@ class TestSocket extends UnitTestCase
 	
 	public function setUp() 
 	{
-		loadClass('ephFrame.lib.Socket');
+		Library::load('ephFrame.lib.net.socket.Socket');
 		$this->socket = new Socket('localhost', 80);
 		$this->assertTrue($this->socket->connect());
 	}

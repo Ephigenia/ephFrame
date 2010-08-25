@@ -15,7 +15,7 @@
  * @filesource
  */
 
-ephFrame::loadClass('ephFrame.lib.model.DB.DBQuery');
+Library::load('ephFrame.lib.model.DB.DBQuery');
 
 /**
  * Database Select Query

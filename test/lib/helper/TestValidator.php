@@ -29,7 +29,7 @@ class TestValidator extends UnitTestCase
 {
 	public function setUp() 
 	{
-		ephFrame::loadClass('ephFrame.lib.helper.Validator');
+		Library::load('ephFrame.lib.util.Validator');
 	}
 	
 	public function testEmail() 

@@ -8,7 +8,7 @@
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 2009-08-30
  */
-class Email extends AppComponent implements Renderable
+class Email extends AppComponent
 {
 	public $to;
 	

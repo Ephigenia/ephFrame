@@ -146,16 +146,12 @@ class Cookie extends AppComponent
 	 * 	$Cookie->write('userId', $userId, '+256days');
 	 * </code>
 	 * 
-	 * $varname and $value are checked to be proper string values, otherwise an
-	 * {@link StringExpectedException} will be thrown.
-	 * 
 	 * @param	string	$varname		Cookiename
 	 * @param	scalar	$value	
 	 * @param	integer	$ttl			Time to live for this cookie, a timestamp in the future or a string
 	 * @param	string	$domain		Domain String where cookie should be set
 	 * @param integer $flags		Set specific flags for the cookie like COOKIE_SECURE or COOKIE_HTTPONLY
 	 * @param boolean $httpOnly	 
-	 * @throws StringExpectedException on invalid varname or value
 	 */
 	public function set($name, $value, $ttl = null, $path = null, $domain = null, $flags = self::FLAG_HTTPONLY) 
 	{

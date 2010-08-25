@@ -17,7 +17,7 @@
 
 $___d = dirname(__FILE__);
 class_exists('DBConnectionManager') or require $___d.'/DB/DBConnectionManager.php';
-class_exists('Inflector') or require $___d.'/../Inflector.php';
+class_exists('Inflector') or require $___d.'/../util/Inflector.php';
 class_exists('SelectQuery') or require $___d.'/DB/SelectQuery.php';
 class_exists('InsertQuery') or require $___d.'/DB/InsertQuery.php';
 class_exists('UpdateQuery') or require $___d.'/DB/UpdateQuery.php';
@@ -25,7 +25,7 @@ class_exists('DeleteQuery') or require $___d.'/DB/DeleteQuery.php';
 class_exists('ModelFieldInfo') or require $___d.'/ModelFieldInfo.php';
 class_exists('ModelStructureCache') or require $___d.'/ModelStructureCache.php';
 class_exists('ModelBehaviorHandler') or require $___d.'/ModelBehaviorHandler.php';
-class_exists('ObjectSet') or require $___d.'/../ObjectSet.php';
+class_exists('ObjectSet') or require $___d.'/../util/ObjectSet.php';
 unset($___d);
 
 /**
@@ -256,7 +256,7 @@ class Model extends Object
 		
 		// get DB Instance if tablename is set
 		if ($this->tablename !== false) {
-			$this->DB = DBConnectionManager::getInstance()->get($this->useDBConfig);
+			$this->DB = DBConnectionManager::instance()->get($this->useDBConfig);
 			if (empty($this->tablenamePrefix)) {
 				$this->tablenamePrefix = Registry::get('DB.tablenamePrefix');
 				$this->tablename();
@@ -327,7 +327,7 @@ class Model extends Object
 					$config = array();
 				}
 				if (in_array($associationType, array('hasMany', 'hasAndBelongsToMany'))) {
-					$this->{Inflector::plural($modelAlias)} = new IndexedArray();
+					$this->{Inflector::pluralize($modelAlias)} = new IndexedArray();
 				}
 				$this->bind($modelAlias, $associationType, $config, $bind);
 			}
@@ -363,9 +363,9 @@ class Model extends Object
 		// load model class if not allready loaded
 		if (!class_exists($classname)) {
 			if (strpos($classname, '.')) {
-				$classname = ephFrame::loadClass($classname);
+				$classname = Library::load($classname);
 			} else {
-				ephFrame::loadClass('app.lib.model.'.$classname);
+				Library::load('app.lib.model.'.$classname);
 			}
 		}
 		// prevent unlimited nesting
@@ -399,7 +399,7 @@ class Model extends Object
 		switch($associationType) {
 			case 'hasAndBelongsToMany':
 				if (!isset($config['joinTable'])) {
-					$config['joinTable'] = $this->tablename.'_'.Inflector::underscore(Inflector::plural($this->{$modelAlias}->name), true);
+					$config['joinTable'] = $this->tablename.'_'.Inflector::underscore(Inflector::pluralize($this->{$modelAlias}->name), true);
 				}
 				$config['joinTable'] = String::prepend($config['joinTable'], $this->tablenamePrefix, true);
 				if (empty($config['with'])) {
@@ -414,7 +414,7 @@ class Model extends Object
 					$config['foreignKey'] = ucFirst($this->{$modelAlias}->name).'.'.$this->{$modelAlias}->primaryKeyName;
 					break;
 				case 'hasOne':
-					$config['foreignKey'] = ucFirst($this->{$modelAlias}->name).'.'.Inflector::delimeterSeperate($this->name.'_id', '_');
+					$config['foreignKey'] = ucFirst($this->{$modelAlias}->name).'.'.Inflector::underscore($this->name.'_id');
 					break;
 				case 'hasMany':
 					$config['foreignKey'] = ucFirst($this->name).'.'.$this->primaryKeyName;
@@ -577,7 +577,7 @@ class Model extends Object
 			$this->$modelName = $model->$modelName;
 		}
 		foreach($this->hasMany + $this->hasAndBelongsToMany as $modelName => $config) {
-			$modelPlural = Inflector::plural($modelName);
+			$modelPlural = Inflector::pluralize($modelName);
 			$this->{$modelPlural} = $model->$modelPlural;
 			$this->{$modelName} = $model->$modelName;
 		}
@@ -671,18 +671,16 @@ class Model extends Object
 	 */
 	public function save($validate = true) 
 	{
-		if (!($this->beforeSave($this) && $this->behaviors->beforeSave($this))) {
+		if (!$this->beforeSave($this) || !$this->behaviors->beforeSave($this)) {
 			return false;
 		}
-		// validate model data first
 		if ($validate && !$this->validate($this->data)) {
 			return false;
 		}
-		// insert or update
-		if (!$this->exists()) {
-			$this->insert();
-		} else {
+		if ($this->exists()) {
 			$this->update();
+		} else {
+			$this->insert();
 		}
 		$this->afterSave();
 		$this->behaviors->afterSave($this, $validate);
@@ -713,7 +711,7 @@ class Model extends Object
 			}
 			// save has many
 			foreach($this->hasMany as $modelName => $config) {
-				$plural = Inflector::plural($modelName);
+				$plural = Inflector::pluralize($modelName);
 				if (!empty($this->{$plural})) foreach($this->{$plural} as $model) {
 					$model->set($config['associationKey'], $this->get($this->primaryKeyName));
 					$model->save();
@@ -723,7 +721,7 @@ class Model extends Object
 		// save HABTM associated models
 		if (is_array($this->hasAndBelongsToMany) && $this->depth > 0) {
 			foreach($this->hasAndBelongsToMany as $modelName => $config) {
-				$pluralName = Inflector::plural($modelName);
+				$pluralName = Inflector::pluralize($modelName);
 				// remove previosly saved
 				$this->query(new DeleteQuery($config['joinTable'].' '.$config['with'], array($config['foreignKey'] => $this->get($this->primaryKeyName))));
 				// add new data
@@ -779,7 +777,7 @@ class Model extends Object
 	 */
 	protected function insert()
 	{
-		if (!($this->beforeInsert() && $r = $this->behaviors->beforeInsert($this))) {
+		if (!$this->beforeInsert() || !$this->behaviors->beforeInsert($this)) {
 			return false;
 		}
 		$quotedData = array();
@@ -796,7 +794,7 @@ class Model extends Object
 			}
 		}
 		$q = new InsertQuery($this->tablename, $quotedData);		
-		$db = DBConnectionManager::getInstance()->get($this->useDBConfig);
+		$db = DBConnectionManager::instance()->get($this->useDBConfig);
 		$db->query($q, $this->cacheQueries);
 		$this->set($this->primaryKeyName, $db->lastInsertId());
 		$this->afterInsert();
@@ -821,7 +819,7 @@ class Model extends Object
 	 */
 	protected function update()
 	{
-		if (!($this->beforeUpdate() && $this->behaviors->beforeUpdate($this))) return false;
+		if (!$this->beforeUpdate() || !$this->behaviors->beforeUpdate($this)) return false;
 		$quotedData = array();
 		foreach($this->structure as $key => $value) {
 			if (!isset($this->data[$key])) continue;
@@ -884,7 +882,7 @@ class Model extends Object
 			$id = (int) $id;
 		}
 		if (!$this->beforeDelete($id) || !$this->behaviors->beforeDelete($this, $id)) return false;
-		$db = DBConnectionManager::getInstance()->get($this->useDBConfig);
+		$db = DBConnectionManager::instance()->get($this->useDBConfig);
 		$db->query(new DeleteQuery($this->tablename, array($this->primaryKeyName => $id)), $this->cacheQueries);
 		$this->afterDelete();
 		$this->behaviors->afterDelete($this);
@@ -922,7 +920,7 @@ class Model extends Object
 		// delete hasMany stuff
 		if ($this->hasMany) {
 			foreach($this->hasMany as $name => $config) {
-				$plural = Inflector::plural($name);
+				$plural = Inflector::pluralize($name);
 				if (!$config['dependent'] || empty($this->{$plural})) continue;
 				foreach($this->{$plural} as $model) {
 					$model->delete();
@@ -932,7 +930,7 @@ class Model extends Object
 		// delete hasAndBelongsToMany associated 
 		if (is_array($this->hasAndBelongsToMany)) {
 			foreach($this->hasAndBelongsToMany as $modelName => $config) {
-				$pluralName = Inflector::plural($modelName);
+				$pluralName = Inflector::pluralize($modelName);
 				if (!$config['dependent'] || empty($this->{$plural})) continue;
 				foreach($this->{$pluralName} as $model) {
 					$model->delete();
@@ -1070,7 +1068,11 @@ class Model extends Object
 		}
 		// add fields from this table
 		foreach($fields as $name) {
-			$query->select($this->name.'.'.$name, $this->name.'.'.$name);
+			if (strpos($name, '.') === false) {
+				$query->select($this->name.'.'.$name, $this->name.'.'.$name);
+			} else {
+				$query->select($name);
+			}
 		}
 		// ordering
 		$order = array_merge((array) $order, $this->order);
@@ -1157,7 +1159,7 @@ class Model extends Object
 				$modelClassName = ucFirst($modelData[$this->name.'.use_model']);
 			}
 			if (!class_exists($modelClassName)) {
-				ephFrame::loadClass('app.lib.model.'.$modelClassName);
+				Library::load('app.lib.model.'.$modelClassName);
 			}
 			$model = new $modelClassName($modelData, $this->name);
 			$model->findConditions = $this->findConditions;
@@ -1178,7 +1180,7 @@ class Model extends Object
 				foreach($this->hasMany as $modelName => $config) {
 					$primaryKeyValue = $model->get($model->primaryKeyName);
 					if (empty($primaryKeyValue)) continue;
-					$associatedModelNamePlural = Inflector::plural($modelName);
+					$associatedModelNamePlural = Inflector::pluralize($modelName);
 					$joinConditions = array_merge($config['conditions'], array(
 						$config['associationKey'] => $primaryKeyValue
 					));
@@ -1211,7 +1213,7 @@ class Model extends Object
 					$query->join($config['joinTable'], $this->name.$modelName, DBQuery::JOIN, $conditions);
 					$query->orderBy->add($config['order']);
 					$query->count($config['count']);
-					$modelNamePlural = Inflector::plural($modelName);
+					$modelNamePlural = Inflector::pluralize($modelName);
 					$model->{$modelNamePlural} = new ObjectSet($modelName);
 					if ($r = $this->{$modelName}->query($query)) {
 						$model->{$modelNamePlural} = $r;
@@ -1235,7 +1237,7 @@ class Model extends Object
 	 */
 	public function query($query, $depth = null) 
 	{
-		if ($db = DBConnectionManager::getInstance()->get($this->useDBConfig)) {
+		if ($db = DBConnectionManager::instance()->get($this->useDBConfig)) {
 			$result = $db->query($query, $this->cacheQueries);
 			return $this->createSelectResultList($result, false, $depth);
 		}
@@ -1475,6 +1477,7 @@ class Model extends Object
 			$params['field'] = 'DISTINCT('.implode(',', $params['group']).')';	
 		}
 		$query->select = new Hash(array('COUNT('.$params['field'].')' => 'count'));
+		$query->groupBy = new Hash();
 		if (!($result = $this->query($query))) {
 			return false;
 		}
@@ -1561,13 +1564,13 @@ class Model extends Object
 		// catch findAllBy[fieldname] calls
 		if (preg_match('/(findAll(By)?)(.+)/i', $methodName, $found)) {
 			if (isset($args[1])) {
-				return $this->findAllBy(Inflector::delimeterSeperate($found[3], null, true), $args[0], $args[1]);
+				return $this->findAllBy(Inflector::underscore($found[3]), $args[0], $args[1]);
 			} else {
-				return $this->findAllBy(Inflector::delimeterSeperate($found[3], null, true), $args[0]);
+				return $this->findAllBy(Inflector::underscore($found[3]), $args[0]);
 			}
 		// catch findBy[fieldname] calls 
 		} elseif (preg_match('/find(By)?(.+)/i', $methodName, $found)) {
-			array_unshift($args, Inflector::delimeterSeperate($found[2], null, true));
+			array_unshift($args, Inflector::underscore($found[2], null, true));
 			return $this->callMethod('findBy', $args);
 		// catch $model->username() calls
 		} elseif (isset($this->structure[$methodName])) {

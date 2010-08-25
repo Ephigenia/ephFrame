@@ -34,7 +34,7 @@ class TestIndexedArray extends UnitTestCase
 {
 	public function setUp() 
 	{
-		ephFrame::loadClass('ephFrame.lib.IndexedArray');
+		Library::load('ephFrame.lib.util.IndexedArray');
 	}
 	
 	public function testImplode() 

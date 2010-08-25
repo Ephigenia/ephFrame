@@ -33,44 +33,7 @@ if (!class_exists('ephFrame')) {
 		'when you instanciate ephFrame');
 }
 
-/**
- * Function alias for {@link ephFrame}s loadInterface Method
- * @param string $interfacePath
- * @return boolean
- */
-function loadClass($classPath) {
-	return ephFrame::loadClass($classPath);
-}
-
-/**
- * Load a component
- * @param string $componentName
- * @return boolean
- */
-function loadComponent($componentName) {
-	return ephFrame::loadComponent($componentName);
-}
-
-/**
- * Load a helper
- * @param string $componentName
- * @return boolean
- */
-function loadHelper($helperName) {
-	return ephFrame::loadHelper($helperName);
-}
-
-/**
- * Function alias for {@link ephFrame}s loadInterface Method
- * @param string $interfacePath
- * @return boolean
- */
-function loadInterface($interfacePath) {
-	return ephFrame::loadInterface($interfacePath);
-}
-
-
-if (!function_exists('isEmpty')) {
+if (!function_exists('coalesce')) {
 	/**
 	 * Return the first argument that is not empty
 	 * @param mixed
@@ -91,7 +54,7 @@ function logg($level, $message) {
 	 * @param string $message
 	 */
 	if (!class_exists('Log')) {
-		loadClass('ephFrame.lib.component.Log');
+		Library::load('ephFrame.lib.component.Log');
 	}
 	Log::write($level, $message);
 }
@@ -176,7 +139,8 @@ function swapIfGt(&$var1, &$var2) {
  * @param integer|float $var2
  * @return boolean
  */
-function swapIfLt(&$var1, &$var2) {
+function swapIfLt(&$var1, &$var2)
+{
 	return swapIfGt($var2, $var1);
 }
 
@@ -191,7 +155,8 @@ function swapIfLt(&$var1, &$var2) {
  * </code>
  */
 if (!function_exists('assert')) {
-	function assert($condition) {
+	function assert($condition)
+	{
 		if ($condition) return true;
 		trigger_error('Assertion failed.'.var_export(debug_backtrace(), true), E_USER_NOTICE);
 	}
@@ -211,7 +176,8 @@ if (!function_exists('assert')) {
  * @param mixed $var
  * @param boolean $output
  */
-function dump($var, $output = true) {
+function dump($var, $output = true)
+{
 	if (!$output) {
 		return var_export($var, true);
 	} elseif (Registry::get('DEBUG') >= DEBUG_DEBUG) {

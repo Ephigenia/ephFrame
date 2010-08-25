@@ -33,7 +33,7 @@ class TestSelectQuery extends UnitTestCase
 {	
 	public function setUp() 
 	{
-		ephFrame::loadClass('ephFrame.lib.model.DB.SelectQuery');
+		Library::load('ephFrame.lib.model.DB.SelectQuery');
 	}
 	
 	public function testSimple() 

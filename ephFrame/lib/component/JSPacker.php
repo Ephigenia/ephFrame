@@ -63,27 +63,26 @@ class JSPacker extends AppComponent
 	 * Classname to use by default for compression
 	 * @var string
 	 */
-	public $compressorClassname = 'JSCompressor';
+	public $compressorClassname = 'ephFrame.lib.component.JSCompressor';
 	
 	/**
 	 * Extension for packed JS Files, without points
 	 * @var string
 	 */
-	public $packedExtension = 'js';
+	public $extension = 'js';
 	
 	/**
 	 * FilenamePrefix for compressed filenames, no slashes
 	 * @var string
 	 */
-	public $packedPrefix = 'p_';
+	public $prefix = 'p_';
 	
 	/**
 	 * @return JSPacker
 	 */
 	public function __construct() 
 	{
-		loadComponent($this->compressorClassname);
-		$this->compressor = new $this->compressorClassname();
+		$this->compressor = Library::create($this->compressorClassname);
 		return $this;
 	}
 	
@@ -91,13 +90,13 @@ class JSPacker extends AppComponent
 	 * Compresses multiple javascript files and stores them as a new file in
 	 * the target dir. The return value is the new filename of the packaged
 	 * files.
+	 * 
 	 * @todo use the {@link File} Class for storing the content
 	 * @param array(string) $files
 	 * @param string $targetDir
 	 */
 	public function packAndStore(Array $files, $targetDir) 
 	{
-		assert(!empty($targetDir));
 		$dir = new Dir($targetDir);
 		if (!$dir->exists()) {
 			$dir->create();
@@ -114,7 +113,7 @@ class JSPacker extends AppComponent
 	public function pack(Array $files) 
 	{
 		if (!$this->compress) {
-			ephFrame::loadClass('ephFrame.lib.File');
+			Library::load('ephFrame.lib.File');
 		}
 		$packed = '';
 		foreach($files as $filename) {
@@ -137,7 +136,7 @@ class JSPacker extends AppComponent
 	public function packedFilename(Array $files) 
 	{
 		$md5Filenames = substr(md5(implode('', array_map('basename', $files))), 0, 8);
-		$compressedFileName = $this->packedPrefix.$md5Filenames.'.'.$this->packedExtension;
+		$compressedFileName = $this->prefix.$md5Filenames.'.'.$this->extension;
 		$compressedFileName = str_replace('/[^-_A-Za-z0-9\./', '', $compressedFileName);
 		return $compressedFileName;
 	}	

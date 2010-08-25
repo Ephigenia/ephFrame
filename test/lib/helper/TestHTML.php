@@ -31,7 +31,7 @@ class TestHTML extends UnitTestCase
 {
 	public function setUp() 
 	{
-		ephFrame::loadClass('ephFrame.lib.helper.HTML');
+		Library::load('ephFrame.lib.view.helper.HTML');
 	}
 	
 	public function testEmail() 

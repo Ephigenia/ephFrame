@@ -15,7 +15,7 @@
  * @filesource
  */
 
-class_exists('HTMLTag') or require dirname(__FILE__).'/../../HTMLTag.php';
+class_exists('HTMLTag') or require dirname(__FILE__).'/../../util/HTMLTag.php';
 
 /**
  * Form Class
@@ -259,7 +259,7 @@ class Form extends HTMLTag
 			$fieldClassPath = $type;
 		}
 		if (!class_exists($classname)) {
-			ephFrame::loadClass($fieldClassPath);
+			Library::load($fieldClassPath);
 		}
 		// create form field instance
 		if (!empty($attributes['value'])) {

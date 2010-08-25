@@ -30,7 +30,7 @@ class TestCollection extends UnitTestCase
 {
 	public function setUp() 
 	{
-		ephFrame::loadClass('ephFrame.lib.Collection');
+		Library::load('ephFrame.lib.util.Collection');
 	}
 	
 	public function testCollectionUnique() 

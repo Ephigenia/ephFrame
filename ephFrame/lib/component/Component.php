@@ -15,8 +15,6 @@
  * @filesource
  */
 
-interface_exists('ephFrameComponent') or require(dirname(__FILE__).'/ephFrameComponent.php');
-
 /**
  * Abstract Component Class
  * 
@@ -46,7 +44,7 @@ interface_exists('ephFrameComponent') or require(dirname(__FILE__).'/ephFrameCom
  * @package ephFrame
  * @subpackage ephFrame.lib.component
  */
-abstract class Component extends Object implements ephFrameComponent
+abstract class Component extends Object
 {	
 	/**
 	 * List of components that are used by this component. Each of them

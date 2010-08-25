@@ -15,7 +15,7 @@
  * @filesource
  */
 
-ephFrame::loadClass('ephFrame.lib.model.DB.DBQuery');
+class_exists('DBDeleteQuery') or require dirname(__FILE__).'/DBQuery.php';
 
 /**
  * A Delete Query

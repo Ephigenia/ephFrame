@@ -40,7 +40,7 @@ class TestFile extends UnitTestCase
 	
 	public function setUp() 
 	{
-		ephFrame::loadClass('ephFrame.lib.File');
+		Library::load('ephFrame.lib.file.File');
 		$this->testFile = new File(__FILE__);
 		$this->falseFile = new File('nixda');
 	}

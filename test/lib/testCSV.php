@@ -30,7 +30,7 @@ class testCSV extends UnitTestCase
 {
 	public function setUp() 
 	{
-		ephFrame::loadClass('ephFrame.lib.CSV');
+		Library::load('ephFrame.lib.file.CSV');
 	}
 	
 	public function testCreate() 

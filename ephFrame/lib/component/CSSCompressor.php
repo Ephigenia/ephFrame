@@ -69,10 +69,3 @@ class CSSCompressor extends Compressor
 		return $compressed;
 	}	
 }
-
-/**
- * @package ephFrame
- * @subpackage ephFrame.lib.exception
- */
-class CSSCompressorException extends ComponentException 
-{}

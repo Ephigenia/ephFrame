@@ -35,7 +35,7 @@ class TestWikiText extends UnitTestCase
 	
 	public function setUp() 
 	{
-		ephFrame::loadClass('ephFrame.lib.component.WikiText');
+		Library::load('ephFrame.lib.component.WikiText');
 		$this->wikiText = new WikiText();
 	}
 	

@@ -30,7 +30,7 @@ class TestHash extends UnitTestCase
 {	
 	public function setUp() 
 	{
-		ephFrame::loadClass('ephFrame.lib.Hash');
+		Library::load('ephFrame.lib.util.Hash');
 	}
 	
 	public function testSort() 

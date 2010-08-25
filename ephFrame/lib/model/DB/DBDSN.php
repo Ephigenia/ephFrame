@@ -16,7 +16,7 @@
  */
 
 // load parent class URL
-ephFrame::loadClass('ephFrame.lib.URL');
+Library::load('ephFrame.lib.util.URL');
 
 /**
  * Class for Database Source Names

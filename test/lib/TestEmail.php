@@ -29,7 +29,7 @@ class TestEmail extends UnitTestCase
 {	
 	public function setUp() 
 	{
-		ephFrame::loadClass('ephFrame.lib.Email');
+		Library::load('ephFrame.lib.component.Email');
 	}
 	
 	public function testConstructor() 

@@ -29,7 +29,7 @@ class TestTimer extends UnitTestCase
 {
 	public function setUp() 
 	{
-		ephFrame::loadClass('ephFrame.lib.helper.Timer');
+		Library::load('ephFrame.lib.util.Timer');
 	}
 	
 	public function testSingleTimer()

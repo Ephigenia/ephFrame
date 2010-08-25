@@ -30,7 +30,7 @@ class TestTime extends UnitTestCase
 {
 	public function setUp() 
 	{
-		ephFrame::loadClass('ephFrame.lib.helper.Time');
+		Library::load('ephFrame.lib.view.helper.Time');
 	}
 	
 	public function testNiceShort() 

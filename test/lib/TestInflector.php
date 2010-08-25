@@ -30,7 +30,7 @@ class TestInflector extends UnitTestCase
 {
 	public function setUp() 
 	{
-		ephFrame::loadClass('ephFrame.lib.Inflector');
+		Library::load('ephFrame.lib.util.Inflector');
 	}
 	
 	public function testPluralize() 

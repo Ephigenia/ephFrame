@@ -48,15 +48,16 @@ class DBConnectionManager extends Object
 	
 	public function __construct() 
 	{
-		ephFrame::loadClass('ephFrame.lib.model.DB.DBFactory');
-		ephFrame::loadClass('ephFrame.lib.model.DB.DBDSN');
+		Library::load('ephFrame.lib.model.DB.DBFactory');
+		Library::load('ephFrame.lib.model.DB.DBDSN');
 		$this->factory = new DBFactory();
 	}
 	
 	/**
 	 * @return DBConnectionManager
 	 */
-	public static function getInstance() {
+	public static function instance()
+	{
 		if (empty(self::$instance)) {
 			self::$instance = new DBConnectionManager();
 		}
@@ -71,7 +72,7 @@ class DBConnectionManager extends Object
 	 */
 	public function get($DBConfigName) 
 	{
-		$instance = self::getInstance();
+		$instance = self::instance();
 		// open conenction and place connection in {@link data} when successfully connected
 		if (!$instance->opened($DBConfigName)) {
 			$DBConfig = new DBConfig();
@@ -85,7 +86,7 @@ class DBConnectionManager extends Object
 	
 	public function opened($DBConfigName) 
 	{
-		return array_key_exists($DBConfigName, self::getInstance()->connections);
+		return array_key_exists($DBConfigName, self::instance()->connections);
 	}	
 }
 
@@ -104,7 +105,7 @@ class DBConnectionManagerDBConfigNotFoundException extends DBConnectionManagerEx
 {
 	public function __construct($DBConfigName) 
 	{
-		$this->message = 'Unable to find \''.$DBConfigName.'\' in DBConfig.';
+		$this->message = sprintf('Unable to find "%s" in DBConfig.', $DBConfigName);
 		parent::__construct($this->message);
 	}
 }

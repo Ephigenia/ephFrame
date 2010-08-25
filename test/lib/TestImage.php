@@ -35,7 +35,7 @@ class TestImage extends UnitTestCase
 	
 	public function setUp() 
 	{
-		ephFrame::loadClass('ephFrame.lib.Image');
+		Library::load('ephFrame.lib.file.image.Image');
 		$this->testImage = new Image(dirname(__FILE__).'/../tmp/Blue_Box_in_museum.jpg');
 	}
 	

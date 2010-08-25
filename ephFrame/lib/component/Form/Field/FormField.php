@@ -243,7 +243,7 @@ abstract class FormField extends HTMLTag
 		return parent::beforeRender();
 	}
 	
-	public function render() 
+	public function render($escaped = false) 
 	{
 		$rendered = '';
 		if (!empty($this->label) && $this->type != 'hidden') {

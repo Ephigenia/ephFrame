@@ -35,13 +35,7 @@ class JSCompressor extends Compressor
 	 */
 	public function compress($code) 
 	{
-		// strip multiline comments
 		$code = String::stripComments($code);
 		return $code;
 	}
-	
-	public function basicCompress($code) 
-	{
-		return $code;
-	}	
 }

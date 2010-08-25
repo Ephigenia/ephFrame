@@ -75,14 +75,13 @@ class SearchQueryParser extends AppComponent
 	 */
 	public function __construct($queryString) 
 	{
-		assert(is_string($queryString));
 		$this->query = $this->cleanUp($queryString);
 		$this->terms = $this->parse($this->query);
 		return $this;
 	}
 	
-	private function parse($queryString) {
-		assert(is_string($queryString));
+	private function parse($queryString)
+	{
 		$words = array();
 		if ($this->useQuotes) {
 			$quoting = '["\'‘’“”]';

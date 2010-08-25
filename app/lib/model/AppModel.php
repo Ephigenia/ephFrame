@@ -15,7 +15,7 @@
  * @filesource
  */
 
-ephFrame::loadClass('ephFrame.lib.model.Model');
+Library::load('ephFrame.lib.model.Model');
 
 /**
  * The appmodel should be the parent class for every model used in the

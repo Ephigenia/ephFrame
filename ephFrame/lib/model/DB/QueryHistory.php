@@ -27,7 +27,7 @@
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 23.07.2007
  */
-class QueryHistory extends Object implements Countable, Renderable 
+class QueryHistory implements Countable
 {
 	/**
 	 * Stores all the queries in an array
@@ -37,12 +37,11 @@ class QueryHistory extends Object implements Countable, Renderable
 	
 	/**
 	 * Stores the single instance of QueryHistory
-	 *
 	 * @var QueryHistory
 	 */
 	public static $instance;
 	
-	public static function getInstance()
+	public static function instance()
 	{
   		if (self::$instance === null) {
   			$classname = __CLASS__;
@@ -59,7 +58,7 @@ class QueryHistory extends Object implements Countable, Renderable
 	 */
 	public static function add($query, $result, Timer $timer)
 	{
-		$history = self::getInstance();
+		$history = self::instance();
 		$history->data[] = array(
 			'query' => $query,
 			'result' => $result,
@@ -74,7 +73,7 @@ class QueryHistory extends Object implements Countable, Renderable
 	 */
 	public function count() 
 	{
-		$history = self::getInstance();
+		$history = self::instance();
 		return count($history->data);
 	}
 	
@@ -84,7 +83,7 @@ class QueryHistory extends Object implements Countable, Renderable
 	 */
 	public function last() 
 	{
-		$history = self::getInstance();
+		$history = self::instance();
 		if (count($history) > 0) return $history->data[count($history)-1]['query'];
 		return false;
 	}
@@ -137,16 +136,6 @@ class QueryHistory extends Object implements Countable, Renderable
 			
 		}
 		return $this->afterRender($rendered);
-	}
-	
-	public function beforeRender() 
-	{
-		return true;
-	}
-	
-	public function afterRender($rendered) 
-	{
-		return $rendered;
 	}
 	
 	public function __toString() 

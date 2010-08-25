@@ -26,7 +26,7 @@ class_exists('HTMLTag') or require dirname(__FILE__).'/../HTMLTag.php';
  * @subpackage ephFrame.lib.component
  * @uses HTMLTag
  */
-class MetaTags extends Hash implements Renderable 
+class MetaTags extends Hash
 {
 	public $data = array(
 		'keywords' => array(''),
@@ -39,7 +39,6 @@ class MetaTags extends Hash implements Renderable
 	
 	public function startup() 
 	{
-		$this->controller->set('MetaTags', $this);
 		$this->data['keywords'] = new Collection($this->data['keywords']);
 		return parent::startup();
 	}

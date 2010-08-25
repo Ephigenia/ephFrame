@@ -16,7 +16,7 @@
  */
 
 // load parent class
-ephFrame::loadClass('ephFrame.lib.Controller');
+Library::load('ephFrame.lib.core.Controller');
 
 /**
  * Applications Main Controller

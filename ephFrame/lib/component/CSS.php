@@ -15,9 +15,9 @@
  * @filesource
  */
 
-class_exists('File') or require dirname(__FILE__).'/../File.php';
-class_exists('Collection') or require dirname(__FILE__).'/../Collection.php';
-class_exists('String') or require dirname(__FILE__).'/../helper/String.php';
+class_exists('File') or require dirname(__FILE__).'/../file/File.php';
+class_exists('Collection') or require dirname(__FILE__).'/../util/Collection.php';
+class_exists('String') or require dirname(__FILE__).'/../util/String.php';
 
 /**
  * Class Collecting CSS definitions and files for the view
@@ -56,7 +56,7 @@ class_exists('String') or require dirname(__FILE__).'/../helper/String.php';
  * @uses CSSPacker
  * @uses Collection
  */
-class CSS extends AppComponent implements Renderable
+class CSS extends AppComponent
 {	
 	/**
 	 * Collection that stores the name of css files added
@@ -93,7 +93,9 @@ class CSS extends AppComponent implements Renderable
 	 * that CSS should search in
 	 * @var string
 	 */
-	public $dirs = array('static/css/');
+	public $dirs = array(
+		'static/css/',
+	);
 	
 	public function clear() 
 	{
@@ -106,7 +108,6 @@ class CSS extends AppComponent implements Renderable
 	public function startup() 
 	{
 		$this->clear();
-		$this->controller->set('CSS', $this);
 		return parent::startup();
 	}
 	
@@ -198,7 +199,7 @@ class CSS extends AppComponent implements Renderable
 		if (count($this->plain) > 0) {
 			$styleTag = new HTMLTag('style', array('type' => 'text/css'));
 			if ($this->compress) {
-				loadComponent('CSSCompressor');
+				Library::load('ephFrame.lib.component.CSSCompressor');
 				$CSSCompressor = new CSSCompressor();
 				$styleTag->tagValue($CSSCompressor->compress(implode(LF, $this->plain)));
 			} else {
@@ -227,7 +228,7 @@ class CSS extends AppComponent implements Renderable
 		$this->files = new Collection(@$existingFiles);
 		// pack files, if {@link pack} is on and everything is smooothy
 		if ($this->pack) {
-			loadComponent('CSSPacker');
+			Library::load('ephFrame.lib.component.CSSPacker');
 			$packer = new CSSPacker();
 			$compressedFilename = $this->dirs[0].$packer->packAndStore($this->files->toArray(), $this->dirs[0]);
 			$this->files = new Collection($compressedFilename);

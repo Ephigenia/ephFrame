@@ -166,7 +166,6 @@ class FileStorageComponent extends AppComponent
 	 */
 	public function store($filename, $storageName, $overwrite = false, $copy = false) 
 	{
-		assert(is_string($filename) && is_string($storageName));
 		if (!$this->beforeStore($filename)) {
 			return false;
 		}

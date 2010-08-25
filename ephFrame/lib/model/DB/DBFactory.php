@@ -32,13 +32,13 @@
  * @subpackage ephFrame.lib.model.DB
  * @version 0.2
  */
-class DBFactory extends Object 
+class DBFactory
 {
 	/**
 	 * Creates a new DAO Object of the given type and returns it
 	 * 
-	 * @throws DAOFactoryDBTypeNotFoundException if no DAO Object for the given type was found
-	 * @param string	$type
+	 * @throws DBFactoryDBTypeNotFoundException
+	 * @param string $type
 	 * @return DAO
 	 */	
 	public function create($type) 
@@ -46,7 +46,7 @@ class DBFactory extends Object
 		if (strtolower($type) == 'mysql') $type = 'MySQL';
 		$classPath = 'ephFrame.lib.model.DB.'.$type.'.'.$type;
 		try {
-			ephFrame::loadClass($classPath);
+			Library::load($classPath);
 		} catch (ephFrameLoadError $e) {
 			throw $e;
 			throw new DBFactoryDBTypeNotFoundException($type);
@@ -61,13 +61,7 @@ class DBFactory extends Object
  * @subpackage ephFrame.lib.exception
  */
 class DBFactoryException extends BasicException 
-{
-	public function __construct($message = null) 
-	{
-		$this->level = BasicException::FATAL;
-		parent::__construct($message);
-	}
-}
+{}
 
 /**
  * @package ephFrame
@@ -77,6 +71,6 @@ class DBFactoryDBTypeNotFoundException extends DBFactoryException
 {
 	public function __construct($type) 
 	{
-		parent::__construct('No Database Connection Handler for \''.$type.'\' found.');
+		parent::__construct(sprintf('No Database Connection Handler for "%s" found.', $type));
 	}
 }

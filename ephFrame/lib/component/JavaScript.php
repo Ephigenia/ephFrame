@@ -42,7 +42,7 @@ class_exists('String') or require dirname(__FILE__).'/../helper/String.php';
  * @uses JSCompressor
  * @uses JSPacker
  */
-class JavaScript extends AppComponent implements Renderable 
+class JavaScript extends AppComponent
 {
 	/**
 	 * Collection that stores the name of js files added
@@ -98,7 +98,6 @@ class JavaScript extends AppComponent implements Renderable
 	public function startup() 
 	{
 		$this->clear();
-		$this->controller->set('JavaScript', $this);
 		return parent::startup();	
 	}
 	
@@ -195,8 +194,7 @@ class JavaScript extends AppComponent implements Renderable
 			$jQuery = implode(LF, $this->jQuery);
 			// compress plain javascript
 			if ($this->compress) {
-				loadComponent('JSCompressor');
-				$compressor = new JSCompressor();
+				$compressor = Library::create('ephFrame.lib.component.JSCompressor');
 				$plain = $compressor->compress($plain);
 				$jQuery = $compressor->compress($jQuery);
 			}
@@ -230,8 +228,7 @@ class JavaScript extends AppComponent implements Renderable
 		$this->files = new Collection(@$existingFiles);
 		// pack files, if {@link pack} is on and everything is smooothy
 		if ($this->pack) {
-			loadComponent('JSPacker');
-			$packer = new JSPacker();
+			$packer = Library::create('ephFrame.lib.component.JSPacker');
 			$compressedFilename = $this->dirs[0].$packer->packAndStore($this->files->toArray(), $this->dirs[0]);
 			$this->files = new Collection($compressedFilename);
 		}

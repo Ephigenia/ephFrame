@@ -30,8 +30,7 @@
  * 	public $localhost = 'mysql:...';
  * 	public $default = '';
  * 	public $online = 'mysql:...';
- * 	public function __construct() 
-	{
+ * 	public function __construct() {
  * 		if ($_SERVER['SERVER_NAME'] == 'localhost') {
  * 			$this->default = $this->localhost;
  * 		} else {

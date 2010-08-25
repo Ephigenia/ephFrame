@@ -15,7 +15,7 @@
  * @filesource
  */
 
-class_exists('File') or require dirname(__FILE__).'/../File.php';
+class_exists('File') or require dirname(__FILE__).'/../util/File.php';
 
 /**
  * CSS Packer, packs CSS Files into single files
@@ -43,8 +43,6 @@ class_exists('File') or require dirname(__FILE__).'/../File.php';
  * @since 12.05.2008
  * @subpackage ephFrame.lib.component
  * @package ephFrame
- * @uses CSSCompressor
- * @uses File
  */
 class CSSPacker extends AppComponent 
 {
@@ -54,34 +52,33 @@ class CSSPacker extends AppComponent
 	 * Compressor instance used when {@compress} is true
 	 * @var CSSCompressor
 	 */
-	public $compressor;
+	protected $compressor;
 	
 	/**
 	 * Stores the name of the class that should be used to compress
 	 * the css files if {@link compress} is true
 	 * @return string
 	 */
-	public $compressorClassname = 'CSSCompressor';
+	protected $compressorClassname = 'ephFrame.lib.component.CSSCompressor';
 	
 	/**
 	 * Extension for packed CSS Files, without point
 	 * @var string
 	 */
-	public $packedExtension = 'css';
+	public $extension = 'css';
 	
 	/**
 	 * FilenamePrefix for compressed filenames, no slashes
 	 * @var string
 	 */
-	public $packedPrefix = 'p_';
+	public $prefix = 'p_';
 	
 	/**
 	 * @return CSSPacker
 	 */
 	public function __construct() 
 	{
-		loadComponent($this->compressorClassname);
-		$this->compressor = new $this->compressorClassname();
+		$this->compressor = Library::create($this->compressorClassname);
 		return $this;
 	}
 	
@@ -95,7 +92,6 @@ class CSSPacker extends AppComponent
 	 */
 	public function packAndStore(Array $files, $targetDir) 
 	{
-		assert(!empty($targetDir));
 		$dir = new Dir($targetDir);
 		if (!$dir->exists()) {
 			$dir->create();
@@ -109,7 +105,8 @@ class CSSPacker extends AppComponent
 	 * @param string $cssContent
 	 * @return boolean|array(string) false if nothing found, otherwise a string with the charset encoding name found
 	 */
-	private function captureCharset($cssString) {
+	private function captureCharset($cssString)
+	{
 		if (preg_match('/^[\s\n\r]*@charset\s+["\']([^"\']+)["\'];\s*/i', $cssString, $found)) {
 			return $found;
 		}
@@ -157,7 +154,7 @@ class CSSPacker extends AppComponent
 	public function packedFilename(Array $files = array()) 
 	{
 		$md5Filenames = substr(md5(implode('', array_map('basename', $files))), 0, 8);
-		$compressedFileName = $this->packedPrefix.$md5Filenames.'.'.$this->packedExtension;
+		$compressedFileName = $this->prefix.$md5Filenames.'.'.$this->extension;
 		$compressedFileName = str_replace('/[^-_A-Za-z0-9\./', '', $compressedFileName);
 		return $compressedFileName;
 	}

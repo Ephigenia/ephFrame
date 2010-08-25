@@ -31,7 +31,7 @@ class TestSanitizer extends UnitTestCase
 {
 	public function setUp() 
 	{
-		ephFrame::loadClass('ephFrame.lib.helper.Sanitizer');
+		Library::load('ephFrame.lib.util.Sanitizer');
 	}
 	
 	public function testFilename() 

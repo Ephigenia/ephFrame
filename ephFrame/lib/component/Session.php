@@ -117,14 +117,12 @@ class Session extends Hash
 	
 	/**
 	 * sets or returns the current session id
-	 * @param 	string	$id	new session name
-	 * @throws StringExpectedException
+	 * @param string $id new session name
 	 * @return string
 	 */
 	public function id($id = null) 
 	{
 		if (func_num_args() > 0) {
-			if (!is_string($id) || strlen($id) == 0) throw new StringExpectedException();
 			session_id($id);
 		}
 		return session_id();

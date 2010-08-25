@@ -100,7 +100,7 @@ class ModelBehaviorHandler extends Object implements Iterator, Countable
 				if (!ClassPath::exists($behaviorClassPath)) {
 					throw new ModelBehaviorNotFoundException($this->model, $behaviorClassName);
 				}
-				ephFrame::loadClass($behaviorClassPath);
+				Library::load($behaviorClassPath);
 			}
 			self::$cache[$behaviorName] = $behaviorClassName;
 		} else {

@@ -3,8 +3,8 @@
 if (Registry::get('DEBUG') <= DEBUG_PRODUCTION) return true;
 
 if (class_exists('QueryHistory')) {
-	$queriesTotal = QueryHistory::getInstance()->count();
-	$queriesTime = QueryHistory::getInstance()->timeTotal(3);
+	$queriesTotal = QueryHistory::instance()->count();
+	$queriesTime = QueryHistory::instance()->timeTotal(3);
 } else {
 	$queriesTotal = false;
 	$queriesTime = false;

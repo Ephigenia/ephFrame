@@ -16,9 +16,9 @@
  */
 
 // load parent class
-ephFrame::loadClass('ephFrame.lib.model.DB.QueryHistory');
-ephFrame::loadClass('ephFrame.lib.model.DB.DBDSN');
-ephFrame::loadInterface('ephFrame.lib.model.DB.DBInterface');
+Library::load('ephFrame.lib.model.DB.QueryHistory');
+Library::load('ephFrame.lib.model.DB.DBDSN');
+Library::load('ephFrame.lib.model.DB.DBInterface');
 
 /**
  * Abstract Database-Access-Object (DAO)
@@ -219,7 +219,7 @@ abstract class DB extends Object implements DBInterface
 	public function describe($tablename) 
 	{
 		if (!class_exists('DBDescribeQuery')) {
-			ephFrame::loadClass('ephFrame.lib.model.DB.DBDescribeQuery');
+			Library::load('ephFrame.lib.model.DB.DBDescribeQuery');
 		}
 		$query = new DBDescribeQuery($tablename);
 		$result = $this->query($query);
