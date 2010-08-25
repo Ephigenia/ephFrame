@@ -18,8 +18,7 @@ Features:
 	* HTML Helper (fast HTML valid code!)
 	* Javascript & CSS Component (compressing, packing)
 	* Email Component
-* Active Record
-* I18n (gettext)
+* Model Active Record
 * Different Behaviors
 	* Flagable (Flag-Columns)
 	* HitCount (Increasing Columns)
@@ -28,6 +27,7 @@ Features:
 	* Sluggable (URIs)
 	* Timestampable (Update, Created-Auto-Columns)
 	* Versionable
+* I18n (gettext)
 * Logging
 * Console Integration
 	* OptParse

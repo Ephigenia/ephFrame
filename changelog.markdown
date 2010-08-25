@@ -9,9 +9,12 @@ check some deprecated methods or new features.
 
 * completely refactored the order of class files in the library, deleted some
 classes that were never used like: `FTP`, `Barcode`
-* redon the callback stack on the controller where every component or logic
+* redo the callback stack on the controller where every component or logic
 now can be added to the after/before callbacks by adding valid callback arrays
 to the variable array
+* params array of controller contains also submitted post/get variables so
+that you only have to look there for defined vars, no messing around with
+$request->data and $this->params
 
 # 2010-08-14
 
