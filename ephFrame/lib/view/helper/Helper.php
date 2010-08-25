@@ -35,21 +35,12 @@ abstract class Helper extends Object
 
 	public function __construct($controller = null) 
 	{
-		if (is_object($controller))	$this->controller = $controller;
+		$this->controller = $controller;
+		$controller->registerCallback('beforeRender', array($this, 'beforeRender'));
+		$controller->registerCallback('afterRender', array($this, 'afterRender'));
 		$this->__mergeParentProperty('helpers');
-		$this->init();
-		return $this;
-	}
-	
-	public function init() 
-	{
 		$this->initHelpers();
-		return true;
-	}
-	
-	public function startup() 
-	{
-		return true;
+		return $this;
 	}
 	
 	protected function initHelpers()
@@ -64,18 +55,9 @@ abstract class Helper extends Object
 		return true;
 	}
 	
-	public function beforeAction() 
-	{
-		return true;
-	}
-	
-	public function afterAction() 
-	{
-		return true;
-	}
-	
 	public function beforeRender() 
 	{
+		$this->controller->data->set(get_class($this), $this);
 		return true;
 	}
 	

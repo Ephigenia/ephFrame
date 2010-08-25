@@ -122,7 +122,7 @@ class I18n extends AppComponent
 	public function domain($location, $name, $encoding = null)
 	{
 		if (!empty($location)) {
-			$this->domainLocation = rtrim($location, DS).DS;
+			$this->domainLocation = realpath($location).DS;
 		}
 		$this->domainName = $name;
 		// bind textdomain
@@ -254,7 +254,6 @@ class I18nDomainLocationNotFoundException extends I18nException
 {
 	public function __construct(I18n $I18n) 
 	{
-		$message = 'Unable to find textdomain \''.$I18n->domainName.'\' in \''.$I18n->domainLocation.'\'';
-		parent::__construct($message);
+		parent::__construct(sprintf('Unable to find textdomain "%s" in "%s",', $I18n->domainName, $I18n->domainLocation));
 	}
 }

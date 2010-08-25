@@ -551,7 +551,7 @@ class Model extends Object
 	 * @param array(string) name of the field that should be set (so you can ignore keys)
 	 * @return Model
 	 */
-	public function fromArray(Array $data = array(), Array $fieldNames = array()) 
+	public function fromArray(Array $data, Array $fieldNames = array()) 
 	{
 		foreach($data as $key => $value) {
 			if (count($fieldNames) > 0 && !in_array($key, $fieldNames)) continue;

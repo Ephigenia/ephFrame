@@ -15,7 +15,7 @@
  * @filesource
  */
 
-class_exists('Hash') or require dirname(__FILE__).'/../Hash.php';
+class_exists('Hash') or require dirname(__FILE__).'/../util/Hash.php';
 
 /**
  * Session Class
@@ -39,7 +39,7 @@ class Session extends Hash
 {
 	/**
 	 * Default session name, usually overwritten by Session.name in the
-	 * application config
+	 * application’s config
 	 * @var string
 	 */
 	private $name = 'sessionId';
@@ -50,14 +50,6 @@ class Session extends Hash
 	 * @var integer
 	 */
 	public $ttl;
-	
-	/**
-	 * Components used by session component
-	 * @var array(string)
-	 */
-	public $components = array(
-		'Cookie',
-	);
 	
 	/**
 	 * Creates a new Session, you can pass the sessions Name to
@@ -151,7 +143,7 @@ class Session extends Hash
 	 */
 	public function beforeRender() 
 	{
-		$this->controller->set('Session', $this);
+		$this->controller->data->set(get_class($this), $this);
 		return parent::beforeRender();
 	}
 	

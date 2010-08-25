@@ -5,6 +5,14 @@ This file should record some kind of change history of the ephFrame Framework
 Please check this file for hints after you updated the framework via svn to 
 check some deprecated methods or new features.
 
+# 2010-08-25
+
+* completely refactored the order of class files in the library, deleted some
+classes that were never used like: `FTP`, `Barcode`
+* redon the callback stack on the controller where every component or logic
+now can be added to the after/before callbacks by adding valid callback arrays
+to the variable array
+
 # 2010-08-14
 
 * CURL responds with a real HTTPResponse class that contains headers and the 

@@ -87,42 +87,18 @@ abstract class Component extends Object
 	public function init(Controller $controller) 
 	{
 		$this->controller = $controller;
-		$this->initComponents();
-		$this->initHelpers();
+		$controller->registerCallback('beforeRender', array($this, 'beforeRender'));
+		$controller->registerCallback('afterRender', array($this, 'afterRender'));
+		$controller->registerCallback('beforeAction', array($this, 'beforeAction'));
+		$controller->registerCallback('afterAction', array($this, 'afterAction'));
+		$controller->registerCallback('beforeRedirect', array($this, 'beforeRedirect'));
+		foreach($this->helpers as $helper) {
+			$this->{$helper} = $controller->addHelper($helper);
+		}
+		foreach($this->components as $component) {
+			$this->{$component} = $controller->addComponent($component);
+		}
 		return $this;
-	}
-	
-	/**
-	 * Initiates all components defined for this component and creates a link
-	 * to them on the component.
-	 * 
-	 * @return true
-	 */
-	protected function initComponents()
-	{
-		// init components used by this component
-		foreach ($this->components as $componentName) {
-			$componentClassName = ClassPath::className($componentName);
-			// component not attached to controller, therefore do that now 
-			if (empty($this->controller->{$componentClassName})) {
-				logg(Log::VERBOSE_SILENT, 'ephFrame: '.get_class($this).' adds component \''.$componentName.'\' to '.get_class($this->controller));
-				$this->controller->addComponent($componentName, false);
-			}
-			$this->{$componentClassName} = $this->controller->{$componentClassName};
-		}
-		return true;
-	}
-	
-	protected function initHelpers()
-	{
-		foreach($this->helpers as $HelperName) {
-			$className = ClassPath::className($HelperName);
-			if (!class_exists($className)) {
-				loadHelper($HelperName);
-			}
-			$this->{$className} = new $className();
-		}
-		return true;
 	}
 	
 	/**
@@ -141,6 +117,7 @@ abstract class Component extends Object
 	 */
 	public function beforeRender() 
 	{
+		$this->controller->data->set(get_class($this), $this);
 		return true;
 	}
 	
@@ -148,12 +125,12 @@ abstract class Component extends Object
 	 * Called right after the controller rendered everything, add something
 	 * to the rendered output here in your own components. This method should
 	 * always return the rendered content to the controller.
-	 * @param string $rendered
+	 * @param string $string
 	 * @return string
 	 */
-	public function afterRender($rendered) 
+	public function afterRender($string) 
 	{
-		return $rendered;
+		return $string;
 	}
 	
 	/**

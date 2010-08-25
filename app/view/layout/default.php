@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title><?php echo coalesce($pageTitle, '[no title]'); ?> ></title>
+	<title><?php echo coalesce($pageTitle, '[no title]') ?></title>
 	<?php
 	if (isset($MetaTags)) echo String::indent($MetaTags->render(), 2, TAB, 1);
 	if (isset($CSS)) {
@@ -13,6 +13,7 @@
 		echo $CSS;
 	}
 	?>
+	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;" />
 	<link rel="shortcut icon" type="image/ico" href="<?php echo WEBROOT ?>favicon.ico" />
 </head>
 <body>
