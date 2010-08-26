@@ -15,7 +15,7 @@
  * @filesource
  */
 
-class_exists('CURL') or require(dirname(__FILE__).'/../CURL.php');
+class_exists('CURL') or require(dirname(__FILE__).'/../socket/CURL.php');
 
 /**
  * Simple Twitter API Integration
@@ -46,7 +46,6 @@ class_exists('CURL') or require(dirname(__FILE__).'/../CURL.php');
  */
 class Twitter extends CURL 
 {
-	
 	public $baseUrl = 'http://www.twitter.com/';
 	
 	public $username; 
@@ -211,7 +210,6 @@ class Twitter extends CURL
 			throw new TwitterErrorException($response);
 		}
 	}
-	
 }
 
 /**
@@ -219,9 +217,7 @@ class Twitter extends CURL
  * @subpackage ephFrame.lib.exception
  */
 class TwitterException extends BasicException 
-{
-	
-}
+{ }
 
 /**
  * @package ephFrame
@@ -240,5 +236,4 @@ class TwitterErrorException extends TwitterException
  * @subpackage ephFrame.lib.exception
  */
 class TwitterAuthentificationException extends TwitterErrorException 
-{
-}
+{ }

@@ -26,5 +26,4 @@
  * @subpackage ephFrame.lib
  */
 abstract class ImageColorFilter extends Object 
-{
-}
+{ }

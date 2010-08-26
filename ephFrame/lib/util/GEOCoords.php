@@ -26,9 +26,9 @@
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de
  * @since 12.02.2008
  * @package ephFrame
- * @subpackage ephFrame.lib.component
+ * @subpackage ephFrame.lib.util
  */
-class GEOCoords extends AppComponent 
+class GEOCoords
 {
 	/**
 	 * Stores the constant radius at the equator

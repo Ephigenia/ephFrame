@@ -14,7 +14,7 @@
 
 // load ephFrame Framework
 require (dirname(__FILE__).'/../html/ephFrame.php');
-Library::load('ephFrame.lib.ConsoleController');
+Library::load('ephFrame.lib.console.ConsoleController');
 
 // get desired job name from console argument list
 $jobName = preg_replace('@[^A-Z0-9a-z_-]@i', '', @$argv[1]);

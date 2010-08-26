@@ -16,7 +16,7 @@
  */
 
 // load needed classes
-class_exists('Hash') or require dirname(__FILE__).'/Hash.php';
+class_exists('Hash') or require dirname(__FILE__).'/../../core/Hash.php';
 
 /**
  * A Router

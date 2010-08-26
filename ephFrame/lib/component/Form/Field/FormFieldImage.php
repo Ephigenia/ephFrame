@@ -16,7 +16,6 @@
  */
 
 class_exists('FormFieldFile') or require dirname(__FILE__).'/FormFieldFile.php';
-class_exists('Image') or require dirname(__FILE__).'/../../../Image.php';
 
 /**
  * Image Upload Form Field
@@ -28,5 +27,5 @@ class_exists('Image') or require dirname(__FILE__).'/../../../Image.php';
  */
 class FormFieldImage extends FormFieldFile 
 {
-	public $fileClassName = 'Image';
+	public $fileClassName = 'ephFrame.lib.file.image.Image';
 }

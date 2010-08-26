@@ -16,8 +16,6 @@
  */
 
 class_exists('FormField') or require(dirname(__FILE__).'/FormField.php');
-class_exists('File') or require(dirname(__FILE__).'/../../../File.php');
-class_exists('PHPINI') or require(dirname(__FILE__).'/../../../PHPINI.php');
 
 /**
  * Simple Form File Upload Field
@@ -34,7 +32,7 @@ class FormFieldFile extends FormField
 	 * Usually this class is an extension of {@link File}
 	 * @var string
 	 */
-	public $fileClassName = 'File';
+	public $fileClassName = 'ephFrame.lib.file.File';
 	
 	/**
 	 * Overwrite Parents type attribute
@@ -50,7 +48,7 @@ class FormFieldFile extends FormField
 	public function value($value = null) 
 	{
 		if (func_num_args() == 0 && $this->isUploaded() && !empty($_FILES[$this->attributes->name]['tmp_name'])) {
-			return new $this->fileClassName($_FILES[$this->attributes->name]['tmp_name']);
+			return Library::create($this->fileClassName, array($_FILES[$this->attributes->name]['tmp_name']));
 		}
 		return false;
 	}
