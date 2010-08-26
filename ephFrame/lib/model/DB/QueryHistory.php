@@ -114,9 +114,7 @@ class QueryHistory implements Countable
 	
 	public function render() 
 	{
-		if (!$this->beforeRender()) return '';
 		$rendered = '';
-		if (!$this->beforeRender()) return $rendered;
 		foreach ($this->data as $index => $data) {
 			//@todo make the following lines better
 			if($data['result']->numRows()) {
@@ -135,7 +133,7 @@ class QueryHistory implements Countable
 			}
 			
 		}
-		return $this->afterRender($rendered);
+		return $rendered;
 	}
 	
 	public function __toString() 
