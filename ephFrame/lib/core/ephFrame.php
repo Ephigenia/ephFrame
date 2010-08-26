@@ -49,7 +49,7 @@ final class ephFrame
 			require (FRAME_ROOT.'config/constants.php');
 			require (FRAME_ROOT.'config/paths.php');
 			require (FRAME_LIB_DIR.'core/Object.php');
-			require (FRAME_ROOT.'core.php');
+			require (FRAME_LIB_DIR.'core/core.php');
 			require (FRAME_LIB_DIR.'core/PHPINI.php');
 			require (FRAME_LIB_DIR.'core/Library.php');
 			require (FRAME_LIB_DIR.'component/Component.php');

@@ -10,4 +10,4 @@
  * @since 2009-09-28
  */
 
-require dirname(__FILE__).'/../../ephFrame/startup.php';
+require dirname(__FILE__).'/../../ephFrame/bootstrap.php';

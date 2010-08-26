@@ -162,7 +162,6 @@ class MySQLQueryException extends MySQLException
 {
 	public function __construct(MySQL $dao, $query = null) 
 	{
-		$this->level = self::FATAL;
 		parent::__construct($dao);
 	}
 }
@@ -176,7 +175,7 @@ class MySQLQueryEmptyException extends MySQLQueryException
 {
 	public function __construct(MySQL $dao) 
 	{
-		$this->message = 'MySQL seems not to be activated or compiled in this php installation.';
+		$this->message = 'MySQL seems not to be activated or compiled in this PHP installation.';
 		parent::__construct('The query that should be performed is empty.');
 	}
 }
@@ -188,11 +187,6 @@ class MySQLQueryEmptyException extends MySQLQueryException
  */
 class MySQLConnectionErrorException extends MySQLException 
 {
-	public function __construct(MySQL $dao) 
-	{
-		$this->level = self::FATAL;
-		parent::__construct($dao);
-	}
 }
 
 /**
@@ -202,11 +196,6 @@ class MySQLConnectionErrorException extends MySQLException
  */
 class MySQLSocketConnectionError extends MySQLConnectionErrorException 
 {
-	public function __construct(MySQL $dao) 
-	{
-		$this->level = self::FATAL;
-		parent::__construct($dao);
-	}
 }
 
 /**
