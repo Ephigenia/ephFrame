@@ -399,7 +399,7 @@ class Model extends Object
 		switch($associationType) {
 			case 'hasAndBelongsToMany':
 				if (!isset($config['joinTable'])) {
-					$config['joinTable'] = $this->tablename.'_'.Inflector::underscore(Inflector::pluralize($this->{$modelAlias}->name), true);
+					$config['joinTable'] = $this->tablename.'_'.Inflector::underscore(Inflector::pluralize($this->{$modelAlias}->name));
 				}
 				$config['joinTable'] = String::prepend($config['joinTable'], $this->tablenamePrefix, true);
 				if (empty($config['with'])) {
@@ -730,7 +730,7 @@ class Model extends Object
 					$model->save();
 					$values = array(
 						$config['foreignKey'] => $this->get($this->primaryKeyName),
-						Inflector::underscore($model->name, true).'_'.$model->primaryKeyName => $model->get($model->primaryKeyName)
+						Inflector::underscore($model->name).'_'.$model->primaryKeyName => $model->get($model->primaryKeyName)
 					);
 					// get join data from join table
 					if (isset($model->data[$this->name.$modelName])) {
@@ -1570,7 +1570,7 @@ class Model extends Object
 			}
 		// catch findBy[fieldname] calls 
 		} elseif (preg_match('/find(By)?(.+)/i', $methodName, $found)) {
-			array_unshift($args, Inflector::underscore($found[2], null, true));
+			array_unshift($args, Inflector::underscore($found[2]));
 			return $this->callMethod('findBy', $args);
 		// catch $model->username() calls
 		} elseif (isset($this->structure[$methodName])) {
@@ -1581,9 +1581,6 @@ class Model extends Object
 				return $result;
 			}
 		}
-		// all other method that could be called till here _must_ be defined
-		// in this class (they would be called instead of __call), so we can
-		// throw an error
 		trigger_error(get_class($this).' '.$methodName.' is not defined.', E_USER_ERROR);
 	}
 	
