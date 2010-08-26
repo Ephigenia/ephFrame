@@ -15,9 +15,6 @@
  * @filesource
  */
 
-// load parent class
-Library::load('ephFrame.lib.core.Controller');
-
 /**
  * Applications Main Controller
  * 

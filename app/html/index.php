@@ -22,7 +22,6 @@ require dirname(__FILE__).'/ephFrame.php';
  * Create the dispatcher that creates the controller ... which will
  * start the hole ephFrame MVC-Pattern.
  */
-Library::load('app.lib.AppDispatcher');
-$dispatcher = new AppDispatcher();
+$dispatcher = Library::create('app.lib.AppDispatcher');
 $dispatcher->dispatch(new HTTPRequest(true));
 exit;
