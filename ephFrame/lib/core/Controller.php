@@ -398,10 +398,8 @@ abstract class Controller extends Object
 	 */
 	public function beforeAction() 
 	{
-		if (method_exists($this, 'before'.ucFirst($this->action))) {
-			if (!$this->callMethod('before'.ucFirst($this->action))) {
-				return false;
-			}
+		if (!$this->callback('before'.ucFirst($this->action))) {
+			return false;
 		}
 		return true;
 	}
@@ -427,7 +425,7 @@ abstract class Controller extends Object
 		}
 		$arguments = array_diff_key($params, array('controller' => 0, 'action' => 0, 'path' => 0, 'controllerPrefix' => 0, 'prefix' => 0, 'layout' => 0));
 		// before action, action and after action
-		if (!$beforeActionResult = $this->callback('beforeAction', array($action, $params))) {
+		if (!$beforeActionResult = $this->callback('beforeAction', array($this->action, $params))) {
 			return $this->error(404);
 		}
 		if (method_exists($this, $action) && $this->callMethod($action, $arguments) === false) {
@@ -445,7 +443,7 @@ abstract class Controller extends Object
 	public function afterAction() 
 	{
 		if (method_exists($this, 'after'.ucFirst($this->action))) {
-			$this->callMethod('after'.ucFirst($this->action));
+			$this->callback('after'.ucFirst($this->action));
 		}
 		return true;
 	}
@@ -462,6 +460,7 @@ abstract class Controller extends Object
 			}
 		}
 		$errorController = new ErrorController($this->request);
+		$errorController->response->header->set('Content-Type', $this->response->header->get('Content-Type'));
 		$errorController->theme = $this->theme;
 		$errorController->action('error', $params);
 		die($errorController->render());

@@ -76,12 +76,11 @@ abstract class Object
 	public function callback($method, Array $arguments = array())
 	{
 		$result = true;
-		if (!isset($this->callbacks[$method])) {
-			return $result;
-		}
-		foreach($this->callbacks[$method] as $callback) {
-			if (!($result = call_user_func_array(array($callback[0], $callback[1]), $arguments))) {
-				return $result;
+		if (isset($this->callbacks[$method])) {
+			foreach($this->callbacks[$method] as $callback) {
+				if (!($result = call_user_func_array(array($callback[0], $callback[1]), $arguments))) {
+					return $result;
+				}
 			}
 		}
 		return $result;
