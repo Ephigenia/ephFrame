@@ -360,9 +360,13 @@ abstract class Controller extends Object
 			foreach($this->forms as $Form) {
 				$Form->startup($this);
 			}
-		} elseif (ClassPath::exists('app.lib.component.Form.'.$this->name.'Form')) {
-			$this->addForm($this->name.'Form');
-			$this->{$this->name.'Form'}->startUp($this);
+		} else {
+			if ($this->forms === false) {
+				$this->forms = array();
+			} elseif (ClassPath::exists('app.lib.component.Form.'.$this->name.'Form')) {
+				$this->addForm($this->name.'Form');
+				$this->{$this->name.'Form'}->startUp($this);
+			}
 		}
 		return $this;
 	}
@@ -613,14 +617,8 @@ class ControllerException extends BasicException
  */
 class ControllerMissingActionException extends ControllerException 
 {
-	public function __construct(Controller $controller, $action = null) 
+	public function __construct(Controller $controller, $action) 
 	{
-		$message = get_class($controller).' misses ';
-		if (empty($message) && func_num_args() == 1) {
-			$message .= ' the action named '.$controller->action;
-		} else {
-			$message .= ' the action named '.$action;
-		}
-		parent::__construct($message);
+		parent::__construct(sprintf('%s misses action called "%s".', get_class($controller), $action));
 	}
 }
