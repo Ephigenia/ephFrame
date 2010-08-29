@@ -423,6 +423,7 @@ class Model extends Object
 			$config = $this->normalizeBindConfig($alias, $config, $associationType);
 			$this->{$alias} = Library::create($config['class'], array($this, $alias));
 		}
+		$this->{$associationType}[$alias] = $config;
 		$this->{$alias}->{$this->name} = $this;
 		$this->{$alias}->{$this->name}->name = $this->name;
 		return true;
