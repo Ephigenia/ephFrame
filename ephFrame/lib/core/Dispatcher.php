@@ -36,8 +36,8 @@ class Dispatcher
 	 */
 	public function dispatch($requestObjectOrUrl = null, Array $params = array()) 
 	{
-		class_exists('Router') or require dirname(__FILE__).'/../net/HTTP/Router.php';
-		class_exists('HTTPRequest') or require dirname(__FILE__).'/../net/HTTP/HTTPRequest.php';
+		class_exists('Router') or require dirname(__FILE__).'/../net/http/Router.php';
+		class_exists('HTTPRequest') or require dirname(__FILE__).'/../net/http/HTTPRequest.php';
 		$this->itertation++;
 		// use original request
 		if (is_object($requestObjectOrUrl)) {

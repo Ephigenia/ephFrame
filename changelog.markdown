@@ -5,6 +5,12 @@ This file should record some kind of change history of the ephFrame Framework
 Please check this file for hints after you updated the framework via svn to 
 check some deprecated methods or new features.
 
+# 2010-08-29
+
+* Significant increase speed by loading associated model only if needed via
+PHP’s magic __get method. Associated models get not attached until they are
+requested. That feature is not much tested yet!
+
 # 2010-08-25
 
 * completely refactored the order of class files in the library, deleted some

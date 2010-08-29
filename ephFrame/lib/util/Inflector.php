@@ -52,7 +52,7 @@ class Inflector
 		if (!is_string($string)) return $string;
 		if (empty($string)) return $string;
 		$consonants = 'bcdfghjklmnpqrstvwxy';
-		if (preg_match('@news@i', $string)) {
+		if (preg_match('@news$@i', $string)) {
 			return $string; 
 		}
 		// english language rules
@@ -62,6 +62,7 @@ class Inflector
 			// The -oes rule: most nouns ending in o preceded by a consonant also form their plurals by adding -es
 			'@(['.$consonants.'])o$@i' => '\\1oes',
 			// other rules
+			'@(status)$@i' => '\\1',
 			'@s$@i' => '\\1ses',
 			// kiss, dish, witch
 			'@(ss|sh|ch)$@' => '\\1es',
@@ -75,9 +76,7 @@ class Inflector
 			'@ife$@i' => '\\1ives',
 		);
 		foreach($rules as $regexp => $replace) {
-			if (($plural = preg_replace($regexp, $replace, $string)) != $string) {
-				return $plural;
-			}
+			if (preg_match($regexp, $string)) return preg_replace($regexp, $replace, $string);
 		}
 		return $string.'s';
 	}

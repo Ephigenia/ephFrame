@@ -12,7 +12,7 @@
  * @filesource
  */
 
-class_exists('HTTPRequest') or require dirname(__FILE__).'/../net/HTTP/HTTPRequest.php';
+class_exists('HTTPRequest') or require dirname(__FILE__).'/../net/http/HTTPRequest.php';
 
 /**
  * Controller Class
@@ -382,7 +382,7 @@ abstract class Controller extends Object
 			try {
 				$Form = Library::create($name);
 			} catch (Exception $e) {
-				$Form = Library::create('App.lib.component.form.'.$name);
+				$Form = Library::create('App.lib.component.Form.'.$name);
 			}
 			$Form->init($this);
 			if ($startUp) {
@@ -575,7 +575,7 @@ abstract class Controller extends Object
 		$this->callback('beforeRedirect', array($url, $status, $exit));
 		header('Location: '.$url, true);
 		if (!empty($status)) {
-			class_exists('HTTPStatusCode') or Library::load('ephFrame.lib.HTTPStatusCode');
+			class_exists('HTTPStatusCode') or Library::load('ephFrame.lib.net.http.HTTPStatusCode');
 			if (in_array($status, array('p', 'permanent', 'perm'))) {
 				$status = 301;
 			}

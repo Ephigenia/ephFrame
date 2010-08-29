@@ -32,7 +32,9 @@ class FlagableBehavior extends ModelBehavior
 	 * Name of the field that stores the flags
 	 * @var string
 	 */
-	public $flagFieldname = 'flags';
+	protected $defaultConfig =array(
+		'name' => 'flags',
+	);
 	
 	/**
 	 * Test the model to have at least one of the passed flags
@@ -68,10 +70,10 @@ class FlagableBehavior extends ModelBehavior
 	 */
 	public function hasFlag($flag)
 	{
-		if ($flag == 0 && $this->model->isEmpty($this->flagFieldname)) {
+		if ($flag == 0 && $this->model->isEmpty($this->config[$this->model->name]['name'])) {
 			return true;
 		}
-		return (((int) $this->model->{$this->flagFieldname} & (int) $flag) != 0);
+		return (((int) $this->model->{$this->config[$this->model->name]['name']} & (int) $flag) != 0);
 	}
 	
 	/**
@@ -89,7 +91,7 @@ class FlagableBehavior extends ModelBehavior
 			$args = func_get_args();
 			return $this->callMethod('addFlags', $args); 
 		}
-		(int) $this->model->{$this->flagFieldname} |= (int) $flag;
+		(int) $this->model->{$this->config[$this->model->name]['name']} |= (int) $flag;
 		return $this->model;
 	}
 	
@@ -111,7 +113,7 @@ class FlagableBehavior extends ModelBehavior
 	 */
 	public function removeFlag($flag)
 	{
-		(int) $this->model->{$this->flagFieldname} &= ~(int) $flag;
+		(int) $this->model->{$this->config[$this->model->name]['name']} &= ~(int) $flag;
 		return $this->model;
 	}
 	
@@ -148,7 +150,7 @@ class FlagableBehavior extends ModelBehavior
 	 */
 	public function toggleFlag($flag)
 	{
-		(int) $this->model->{$this->flagFieldname} ^= (int) $flag;
+		(int) $this->model->{$this->config[$this->model->name]['name']} ^= (int) $flag;
 		return $this->model;
 	}
 }

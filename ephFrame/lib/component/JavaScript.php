@@ -72,13 +72,13 @@ class JavaScript extends AppComponent
 	 * Will compress external files as well
 	 * @var boolean
 	 */
-	public $compress = true;
+	public $compress = false;
 	
 	/**
 	 * Turns automatic js file packaging on
 	 * @var boolean
 	 */
-	public $pack = true;
+	public $pack = false;
 	
 	/**
 	 * Directories where js files can exist, add multiple paths
@@ -227,7 +227,7 @@ class JavaScript extends AppComponent
 		}
 		$this->files = new Collection(@$existingFiles);
 		// pack files, if {@link pack} is on and everything is smooothy
-		if ($this->pack) {
+		if ($this->pack && $this->files->count() > 0) {
 			$packer = Library::create('ephFrame.lib.component.JSPacker');
 			$compressedFilename = $this->dirs[0].$packer->packAndStore($this->files->toArray(), $this->dirs[0]);
 			$this->files = new Collection($compressedFilename);

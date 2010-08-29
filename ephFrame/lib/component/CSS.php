@@ -80,13 +80,13 @@ class CSS extends AppComponent
 	 * Will compress external files as well
 	 * @var boolean
 	 */
-	public $compress = true;
+	public $compress = false;
 	
 	/**
 	 * Turns automatic css file packaging on
 	 * @var boolean
 	 */
-	public $pack = true;
+	public $pack = false;
 	
 	/**
 	 * Directories where css files can exist, add multiple paths
@@ -227,7 +227,7 @@ class CSS extends AppComponent
 		}
 		$this->files = new Collection(@$existingFiles);
 		// pack files, if {@link pack} is on and everything is smooothy
-		if ($this->pack) {
+		if ($this->pack && $this->files->count() > 0) {
 			Library::load('ephFrame.lib.component.CSSPacker');
 			$packer = new CSSPacker();
 			$compressedFilename = $this->dirs[0].$packer->packAndStore($this->files->toArray(), $this->dirs[0]);

@@ -248,12 +248,10 @@ class Model extends Object
 			}
 			$this->tablename();
 		}
-		
-		// get model alias name stored in $this->name
+		// model alias
 		if (is_string($fieldNames)) {
 			$this->name = $fieldNames;
 		}
-		
 		// get DB Instance if tablename is set
 		if ($this->tablename !== false) {
 			$this->DB = DBConnectionManager::instance()->get($this->useDBConfig);
@@ -270,16 +268,9 @@ class Model extends Object
 		}
 		$this->__mergeParentProperty('behaviors');
 		$this->__mergeParentProperty('uses');
+		$this->uses = new Collection($this->uses);
+		$this->initAssociations();
 		
-		// add models from uses array
-		if (is_array($this->uses) && count($this->uses) > 0) {
-			foreach($this->uses as $modelName) {
-				$this->bind($modelName);
-			}
-		}
-		// initialize model bindings
-		$this->initAssociations($id);
-		// call afterconstruct on model and behaviors
 		$this->afterConstruct();
 		
 		// initialize model behaviors
@@ -288,8 +279,8 @@ class Model extends Object
 		// load inital data from array data or primary id
 		if (is_array($id)) {
 			$this->fromArray($id, is_array($fieldNames) ? $fieldNames : array());
-		} elseif ((is_int($id) || is_string($id)) && !$this->fromId($id)) {
-			return false;
+		} elseif (is_int($id) || is_string($id)) {
+			!$this->fromId($id);
 		}
 		return $this;
 	}
@@ -315,30 +306,94 @@ class Model extends Object
 	 * Initates all models associations defined in $belongsTo, $hasMany and so on
 	 * @return boolean
 	 */
-	protected function initAssociations($bind = true)
+	protected function initAssociations()
 	{
-		// init models associated with this model
 		foreach($this->associationTypes as $associationType) {
-			if (!is_array($this->$associationType)) continue;
-			foreach($this->$associationType as $modelAlias => $config) {
-				if (is_int($modelAlias)) {
-					unset($this->{$associationType}[$modelAlias]);
-					$modelAlias = $config;
-					$config = array();
-				}
-				if (in_array($associationType, array('hasMany', 'hasAndBelongsToMany'))) {
-					$this->{Inflector::pluralize($modelAlias)} = new IndexedArray();
-				}
-				$this->bind($modelAlias, $associationType, $config, $bind);
+			if (!is_array($this->{$associationType})) {
+				$this->{$associationType} = array();
 			}
-		}
-		// add models from uses array
-		if (is_array($this->uses) && count($this->uses) > 0) {
-			foreach($this->uses as $modelName) {
-				$this->bind($modelName);
+			foreach($this->{$associationType} as $alias => $config) {
+				unset($this->{$associationType}[$alias]);
+				if (is_int($alias)) {
+					$alias = $config;
+				}
+				if (is_string($config)) {
+					$config = array(
+						'class' => $config,
+					);
+				}
+				$this->{$associationType}[$alias] = $this->normalizeBindConfig($alias, $config, $associationType);
+				$this->uses[] = ClassPath::classname($this->{$associationType}[$alias]['class']);
 			}
 		}
 		return true;
+	}
+	
+	protected function normalizeBindConfig($alias, Array $config = array(), $associationType)
+	{
+		$defaults = array(
+			'dependent' => false,
+			'conditions' => array(),
+			'foreignKey' => false,
+			'associationKey' => false,
+			'joinTable' => false,
+			'class' => false,
+			'with' => false,
+			'order' => array(),
+			'limit' => false,
+		);
+		if (empty($config['class'])) {
+			$config['class'] = $alias;
+		}
+		if (in_array($associationType, array('hasMany', 'hasAndBelongsToMany'))) {
+			$this->{Inflector::pluralize($alias)} = new IndexedArray();
+		}
+		$config = array_merge($defaults, $config);
+		if ($associationType == 'hasAndBelongsToMany') {
+			if (empty($config['with'])) {
+				$config['with'] = $this->name.$alias;
+			}
+			if (!isset($config['joinTable'])) {
+				$config['joinTable'] = $this->tablename.'_'.Inflector::underscore(Inflector::pluralize($alias));
+			}
+			$config['joinTable'] = String::prepend($config['joinTable'], $this->tablenamePrefix, true);
+			if (empty($config['foreignKey'])) {
+				$config['foreignKey'] = $config['with'].'.'.$this->primaryKeyName;
+			}
+			if (empty($config['associationType'])) {
+				$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
+			}
+		}
+		if (empty($config['foreignKey'])) switch ($associationType) {
+			case 'belongsTo':
+				$config['foreignKey'] = $alias.'.id';
+				break;
+			case 'hasOne':
+				$config['foreignKey'] = $alias.'.'.Inflector::underscore($this->name).'_id';
+				break;
+			case 'hasMany':
+				$config['foreignKey'] = $alias.'.'.$this->primaryKeyName;
+				break;
+		} elseif (strpos($config['foreignKey'], '.') === false && $associationType !== 'hasAndBelongsToMany') {
+			$config['foreignKey'] = $alias.'.'.$config['foreignKey'];
+		}
+		if (empty($config['associationKey'])) switch ($associationType) {
+			case 'belongsTo':
+				$config['associationKey'] = $this->name.'.'.Inflector::underscore($alias).'_id';
+				break;
+			case 'hasOne':
+				$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
+				break;
+			case 'hasMany':
+				$config['associationKey'] = $alias.'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName);
+				break;
+		} elseif (strpos($config['associationKey'], '.') === false) {
+			$config['associationKey'] = $this->name.'.'.$config['associationKey'];
+		}
+		if (strpos($config['class'], '.') === false) {
+			$config['class'] = 'app.lib.model.'.$config['class'];
+		}
+		return $config;
 	}
 	
 	/**
@@ -346,109 +401,30 @@ class Model extends Object
 	 * 
 	 * This will remove previously made bindings.
 	 *
-	 * @param string $modelAlias
+	 * @param string $alias
 	 * @param string $associationType
 	 * @param array(string) $config
 	 * @throws ModelInvalidAssociationTypeException
 	 * @throws ModelReflexiveException if you try to bin the model to itsself
 	 * @return boolean
 	 */
-	public function bind($modelAlias, $associationType = null, Array $config = array(), $bind = false) 
+	public function bind($alias, $associationType = null, Array $config = array(), $bind = false) 
 	{
-		// input-check
-		if (empty($modelAlias)) return false;
 		if (!empty($associationType) && !$this->validAssociationType($associationType)) throw new ModelInvalidAssociationTypeException($this, $associationType);
-		// custom class name specified in config
-		$classname = empty($config['class']) ? $modelAlias : $config['class'];
-		// load model class if not allready loaded
-		if (!class_exists($classname)) {
-			if (strpos($classname, '.')) {
-				$classname = Library::load($classname);
-			} else {
-				Library::load('app.lib.model.'.$classname);
-			}
-		}
 		// prevent unlimited nesting
 		if (is_object($bind)
 			&& (
-				get_class($bind) == $modelAlias
-				|| $bind->name == $modelAlias
-				|| isset($this->{$modelAlias})
-				// || isset($bind->{$modelAlias}) @TODO seemes to be buggy
+				get_class($bind) == $alias
+				|| $bind->name == $alias
+				|| isset($this->{$alias})
 			)) {
-			$this->{$modelAlias} = $bind;
+			$this->{$alias} = $bind;
 		} else {
-			$this->{$modelAlias} = new $classname($this, $modelAlias);
+			$config = $this->normalizeBindConfig($alias, $config, $associationType);
+			$this->{$alias} = Library::create($config['class'], array($this, $alias));
 		}
-		$this->{$modelAlias}->{$this->name} = $this;
-		$this->{$modelAlias}->{$this->name}->name = $this->name;
-		
-		// create default config
-		$config = array_merge(array(
-			'conditions' => array(),
-			'count' => null,
-			'order' => null,
-			'foreignKey' => null,
-			'associationKey' => null,
-			'joinTable' => null,
-			'dependent' => false,
-			'class' => $classname,
-			'with' => false,
-		), $config);
-		// has and belongsToMany
-		switch($associationType) {
-			case 'hasAndBelongsToMany':
-				if (!isset($config['joinTable'])) {
-					$config['joinTable'] = $this->tablename.'_'.Inflector::underscore(Inflector::pluralize($this->{$modelAlias}->name));
-				}
-				$config['joinTable'] = String::prepend($config['joinTable'], $this->tablenamePrefix, true);
-				if (empty($config['with'])) {
-					$config['with'] = $this->name.$modelAlias;
-				}
-				break;
-		}
-		// other model’s side
-		if (!isset($config['foreignKey'])) {
-			switch ($associationType) {
-				case 'belongsTo':
-					$config['foreignKey'] = ucFirst($this->{$modelAlias}->name).'.'.$this->{$modelAlias}->primaryKeyName;
-					break;
-				case 'hasOne':
-					$config['foreignKey'] = ucFirst($this->{$modelAlias}->name).'.'.Inflector::underscore($this->name.'_id');
-					break;
-				case 'hasMany':
-					$config['foreignKey'] = ucFirst($this->name).'.'.$this->primaryKeyName;
-					break;
-				case 'hasAndBelongsToMany':
-					$config['foreignKey'] = $config['with'].'.'.Inflector::underscore($this->primaryKeyName);
-					break;
-			}
-		// add model name to foreignkeys with no model name like user_id
-		} elseif (strpos($config['foreignKey'], '.') === false && $associationType !== 'hasAndBelongsToMany') {
-			$config['foreignKey'] = $modelAlias.'.'.$config['foreignKey'];
-		}
-		// my side of the join
-		if (!isset($config['associationKey'])) {
-			switch ($associationType) {
-				case 'belongsTo':
-					$config['associationKey'] = $this->name.'.'.Inflector::underscore($modelAlias.'_'.$this->{$modelAlias}->primaryKeyName);
-					break;
-				case 'hasOne':
-					$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
-					break;
-				case 'hasAndBelongsToMany':
-					$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
-					break;
-				case 'hasMany':
-					$config['associationKey'] = $this->{$modelAlias}->name.'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName);
-					break;
-			}
-		} elseif (strpos($config['associationKey'], '.') === false) {
-			$config['associationKey'] = $this->name.'.'.$config['associationKey'];
-		}
-		if (!empty($associationType)) {
-			$this->{$associationType}[$modelAlias] = $config;
-		}
+		$this->{$alias}->{$this->name} = $this;
+		$this->{$alias}->{$this->name}->name = $this->name;
 		return true;
 	}
 	
@@ -618,6 +594,12 @@ class Model extends Object
 		return $data;
 	}
 	
+	/**
+	 * To String serializer.
+	 * 
+	 * Modify $displayField to get different results for every model
+	 * @return string
+	 */
 	public function __toString()
 	{
 		if (empty($this->displayField)) {
@@ -655,7 +637,7 @@ class Model extends Object
 		if (!$this->exists() || !$this->hasField($fieldname)) return false;
 		$this->query('UPDATE '.$this->tablename.' SET `'.$fieldname.'` = '.DBQuery::quote($value, $this->structure[$fieldname]->quoting).' WHERE '.$this->primaryKeyName.' = '.$this->get($this->primaryKeyName));
 		$this->set($fieldname, $value);
-		return $this->save();
+		return $this;
 	}
 	
 	/**
@@ -1108,7 +1090,7 @@ class Model extends Object
 				$joinConditions = $config['conditions'];
 				$joinConditions[$config['associationKey']] = $config['foreignKey'];
 				$query->join($this->{$modelName}->tablename, ucFirst($modelName), DBQuery::JOIN_LEFT, $joinConditions);
-				if (isset($config['limit'])) {
+				if (!empty($config['limit'])) {
 					$query->groupBy($config['associationKey']);
 				}
 			}
@@ -1117,7 +1099,6 @@ class Model extends Object
 			foreach($this->hasAndBelongsToMany as $modelName => $config) {
 				if (!preg_match('@'.$modelName.'\.@i', $tmpR)) continue;
 				$query->groupBy($this->name.'.'.$this->primaryKeyName);
-				// die(var_dump($config));
 				$query->join($config['joinTable'], null, DBQuery::JOIN_LEFT, array(
 					$config['foreignKey'] => $config['associationKey']
 				));
@@ -1166,35 +1147,32 @@ class Model extends Object
 			$model->{$this->name} = $this;
 			// hasOne, belongsTo data
 			foreach($this->belongsTo + $this->hasOne as $modelName => $config) {
-				$modelClassname2 = coalesce(@$config['class'], $modelName);
 				if (!isset($model->{$modelName})) {
-					$model->{$modelName} = new $modelClassname2(false, false);
+					$model->{$modelName} = Library::create(coalesce(@$config['class'], $modelName), array($modelData, false));
 					$model->{$modelName}->name = $modelName;
-					$model->{$modelName}->fromArray($modelData);
 					$model->{$modelName}->depth = $depth - 1;
 				}
 			}
 			// fetch associated data if detph is larger than one
 			if ($depth >= 1) {
-				// fetch hasMany associated Models
 				foreach($this->hasMany as $modelName => $config) {
-					$primaryKeyValue = $model->get($model->primaryKeyName);
-					if (empty($primaryKeyValue)) continue;
+					if (!$model->exists()) {
+						continue;
+					}
 					$associatedModelNamePlural = Inflector::pluralize($modelName);
-					$joinConditions = array_merge($config['conditions'], array(
-						$config['associationKey'] => $primaryKeyValue
-					));
 					if ($this->{$modelName} instanceof Model) {
 						$params = array(
-							'conditions' => $joinConditions,
+							'conditions' => array_merge($config['conditions'], array(
+								$config['associationKey'] => $model->get($model->primaryKeyName),
+							)),
 							'offset' => 0,
-							'limit' => $config['count'],
-							'depth' => $depth -1,
+							'limit' => $config['limit'],
+							'depth' => $depth - 1,
 						);
 						$associatedData = $this->{$modelName}->findAll($params);
 					}
 					if (empty($associatedData)) {
-						$associatedData = new ObjectSet($config['class']);
+						$associatedData = new ObjectSet(ClassPath::classname($config['class']));
 					}
 					$model->{$associatedModelNamePlural}->{$this->name} = $this;
 					$model->{$associatedModelNamePlural} = $associatedData;
@@ -1205,14 +1183,14 @@ class Model extends Object
 					if ($model->isEmpty($model->primaryKeyName)) continue;
 					// add maybe missing tableprefix @todo clean this tableprefix usage everywhere
 				 	$conditions = array_merge($config['conditions'], array(
-						$config['foreignKey'] => $model->get($model->primaryKeyName),
-						$config['with'].'.'.Inflector::underscore($modelName).'_'.$this->{$modelName}->primaryKeyName => $modelName.'.id'
-					));
+				 		$config['foreignKey'] => $model->get($model->primaryKeyName),
+				 		$config['with'].'.'.Inflector::underscore($modelName).'_'.$this->{$modelName}->primaryKeyName => $modelName.'.id',
+				 	));
 					$query = $this->{$modelName}->createSelectQuery($config);
 					$query->select->prepend($this->name.$modelName.'.*');
 					$query->join($config['joinTable'], $this->name.$modelName, DBQuery::JOIN, $conditions);
-					$query->orderBy->add($config['order']);
-					$query->count($config['count']);
+					$query->orderBy($config['order']);
+					$query->count($config['limit']);
 					$modelNamePlural = Inflector::pluralize($modelName);
 					$model->{$modelNamePlural} = new ObjectSet($modelName);
 					if ($r = $this->{$modelName}->query($query)) {
@@ -1473,6 +1451,7 @@ class Model extends Object
 		);
 		$params = array_merge($defaults, $params);
 		$query = $this->createSelectQuery(array_merge($defaults, $params));
+		// $query = $this->beforeFind($query);
 		if (!empty($params['group']) && empty($params['field'])) {
 			$params['field'] = 'DISTINCT('.implode(',', $params['group']).')';	
 		}
@@ -1646,6 +1625,20 @@ class Model extends Object
 	 */
 	public function get($fieldname, $default = null) 
 	{
+		if ($this->uses->count() > 0 && $this->uses->contains($fieldname) !== false) {
+			foreach($this->associationTypes as $associationType) {
+				foreach($this->{$associationType} as $alias => $config) {
+					if ($alias == $fieldname) {
+						$this->bind($fieldname, $associationType, $config);
+						break 2;
+					}
+				}
+			}
+			if (!isset($this->{$fieldname}) && $this->uses->contains($fieldname) !== false) {
+				$this->{$fieldname} = Library::create('app.lib.model.'.$fieldname);
+			}
+			return $this->{$fieldname};
+		}
 		if (is_scalar($fieldname)) {
 			if (substr($fieldname, 0, strlen($this->name)) == $this->name) {
 				$fieldname = substr($fieldname, strlen($this->name) + 1);

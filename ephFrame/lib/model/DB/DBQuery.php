@@ -392,8 +392,7 @@ abstract class DBQuery extends Object
 	 */
 	public function groupBy($fieldname) 
 	{
-		$fieldname = trim($fieldname);
-		$this->groupBy->add($fieldname);
+		$this->groupBy->add(trim($fieldname));
 		return $this;
 	}
 	
@@ -418,9 +417,9 @@ abstract class DBQuery extends Object
 	 */
 	public function orderBy($fieldname, $direction = null) 
 	{
-		$fieldname = trim($fieldname);
-		$direction = trim($direction);
-		$this->orderBy->add($fieldname.($direction !== null ? ' '.$direction : ''));
+		if (!empty($fieldname)) {
+			$this->orderBy->add($fieldname.' '.$direction);
+		}
 		return $this;
 	}
 	

@@ -91,11 +91,12 @@ class ModelFieldInfo extends Object
 		$this->null = (@$columnInfo['Null'] == 'NO') ? false : true;
 		$this->primary = (@$columnInfo['Key'] == 'PRI') ? true : false;
 		$this->type = $columnInfo['Type'];
+		
 		if (!empty($columnInfo['Extra'])) {
 			$this->extra = $columnInfo['Extra'];
 		}
 		// parse type, length and signed
-		if (preg_match('@([a-z]+)\s*\((\d+)(?:,(\d+))?\)\s*(unsigned)?@i', $this->type, $found)) {
+		if (preg_match('@([a-z]+)\s*(\((\d+)(,(\d+))?\))?\s*(unsigned)?@i', $this->type, $found)) {
 			// type
 			if (!empty($found[1])) {
 				foreach($this->quoteMap as $phptype => $matches) {
@@ -105,19 +106,17 @@ class ModelFieldInfo extends Object
 				$this->type = $found[1];
 			}
 			// length
-			if (!empty($found[2])) {
+			if (!empty($found[3])) {
 				$this->length = (int) $found[2];
-				if (!empty($found[3])) {
-					$this->length .= ','.$found[3];
+				if (!empty($found[5])) {
+					$this->length .= ','.$found[5];
 				}
 			}
 			// signed
-			if (!empty($found[4])) {
+			if (!empty($found[6])) {
 				$this->signed = false;
 			}
-		// check for enum
-		}
-		if (preg_match('@enum\(([^\)]+)\)@i', $this->type, $found)) {
+		} elseif (preg_match('@enum\(([^\)]+)\)@i', $this->type, $found)) {
 			$enumOptionsRaw = $found[1];
 			// split raw enum options and save 'em
 			if ($splitted = preg_split('@\',\'@', $enumOptionsRaw)) {
@@ -130,7 +129,6 @@ class ModelFieldInfo extends Object
 			$this->type = 'enum';
 			$this->quoting = self::QUOTE_STRING;
 		}
-		
 		// default value
 		if (!empty($columnInfo['Default'])) {
 			if ($columnInfo['Default'] == 'NULL') {
@@ -164,7 +162,7 @@ class ModelFieldInfo extends Object
 	public function toArray() 
 	{
 		$r = get_object_vars($this);
-		$ignore = array('quoteMap');
+		$ignore = array('quoteMap', 'callbacks');
 		foreach($ignore as $key) {
 			unset($r[$key]);
 		}

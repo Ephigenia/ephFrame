@@ -65,7 +65,11 @@ class Library
 	 */
 	public static function create($path, Array $arguments = array())
 	{
-		$classname = self::load($path);
+		if (!class_exists($path)) {
+			$classname = self::load($path);
+		} else {
+			$classname = $path;
+		}
 		switch(count($arguments)) {
 			case 0:
 				return new $classname();

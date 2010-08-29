@@ -47,7 +47,8 @@ class ModelStructureCache extends Object
 		return $this;
 	}
 	
-	protected function expired() {
+	protected function expired()
+	{
 		return (filemtime($this->filename) + $this->ttl) > time();
 	}
 	

@@ -20,15 +20,14 @@ class Scaffold extends Component
 			&& isset($this->controller->{$this->controller->name})
 			&& $this->controller->{$this->controller->name} instanceof Model
 			) {
-			$this->model = $this->controller->{$this->controller->name};
+			$this->model = &$this->controller->{$this->controller->name};
 		}
 		return parent::startUp();
 	}
 	
 	public function beforeAction($action = null)
 	{
-		if (in_array($action, array('create', 'edit')) && isset($this->model) && !isset($this->form)) {
-			$this->controller->addForm($this->model->name.'Form');
+		if (in_array($action, array('create', 'edit')) && isset($this->model) && isset($this->controller->{$this->model->name.'Form'})) {
 			$this->form = &$this->controller->{$this->model->name.'Form'};
 		}
 		return parent::beforeAction();

@@ -15,7 +15,7 @@
  * @filesource
  */
 
-class_exists('Hash') or require dirname(__FILE__).'/Hash.php';
+class_exists('Hash') or require dirname(__FILE__).'/../../util/Hash.php';
 class_exists('HTTPStatusCode') or require dirname(__FILE__).'/HTTPStatusCode.php';
 
 /**
