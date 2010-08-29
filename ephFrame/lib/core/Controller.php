@@ -358,7 +358,7 @@ abstract class Controller extends Object
 				$this->addForm($formName, false);
 			}
 			foreach($this->forms as $Form) {
-				$Form->startup($this);
+				$Form->startUp()->configure();
 			}
 		} else {
 			if ($this->forms === false) {

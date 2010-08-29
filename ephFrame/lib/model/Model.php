@@ -456,6 +456,11 @@ class Model extends Object
 			$modelNames = func_get_args();
 		}
 		foreach($modelNames as $modelName) {
+			foreach($this->uses as $index => $use) {
+				if ($use == $modelName) {
+					unset($this->uses[$index]);
+				}
+			}
 			if (!property_exists($this, $modelName)) continue;
 			unset($this->{$modelName});
 			unset($this->belongsTo[$modelName]);
@@ -1160,7 +1165,7 @@ class Model extends Object
 						continue;
 					}
 					$associatedModelNamePlural = Inflector::pluralize($modelName);
-					if ($this->{$modelName} instanceof Model) {
+					if (isset($this->{$modelName}) && $this->{$modelName} instanceof Model) {
 						$params = array(
 							'conditions' => array_merge($config['conditions'], array(
 								$config['associationKey'] => $model->get($model->primaryKeyName),
