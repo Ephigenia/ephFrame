@@ -323,7 +323,7 @@ class Model extends Object
 					);
 				}
 				$this->{$associationType}[$alias] = $this->normalizeBindConfig($alias, $config, $associationType);
-				$this->uses[] = ClassPath::classname($this->{$associationType}[$alias]['class']);
+				$this->uses[] = $alias;
 			}
 		}
 		return true;
@@ -423,6 +423,7 @@ class Model extends Object
 			$config = $this->normalizeBindConfig($alias, $config, $associationType);
 			$this->{$alias} = Library::create($config['class'], array($this, $alias));
 		}
+		$this->uses[] = $alias;
 		$this->{$associationType}[$alias] = $config;
 		$this->{$alias}->{$this->name} = $this;
 		$this->{$alias}->{$this->name}->name = $this->name;
@@ -1090,6 +1091,7 @@ class Model extends Object
 				$this->belongsTo[$modelAlias]['associationKey'] = $this->name.strrchr($config['associationKey'], '.');
 			}
 			foreach($this->hasOne + $this->belongsTo as $modelName => $config) {
+				if ($this->uses->contains($modelName) === false) continue;
 				foreach($this->{$modelName}->structure as $fieldInfo) {
 					$query->select($modelName.'.'.$fieldInfo->name, $modelName.'.'.$fieldInfo->name);
 				}
@@ -1103,6 +1105,7 @@ class Model extends Object
 			// HABTM
 			$tmpR = $query->render();
 			foreach($this->hasAndBelongsToMany as $modelName => $config) {
+				if ($this->uses->contains($modelName) == false) continue;
 				if (!preg_match('@'.$modelName.'\.@i', $tmpR)) continue;
 				$query->groupBy($this->name.'.'.$this->primaryKeyName);
 				$query->join($config['joinTable'], null, DBQuery::JOIN_LEFT, array(
