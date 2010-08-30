@@ -501,7 +501,7 @@ class Form extends HTMLTag
 				switch($modelFieldInfo->type) {
 					case 'varchar': case 'int': case 'float':
 						$fieldInfo['type'] = 'text';
-						if ($modelFieldInfo->type == 'varchar') {
+						if ($modelFieldInfo->type == 'varchar' && $modelFieldInfo->length > 0) {
 							$fieldInfo['maxlength'] = $modelFieldInfo->length;
 						}
 						break;

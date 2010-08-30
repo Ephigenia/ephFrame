@@ -95,6 +95,7 @@ class ModelFieldInfo extends Object
 		if (!empty($columnInfo['Extra'])) {
 			$this->extra = $columnInfo['Extra'];
 		}
+
 		// parse type, length and signed
 		if (preg_match('@([a-z]+)\s*(\((\d+)(,(\d+))?\))?\s*(unsigned)?@i', $this->type, $found)) {
 			// type
@@ -107,7 +108,7 @@ class ModelFieldInfo extends Object
 			}
 			// length
 			if (!empty($found[3])) {
-				$this->length = (int) $found[2];
+				$this->length = (int) $found[3];
 				if (!empty($found[5])) {
 					$this->length .= ','.$found[5];
 				}
@@ -129,6 +130,7 @@ class ModelFieldInfo extends Object
 			$this->type = 'enum';
 			$this->quoting = self::QUOTE_STRING;
 		}
+		
 		// default value
 		if (!empty($columnInfo['Default'])) {
 			if ($columnInfo['Default'] == 'NULL') {
