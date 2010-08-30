@@ -345,7 +345,7 @@ class Model extends Object
 		if (empty($config['class'])) {
 			$config['class'] = $alias;
 		}
-		if (in_array($associationType, array('hasMany', 'hasAndBelongsToMany'))) {
+		if (!isset($this->{Inflector::pluralize($alias)}) && in_array($associationType, array('hasMany', 'hasAndBelongsToMany'))) {
 			$this->{Inflector::pluralize($alias)} = new IndexedArray();
 		}
 		$config = array_merge($defaults, $config);
@@ -1169,7 +1169,7 @@ class Model extends Object
 						continue;
 					}
 					$associatedModelNamePlural = Inflector::pluralize($modelName);
-					if (isset($this->{$modelName}) && $this->{$modelName} instanceof Model) {
+					if ($this->uses->contains($modelName)) {
 						$params = array(
 							'conditions' => array_merge($config['conditions'], array(
 								$config['associationKey'] => $model->get($model->primaryKeyName),
