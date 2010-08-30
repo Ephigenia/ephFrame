@@ -1157,8 +1157,7 @@ class Model extends Object
 			// hasOne, belongsTo data
 			foreach($this->belongsTo + $this->hasOne as $modelName => $config) {
 				if (!isset($model->{$modelName})) {
-					$model->{$modelName} = Library::create(coalesce(@$config['class'], $modelName), array($modelData, false));
-					$model->{$modelName}->name = $modelName;
+					$model->{$modelName} = Library::create(coalesce(@$config['class'], $modelName), array($modelData, $modelName));
 					$model->{$modelName}->depth = $depth - 1;
 				}
 			}
@@ -1169,7 +1168,7 @@ class Model extends Object
 						continue;
 					}
 					$associatedModelNamePlural = Inflector::pluralize($modelName);
-					if ($this->uses->contains($modelName)) {
+					if ($this->uses->contains($modelName) !== false) {
 						$params = array(
 							'conditions' => array_merge($config['conditions'], array(
 								$config['associationKey'] => $model->get($model->primaryKeyName),
