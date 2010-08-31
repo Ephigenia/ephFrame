@@ -435,7 +435,7 @@ abstract class Controller extends Object
 		if (method_exists($this, $action) && $this->callMethod($action, $arguments) === false) {
 			return $this->error(404);
 		}
-		$this->callback('afterRender', array($this->action));
+		$this->callback('afterAction', array($this->action));
 		return $this;
 	}
 	
@@ -446,9 +446,7 @@ abstract class Controller extends Object
 	 */
 	public function afterAction() 
 	{
-		if (method_exists($this, 'after'.ucFirst($this->action))) {
-			$this->callback('after'.ucFirst($this->action));
-		}
+		$this->callback('after'.ucFirst($this->action));
 		return true;
 	}
 	

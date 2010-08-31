@@ -322,8 +322,10 @@ class Model extends Object
 						'class' => $config,
 					);
 				}
-				$this->{$associationType}[$alias] = $this->normalizeBindConfig($alias, $config, $associationType);
+				$config = $this->normalizeBindConfig($alias, $config, $associationType);
+				Library::load($config['class']);
 				$this->uses[] = $alias;
+				$this->{$associationType}[$alias] = $config;
 			}
 		}
 		return true;
@@ -458,11 +460,11 @@ class Model extends Object
 			$modelNames = func_get_args();
 		}
 		foreach($modelNames as $modelName) {
-			foreach($this->uses as $index => $use) {
-				if ($use == $modelName) {
-					unset($this->uses[$index]);
-				}
-			}
+			// foreach($this->uses as $index => $use) {
+			// 	if ($use == $modelName) {
+			// 		unset($this->uses[$index]);
+			// 	}
+			// }
 			if (!property_exists($this, $modelName)) continue;
 			unset($this->{$modelName});
 			unset($this->belongsTo[$modelName]);
@@ -1192,7 +1194,7 @@ class Model extends Object
 					// add maybe missing tableprefix @todo clean this tableprefix usage everywhere
 				 	$conditions = array_merge($config['conditions'], array(
 				 		$config['foreignKey'] => $model->get($model->primaryKeyName),
-				 		$config['with'].'.'.Inflector::underscore($modelName).'_'.$this->{$modelName}->primaryKeyName => $modelName.'.id',
+				 		$config['with'].'.'.Inflector::underscore($modelName).'_id' => $modelName.'.id',
 				 	));
 					$query = $this->{$modelName}->createSelectQuery($config);
 					$query->select->prepend($this->name.$modelName.'.*');

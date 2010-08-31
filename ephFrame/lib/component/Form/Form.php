@@ -81,6 +81,8 @@ class Form extends HTMLTag
 		$this->request = new HTTPRequest(true);
 		if ($action != null) {
 			$this->action = $action;
+		} else {
+			$this->action = Router::uri();
 		}
 		$this->fieldset = new HTMLTag('fieldset');
 		$this->addChild($this->fieldset);
@@ -148,7 +150,6 @@ class Form extends HTMLTag
 	
 	public function beforeRender() 
 	{
-		$this->attributes->action = Router::uri();
 		$this->controller->data->set(get_class($this), $this);
 		// auto add error and success messages
 		if ($this->submitted()) {
@@ -501,7 +502,7 @@ class Form extends HTMLTag
 				switch($modelFieldInfo->type) {
 					case 'varchar': case 'int': case 'float':
 						$fieldInfo['type'] = 'text';
-						if ($modelFieldInfo->type == 'varchar' && $modelFieldInfo->length > 0) {
+						if ($modelFieldInfo->type == 'varchar') {
 							$fieldInfo['maxlength'] = $modelFieldInfo->length;
 						}
 						break;
@@ -613,7 +614,7 @@ class Form extends HTMLTag
 				$id = $field->value();
 				if (!empty($id)) {
 					if (preg_match('/\d+/', $id)) $id = (int) $id;
-					$model->$modelName = new $config['class']($id);
+					$model->$modelName = Library::create($config['class'], array($id));
 				} else {
 					$model->$modelName = null;	
 				}
