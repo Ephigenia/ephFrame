@@ -31,6 +31,11 @@ Registry::set('DEBUG', DEBUG_PRODUCTION);
  * preferred url. This is only available if not in cli-php.
  */
 if (isset($_SERVER['HTTP_HOST'])) {
-	Registry::set('WEBROOT_URL', 'http://'.$_SERVER['HTTP_HOST'].'/');
-	Registry::set('APP_URL', 'http://'.$_SERVER['HTTP_HOST'].WEBROOT);
+	if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+		Registry::set('WEBROOT_URL', 'https://'.$_SERVER['HTTP_HOST'].'/');
+		Registry::set('APP_URL', 'https://'.$_SERVER['HTTP_HOST'].WEBROOT);
+	} else {
+		Registry::set('WEBROOT_URL', 'http://'.$_SERVER['HTTP_HOST'].'/');
+		Registry::set('APP_URL', 'http://'.$_SERVER['HTTP_HOST'].WEBROOT);
+	}
 }

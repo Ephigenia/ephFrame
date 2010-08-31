@@ -141,6 +141,11 @@ class HTTPRequest extends Component
 		return $this->isMethod(HTTPRequestMethod::DELETE);
 	}
 	
+	public function isHttps()
+	{
+		return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on');
+	}
+	
 	/**
 	 * Returns the name of the requesting host
 	 * @return string
