@@ -81,6 +81,7 @@ class Session extends Hash
 			'url_rewriter.tags' => false,
 			'session.use_cookies' => true,
 		));
+		$this->controller = $controller;
 		$this->start();
 		$this->data = &$_SESSION;
 		// register session save

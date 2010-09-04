@@ -66,6 +66,24 @@ class Text extends Helper
 		}
 		return $text;
 	}
+	
+	/**
+	 * Return the first $count sentences from a $text
+	 * 
+	 * @param string $text
+	 * @param integer $count
+	 * @return string
+	 */
+	public static function excerpt($text, $count = 1)
+	{
+		$sentenceCount = preg_match_all('@[^0-9][.!?]{1,}\s*@', $text, $found, PREG_OFFSET_CAPTURE);
+		if ($count > $sentenceCount) {
+			return $text;
+		}
+		$excerpt = String::substr($text, 0, $found[0][$count-1][1] + 2);
+		return String::closeTags($excerpt);
+	}
+	
 	/**
 	 * Wrap $word in $text into a passed tag
 	 * 
@@ -83,6 +101,7 @@ class Text extends Helper
 		$text = preg_replace('@('.preg_quote($keyword, '@').'(?!([^<]+)?>))@i', $replace, $text);
 		return $text;
 	}
+	
 	/**
 	 * Replace URLs with HTML-Tags
 	 * 
