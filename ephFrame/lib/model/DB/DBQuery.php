@@ -633,7 +633,7 @@ abstract class DBQuery extends Object
 				$right = 'NULL';
 				$connector = ' is ';
 			}
-			if (preg_match('@^\s*(<|>|=|LIKE|IN)@i', $right) || preg_match('@[<>]$@', $left)) {
+			if (preg_match('@^\s*(<|>|=|LIKE|IN|IS NOT)@i', $right) || preg_match('@[<>]$@', $left)) {
 				$connector = ' ';
 			}
 			// todo create cool condition array that can map all conditions possible

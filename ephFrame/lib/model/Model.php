@@ -261,7 +261,7 @@ class Model extends Object
 			}
 			$this->loadStructure();
 		}
-		
+
 		// merge associations of this model with associations from parent models
 		foreach ($this->associationTypes as $associationKey) {
 			$this->__mergeParentProperty($associationKey);
@@ -355,7 +355,7 @@ class Model extends Object
 			if (empty($config['with'])) {
 				$config['with'] = $this->name.$alias;
 			}
-			if (!isset($config['joinTable'])) {
+			if (empty($config['joinTable'])) {
 				$config['joinTable'] = $this->tablename.'_'.Inflector::underscore(Inflector::pluralize($alias));
 			}
 			$config['joinTable'] = String::prepend($config['joinTable'], $this->tablenamePrefix, true);
@@ -460,11 +460,6 @@ class Model extends Object
 			$modelNames = func_get_args();
 		}
 		foreach($modelNames as $modelName) {
-			// foreach($this->uses as $index => $use) {
-			// 	if ($use == $modelName) {
-			// 		unset($this->uses[$index]);
-			// 	}
-			// }
 			if (!property_exists($this, $modelName)) continue;
 			unset($this->{$modelName});
 			unset($this->belongsTo[$modelName]);
@@ -1356,12 +1351,10 @@ class Model extends Object
 			$fieldname = $this->displayField;
 		}
 		$query = $this->createSelectQuery($params);
-		$query = $this->beforeFind($query);
-		if (!$query) {
+		if (!$query = $this->beforeFind($query)) {
 			return $list;
 		}
-		$result = $this->query($query, @$params['depth']);
-		if (!$result) {
+		if (!$result = $this->query($query, @$params['depth'])) {
 			return $list;
 		}
 		if (is_array($fieldname)) {

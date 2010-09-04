@@ -126,8 +126,6 @@ class Form extends HTMLTag
 	public function init(Controller $controller) 
 	{
 		$this->controller = $controller;
-		$controller->registerCallback('beforeRender', array($this, 'beforeRender'));
-		$controller->registerCallback('afterRender', array($this, 'afterRender'));
 		$controller->registerCallback('beforeAction', array($this, 'beforeAction'));
 		$controller->registerCallback('afterAction', array($this, 'afterAction'));
 		return $this;

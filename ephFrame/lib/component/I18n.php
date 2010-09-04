@@ -49,7 +49,7 @@ class I18n extends AppComponent
 	 * code
 	 * @var string
 	 */
-	public static $country = 'de';
+	public static $region = 'de';
 	
 	/**
 	 * Location of locale files
@@ -109,8 +109,8 @@ class I18n extends AppComponent
 		if (func_num_args() == 0) return self::$locale;
 		self::$locale = self::normalizeLocale($locale);
 		// set country and language 
-		self::$language = substr(self::$locale,0,2);
-		self::$country = strtolower(substr(self::$locale,3,2));
+		self::$language = substr(self::$locale, 0, 2);
+		self::$region = strtolower(substr(self::$locale, 3, 2));
 		foreach((array) $types as $type) {
 			putenv('LC_ALL='.self::$locale);
 			setlocale($type, self::$locale);
