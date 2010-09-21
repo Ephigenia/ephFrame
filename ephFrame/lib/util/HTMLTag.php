@@ -28,7 +28,7 @@ class_exists('SGMLTag') or require dirname(__FILE__).'/SGMLTag.php';
  */
 class HTMLTag extends SGMLTag 
 {	
-	public $noShortTags = array('script', 'textarea', 'a');
+	public $noShortTags = array('script', 'textarea', 'a', 'select');
 	
 	/**
 	 * Switch this to off to generate HTML Valid tags, important for tags
