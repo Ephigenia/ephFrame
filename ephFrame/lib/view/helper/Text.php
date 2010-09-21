@@ -80,7 +80,7 @@ class Text extends Helper
 		if ($count > $sentenceCount) {
 			return $text;
 		}
-		$excerpt = String::substr($text, 0, $found[0][$count-1][1] + 2);
+		$excerpt = substr($text, 0, $found[0][$count-1][1] + 2);
 		return String::closeTags($excerpt);
 	}
 	

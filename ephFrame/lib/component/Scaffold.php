@@ -47,8 +47,9 @@ class Scaffold extends Component
 			'limit' => $perPage
 		));
 		$pagination = $this->model->paginate($page);
-		if (!($url = Router::getRoute($this->model->name.'Paged'))) {
-			$url = Router::getRoute('scaffold_paged', array('controller' => $this->model->name));
+		$routerParams = array_merge($this->controller->params, array('controller' => $this->model->name));
+		if (!($url = Router::getRoute($this->model->name.'Paged', $routerParams))) {
+			$url = Router::getRoute('scaffold_paged', $routerParams);
 		}
 		$pagination['url'] = $url;
 		$this->controller->{Inflector::pluralize($this->model->name)} = $entries;

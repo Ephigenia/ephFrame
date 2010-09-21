@@ -336,7 +336,7 @@ abstract class Controller extends Object
 		if (!isset($this->helpers[$name])) {
 			try {
 				$classname = Library::load($name);
-			} catch (ClassPathMalformedException $e) {
+			} catch (BasicException $e) {
 				try {
 					$classname = Library::load('App.lib.helper.'.$name);
 				} catch (LibraryFileNotFoundException $e) {

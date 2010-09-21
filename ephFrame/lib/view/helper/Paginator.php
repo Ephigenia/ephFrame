@@ -85,7 +85,8 @@ class Paginator extends AppHelper
 	 */
 	public function url($page) 
 	{
-		return String::substitute($this->url, array('page' => $page, 'controller' => $this->controller->name));
+		$params = array_merge($this->controller->params, array('page' => $page, 'controller' => $this->controller->name));
+		return String::substitute($this->url, $params);
 	}
 	
 	/**
@@ -204,7 +205,15 @@ class Paginator extends AppHelper
 	{
 		$this->page = (int) $this->controller->data['pagination']['page'] or 1;
 		$this->pagesTotal = (int) $this->controller->data['pagination']['pagesTotal'];
-		$this->url = $this->controller->data['pagination']['url'];
+		if (empty($this->url)) {
+			if (isset($this->controller->data['pagination']['url'])) {
+				$this->url = $this->controller->data['pagination']['url'];
+			} else {
+				if (!($this->url = Router::getRoute($this->controller->name.'Paged', false))) {
+					$this->url = Router::getRoute('scaffold_paged', false);
+				}
+			}
+		}
 		$this->controller->data->set('Paginator', $this);
 		return parent::beforeRender();
 	}
