@@ -5,12 +5,13 @@ This file should record some kind of change history of the ephFrame Framework
 Please check this file for hints after you updated the framework via svn to 
 check some deprecated methods or new features.
 
-# 2010-09-04
+# 2010-09-21
 
 * Form->beforeRender and afterRender are not called form the controller by
 default anymore. (Sometimes it was called twice in a request)
 * Text->excerpt can be used to truncate a text to x sentences
 * Session can be init with custom session id from the post/get variables again
+* BUG: Select fields with no options were not closed, that’s fixed now
 
 # 2010-08-29
 
