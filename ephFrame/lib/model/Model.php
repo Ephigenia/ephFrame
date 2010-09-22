@@ -1105,11 +1105,11 @@ class Model extends Object
 				if ($this->uses->contains($modelName) == false) continue;
 				if (!preg_match('@'.$modelName.'\.@i', $tmpR)) continue;
 				$query->groupBy($this->name.'.'.$this->primaryKeyName);
-				$query->join($config['joinTable'], null, DBQuery::JOIN_LEFT, array(
+				$query->join($config['joinTable'], $config['with'], DBQuery::JOIN_LEFT, array(
 					$config['foreignKey'] => $config['associationKey']
 				));
 				$query->join($this->{$modelName}->tablename, ucFirst($modelName), DBQuery::JOIN_LEFT, array(
-					$config['joinTable'].'.'.Inflector::underscore($modelName).'_'.$this->{$modelName}->primaryKeyName => $modelName.'.'.$this->{$modelName}->primaryKeyName
+					$config['with'].'.'.Inflector::underscore($modelName).'_'.$this->{$modelName}->primaryKeyName => $modelName.'.'.$this->{$modelName}->primaryKeyName
 				));
 			}
 		}
@@ -1249,7 +1249,8 @@ class Model extends Object
 			return false;
 		}
 		if ($r = $this->query($query, @$params['depth'])) {
-			return $this->afterFind($r[0]);
+			$results = $this->afterFind($r);
+			return $results[0];
 		}
 		return false;
 	}

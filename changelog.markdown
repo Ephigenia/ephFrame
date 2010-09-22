@@ -11,6 +11,8 @@ check some deprecated methods or new features.
 default anymore. (Sometimes it was called twice in a request)
 * Text->excerpt can be used to truncate a text to x sentences
 * Session can be init with custom session id from the post/get variables again
+* Model afterFind always gets a ObjectSet as $result set, instead of single
+  models
 * BUG: Select fields with no options were not closed, that’s fixed now
 
 # 2010-08-29

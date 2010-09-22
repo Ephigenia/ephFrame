@@ -245,7 +245,7 @@ class NestedSetBehavior extends ModelBehavior
 		}
 		// retreive parent from model
 		if (empty($this->model->Parent)) {
-			$this->model->Parent = $this->model->findById($this->model->parent_id, $modelDepth);
+			$this->model->Parent = $this->model->findById($this->model->parent_id, array('depth' => $modelDepth));
 		}
 		if ($this->model->Parent) {
 			return $this->model->Parent;
