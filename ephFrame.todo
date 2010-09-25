@@ -24,11 +24,6 @@ Console:
 - Create a application / ephFrame console handler
 - create docu for ephFrame console
 
-HTMLTable Helper:
-- create Helper
-- method for creating table cells
-- method for creating table headers
-
 Paginator Helper:
 - make method for sorting links
 - method for a string with numbers of pages etc, item etc.

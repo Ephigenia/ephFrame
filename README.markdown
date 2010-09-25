@@ -11,8 +11,8 @@ While the official Site over at [code.marceleichner.de](http://code.marceleichne
 is still in development you can give some [kudos](http://ohloh.net/p/ephFrame)
 to the project.
 
-Features:
----------
+# FEATURES
+
 * MVC-Architecture (plus Components, Helpers, Behaviors)
 	* Cookie, Session, Request Component
 	* HTML Helper (fast HTML valid code!)
