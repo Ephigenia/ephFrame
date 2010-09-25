@@ -52,16 +52,20 @@ class TestInflector extends UnitTestCase
 		}
 	}
 	
-	public function testCamellize() 
+	public function testCamelize() 
 	{
-		$this->assertEqual(Inflector::camellize('my_class_name'), 'myClassName');
-		$this->assertEqual(Inflector::camellize('my class name'), 'myClassName');
-		$this->assertEqual(Inflector::camellize('my class näme'), 'myClassNäme');
-		$this->assertEqual(Inflector::camellize('my class näme', true), 'MyClassNäme');
-		$this->assertEqual(Inflector::camellize('my'.LF.' class näme'), 'myClassNäme');
+		$tests = array(
+			'my_class_name' => 'myClassName',
+			'my class näme' => 'myClassNäme',
+			'my'.LF.' class näme' => 'myClassNäme',
+		);
+		foreach($tests as $left => $right) {
+			$this->assertEqual(Inflector::camelize($left), $right);
+		}
+		$this->assertEqual(Inflector::camelize('my class näme', true), 'MyClassNäme');
 	}
 	
-	public function testDelimeterSeperate() 
+	public function testUnderscore() 
 	{
 		$a = array(
 			'hallo my name is Earl' => 'hallo_my_name_is_earl',
@@ -71,8 +75,8 @@ class TestInflector extends UnitTestCase
 			' @freak 123   ' => '@freak_123'
 		);
 		foreach($a as $input => $output) {
-			$this->assertEqual(Inflector::delimeterSeperate($input), $output);
+			$this->assertEqual(Inflector::underscore($input), $output);
 		}
-		$this->assertEqual(Inflector::delimeterSeperate(' space is good'.LF, '-'), 'space-is-good');
+		$this->assertEqual(Inflector::underscore(' space is good'.LF, '-'), 'space-is-good');
 	}	
 }

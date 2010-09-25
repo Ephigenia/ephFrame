@@ -15,8 +15,6 @@
  * @filesource
  */
 
-interface_exists('StringFilter') or require dirname(__FILE__).'/StringFilter.php';
-
 /**
  * A Class for beautifying SGML strings
  *

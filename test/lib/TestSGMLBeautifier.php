@@ -31,7 +31,7 @@ class TestSGMLBeautifier extends UnitTestCase
 {
 	public function setUp() 
 	{
-		Library::loadl('ephFrame.lib.util.SGMLBeautifierFilter');
+		Library::load('ephFrame.lib.util.SGMLBeautifierFilter');
 	}
 	
 	public function testBeautifier() 
