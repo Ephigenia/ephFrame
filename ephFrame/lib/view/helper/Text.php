@@ -18,7 +18,7 @@
  */
 
 class_exists('Helper') or require dirname(__FILE__).'/Helper.php';
-class_exists('Validator') or require dirname(__FILE__).'/Validator.php';
+class_exists('Validator') or require dirname(__FILE__).'/../util/Validator.php';
 
 /**
  * Text Helper

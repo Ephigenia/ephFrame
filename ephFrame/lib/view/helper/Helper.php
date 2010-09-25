@@ -15,7 +15,7 @@
  * @filesource
  */
 
-class_exists('Object') or require dirname(__FILE__).'/../Object.php';
+class_exists('Object') or require dirname(__FILE__).'/../../core/Object.php';
 
 /**
  * Abstract Helper Class
@@ -35,9 +35,11 @@ abstract class Helper extends Object
 
 	public function __construct($controller = null) 
 	{
-		$this->controller = $controller;
-		$this->controller->registerCallback('beforeRender', array($this, 'beforeRender'));
-		$this->controller->registerCallback('afterRender', array($this, 'afterRender'));
+		if ($controller instanceof Controller) {
+			$this->controller = $controller;
+			$this->controller->registerCallback('beforeRender', array($this, 'beforeRender'));
+			$this->controller->registerCallback('afterRender', array($this, 'afterRender'));
+		}
 		$this->__mergeParentProperty('helpers');
 		foreach($this->helpers as $helper) {
 			$this->{$helper} = $this->controller->addHelper($helper);

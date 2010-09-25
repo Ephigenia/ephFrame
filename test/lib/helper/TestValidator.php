@@ -35,7 +35,17 @@ class TestValidator extends UnitTestCase
 	public function testEmail() 
 	{
 		$emails = array(
+			// simple examles
+			'marcel.eichner@ephigenia.de',
+			'marcel.eichner@ephigenia.co.uk',
+			'm.e@ephigenia.de',
+			'm.e.f@ephgienia.de',
 			'l.fgetgwxpv@manexam.net',
+			'~user1@system.com.edu.gov',
+			// unicode examples from wikipedia (http://en.wikipedia.org/wiki/Email_address)
+			'Pelé@example.com',
+			'δοκιμή@παράδειγμα.δοκιμή',
+			'甲斐@黒川.日本',
 		);
 		foreach($emails as $email) {
 			$this->assertEqual(Validator::email($email), true);

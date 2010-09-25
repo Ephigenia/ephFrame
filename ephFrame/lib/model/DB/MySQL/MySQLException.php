@@ -62,7 +62,6 @@ class MySQLException extends DBException
 	{
 		$this->errorMessage = $dao->errorMessage();
 		$this->errorNumber 	= (int) $dao->errorNo();
-		echo $dao->queries->last();
 		// put some information in any mysql exception that might have no message
 		if (empty($this->message)) {
 			$this->message = 'MySQL Error ('.$this->errorNumber.'): '.$this->errorMessage;

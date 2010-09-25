@@ -68,6 +68,7 @@ final class ephFrame
 			class_exists('AppController') or require APP_LIB_DIR.'AppController.php';
 			Library::load('ephFrame.lib.model.Model');
 			class_exists('AppModel') or require APP_LIB_DIR.'model/AppModel.php';
+			class_exists('Helper') or require FRAME_LIB_DIR.'view/helper/Helper.php';
 			if (file_exists(APP_LIB_DIR.'component/Form/AppForm.php') && !class_exists('AppForm')) {
 				require APP_LIB_DIR.'component/Form/AppForm.php';
 			}

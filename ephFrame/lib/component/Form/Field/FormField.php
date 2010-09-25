@@ -83,7 +83,6 @@ abstract class FormField extends HTMLTag
 	{
 		$attributes['type'] = $this->type;
 		$attributes['name'] = &$name;
-		$attributes['id'] = &$name;
 		if (empty($this->label) && $this->label !== false) {
 			$this->label = ucwords(preg_replace('/_+/', ' ', $name));
 		}

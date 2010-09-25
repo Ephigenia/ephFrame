@@ -16,6 +16,7 @@
  */
 
 Library::load('ephFrame.lib.HTMLTag');
+Library::load('app.lib.helper.AppHelper');
 
 /**
  * HTML Helper

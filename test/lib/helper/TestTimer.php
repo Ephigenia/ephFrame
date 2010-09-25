@@ -35,8 +35,6 @@ class TestTimer extends UnitTestCase
 	public function testSingleTimer()
 	{
 		$timer = new Timer();
-		sleep(0.2);
-		echo $timer;
-		exit;
+		$this->assertTrue(is_string($timer->__toString()));
 	}
 }

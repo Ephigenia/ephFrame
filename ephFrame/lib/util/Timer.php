@@ -66,12 +66,7 @@ class Timer
 	
 	public function __toString() 
 	{
-		return $this->render();
-	}
-	
-	public function render() 
-	{
-		return $this->time();
+		return (string) $this->time();
 	}
 	
 	public function start() 

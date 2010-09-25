@@ -38,7 +38,6 @@ $helperTests->addTestFile('lib/helper/TestTime.php');
 $helperTests->addTestFile('lib/helper/TestTimer.php');
 $helperTests->addTestFile('lib/helper/TestValidator.php');
 
-
 // ephFrame basic classes
 $helperTests->addTestFile('lib/TestFile.php');
 $helperTests->addTestFile('lib/TestIndexedArray.php');

@@ -29,7 +29,7 @@ require_once SIMPLE_TEST.'reporter.php';
 // go for a ephframe centrict tests... this is realy dirty
 // but i got no idea how to do this in a cool DRY way
 if (!class_exists('ephFrame')) {
-	require (dirname(__FILE__).'/../ephFrame/'.'startup.php');
+	require (dirname(__FILE__).'/../ephFrame/bootstrap.php');
 }
 error_reporting(E_ALL);
 // create a reporter, testing if we're in a server enviorenment
