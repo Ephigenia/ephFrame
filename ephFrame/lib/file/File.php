@@ -137,7 +137,7 @@ class File extends FileSystemNode
 	 */
 	public function exists() 
 	{
-		return (parent::exists() && is_file($this->nodeName));
+		return is_file($this->nodeName);
 	}
 	
 	/**

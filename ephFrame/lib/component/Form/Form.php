@@ -292,6 +292,14 @@ class Form extends HTMLTag
 		foreach($this->fieldset->children as $child) {
 			if ($child instanceof FormField) $formFieldCount++;	
 		}
+		// check if there’s a submit field that’s submitted
+		if ($submitField = $this->fieldset->childWithAttribute('type', 'submit')) {
+			$value = coalesce(@$this->request->data[$submitField->attributes->name], false);
+			if ($value == $submitField->attributes->value) {
+				return true;
+			}
+		}
+		// no submit field there, check if any field has been submitted
 		$filledFields = 0;
 		foreach($this->fieldset->children as $child) {
 			$val = false;

@@ -5,6 +5,13 @@ This file should record some kind of change history of the ephFrame Framework
 Please check this file for hints after you updated the framework via svn to 
 check some deprecated methods or new features.
 
+# 2010-09-28
+
+* Cleanup controller custructor after cleaing up and chaning constructor of
+  HTTPResponse and HTTPHeader
+* Fixed bug where sql dump used timer wrong so that PHP Error deleted the
+  previously set content-type header in the response
+
 # 2010-09-21
 
 * Form->beforeRender and afterRender are not called form the controller by

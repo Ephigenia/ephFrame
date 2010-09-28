@@ -39,13 +39,7 @@ class HTTPResponse extends Object
 	 * Turn the rendereing of the header in the response 
 	 * @var boolean
 	 */
-	public $enableRenderHeaders = true;
-
-	/**
-	 * Raw rendered Data
-	 * @var string
-	 */
-	public $rawData = '';
+	public $includeHeaders = true;
 	
 	/**
 	 * Content of the HTTPResponse
@@ -60,22 +54,20 @@ class HTTPResponse extends Object
 	 * @param string|integer $rawDataOrStatusCode
 	 * @return HTTPResponse
 	 */
-	public function __construct($rawDataOrStatusCode = null) 
+	public function __construct($rawDataOrStatusCode = null, HTTPHeader $header = null) 
 	{
-		$this->header = new HTTPHeader();
+		if ($header) {
+			$this->header = $header;
+		} else {
+			$this->header = new HTTPHeader($headerData);
+		}
 		if (is_string($rawDataOrStatusCode)) {
-			$this->rawData = $rawDataOrStatusCode;
-			// parse takes care of the body and the headers
-			$this->parse($rawDataOrStatusCode);
+			$this->header = new HTTPHeader($raw);
+			$this->body = $this->parse($rawDataOrStatusCode);
 		} elseif (is_int($rawDataOrStatusCode)) {
 			$this->statusCode = $rawDataOrStatusCode;
 		}
 		return $this;
-	}
-	
-	public function hasHeader() 
-	{
-		return count($this->header) > 0;
 	}
 	
 	/**
@@ -86,58 +78,29 @@ class HTTPResponse extends Object
 	 * @param string $raw
 	 * @return string Content part of the message
 	 */
-	private function parse($raw) {
-		$this->header = new HTTPHeader($raw);
+	private function parse($raw)
+	{
 		$parts = preg_split('/\x0D\x0A\x0D\x0A/s', $raw);
 		if (count($parts) > 1) {
-			$this->body = $parts[count($parts)-1];
+			return $parts[count($parts)-1];
 		}
-		return $this->body;
+		return false;
 	}
 	
 	/**
 	 * Renders the HTTP Response with all headers
+	 * @param $includeHeaders include the response headers in the rendering
 	 * @return string
 	 */
-	public function render() 
+	public function render($includeHeaders = false) 
 	{
-		if (!$this->beforeRender()) return false;
-		// add http status code to header
-		$rendered = '';
-		if ($this->enableRenderHeaders) {
-			$rendered = $this->header->render();
-			$rendered .= RT.LF.RT.LF;
+		if ($this->includeHeaders || $includeHeaders) {
+			return $this->header->render().RT.LF.RT.LF.$this->body;
+		} else {
+			return $this->body;
 		}
-		$rendered .= $this->body;
-		return $this->afterRender($rendered);
 	}
 	
-	/**
-	 * Callback before HTTP Response is rendered, returns false if the
-	 * HTTP Response should not be rendered. Place your code here.
-	 * 
-	 * @return boolean
-	 */
-	public function beforeRender() 
-	{
-		return true;
-	}
-	
-	/**
-	 * After Render Callback, hook in your custom code that manipulates the
-	 * rendered content.
-	 * @param string $rendered
-	 * @return string
-	 */
-	public function afterRender($rendered) 
-	{
-		return $rendered;
-	}
-	
-	/**
-	 * Returns the rendered HTTP Response
-	 * @return string
-	 */
 	public function __toString() 
 	{
 		return $this->render();

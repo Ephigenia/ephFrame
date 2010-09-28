@@ -48,14 +48,14 @@ class Element extends View
 		return parent::__construct('element', $name, $data);
 	}
 	
-	public function beforeRender()
+	protected function beforeRender()
 	{
 		$this->data['elementName'] = str_replace('/', '_', $this->name);
 		$this->data['elementBaseName'] = basename($this->name);
 		return parent::beforeRender();
 	}
 	
-	public function afterRender($rendered)
+	protected function afterRender($rendered)
 	{
 		// show element names if registry var is turned to on, note that you
 		// must have DEBUG > 1

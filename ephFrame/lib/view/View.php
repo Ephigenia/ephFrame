@@ -15,9 +15,6 @@
  * @filesource
  */
 
-// load required parent classes
-class_exists('Hash') or require dirname(__FILE__).'/Hash.php';
-
 /**
  * View (part of MVC)
  * 
@@ -42,7 +39,7 @@ class_exists('Hash') or require dirname(__FILE__).'/Hash.php';
  * @package ephFrame
  * @subpackage ephFrame.lib.component
  */
-class View extends Hash
+class View
 {	
 	/**
 	 * Name of this view (this is used to get the
@@ -70,12 +67,6 @@ class View extends Hash
 	protected $extension = 'php';
 	
 	/**
-	 * Content type for this view that can be send to the client
-	 * @var string
-	 */
-	public $contentType = 'text/html';
-	
-	/**
 	 * View constructor
 	 * @return View
 	 */
@@ -88,7 +79,7 @@ class View extends Hash
 		} else {
 			$this->data = new Hash($data);
 		}
-		return parent::__construct();
+		return $this;
 	}
 	
 	protected function templateFileBasename()
@@ -132,6 +123,11 @@ class View extends Hash
 		}
 	}
 	
+	protected function beforeRender()
+	{
+		return true;
+	}
+	
 	/**
 	 * Renders the view by requiring a php file based on the view action name
 	 * 
@@ -148,6 +144,11 @@ class View extends Hash
 		ob_start();
 		require $this->templateFilename();
 		return $this->afterRender(ob_get_clean());
+	}
+	
+	protected function afterRender($content)
+	{
+		return $content;
 	}
 	
 	/**
@@ -230,6 +231,10 @@ class ViewFileNotFoundException extends ViewException
 	}
 }
 
+/**
+ * @package ephFrame
+ * @subpackage ephFrame.lib.exception 
+ */
 class ViewFileNotReadableException extends ViewException
 {
 	public $filename;

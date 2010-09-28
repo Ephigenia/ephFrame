@@ -244,7 +244,7 @@ class OptParse extends Object
 			}
 			if (isset($data['short']) && !isset($this->options[$data['short']])) {
 				if (isset($data['long']) && isset($this->options[$data['long']])) {
-					$this->setOption($data['short'], $this->options[$data[$long]]);
+					$this->setOption($data['short'], $this->options[$data['long']]);
 				} else {
 					$this->setOption($data['short'], $data['default']);
 				}

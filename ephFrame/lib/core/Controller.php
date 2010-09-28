@@ -112,7 +112,7 @@ abstract class Controller extends Object
 	 * @param HTTPRequest $request
 	 * @return Controller
 	 */
-	final public function __construct(HTTPRequest $request = null) 
+	final public function __construct(HTTPRequest $request) 
 	{
 		// get component list from parent class and merge them with this
 		// controllers components and models ...
@@ -125,12 +125,15 @@ abstract class Controller extends Object
 		}
 		$this->beforeConstruct();
 		$this->data = new Hash($this->data);
-		$this->request = !empty($request) ? $request : new HTTPRequest();
-		$this->response = new HTTPResponse();
-		$this->response->enableRenderHeaders = false;
 		if (empty($this->name) && !($this->name = preg_match_first(get_class($this), '@(.*)Controller@i'))) {
 			$this->name = get_class($this);
 		}
+		// setting up proper response and requests
+		$this->request = $request;
+		$this->response = new HTTPResponse(200, new HTTPHeader(array(
+			'Content-Type' => 'text/html; charset=utf8',
+		)));
+		$this->response->includeHeaders = false;
 		// init components and helpers
 		$this->initComponents();
 		$this->initModels();
@@ -402,6 +405,9 @@ abstract class Controller extends Object
 	 */
 	public function beforeAction() 
 	{
+		// action and controller name set for view
+		$this->data->set('action', $this->action);
+		$this->data->set('controller', $this->name);
 		if (!$this->callback('before'.ucFirst($this->action))) {
 			return false;
 		}
@@ -421,9 +427,6 @@ abstract class Controller extends Object
 		$this->action = $action;
 		// additional parameters
 		$this->params = array_merge($this->params, $params, $this->request->data);
-		// action and controller name set for view
-		$this->data->set('action', $this->action);
-		$this->data->set('controller', $this->name);
 		foreach (array('layout', 'theme') as $v) {
 			if (isset($this->params[$v])) $this->{$v} = $this->params[$v];
 		}
@@ -480,7 +483,6 @@ abstract class Controller extends Object
 		}
 		// use view class to render controller result
 		$view = Library::create($this->viewClassName, array($this->name, $this->action, $this->data));
-		// @todo refactor the usage of theme here
 		$view->theme = $this->theme;
 		$content = $view->render();
 		// wrap layout around view
@@ -491,13 +493,8 @@ abstract class Controller extends Object
 			$content = $layout->render();
 		}
 		$this->response->body = $this->callback('afterRender', array($content));
-		// set content header if not allready set
-		if ($this->response->header->isEmpty('Content-Type')) {
-			$this->response->header->set('Content-Type', $view->contentType.'; charset=utf-8');
-		}
-		$rendered = $this->response->render();
 		$this->response->header->send();
-		return $rendered;
+		return $this->response;
 	}
 	
 	/**

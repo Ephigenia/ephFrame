@@ -228,7 +228,8 @@ abstract class FormField extends HTMLTag
 		if ($this->mandatory && (!$this->attributes->get('class') || !strpos($this->attributes->get('class'), 'required'))) {
 			$this->attributes->appendTo('class', ' required');
 		}
-		if (!$this->validate() && $this->form->submitted() && (!$this->attributes->get('class') || !strpos($this->attributes->get('class'), 'error'))) {
+		if ((!$this->validate() || isset($this->form->errors[$this->attributes->name]))
+			&& $this->form->submitted() && (!$this->attributes->get('class') || !strpos($this->attributes->get('class'), 'error'))) {
 			$this->attributes->appendTo('class', ' error');
 		}
 		if ($value = $this->value()) {

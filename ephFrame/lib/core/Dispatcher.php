@@ -71,8 +71,8 @@ class Dispatcher
 			return $this->dispatch('Error/MissingController', array('controllerName' => $controllerName));
 		}
 		try {
-			$controller = new $controllerName($request);
 			unset($request->data['__url']);
+			$controller = new $controllerName($request);
 			$c = $controller->action($router->action, $router->params);
 			if ($c instanceof Controller) {
 				echo $c->render();

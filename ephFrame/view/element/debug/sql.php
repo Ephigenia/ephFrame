@@ -19,7 +19,7 @@ if (!class_exists('QueryHistory')) return false;
 			<tr class="pre">
 				<td><?php echo $i+1; ?></td>
 				<td><?php echo $Query['result']->numRows(); ?></td>
-				<td><?php echo round($Query['timer']->render() * 1000) ?>ms</td>
+				<td><?php echo round($Query['timer']->time() * 1000) ?>ms</td>
 				<td>
 					<pre><?php echo (string) $Query['query'] ?></pre>
 				</td>
