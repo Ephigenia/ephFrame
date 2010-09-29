@@ -97,9 +97,10 @@ class FormFieldDropDown extends FormField
 			foreach($this->children as $child) {
 				if (!$this->attributes->multiple && $child->attributes->value != $value) {
 					$child->attributes->remove('selected');
-					continue;
 				}
-				$child->attributes->set('selected', 'selected');
+				if ($child->attributes->value == $value) {
+					$child->attributes->set('selected', 'selected');
+				}
 			}
 		}
 		return $this;

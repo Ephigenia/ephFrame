@@ -360,10 +360,10 @@ class Model extends Object
 			}
 			$config['joinTable'] = String::prepend($config['joinTable'], $this->tablenamePrefix, true);
 			if (empty($config['foreignKey'])) {
-				$config['foreignKey'] = $config['with'].'.'.$this->primaryKeyName;
+				$config['foreignKey'] = $config['with'].'.'.Inflector::underscore($alias.'_'.$this->primaryKeyName);
 			}
 			if (empty($config['associationType'])) {
-				$config['associationKey'] = $this->name.'.'.$this->primaryKeyName;
+				$config['associationKey'] = $config['with'].'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName);
 			}
 		}
 		if (empty($config['foreignKey'])) switch ($associationType) {
@@ -715,7 +715,8 @@ class Model extends Object
 					if (!($model instanceof Model)) continue;
 					$model->save();
 					$values = array(
-						$config['foreignKey'] => $this->get($this->primaryKeyName),
+						str_replace('.', '_', Inflector::underscore($config['associationKey'])) => $this->get($this->primaryKeyName),
+						// substr($config['foreignKey'], strrpos($config['foreignKey'], '.')+1) => $this->get($this->primaryKeyName),
 						Inflector::underscore($model->name).'_'.$model->primaryKeyName => $model->get($model->primaryKeyName)
 					);
 					// get join data from join table
