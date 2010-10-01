@@ -59,7 +59,7 @@ class HTTPResponse extends Object
 		if ($header) {
 			$this->header = $header;
 		} else {
-			$this->header = new HTTPHeader($headerData);
+			$this->header = new HTTPHeader($header);
 		}
 		if (is_string($rawDataOrStatusCode)) {
 			$this->header = new HTTPHeader($raw);

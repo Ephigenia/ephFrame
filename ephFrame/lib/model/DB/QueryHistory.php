@@ -120,14 +120,14 @@ class QueryHistory implements Countable
 			if($data['result']->numRows()) {
 				$rendered .= sprintf('Query #%s (%ss, %s result/s):'.LF.'%s'.LF.LF,
 									$index +1 ,
-									round($data['timer']->render(), 5),
+									round((string) $data['timer'], 5),
 									$data['result']->numRows(),
 									(string) $data['query']
 								);
 			} else {
 				$rendered .= sprintf('Query #%s (%ss):'.LF.'%s'.LF.LF,
 									$index +1,
-									round($data['timer']->render(), 5),
+									round((string) $data['timer'], 5),
 									(string) $data['query']
 								);
 			}

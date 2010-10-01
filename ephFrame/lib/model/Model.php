@@ -1113,7 +1113,7 @@ class Model extends Object
 				if (!preg_match('@'.$modelName.'\.@i', $tmpR)) continue;
 				$query->groupBy($this->name.'.'.$this->primaryKeyName);
 				$query->join($config['joinTable'], $config['with'], DBQuery::JOIN_LEFT, array(
-					$config['foreignKey'] => $config['associationKey']
+					$this->name.'.'.$this->primaryKeyName => $config['associationKey']
 				));
 				$query->join($this->{$modelName}->tablename, ucFirst($modelName), DBQuery::JOIN_LEFT, array(
 					$config['with'].'.'.Inflector::underscore($modelName).'_'.$this->{$modelName}->primaryKeyName => $modelName.'.'.$this->{$modelName}->primaryKeyName
