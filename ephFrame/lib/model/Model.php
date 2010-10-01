@@ -362,8 +362,10 @@ class Model extends Object
 			if (empty($config['foreignKey'])) {
 				$config['foreignKey'] = $config['with'].'.'.Inflector::underscore($alias.'_'.$this->primaryKeyName);
 			}
-			if (empty($config['associationType'])) {
+			if (empty($config['associationKey'])) {
 				$config['associationKey'] = $config['with'].'.'.Inflector::underscore($this->name.'_'.$this->primaryKeyName);
+			} elseif (strrpos($config['associationKey'], '.') == false) {
+				$config['associationKey'] = $config['with'].'.'.$config['associationKey'];
 			}
 		}
 		if (empty($config['foreignKey'])) switch ($associationType) {
@@ -715,8 +717,7 @@ class Model extends Object
 					if (!($model instanceof Model)) continue;
 					$model->save();
 					$values = array(
-						str_replace('.', '_', Inflector::underscore($config['associationKey'])) => $this->get($this->primaryKeyName),
-						// substr($config['foreignKey'], strrpos($config['foreignKey'], '.')+1) => $this->get($this->primaryKeyName),
+						trim(substr($config['associationKey'], strrpos($config['associationKey'], '.')),'.') => $this->get($this->primaryKeyName),
 						Inflector::underscore($model->name).'_'.$model->primaryKeyName => $model->get($model->primaryKeyName)
 					);
 					// get join data from join table
@@ -922,7 +923,12 @@ class Model extends Object
 				foreach($this->{$pluralName} as $model) {
 					$model->delete();
 				}
-				$this->{$pluralName}->q('DELETE * FROM '.$config['joinTable'].' WHERE '.$config['foreignKey'].' = '.$this->get($this->primaryKeyName));
+				$conditions = array(
+					trim(substr($config['associationKey'], strrpos($config['associationKey'], '.')),'.') => $this->get($this->primaryKeyName),
+				);
+				// @todo use conditions from config here
+				$query = new DeleteQuery($config['joinTable'], array_merge($config['conditions'], $conditions));
+				$this->{$pluralName}->q($query);
 			}
 		}
 		return $this;
@@ -1189,7 +1195,7 @@ class Model extends Object
 					if ($model->isEmpty($model->primaryKeyName)) continue;
 					// add maybe missing tableprefix @todo clean this tableprefix usage everywhere
 				 	$conditions = array_merge($config['conditions'], array(
-				 		$config['foreignKey'] => $model->get($model->primaryKeyName),
+				 		$config['associationKey'] => $model->get($model->primaryKeyName),
 				 		$config['with'].'.'.Inflector::underscore($modelName).'_id' => $modelName.'.id',
 				 	));
 					$query = $this->{$modelName}->createSelectQuery($config);
@@ -1198,9 +1204,10 @@ class Model extends Object
 					$query->orderBy($config['order']);
 					$query->count($config['limit']);
 					$modelNamePlural = Inflector::pluralize($modelName);
-					$model->{$modelNamePlural} = new ObjectSet($modelName);
 					if ($r = $this->{$modelName}->query($query)) {
 						$model->{$modelNamePlural} = $r;
+					} else {
+						$model->{$modelNamePlural} = new ObjectSet($modelName);
 					}
 				}
 			}
