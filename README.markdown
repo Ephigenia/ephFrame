@@ -2,9 +2,10 @@ ephFrame PHP Framework Readme File
 ==============================================================================
 
 ephFrame is an other framework written in PHP5 and wants to be easy to use,
-simple and not to heavy weighted. It focuses on DRY and convention over 
-configuration principle. It's build like many other frameworks with some 
-differences in detail and also uses the MVC pattern.
+simple and not to heavy weighted. It focuses on
+[DRY](http://en.wikipedia.org/wiki/Don't_repeat_yourself) and
+[convention over configuration](http://en.wikipedia.org/wiki/Convention_over_configuration) principle. It's build like many other frameworks with some 
+differences in detail and also uses the [MVC pattern](http://de.wikipedia.org/wiki/Model_View_Controller).
 
 See the [WIKI Documentation](http://github.com/Ephigenia/ephFrame/wiki), which i just started writing. If you’re 
 allready working with the framework you should check the 
