@@ -201,7 +201,7 @@ class HTTPRequest extends Component
 			$this->data = array_merge($_GET, $this->data);
 		}
 		// fix wrong decoded utf8 entities
-		$this->data = ArrayHelper::map(array('Charset', 'toUtf8'), $this->data);
+		// $this->data = ArrayHelper::map(array('Charset', 'toUtf8'), $this->data);
 	
 		// strip slashes from all values if magic quotes are on
 		if (function_exists('get_magic_quotes_gpc') && get_magic_quotes_gpc()) {

@@ -462,7 +462,6 @@ class Model extends Object
 			$modelNames = func_get_args();
 		}
 		foreach($modelNames as $modelName) {
-			if (!property_exists($this, $modelName)) continue;
 			unset($this->{$modelName});
 			unset($this->belongsTo[$modelName]);
 			unset($this->hasMany[$modelName]);
@@ -1328,6 +1327,7 @@ class Model extends Object
 			'conditions' => array(
 				$fieldname => $value
 			),
+			'depth' => $this->depth,
 		);
 		$params = array_merge($defaults, $params);
 		return $this->find($params);

@@ -122,6 +122,12 @@ class JavaScript extends AppComponent
 		return $this;
 	}
 	
+	public function jQueryPrepend($script)
+	{
+		array_unshift($this->jQuery, $script);
+		return $this;
+	}
+	
 	/**
 	 * Add a single or multiple files to javascript
 	 * 
