@@ -34,6 +34,21 @@ if (class_exists('QueryHistory')) {
 		<?php
 		if (!empty($queriesTotal)) {
 			echo $this->element('debug/sql');
-		} ?>
+		}
+		?>
+		<script type="text/javascript" charset="utf-8">
+			if (typeof($) !== 'undefined') {
+				(function($) {
+					$("#debugDump a.toggle").toggle(
+						function () {
+							$('#debugDumpContent').slideDown();
+						},
+						function () {
+							$('#debugDumpContent').slideUp();
+						}
+					);
+				})(jQuery);
+			}
+		</script>
 	</div>
 </div>
