@@ -11,9 +11,9 @@ if (class_exists('QueryHistory')) {
 }
 
 ?>
-<div id="debugDump" style="position: fixed; bottom: 0px;">
+<div id="debugDump">
 	<a href="javascript:void(0);" class="toggle" title="Show/Hide Debugging Console">console</a>
-	<div id="debugDumpContent" style="display: none;">
+	<div id="debugDumpContent">
 		<h3>Stats</h3>
 		<dl>
 			<dt>Compile Time</dt>
@@ -36,16 +36,4 @@ if (class_exists('QueryHistory')) {
 			echo $this->element('debug/sql');
 		} ?>
 	</div>
-	<script type="text/javascript" charset="utf-8">
-		(function($) {
-			$("#debugDump a.toggle").toggle(
-				function () {
-					$('#debugDumpContent').slideDown();
-				},
-				function () {
-					$('#debugDumpContent').slideUp();
-				}
-			);
-		})(jQuery);
-	</script>
 </div>

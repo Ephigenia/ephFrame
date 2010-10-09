@@ -2,24 +2,20 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<title><?php echo coalesce($pageTitle, '[no title]') ?></title>
+	<base href="<?php echo Router::url('root'); ?>" />
 	<?php
-	if (isset($MetaTags)) echo String::indent($MetaTags->render(), 2, TAB, 1);
-	if (isset($CSS)) {
-		$CSS->addFiles(array(
-			'reset',
-			'app',
-			'debug',
-		));
-		echo $CSS;
-	}
+	echo $MetaTags;
+	echo $CSS->addFiles(array(
+		'app',
+		'debug',
+	));
 	?>
-	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;" />
 	<link rel="shortcut icon" type="image/ico" href="<?php echo WEBROOT ?>favicon.ico" />
 </head>
 <body>
 	<div id="app">
 		<div id="header">
-			<h1><a href="<?php Router::uri('root') ?>">ephFrame <?php echo ephFrame::VERSION ?></a></h1>
+			<h1><a href="<?php Router::uri('root') ?>"><?php echo $pageTitle ?></a></h1>
 		</div>
 		<?php echo $this->element('flashMessage') ?>
 		<div id="content">
@@ -31,15 +27,6 @@
 			licensed under <a href="http://www.opensource.org/licenses/mit-license.php" rel="external" title="MIT License">MIT License</a>
 		</div>
 	</div>
-	<?php
-	if (isset($JavaScript)) {
-		$JavaScript->addFiles(array(
-			'http://code.jquery.com/jquery-1.4.2.min.js',
-			'app',
-		));
-		echo $JavaScript;
-	}
-	echo $this->element('debug/dump');
-	?>
+	<?php echo $this->element('debug/dump'); ?>
 </body>
 </html>

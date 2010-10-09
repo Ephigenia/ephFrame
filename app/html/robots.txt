@@ -1,1 +1,1 @@
-User-agent: *
+# Check http://www.robotstxt.org/robotstxt.html for info about this file

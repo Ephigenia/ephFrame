@@ -10,6 +10,8 @@
 	color: #000000;
 }
 #debugDump {
+	position: absolute;
+	bottom: 0px;
 	font: normal normal normal 11px/14px "Lucida Sans Unicode", "Lucida Grande", Verdana, Arial, Sans Serif;
 	clear: both;
 	text-align: left;
