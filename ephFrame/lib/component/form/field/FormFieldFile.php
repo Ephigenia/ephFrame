@@ -23,7 +23,7 @@ class_exists('FormField') or require(dirname(__FILE__).'/FormField.php');
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 04.11.2008
  * @package ephFrame
- * @subpackage ephFrame.lib.component.Form.Field
+ * @subpackage ephFrame.lib.component.form.Field
  */
 class FormFieldFile extends FormField 
 {

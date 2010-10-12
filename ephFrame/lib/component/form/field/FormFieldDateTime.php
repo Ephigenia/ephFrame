@@ -19,7 +19,7 @@ class_exists('FormFieldDate') or require(dirname(__FILE__).'/FormFieldDate.php')
 
 /**
  * @package ephFrame
- * @subpackage ephFrame.lib.component.Form.Field
+ * @subpackage ephFrame.lib.component.form.Field
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 20.02.2009
  */

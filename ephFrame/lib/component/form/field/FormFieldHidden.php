@@ -25,7 +25,7 @@ class_exists('FormField') or require(dirname(__FILE__).'/FormField.php');
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 21.04.2009
  * @package ephFrame
- * @subpackage ephFrame.lib.component.Form.Field
+ * @subpackage ephFrame.lib.component.form.Field
  */
 class FormFieldHidden extends FormField 
 {	

@@ -21,7 +21,7 @@ class_exists('FormFieldNumber') or require(dirname(__FILE__).'/FormFieldNumber.p
  * Form Field for float values
  * 
  * @package ephFrame
- * @subpackage ephFrame.lib.component.Form.Field
+ * @subpackage ephFrame.lib.component.form.Field
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 2010-03-25
  */

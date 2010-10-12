@@ -21,7 +21,7 @@ class_exists('FormFieldText') or require dirname(__FILE__).'/FormFieldText.php';
  * URL-Input Field
  * 
  * @package ephFrame
- * @subpackage ephFrame.lib.component.Form.Field
+ * @subpackage ephFrame.lib.component.form.Field
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 04.11.2008
  */

@@ -19,7 +19,7 @@ class_exists('FormFieldText') or require(dirname(__FILE__).'/FormFieldText.php')
 
 /**
  * @package ephFrame
- * @subpackage ephFrame.lib.component.Form.Field
+ * @subpackage ephFrame.lib.component.form.Field
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 20.02.2009
  */

@@ -20,7 +20,7 @@ class_exists('FormFieldText') or require(dirname(__FILE__).'/FormFieldText.php')
 /**
  * Email Form Field Text
  * @package ephFrame
- * @subpackage ephFrame.lib.component.Form.Field
+ * @subpackage ephFrame.lib.component.form.Field
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 04.11.2008
  */

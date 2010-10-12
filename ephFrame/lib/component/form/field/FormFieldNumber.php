@@ -21,7 +21,7 @@ class_exists('FormFieldText') or require(dirname(__FILE__).'/FormFieldText.php')
  * Form Field for integer like values
  * 
  * @package ephFrame
- * @subpackage ephFrame.lib.component.Form.Field
+ * @subpackage ephFrame.lib.component.form.Field
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 2010-07-06
  */
