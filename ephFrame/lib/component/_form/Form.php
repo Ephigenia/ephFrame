@@ -250,7 +250,7 @@ class Form extends HTMLTag
 		// load form field class
 		if (strpos($type, '.') == false) {
 			$classname = 'FormField'.ucFirst($type);
-			$fieldClassPath = 'ephFrame.lib.component.Form.Field.'.$classname;
+			$fieldClassPath = 'ephFrame.lib.component.form.field.'.$classname;
 		} else {
 			$classname = ClassPath::className($type);
 			$fieldClassPath = $type;
