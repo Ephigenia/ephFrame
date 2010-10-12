@@ -232,7 +232,7 @@ abstract class Controller extends Object
 	public function addModel($modelName) 
 	{
 		try {
-			$this->{$modelName} = Library::create($modelName);;
+			$this->{$modelName} = Library::create($modelName);
 		} catch (ClassPathMalformedException $e) {
 			$this->{$modelName} = Library::create('App.lib.model.'.$modelName);
 		}
@@ -366,7 +366,7 @@ abstract class Controller extends Object
 		} else {
 			if ($this->forms === false) {
 				$this->forms = array();
-			} elseif (ClassPath::exists('app.lib.component.Form.'.$this->name.'Form')) {
+			} elseif (ClassPath::exists('app.lib.component.form.'.$this->name.'Form')) {
 				$this->addForm($this->name.'Form');
 				$this->{$this->name.'Form'}->startUp($this);
 			}
@@ -385,7 +385,7 @@ abstract class Controller extends Object
 			try {
 				$Form = Library::create($name);
 			} catch (Exception $e) {
-				$Form = Library::create('App.lib.component.Form.'.$name);
+				$Form = Library::create('App.lib.component.form.'.$name);
 			}
 			$Form->init($this);
 			if ($startUp) {

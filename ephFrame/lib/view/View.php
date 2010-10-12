@@ -135,7 +135,7 @@ class View
 	 * @throws LayoutFileNotFoundException
 	 * @return string
 	 */
-	public function render() 
+	public function render()
 	{
 		if (!$this->beforeRender()) return false;
 		foreach($this->data->toArray() as $___key => $___val) {
