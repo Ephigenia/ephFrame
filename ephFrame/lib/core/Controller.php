@@ -148,13 +148,13 @@ abstract class Controller extends Object
 	
 	protected function beforeConstruct() 
 	{
-		$this->registerCallback('beforeRender', array($this, 'beforeRender'));
-		$this->registerCallback('beforeAction', array($this, 'beforeAction'));
 		return true;
 	}
 	
 	protected function afterConstruct() 
 	{
+		$this->registerCallback('beforeRender', array($this, 'beforeRender'));
+		$this->registerCallback('beforeAction', array($this, 'beforeAction'));
 		$this->registerCallback('afterRender', array($this, 'afterRender'));
 		$this->registerCallback('afterAction', array($this, 'afterAction'));
 		return true;

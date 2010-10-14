@@ -10,6 +10,7 @@ AddDefaultCharset utf-8
 RewriteEngine On
 # RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-s
+RewriteCond %{REQUEST_FILENAME} !-l
 # normal rewrite for all files
 RewriteRule	^(.*)$ index.php?__url=$1 [QSA,L]
