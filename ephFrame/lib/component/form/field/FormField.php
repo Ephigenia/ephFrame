@@ -130,9 +130,9 @@ abstract class FormField extends HTMLTag
 	}
 	
 	/**
-	 * Sets the form field value or returns the submitted value
+	 * Set or return form field value
 	 * 
-	 * @param string	$value
+	 * @param string $value
 	 * @return string|FormField
 	 */
 	public function value($value = null) 
@@ -143,8 +143,9 @@ abstract class FormField extends HTMLTag
 				$this->attributes->set('value', $value);
 			}
 			return $this;
+		}
 		// return value, form submitted
-		} elseif (isset($this->form) && $this->form->submitted()) {
+		if (isset($this->form) && $this->form->submitted()) {
 			$fieldname = $this->attributes->name;
 			if (substr($fieldname, -2) == '[]') {
 				$fieldname = substr($fieldname, 0, -2);

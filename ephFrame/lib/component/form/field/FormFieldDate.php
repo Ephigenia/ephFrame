@@ -36,21 +36,18 @@ class FormFieldDate extends FormFieldText
 	
 	public function afterConstruct() 
 	{
-		$this->value(time());
+		// default value should be the current date
+		if ($this->attributes->value === null) {
+			$this->value(time());
+		}
 		return parent::afterConstruct();
 	}
 	
 	public function value($value = null) 
 	{
-		// translate passed date to timestamp
 		if (func_num_args() == 0) {
 			return strtotime(parent::value());
 		}
-		$value = trim($value);
-		if (empty($value)) {
-			return parent::value('');
-		}
-		// convert timestamps to date in form
 		if (preg_match('@^\d+$@', $value)) {
 			$value = strftime($this->format, $value);
 		}

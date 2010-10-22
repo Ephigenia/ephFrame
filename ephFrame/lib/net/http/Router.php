@@ -233,7 +233,8 @@ class Router extends Hash
 			$uri = $routeConfig['path'];
 			// parameter replacement
 			if (is_array($params)) {
-				$uriReg = preg_replace('@\(\?P<([^>]+)>[^)]+\)@', ':$1', $uri);
+				$uriReg = preg_replace('@\(\?P<([^>]+)>[^)]+\)+\??@', ':$1', $uri);
+				$uriReg = str_replace('/?', '/', $uriReg);
 				$uri = String::substitute($uriReg, array_merge($routeConfig, $params));
 			}
 		}
