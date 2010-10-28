@@ -26,7 +26,7 @@ require_once dirname(__FILE__).'/../../autorun.php';
  * @package ephFrame
  * @subpackage ephFrame.test
  */
-class TestWikiText extends UnitTestCase 
+class WikiTextTest extends UnitTestCase 
 {
 	/**
 	 * @var WikiText

@@ -16,7 +16,7 @@
  */
 
 // init simpletest and framework
-require_once dirname(__FILE__).'/../../autorun.php';
+require_once dirname(__FILE__).'/../autorun.php';
 
 /**
  * [SOME DOCU HERE WOULD BE NICE HEE!?]
@@ -26,22 +26,22 @@ require_once dirname(__FILE__).'/../../autorun.php';
  * @package ephFrame
  * @subpackage ephFrame.test
  */
-class TestSeachQueryParser extends UnitTestCase
-{	
+class CollectionTest extends UnitTestCase 
+{
 	public function setUp() 
 	{
-		Library::load('ephFrame.lib.component.SearchQueryParser');
+		Library::load('ephFrame.lib.util.Collection');
 	}
 	
-	public function test() 
+	public function testCollectionUnique() 
 	{
-		$testArray = array(
-			'%25C3%25A4' => array('%C3%A4'),
-			'%22marcel+eichner+%26+illustration%22' => array('marcel eichner & illustration'),
-			'%22marcel+eichner%22' => array('marcel eichner')
-		);
-		foreach($testArray as $input => $output) {
-			$parser = new SearchQueryParser($input);
-		}
+		$c = new Collection();
+		$c->add('A');
+		$c->add('B');
+		$c->add('C');
+		$this->assertEqual((string) $c->implode(','), 'A,B,C');
+		// test adding of an element that is allready there
+		$c->add('A');
+		$this->assertEqual((string) $c->implode(','), 'A,B,C');
 	}	
 }

@@ -46,7 +46,7 @@ class GEOCoords
 	 * @param string $hemisphere
 	 * @return float
 	 */
-	public static function toLatitude ($degree, $minutes, $seconds, $hemisphere) {  
+	public static function toLatitude($degree, $minutes, $seconds, $hemisphere) {  
 		if (strcasecmp($hemisphere,'s')) {
 			return -($degree + ($minutes / 60) + ($seconds / 3600));  
 		} else {
@@ -64,7 +64,7 @@ class GEOCoords
 	 * @param string $hemisphere
 	 * @return float
 	 */
-    public static function toLongitude ($degree, $minutes, $seconds, $hemisphere) {
+    public static function toLongitude($degree, $minutes, $seconds, $hemisphere) {
     	if (strcasecmp($hemisphere, 'w')) {
 			return -($degree + ($minutes / 60) + ($seconds / 3600));
     	} else {
@@ -77,7 +77,8 @@ class GEOCoords
      * return it.
      * @return float km distance between the geo coordinates
      */
-    public static function getDistance ($latitudeA, $longitudeA, $latitudeB, $longitudeB) {  
+    public static function getDistance($latitudeA, $longitudeA, $latitudeB, $longitudeB)
+	{  
         $latA = $latitudeA  / 180 * pi();
         $lonA = $longitudeA / 180 * pi();
         $latB = $latitudeB  / 180 * pi();

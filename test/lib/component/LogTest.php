@@ -26,7 +26,7 @@ require_once dirname(__FILE__).'/../../autorun.php';
  * @package ephFrame
  * @subpackage ephFrame.test
  */
-class TestLog extends UnitTestCase
+class LogTest extends UnitTestCase
 {	
 	public function testWrite() 
 	{

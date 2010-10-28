@@ -19,14 +19,12 @@
 require_once dirname(__FILE__).'/../autorun.php';
 
 /**
- * [SOME DOCU HERE WOULD BE NICE HEE!?]
- * 
  * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
  * @since 18.08.2008
  * @package ephFrame
  * @subpackage ephFrame.test
  */
-class TestSocket extends UnitTestCase 
+class SocketTest extends UnitTestCase 
 {
 	/**
 	 * @var Socket

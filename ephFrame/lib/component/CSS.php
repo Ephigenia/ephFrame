@@ -77,18 +77,6 @@ class CSS extends AppComponent
 	public $plain = array();
 	
 	/**
-	 * Will compress external files as well
-	 * @var boolean
-	 */
-	public $compress = false;
-	
-	/**
-	 * Turns automatic css file packaging on
-	 * @var boolean
-	 */
-	public $pack = false;
-	
-	/**
 	 * Directories where css files can exist, add multiple paths
 	 * that CSS should search in
 	 * @var string
@@ -198,13 +186,7 @@ class CSS extends AppComponent
 		// render plain css definitions
 		if (count($this->plain) > 0) {
 			$styleTag = new HTMLTag('style', array('type' => 'text/css'));
-			if ($this->compress) {
-				Library::load('ephFrame.lib.component.CSSCompressor');
-				$CSSCompressor = new CSSCompressor();
-				$styleTag->tagValue($CSSCompressor->compress(implode(LF, $this->plain)));
-			} else {
-				$styleTag->tagValue(implode(LF, $this->plain));
-			}
+			$styleTag->tagValue(implode(LF, $this->plain));
 			$rendered .= $styleTag->render();
 		}
 		return $this->afterRender($rendered);
@@ -226,13 +208,6 @@ class CSS extends AppComponent
 			}
 		}
 		$this->files = new Collection(@$existingFiles);
-		// pack files, if {@link pack} is on and everything is smooothy
-		if ($this->pack && $this->files->count() > 0) {
-			Library::load('ephFrame.lib.component.CSSPacker');
-			$packer = new CSSPacker();
-			$compressedFilename = $this->dirs[0].$packer->packAndStore($this->files->toArray(), $this->dirs[0]);
-			$this->files = new Collection($compressedFilename);
-		}
 		return parent::beforeRender($controller);
 	}
 	

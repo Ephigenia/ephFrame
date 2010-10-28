@@ -15,27 +15,26 @@
  * @filesource
  */
 
-class_exists('Compressor') or require dirname(__FILE__).'/Compressor.php';
+// init simpletest and framework
+require_once dirname(__FILE__).'/../autorun.php';
 
 /**
- * Class that compresses/packes Javascripts
+ * [SOME DOCU HERE WOULD BE NICE HEE!?]
  * 
- * @author Marcel Eichner // Ephiagenia <love@ephigenia.de>
- * @since 12.05.2008
+ * @author Marcel Eichner // Ephigenia <love@ephigenia.de>
+ * @since 18.08.2008
  * @package ephFrame
- * @subpackage ephFrame.lib.component
+ * @subpackage ephFrame.test
  */
-class JSCompressor extends Compressor
+class URLTest extends UnitTestCase
 {
 	/**
-	 * Compresses the passes javascript code
-	 * @todo implement a real compression algorithm for javascript, that is still missing
-	 * @param string $code
-	 * @return string
+	 * @var Socket
 	 */
-	public function compress($code) 
+	public $socket;
+	
+	public function setUp() 
 	{
-		$code = String::stripComments($code);
-		return $code;
+		Library::load('ephFrame.lib.util.URL');
 	}
 }

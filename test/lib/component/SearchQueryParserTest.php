@@ -26,23 +26,22 @@ require_once dirname(__FILE__).'/../../autorun.php';
  * @package ephFrame
  * @subpackage ephFrame.test
  */
-class TestCharset extends UnitTestCase
-{
-	public function testIsASCII() 
+class SearchQueryParserTest extends UnitTestCase
+{	
+	public function setUp() 
 	{
-		$this->assertTrue(Charset::isASCII('abcdefghijklmop'));
-		$this->assertFalse(Charset::isASCII(chr(123)));
+		Library::load('ephFrame.lib.component.SearchQueryParser');
 	}
 	
-	public function testIsUTF8() 
+	public function test() 
 	{
-		$this->assertTrue(Charset::isUTF8('bä'));
-	}
-	
-	public function testToSingleBytes() 
-	{
-		$this->assertEqual(Charset::toSingleBytes('Bär'), 'Baer');
-		$this->assertEqual(Charset::toSingleBytes('Ègalité'), 'Egalite');
-		$this->assertEqual(Charset::toSingleBytes('ÄÜÖß'), 'AEUEOEss');
+		$testArray = array(
+			'%25C3%25A4' => array('%C3%A4'),
+			'%22marcel+eichner+%26+illustration%22' => array('marcel eichner & illustration'),
+			'%22marcel+eichner%22' => array('marcel eichner')
+		);
+		foreach($testArray as $input => $output) {
+			$parser = new SearchQueryParser($input);
+		}
 	}	
 }
