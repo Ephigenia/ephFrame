@@ -1,4 +1,0 @@
-this is an example testfile that is used by the tests
-
-anöther string with german umläutsen
-Lorem ipsum dolor sit amet, consectetur, sadipisci velit
