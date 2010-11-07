@@ -1464,8 +1464,8 @@ class Model extends Object
 		$params = array_merge($defaults, $params);
 		$query = $this->createSelectQuery(array_merge($defaults, $params));
 		// $query = $this->beforeFind($query);
-		if (!empty($params['group']) && empty($params['field'])) {
-			$params['field'] = 'DISTINCT('.implode(',', $params['group']).')';	
+		if (!empty($params['group']) && (empty($params['field']) || $params['field'] == '*')) {
+			$params['field'] = 'DISTINCT('.implode(',', (array)$params['group']).')';	
 		}
 		$query->select = new Hash(array('COUNT('.$params['field'].')' => 'count'));
 		$query->groupBy = new Hash();
@@ -1488,7 +1488,7 @@ class Model extends Object
 		$page = abs((int) $page); $perPage = abs((int) $perPage);
 		if ($page <= 0) $page = 1;
 		if ($perPage == 0) $perPage = $this->perPage;
-		$total = $this->countAll(array('conditions' => $conditions));
+		$total = $this->countAll(array('conditions' => $conditions, 'group' => $this->name.'.'.$this->primaryKeyName));
 		if (!$perPage) {
 			$lastPage = 1;
 		} else {
