@@ -1,5 +1,7 @@
 <?php
 
+namespace ephFrame\lib\HTTP;
+
 class Header
 {
 	public $status;
