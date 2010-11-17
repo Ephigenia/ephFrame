@@ -22,6 +22,6 @@ class Controller
 	
 	public function __toString()
 	{
-		return $this->response;
+		return $this->response->body;
 	}
 }

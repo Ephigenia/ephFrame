@@ -6,7 +6,11 @@ class Library
 {
 	public static function load($path)
 	{
-		$path = '../..'.DIRECTORY_SEPARATOR.str_replace('\\', DIRECTORY_SEPARATOR, $path).'.php';
+		if (strncasecmp($path, 'ephframe', 7) === 0) {
+			$path = __DIR__.'/../../'.str_replace('\\', DIRECTORY_SEPARATOR, $path).'.php';
+		} else {
+			$path = '../..'.DIRECTORY_SEPARATOR.str_replace('\\', DIRECTORY_SEPARATOR, $path).'.php';
+		}
 		require $path;
 	}
 }
