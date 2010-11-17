@@ -1,5 +1,9 @@
 <?php
 
+namespace ephFrame\HTTP;
+
+use ephFrame\HTTP\Header;
+
 class Response
 {
 	public $header;
