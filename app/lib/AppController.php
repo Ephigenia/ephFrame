@@ -37,7 +37,7 @@ class AppController extends Controller
 	public $components = array(
 		'CSS',
 		'MetaTags',
-	);
+	); 
 }
 
 /**

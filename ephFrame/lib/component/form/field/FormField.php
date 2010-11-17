@@ -1,6 +1,5 @@
 <?php
 
-// @todo add method, var to add validation rules (from a model)
 /**
  * ephFrame: <http://code.marceleichner.de/project/ephFrame/>
  * Copyright (c) 2007+, Ephigenia M. Eichner

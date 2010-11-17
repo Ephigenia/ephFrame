@@ -73,7 +73,7 @@ class I18n extends AppComponent
 	 * Default Domain Name that is used
 	 * @var string
 	 */
-	public $domainName = 'default';
+	public $domain = 'default';
 	
 	public function startUp() 
 	{
@@ -86,7 +86,7 @@ class I18n extends AppComponent
 		}
 		$this->domainLocation = APP_ROOT.$this->domainLocation;
 		self::locale(self::$locale);
-		$this->domain($this->domainLocation, $this->domainName, $this->domainEncoding);
+		$this->domain($this->domainLocation, $this->domain, $this->domainEncoding);
 		return parent::startUp();
 	}
 	
@@ -104,7 +104,7 @@ class I18n extends AppComponent
 	 * @param string $locale
 	 * @return I18n|string
 	 */
-	public static function locale($locale = null, $types = array(LC_COLLATE, LC_TIME))
+	public static function locale($locale = null, $types = array(LC_MESSAGES, LC_TIME))
 	{
 		if (func_num_args() == 0) return self::$locale;
 		self::$locale = self::normalizeLocale($locale);
@@ -124,23 +124,23 @@ class I18n extends AppComponent
 		if (!empty($location)) {
 			$this->domainLocation = realpath($location).DS;
 		}
-		$this->domainName = $name;
+		$this->domain = $name;
 		// bind textdomain
-		$result = bindtextdomain($this->domainName, $this->domainLocation);
+		$result = bindtextdomain($this->domain, $this->domainLocation);
 		if (empty($result)) {
 			throw new I18nDomainLocationNotFoundException($this);
 		}
-		textdomain($this->domainName);
 		// set domain name encoding if given
 		if (!empty($encoding)) {
 			$this->encoding = $encoding;
 			$encoding = strtoupper($this->domainEncoding);
-			bind_textdomain_codeset($this->domainName, $this->domainEncoding);
+			bind_textdomain_codeset($this->domain, $this->domainEncoding);
 		}
+		textdomain($this->domain);
 		// log message
 		$logmessage = 'ephFrame: Component '.get_class($this).' setting domain '.
 			'location: \''.$result.'\', '.
-			'domainname: \''.$this->domainName.'\'';
+			'domain: \''.$this->domain.'\'';
 		if (!empty($encoding)) {
 			$logmessage .= ', encoding: \''.$this->domainEncoding.'\'';
 		}
@@ -254,6 +254,6 @@ class I18nDomainLocationNotFoundException extends I18nException
 {
 	public function __construct(I18n $I18n) 
 	{
-		parent::__construct(sprintf('Unable to find textdomain "%s" in "%s",', $I18n->domainName, $I18n->domainLocation));
+		parent::__construct(sprintf('Unable to find textdomain "%s" in "%s",', $I18n->domain, $I18n->domainLocation));
 	}
 }
