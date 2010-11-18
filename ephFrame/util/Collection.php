@@ -2,3 +2,7 @@
 
 namespace ephFrame\util;
 
+class Collection
+{
+	
+}
