@@ -16,7 +16,9 @@ class Controller
 	
 	protected $params = array();
 	
-	protected $data = array();
+	protected $data = array(
+		'test' => 'value',
+	);
 	
 	protected $action = 'index';
 	
@@ -40,7 +42,7 @@ class Controller
 	
 	public function __toString()
 	{
-		$this->response->body = (string) $this->view->render($this->action);
+		$this->response->body = (string) $this->view->render($this->action, $this->data);
 		return $this->response->body;
 	}
 }

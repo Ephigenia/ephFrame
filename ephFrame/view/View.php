@@ -6,15 +6,14 @@ use ephFrame\view\Element;
 
 class View
 {
+	protected $renderer;
+	
 	public $data = array();
 	
-	protected $extension = 'php';
-	
-	public function render($name)
+	public function render($action, Array $data = array())
 	{
-		ob_start();
-		require APP_ROOT.'/view/default/app/'.$name.'.php';
-		return ob_get_clean();
+		$this->renderer = new Simple('default/app/'.$action, $data);
+		return $this->renderer->render();
 	}
 	
 	public function element($name, Array $data)
