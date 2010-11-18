@@ -1,1 +1,0 @@
-<?php require dirname(__FILE__).'/default.php'; ?>
