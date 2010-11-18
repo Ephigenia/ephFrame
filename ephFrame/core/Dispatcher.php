@@ -4,15 +4,17 @@ namespace ephFrame\core;
 
 class Dispatcher
 {
-	public function dispatch()
+	public function dispatch($url)
 	{
 		
 	}
 	
 	public static function run()
 	{
-		$request = new \ephFrame\HTTP\Request();
-		$controller = new \app\lib\controller\Controller($request);
+		$controller = new \app\lib\controller\Controller(
+			new \ephFrame\HTTP\Request()
+		);
+		$controller->action('index');
 		return $controller->__toString();
 	}
 }

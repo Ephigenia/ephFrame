@@ -3,7 +3,7 @@
 namespace ephFrame\core;
 
 class Library
-{
+{	
 	public static function load($path)
 	{
 		if (strncasecmp($path, 'ephframe', 7) === 0) {

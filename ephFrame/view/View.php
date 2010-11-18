@@ -1,16 +1,24 @@
 <?php
 
+namespace ephFrame\view;
+
+use ephFrame\view\Element;
+
 class View
 {
-	protected $data = array();
+	public $data = array();
 	
-	public function __construct($template, Array $data = array())
+	protected $extension = 'php';
+	
+	public function render($name)
 	{
-		$this->data = $data;
+		ob_start();
+		require APP_ROOT.'/view/default/app/'.$name.'.php';
+		return ob_get_clean();
 	}
 	
-	public function render()
+	public function element($name, Array $data)
 	{
-		
+		return new Element($name, $data);
 	}
 }
