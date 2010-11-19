@@ -2,32 +2,11 @@
 
 namespace ephFrame\HTTP;
 
-class Header
+class Header extends \ArrayObject
 {
-	protected $data = array();
-	
-	public function __construct(Array $data = array())
+	public function __construct(Array $array = array())
 	{
-		$this->data = $data;
-	}
-	
-	public function __get($k)
-	{
-		return $this->data[$k];
-	}
-	
-	public function __set($k, $v)
-	{
-		return $this->data[$k] = $v;
-	}
-	
-	public function __toString()
-	{
-		$lines = array();
-		foreach ($this->data as $key => $value) {
-			$lines[] = $this->statement($key, $value);
-		}
-		return implode($lines, "\r\n");
+		return parent::__construct($array, \ArrayObject::ARRAY_AS_PROPS);
 	}
 	
 	protected function statement($key, $value)
@@ -38,9 +17,18 @@ class Header
 		return sprintf('%s: %s', $key, $value);
 	}
 	
+	public function __toString()
+	{
+		$lines = array();
+		foreach ($this as $key => $value) {
+			$lines[] = $this->statement($key, $value);
+		}
+		return implode($lines, "\r\n");
+	}
+	
 	public function send($overwrite = true)
 	{
-		foreach($this->data as $k => $v) {
+		foreach($this as $k => $v) {
 			header($this->statement($k, $v), true);
 		}
 		return $this;

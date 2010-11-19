@@ -15,14 +15,33 @@ class HeaderTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals((string) $header, "Content-Type: text/html; charset=UTF-8\r\nETag: \"content\"");
 	}
 	
-	public function testSetter()
+	public function testArrayAccess()
 	{
 		$header = new Header(array(
 			'Content-Type' => 'text/html',
 			'Pragma' => 'no-cache',
 		));
+		$header['Content-Type'] = 'text/plain';
+		$header['Pragma'] = 'cache';
+		$this->assertEquals((string) $header, "Content-Type: text/plain\r\nPragma: cache");
+	}
+	
+	public function testSetters()
+	{
+		$header = new Header();
 		$header->{'Content-Type'} = 'text/plain';
 		$header->Pragma = 'cache';
 		$this->assertEquals((string) $header, "Content-Type: text/plain\r\nPragma: cache");
+	}
+	
+	public function testPropertyAccess()
+	{
+		$header = new Header(array(
+			'Pragma' => 'no-cache',
+		));
+		$this->assertEquals($header->Pragma, 'no-cache');
+		$this->assertEquals(isset($header['Pragma']), true);
+		$this->assertEquals(!empty($header->Pragma), true);
+		$this->assertEquals(!empty($header->Pragma), true);
 	}
 }

@@ -30,10 +30,11 @@ class Response
 	
 	public function __toString()
 	{
-		return 
-			'HTTP 1.1 '.$this->status.' '.StatusCode::message($this->status)."\r\n".
-			$this->header."\r\n\r\n".
+		return trim(
+			'HTTP '.$this->version.' '.$this->status.' '.StatusCode::message($this->status).
+			((count($this->header) > 0) ? "\r\n".$this->header : '')
+			."\r\n\r\n".
 			$this->body
-		;
+		);
 	}
 }
