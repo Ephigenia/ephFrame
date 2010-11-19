@@ -4,17 +4,15 @@ namespace ephFrame\core;
 
 class Dispatcher
 {
-	public function dispatch($url)
+	public static function dispatch($url = null)
 	{
-		
-	}
-	
-	public static function run()
-	{
-		$controller = new \app\lib\controller\Controller(
-			new \ephFrame\HTTP\Request()
-		);
-		$controller->action('index');
-		return $controller->__toString();
+		$request = new \ephFrame\HTTP\Request();
+		$uri = substr($request->uri, strlen(Router::base()));
+		if ($result = Router::parse($uri)) {
+			$controller = new $result['controller']($request);
+			$controller->action($result['action'], $result);
+			return $controller->__toString();
+		}
+		return false;
 	}
 }

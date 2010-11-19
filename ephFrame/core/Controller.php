@@ -24,15 +24,20 @@ class Controller
 		$this->response = new Response();
 		$this->view = new View();
 		$this->params = array_merge_recursive($this->params, $params);
+		$this->name = preg_replace('@(.+)\\\(\w*)Controller$@', '\\2', get_class($this));
 	}
 	
 	public function index()
 	{
+		
 	}
 	
 	public function action($action, Array $params = array())
 	{
 		$this->action = $action;
+		if (!method_exists($this, $this->action)) {
+			die('ACTION NOT FOUND');
+		}
 		return call_user_func_array(array($this, $this->action), $params);
 	}
 	
@@ -40,7 +45,7 @@ class Controller
 	{
 		$this->view->data += array(
 			'action' => $this->action,
-			'controller' => get_class($this),
+			'controller' => $this->name,
 		);
 		return true;
 	}
@@ -48,7 +53,8 @@ class Controller
 	public function __toString()
 	{
 		$this->beforeRender();
-		$this->response->body = (string) $this->view->render($this->action);
+		$this->response->body = (string) $this->view->render(
+			(!empty($this->name) ? $this->name : 'app').'/'.$this->action);
 		$this->response->header->send();
 		return $this->response->body;
 	}
