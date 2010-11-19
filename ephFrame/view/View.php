@@ -2,22 +2,24 @@
 
 namespace ephFrame\view;
 
-use ephFrame\view\Element;
-
 class View
 {
 	protected $renderer;
 	
 	public $data = array();
 	
-	public function render($action, Array $data = array())
+	public $type = 'html';
+	
+	public $theme = 'default';
+	
+	public function __construct()
 	{
-		$this->renderer = new Simple('default/app/'.$action, $data);
-		return $this->renderer->render();
+		$this->renderer = new \ephFrame\view\Renderer();
 	}
 	
-	public function element($name, Array $data)
+	public function render($path)
 	{
-		return new Element($name, $data);
+		$filename = APP_ROOT.'/view/default/app/index.php';
+		return $this->renderer->render($filename, $this->data);
 	}
 }

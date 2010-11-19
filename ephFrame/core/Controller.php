@@ -16,10 +16,6 @@ class Controller
 	
 	protected $params = array();
 	
-	protected $data = array(
-		'test' => 'value',
-	);
-	
 	protected $action = 'index';
 	
 	public function __construct(Request $request, Array $params = array())
@@ -40,9 +36,21 @@ class Controller
 		return call_user_func_array(array($this, $this->action), $params);
 	}
 	
+	public function beforeRender()
+	{
+		$this->view->data += array(
+			'action' => $this->action,
+			'controller' => get_class($this),
+		);
+		return true;
+	}
+	
 	public function __toString()
 	{
-		$this->response->body = (string) $this->view->render($this->action, $this->data);
+		$this->beforeRender();
+		$this->response->body = (string) $this->view->render($this->action);
+		echo $this->response;
+		exit;
 		return $this->response->body;
 	}
 }

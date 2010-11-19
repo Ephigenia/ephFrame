@@ -1,4 +1,4 @@
 <p>
 	Welcome!
-	:test
+	<?php echo $test ?>
 </p>

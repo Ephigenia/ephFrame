@@ -4,20 +4,11 @@ namespace ephFrame\view;
 
 class Renderer
 {
-	protected $data = array();
-	
-	protected $template = 'index';
-	
-	public function __construct($template, Array $data = array())
-	{
-		$this->data = $data;
-		$this->template = $template;
-	}
-	
-	public function render()
+	public function render($template, $data = array())
 	{
 		ob_start();
-		require APP_ROOT.'/view/'.$this->template.'.php';
+		extract($data);
+		require $template;
 		return ob_get_clean();
 	}
 }
