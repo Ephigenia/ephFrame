@@ -17,7 +17,9 @@ class Response
 	
 	public function __construct($status = null, Header $header = null, $body = null)
 	{
-		$this->status = (int) $status;
+		if (!is_null($status)) {
+			$this->status = (int) $status;
+		}
 		if ($header instanceof Header) {
 			$this->header = $header;
 		} else {
@@ -29,7 +31,7 @@ class Response
 	public function __toString()
 	{
 		return 
-			'HTTP 1.1 '.$this->status."\r\n".
+			'HTTP 1.1 '.$this->status.' '.StatusCode::message($this->status)."\r\n".
 			$this->header."\r\n\r\n".
 			$this->body
 		;

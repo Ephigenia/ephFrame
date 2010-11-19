@@ -21,7 +21,7 @@ class Controller
 	public function __construct(Request $request, Array $params = array())
 	{
 		$this->request = $request;
-		$this->response = new Response(404);
+		$this->response = new Response();
 		$this->view = new View();
 		$this->params = array_merge_recursive($this->params, $params);
 	}
@@ -49,8 +49,7 @@ class Controller
 	{
 		$this->beforeRender();
 		$this->response->body = (string) $this->view->render($this->action);
-		echo $this->response;
-		exit;
+		$this->response->header->send();
 		return $this->response->body;
 	}
 }

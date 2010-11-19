@@ -1,4 +1,4 @@
 <p>
 	Welcome!
-	<?php echo $test ?>
+	<?php echo $controller.$action ?>
 </p>
