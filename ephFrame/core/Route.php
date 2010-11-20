@@ -7,7 +7,7 @@ class Route
 	public $template;
 	
 	public $params = array(
-		'controller' => 'Controller',
+		'controller' => 'app\lib\controller\Controller',
 		'action' => 'index',
 	);
 	
