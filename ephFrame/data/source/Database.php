@@ -1,6 +1,8 @@
 <?php
 
-class Database
+namespace ephFrame\data\source;
+
+class Database extends \ephFrame\data\Source
 {
-	
+
 }

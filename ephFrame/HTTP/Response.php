@@ -13,7 +13,7 @@ class Response
 	
 	public $status = StatusCode::OK;
 	
-	public $version = '1.1';
+	public $protocol = 'HTTP 1.1';
 	
 	public function __construct($status = null, Header $header = null, $body = null)
 	{
@@ -31,7 +31,7 @@ class Response
 	public function __toString()
 	{
 		return trim(
-			'HTTP '.$this->version.' '.$this->status.' '.StatusCode::message($this->status).
+			$this->protocol.' '.$this->status.' '.StatusCode::message($this->status).
 			((count($this->header) > 0) ? "\r\n".$this->header : '')
 			."\r\n\r\n".
 			$this->body

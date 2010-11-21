@@ -19,10 +19,10 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals((string) $response, 'HTTP 1.1 404 Not Found');
 	}
 	
-	public function testHTTPVersion()
+	public function testProtocoll()
 	{
 		$response = new Response(200);
-		$response->version = '1.0';
+		$response->protocol = 'HTTP 1.0';
 		$this->assertEquals((string) $response, 'HTTP 1.0 200 OK');
 	}
 	

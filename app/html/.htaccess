@@ -2,15 +2,9 @@
 # if you experience problems successive delete some of the parts
 # ----------------------------------------------------------------------------
 
-# default charset for responses
-AddDefaultCharset utf-8
-
-# rewrite rule
-# ----------------------------------------------------------------------------
 RewriteEngine On
 # RewriteBase /
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-s
 RewriteCond %{REQUEST_FILENAME} !-l
-# normal rewrite for all files
-RewriteRule	^(.*)$ index.php?__url=$1 [QSA,L]
+RewriteRule	^(.*)$ index.php [QSA,L]

@@ -18,6 +18,8 @@ class Controller
 	
 	protected $action = 'index';
 	
+	protected $callbacks;
+	
 	public function __construct(Request $request, Array $params = array())
 	{
 		$this->request = $request;
@@ -25,9 +27,10 @@ class Controller
 		$this->view = new View();
 		$this->params = array_merge_recursive($this->params, $params);
 		$this->name = preg_replace('@(.+)\\\(\w*)Controller$@', '\\2', get_class($this));
+		$this->callbacks = new \ephFrame\core\CallbackHandler();
 	}
 	
-	public function index()
+	protected function index()
 	{
 		
 	}
@@ -35,27 +38,20 @@ class Controller
 	public function action($action, Array $params = array())
 	{
 		$this->action = $action;
+		$this->callbacks->call('beforeAction');
 		if (!method_exists($this, $this->action)) {
 			die('ACTION NOT FOUND');
 		}
+		$this->callbacks->call('afterAction');
 		return call_user_func_array(array($this, $this->action), $params);
-	}
-	
-	public function beforeRender()
-	{
-		$this->view->data += array(
-			'action' => $this->action,
-			'controller' => $this->name,
-		);
-		return true;
 	}
 	
 	public function __toString()
 	{
-		$this->beforeRender();
-		$this->response->body = (string) $this->view->render(
-			(!empty($this->name) ? $this->name : 'app').'/'.$this->action);
+		$this->callbacks->call('beforeRender');
+		$this->response->body = (string) $this->view->render($this->name ?: 'app'.'/'.$this->action);
 		$this->response->header->send();
+		$this->callbacks	->call('afterRender');
 		return $this->response->body;
 	}
 }

@@ -1,6 +1,9 @@
 <?php
 
 require __DIR__.'/../../ephFrame/core/Library.php';
-define('APP_ROOT', dirname(__DIR__));
+
+define('APP_ROOT', realpath(dirname(__DIR__)));
+ephFrame\core\Library::add('app', APP_ROOT);
+
 require __DIR__.'/config.php';
 require __DIR__.'/routes.php';
