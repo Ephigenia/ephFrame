@@ -2,7 +2,6 @@
 
 namespace ephFrame\test\core;
 
-use ephFrame\HTTP\Request;
 use ephFrame\core\Route;
 
 class RouteTest extends \PHPUnit_Framework_TestCase
@@ -11,7 +10,25 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 	{
 		$route = new Route('/{:controller}*');
 		$this->assertEquals(
-			$route->parse('/abc/defg'), array('controller' => 'abc', 'action' => 'index')
+			$route->parse('/user/edit'), array('controller' => 'user', 'action' => 'index')
+		);
+		$route = new Route('/{:controller}');
+		$this->assertFalse($route->parse('/user/edit'));
+		$this->assertEquals($route->parse('/user'), array('controller' => 'user', 'action' => 'index'));
+	}
+	
+	public function testRootSlash()
+	{
+		$route = new Route('/{:controller}');
+		$this->assertEquals(
+			$route->parse('/abc'), array('controller' => 'abc', 'action' => 'index')
+		);
+		$route->template = '{:controller}/{:action}';
+		$this->assertEquals(
+			$route->parse('abc/def'), array('controller' => 'abc', 'action' => 'def')
+		);
+		$this->assertEquals(
+			$route->parse('/abc/def'), array('controller' => 'abc', 'action' => 'def')
 		);
 	}
 	
@@ -46,6 +63,25 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(
 			$route->insert(array('controller' => 'test', 'page' => '2')),
 			'/test/2'
+		);
+		$route->template = '/{:controller}/{:page}';
+		$this->assertEquals(
+			$route->insert(array('controller' => 'test', 'page' => 'my_page is cool!')),
+			'/test/my_page is cool!'
+		);
+	}
+	
+	public function testInsertAsterisk()
+	{
+		$route = new Route('/{:controller}/{:action}*');
+		$this->assertEquals(
+			$route->insert(array('controller' => 'abc', 'action' => 'def')),
+			'/abc/def'
+		);
+		$route = new Route('/{:controller}/{:action}/*');
+		$this->assertEquals(
+			$route->insert(array('controller' => 'abc', 'action' => 'def')),
+			'/abc/def'
 		);
 	}
 	

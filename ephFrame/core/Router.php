@@ -21,10 +21,22 @@ class Router
 		}
 		return rtrim($base, '/');
 	}
+	
+	public static function reset()
+	{
+		self::$routes = array();
+	}
 
 	public static function addRoute(Route $route)
 	{
 		self::$routes[] = $route;
+	}
+	
+	public static function addRoutes(Array $data)
+	{
+		foreach ($data as $Route) {
+			self::addRoute($Route);
+		}
 	}
 	
 	public static function parse($url)
