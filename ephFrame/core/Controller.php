@@ -49,9 +49,11 @@ class Controller
 	public function __toString()
 	{
 		$this->callbacks->call('beforeRender');
-		$this->response->body = (string) $this->view->render($this->name ?: 'app'.'/'.$this->action);
+		$this->response->body = (string) $this->view->render(
+			strtolower(($this->name ?: 'app').'/'.$this->action)
+		);
 		$this->response->header->send();
-		$this->callbacks	->call('afterRender');
+		$this->callbacks->call('afterRender');
 		return $this->response->body;
 	}
 }
