@@ -50,7 +50,7 @@ class Controller
 	{
 		$this->callbacks->call('beforeRender');
 		$this->response->body = (string) $this->view->render(
-			strtolower(($this->name ?: 'app').'/'.$this->action)
+			strtolower($this->name ?: 'app').'/'.$this->action
 		);
 		$this->response->header->send();
 		$this->callbacks->call('afterRender');
