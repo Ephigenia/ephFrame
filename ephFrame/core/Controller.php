@@ -49,7 +49,7 @@ class Controller
 	public function __toString()
 	{
 		$this->callbacks->call('beforeRender');
-		$this->response->body = (string) $this->view->render(
+		$this->response->body = (string) $this->view->render('all', 
 			strtolower($this->name ?: 'app').'/'.$this->action
 		);
 		$this->response->header->send();

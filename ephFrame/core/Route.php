@@ -52,6 +52,8 @@ class Route
 		foreach($array + $this->params as $key => $value) {
 			$result = preg_replace('@\{:'.preg_quote($key,'@').'\}@', $value, $result);
 		}
+		// replace remaining placeholders with nothing
+		$result = preg_replace('@\{:[^\}]+\}@', '', $result);
 		return rtrim($result, '/*');
 	}
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace ephFrame\core;
 
 class CallbackHandler

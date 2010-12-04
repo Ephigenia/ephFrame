@@ -96,9 +96,9 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 	
 	public function testInsertEmptyParam()
 	{
-		$route = new Route('/{:controller}/{:page}/{:page}');
+		$route = new Route('/{:controller}/{:param1}/{:param2}');
 		$this->assertEquals(
-			$route->insert(array('controller' => 'test', 'page' => null)),
+			$route->insert(array('controller' => 'test', 'param1' => null)),
 			'/test'
 		);
 	}
