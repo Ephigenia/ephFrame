@@ -36,6 +36,19 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 		);
 	}
 	
+	public function testRoutesAdd()
+	{
+		$Router = new Router();
+		$Router->addRoutes(array(
+			'namedroute' => new Route('/{:controller}/'),
+			new Route('/static/{:page}'),
+		));
+		$this->assertEquals(
+			$Router->namedroute->insert(array('controller' => 'controller')),
+			'/controller'
+		);
+	}
+	
 	public function testNamedRouteFind()
 	{
 		$Router = new Router();

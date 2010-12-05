@@ -69,6 +69,11 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 			$route->insert(array('controller' => 'test', 'page' => 'my_page is cool!')),
 			'/test/my_page is cool!'
 		);
+		$route->template = '/{:controller}/{:page}';
+		$this->assertEquals(
+			$route->insert(array('controller' => 'test', 'page' => 'my_page is cool!', 'some_more')),
+			'/test/my_page is cool!'
+		);
 	}
 	
 	public function testInsertAsterisk()
