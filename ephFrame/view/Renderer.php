@@ -4,7 +4,7 @@ namespace ephFrame\view;
 
 class Renderer
 {
-	protected $view;
+	public $view;
 	
 	public function render($template, Array $data = array())
 	{
@@ -17,12 +17,6 @@ class Renderer
 		require $template;
 		return ob_get_clean();
 	}
-	
-	protected function element($path, Array $data = array())
-	{
-		return $this->view->render('element', $path, $this->data + $data);
-	}
-	
 }
 
 class RendererException extends \Exception {}

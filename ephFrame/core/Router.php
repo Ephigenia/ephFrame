@@ -4,9 +4,22 @@ namespace ephFrame\core;
 
 use ephFrame\HTTP\Request;
 
-class Router
+class Router extends \ArrayObject
 {
-	private static $routes = array();
+	private static $instance;
+	
+	public function __construct(Array $array = array())
+	{
+		return parent::__construct($array, \ArrayObject::ARRAY_AS_PROPS);
+	}
+	
+	public static function getInstance()
+	{
+		if (!self::$instance) {
+			self::$instance = new Router();
+		}
+		return self::$instance;
+	}
 	
 	public static function base()
 	{
@@ -22,26 +35,15 @@ class Router
 		return rtrim($base, '/');
 	}
 	
-	public static function reset()
+	public function addRoutes(Array $routes)
 	{
-		self::$routes = array();
-	}
-
-	public static function addRoute(Route $route)
-	{
-		self::$routes[] = $route;
+		$this->exchangeArray((array) $this + $routes);
+		return $this;
 	}
 	
-	public static function addRoutes(Array $data)
+	public function parse($url)
 	{
-		foreach ($data as $Route) {
-			self::addRoute($Route);
-		}
-	}
-	
-	public static function parse($url)
-	{
-		foreach(self::$routes as $route) {
+		foreach($this as $route) {
 			if ($result = $route->parse($url)) return $result;
 		}
 		return false;

@@ -27,7 +27,7 @@ class View
 			'type' => $this->type,
 			'theme' => $this->theme,
 		);
-		
+		$this->renderer->view = $this; //@todo clear this
 		switch($part) {
 			default:
 			case 'view':

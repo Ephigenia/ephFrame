@@ -3,9 +3,9 @@
 use \ephFrame\core\Router;
 use \ephFrame\core\Route;
 
-Router::addRoute(
-	new Route('/{:page}', array('action' => 'display', 'controller' => 'app\lib\controller\Controller'))
-);
-Router::addRoute(
-	new Route('/', array('action' => 'index', 'controller' => 'app\lib\controller\Controller'))
-);
+$router = Router::getInstance();
+
+$router->addRoutes(array(
+	new Route('/{:page}', array('action' => 'display', 'controller' => 'app\lib\controller\Controller')),
+	new Route('/', array('action' => 'index', 'controller' => 'app\lib\controller\Controller')),
+));
