@@ -56,4 +56,9 @@ class Route
 		$result = preg_replace('@\{:[^\}]+\}@', '', $result);
 		return rtrim($result, '/*');
 	}
+	
+	public function __toString()
+	{
+		return $this->template;
+	}
 }

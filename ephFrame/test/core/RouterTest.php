@@ -8,6 +8,11 @@ use ephFrame\core\Route;
 
 class RouterTest extends \PHPUnit_Framework_TestCase
 {
+	public function testGetInstance()
+	{
+		$this->assertInstanceOf('\ephFrame\core\Router',  Router::getInstance());
+	}
+	
 	public function testConcurrency()
 	{
 		// add two routes that are almost the same and test which one
@@ -46,6 +51,16 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(
 			$Router->namedroute->insert(array('controller' => 'controller')),
 			'/controller'
+		);
+		// check if namedroute gets overwritten
+		$Router->addRoutes(array(
+			'secondname' => new Route('/'),
+			'namedroute' => new Route('/{:action}/'),
+		));
+		$this->assertInstanceOf('\ephFrame\core\Route', $Router->namedroute);
+		$this->assertEquals(
+			$Router->namedroute->insert(array('action' => 'newaction')),
+			'/newaction'
 		);
 	}
 	

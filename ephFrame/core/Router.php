@@ -37,7 +37,7 @@ class Router extends \ArrayObject
 	
 	public function addRoutes(Array $routes)
 	{
-		$this->exchangeArray((array) $this + $routes);
+		$this->exchangeArray($routes + (array) $this);
 		return $this;
 	}
 	
