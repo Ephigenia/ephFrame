@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <phpunit bootstrap="./config/bootstrap.php" colors="true" syntaxCheck="true">
 	<testsuite name="app">
-		<directory>./test/</directory>
+		<directory>test/</directory>
 	</testsuite>
+	<logging>
+		<log type="coverage-html" target="test/reports/coverage" charset="UTF-8" yui="true" highlight="true" lowUpperBound="35" highLowerBound="70" />
+		<log type="coverage-xml" target="test/reports/coverage.xml" />
+		<log type="testdox-html" target="test/reports/testdox.html" />
+	</logging>
 </phpunit>
