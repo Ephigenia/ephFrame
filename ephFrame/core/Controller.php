@@ -28,6 +28,10 @@ class Controller
 		$this->params = array_merge_recursive($this->params, $params);
 		$this->name = preg_replace('@(.+)\\\(\w*)Controller$@', '\\2', get_class($this));
 		$this->callbacks = new \ephFrame\core\CallbackHandler();
+		$this->callbacks->add('beforeAction', array($this, 'beforeAction'));
+		$this->callbacks->add('afterAction', array($this, 'afterAction'));
+		$this->callbacks->add('beforeRender', array($this, 'beforeRender'));
+		$this->callbacks->add('afterRender', array($this, 'afterRender'));
 	}
 	
 	protected function index()

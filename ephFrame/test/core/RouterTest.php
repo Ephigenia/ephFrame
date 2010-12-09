@@ -13,24 +13,47 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 		$this->assertInstanceOf('\ephFrame\core\Router',  Router::getInstance());
 	}
 	
+	public function testRoutesAdd()
+	{
+		$Router = new Router();
+		$Router->addRoutes(array(
+			'namedroute' => new Route('/:controller/'),
+			new Route('/static/:page'),
+		));
+		$this->assertEquals($Router->namedroute->template, '/:controller/');
+		// check if namedroute gets overwritten
+		$Router->addRoutes(array(
+			'secondname' => new Route('/'),
+			'namedroute' => new Route('/:action'),
+		));
+		$this->assertEquals($Router->namedroute->template, '/:action');
+	}
+	
+	public function testNamedRouteFind()
+	{
+		$Router = new Router(array(
+			'testRoute' => new Route('/:controller/:action')
+		));
+		$this->assertEquals($Router['testRoute']->template, '/:controller/:action');
+		$this->assertEquals($Router->testRoute->template, '/:controller/:action');
+	}
+	
 	public function testConcurrency()
 	{
-		// add two routes that are almost the same and test which one
-		// is parsed
-		$router = new Router();
-		$router[] = new Route('/{:controller}/{:action}');
-		$router[] = new Route('/{:controller}');
-		$result = $router->parse('/user/edit');
-		$this->assertEquals($result, array('controller' => 'user', 'action' => 'edit'));
-		$result = $router->parse('/user');
-		$this->assertEquals($result, array('controller' => 'user', 'action' => 'index'));
+		$router = new Router(array(
+			new Route('/:controller/:action'),
+			new Route('/:controller'),
+		));
+		$this->assertEquals($router->parse('/user/edit'), array('controller' => 'user', 'action' => 'edit'));
+		$this->assertEquals($router->parse('/user'), array('controller' => 'user', 'action' => 'index'));
 	}
 	
 	public function testConcurrencyAsterisk()
 	{
-		$Router = new Router();
-		$Router[] = new Route('/{:controller}*');
-		$Router[] = new Route('/{:controller}/{:action}');
+		$Router = new Router(array(
+			new Route('/:controller*'),
+			new Route('/:controller/:action'),
+		));
 		$this->assertEquals(
 			$Router->parse('/user/edit'), 
 			array('controller' => 'user', 'action' => 'index')
@@ -38,43 +61,6 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(
 			$Router->parse('/user'),
 			array('controller' => 'user', 'action' => 'index')
-		);
-	}
-	
-	public function testRoutesAdd()
-	{
-		$Router = new Router();
-		$Router->addRoutes(array(
-			'namedroute' => new Route('/{:controller}/'),
-			new Route('/static/{:page}'),
-		));
-		$this->assertEquals(
-			$Router->namedroute->insert(array('controller' => 'controller')),
-			'/controller'
-		);
-		// check if namedroute gets overwritten
-		$Router->addRoutes(array(
-			'secondname' => new Route('/'),
-			'namedroute' => new Route('/{:action}/'),
-		));
-		$this->assertInstanceOf('\ephFrame\core\Route', $Router->namedroute);
-		$this->assertEquals(
-			$Router->namedroute->insert(array('action' => 'newaction')),
-			'/newaction'
-		);
-	}
-	
-	public function testNamedRouteFind()
-	{
-		$Router = new Router();
-		$Router['testRoute'] = new Route('/{:controller}/{:action}');
-		$this->assertEquals(
-			$Router['testRoute']->insert(array('controller' => 'controller', 'action' => 'action')),
-			'/controller/action'
-		);
-		$this->assertEquals(
-			$Router->testRoute->insert(array('controller' => 'controller', 'action' => 'action')),
-			'/controller/action'
 		);
 	}
 }

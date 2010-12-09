@@ -31,10 +31,10 @@ class Route
 	public function compile()
 	{
 		$regexp = $this->template;
-		// replace {:var:regex} syntax with regexp catch
-		$regexp = preg_replace('@\{:([^\:}]+)(:(.+))\}@', '(?P<\\1>\\3)', $regexp);
-		// replace {:var} syntax with regexp catch
-		$regexp = preg_replace('@\{:([^\}]+)\}@', '(?P<\\1>[^/]+)', $regexp);
+		// :var<regex>
+		$regexp = preg_replace('@:([\w]+)(?:<([^>]+)>)@U', '(?P<\\1>\\3)', $regexp);
+		// :var
+		$regexp = preg_replace('@:([\w]+)@', '(?P<\\1>[^?\/]+)', $regexp);
 		// add regexp rules for beginning and end of route
 		if (strncmp($regexp, '/', 1) == 0) {
 			$regexp = '^'.$regexp;
@@ -50,10 +50,8 @@ class Route
 	{
 		$result = $this->template;
 		foreach($array + $this->params as $key => $value) {
-			$result = preg_replace('@\{:'.preg_quote($key,'@').'\}@', $value, $result);
+			$result = preg_replace('@:'.preg_quote($key,'@').'(<[^>]+>)?@', $value, $result);
 		}
-		// replace remaining placeholders with nothing
-		$result = preg_replace('@\{:[^\}]+\}@', '', $result);
 		return rtrim($result, '/*');
 	}
 	
