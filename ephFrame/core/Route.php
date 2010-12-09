@@ -32,7 +32,7 @@ class Route
 	{
 		$regexp = $this->template;
 		// :var<regex>
-		$regexp = preg_replace('@:([\w]+)(?:<([^>]+)>)@U', '(?P<\\1>\\3)', $regexp);
+		$regexp = preg_replace('@:([\w]+)(?:<([^>]+)>)@U', '(?P<\\1>\\2)', $regexp);
 		// :var
 		$regexp = preg_replace('@:([\w]+)@', '(?P<\\1>[^?\/]+)', $regexp);
 		// add regexp rules for beginning and end of route

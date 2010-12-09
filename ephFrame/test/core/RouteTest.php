@@ -37,6 +37,14 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 		}
 	}
 	
+	public function testParseWithRegexpRoute()
+	{
+		$route = new Route('/:controller/:username<\w+>');
+		$this->assertEquals($route->parse('/user/ephigenia'), array('username' => 'ephigenia', 'controller' => 'user', 'action' => 'index'));
+		$route = new Route('/:controller/:username<\w+>,:id<\d{2,}>.:format');
+		$this->assertEquals($route->parse('/user/ephigenia,15.json'), array('username' => 'ephigenia', 'controller' => 'user', 'action' => 'index', 'format' => 'json', 'id' => 15));
+	}
+	
 	public function testInsert()
 	{
 		$routes = array(
