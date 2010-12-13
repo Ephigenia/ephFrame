@@ -119,4 +119,10 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 			$route->parse('/abc/def'), array('controller' => 'abc', 'action' => 'def')
 		);
 	}
+	
+	public function test__toString()
+	{
+		$route = new Route('/:controller/:action');
+		$this->assertEquals((string) $route, '/:controller/:action');
+	}
 }

@@ -6,83 +6,119 @@ use ephFrame\util\Inflector;
 
 class InflectorTest extends \PHPUnit_Framework_TestCase
 {
-	public function testPluralize() 
+	public function pluralizeEqualValues()
 	{
-		$tests = array(
-			'User' => 'Users',
-			'user' => 'users',
-			'Country' => 'Countries',
-			'boy' => 'boys',
-			'girl' => 'girls',
-			'hero' => 'heroes',
-			'potato' => 'potatoes',
-			'volcano' => 'volcanoes',
-			'dish' => 'dishes',
-			'witch' => 'witches',
-			'phase' => 'phases',
-			'cherry' => 'cherries',
-			'lady'	=> 'ladies',
-			'bus' => 'busses',
-			'life' => 'lives',
-			'kiss' => 'kisses',
+		return array(
+			array('news', 'news'),
+			array('NewS', 'NewS'),
+			array('User', 'Users'),
+			array('user', 'users'),
+			array('Country', 'Countries'),
+			array('boy', 'boys'),
+			array('girl', 'girls'),
+			array('hero', 'heroes'),
+			array('potato', 'potatoes'),
+			array('volcano', 'volcanoes'),
+			array('dish', 'dishes'),
+			array('witch', 'witches'),
+			array('phase', 'phases'),
+			array('cherry', 'cherries'),
+			array('lady', 'ladies'),
+			array('bus', 'busses'),
+			array('life', 'lives'),
+			array('kiss', 'kisses'),
 		);
-		foreach($tests as $k => $v) {
-			$this->assertEquals(Inflector::pluralize($k), $v);
-		}
 	}
 	
-	public function testSingularize() 
-	{
-		$tests = array(
-			'users' => 'user',
-			'Countries' => 'Country',
-			'kisses' => 'kiss',
-			'judges' => 'judge',
-		);
-		foreach($tests as $left => $right) {
-			$this->assertEquals(Inflector::singularize($left), $right);
-		}
+	/**
+	 * @dataProvider pluralizeEqualValues
+	 */
+	public function testPluralize($k, $v) 
+	{ 
+		$this->assertEquals(Inflector::pluralize($k), $v);
 	}
 	
-	public function testCamelize() 
+	public function singularizeEqualValues()
 	{
-		$tests = array(
-			'my_class_name' => 'myClassName',
-			'my class näme' => 'myClassNäme',
-			"my\n class näme" => 'myClassNäme',
+		return array(
+			array('users', 'user'),
+			array('Countries', 'Country'),
+			array('kisses', 'kiss'),
+			array('judges', 'judge'),
+			array('noplural', 'noplural'),
 		);
-		foreach($tests as $left => $right) {
-			$this->assertEquals(Inflector::camelize($left), $right);
-		}
-		$this->assertEquals(Inflector::camelize('my class näme', true), 'MyClassNäme');
 	}
 	
-	public function testUnderscore() 
+	/**
+	 * @dataProvider singularizeEqualValues
+	 */
+	public function testSingularize($left, $right) 
 	{
-		$a = array(
-			'tree simple words' => 'tree_simple_words',
-			'youAreSo   Great' => 'you_are_so_great',
-			'testTHe_great' => 'test_t_he_great',
-			'  master Testa' => 'master_testa',
-			' @freak 123   ' => '@freak_123',
-			'__underscore' => '_underscore',
-			' __underscore space' => '_underscore_space',
-		);
-		foreach($a as $input => $output) {
-			$this->assertEquals(Inflector::underscore($input), $output);
-		}
+		$this->assertEquals(Inflector::singularize($left), $right);
 	}
 	
-	public function testUnderscoreAlternateDelimeter()
+	public function camelizeEqualValues() 
 	{
-		foreach(array(
-			'tree simple words' => 'tree-simple-words',
-			'youAreSo    Great' => 'you-are-so-great',
-			'testTHe_great' => 'test-t-he_great',
-			'  master Testa' => 'master-testa',
-			' @freak 123   ' => '@freak-123',
-			) as $k => $v) {
-			$this->assertEquals(Inflector::underscore($k, '-'), $v);
-		}
+		return array(
+			array('my_class_name', 'myClassName'),
+			array('my class näme', 'myClassNäme'),
+			array("my\n class näme", 'myClassNäme'),
+			array('app_my_class', 'appMyClass'),
+			array('_first second', 'firstSecond'),
+			array('__first second__', 'firstSecond'),
+		);
+	}
+	
+	/**
+	 * @dataProvider camelizeEqualValues
+	 */
+	public function testCamelize($left, $right) 
+	{
+		$this->assertEquals(Inflector::camelize($left), $right);
+	}
+	
+	public function testCamilizeUpper()
+	{
+		$this->assertEquals(Inflector::camelize('app_my_class', true), 'AppMyClass');
+	}
+	
+	public function underscoreEqualValues()
+	{
+		return array(
+			array('tree simple words', 'tree_simple_words'),
+			array('youAreSo   Great', 'you_are_so_great'),
+			array('testTHe_great', 'test_t_he_great'),
+			array('  master Testa', 'master_testa'),
+			array(' @freak 123   ', '@freak_123'),
+			array('__underscore', '_underscore'),
+			array(' __underscore space', '_underscore_space'),
+		);
+	}
+	
+	/**
+	 * @dataProvider underscoreEqualValues
+	 */
+	public function testUnderscore($left, $right)
+	{
+		$this->assertEquals(Inflector::underscore($left), $right);
+	}
+	
+	public function underscoreAlternateDelimeterEqualValues()
+	{
+		return array(
+			array('tree simple words', 'tree-simple-words'),
+			array('youAreSo    Great', 'you-are-so-great'),
+			array('testTHe_great', 'test-t-he_great'),
+			array('  master Testa', 'master-testa'),
+			array(' @freak 123   ', '@freak-123'),
+		);
+	}
+	
+	/**
+	 * @dataProvider underscoreAlternateDelimeterEqualValues
+	 */
+	public function testUnderscoreAlternateDelimeter($left, $right)
+	{
+		$this->assertEquals(Inflector::underscore($left, '-'), $right);
 	}
 }

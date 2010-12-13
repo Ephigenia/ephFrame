@@ -2,23 +2,18 @@
 
 namespace ephFrame\HTTP;
 
-use ephFrame\HTTP\Header;
-use ephFrame\HTTP\RequestMethod;
-
-class Request
+class Request extends Message
 {
 	public $method = RequestMethod::GET;
 
-	public $header;
-
 	public $data = array();
 	
-	public $uri;
+	public $path;
 	
 	public function __construct($method = null, Header $header = null, Array $data = array())
 	{
 		if (isset($_SERVER['REQUEST_URI'])) {
-			$this->uri = $_SERVER['REQUEST_URI'];
+			$this->path = $_SERVER['REQUEST_URI'];
 		}
 		if (isset($_SERVER['REQUEST_METHOD'])) {
 			$this->method = $_SERVER['REQUEST_METHOD'];

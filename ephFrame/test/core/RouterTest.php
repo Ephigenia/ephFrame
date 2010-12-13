@@ -13,6 +13,13 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 		$this->assertInstanceOf('\ephFrame\core\Router',  Router::getInstance());
 	}
 	
+	public function testBase()
+	{
+		$Router = new Router();
+		$_SERVER['REQUEST_URI'] = '';
+		$this->assertTrue(is_string(Router::base()));
+	}
+	
 	public function testRoutesAdd()
 	{
 		$Router = new Router();
@@ -38,7 +45,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($Router->testRoute->template, '/:controller/:action');
 	}
 	
-	public function testConcurrency()
+	public function testParse()
 	{
 		$router = new Router(array(
 			new Route('/:controller/:action'),
@@ -46,6 +53,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 		));
 		$this->assertEquals($router->parse('/user/edit'), array('controller' => 'user', 'action' => 'edit'));
 		$this->assertEquals($router->parse('/user'), array('controller' => 'user', 'action' => 'index'));
+		$this->assertFalse($router->parse('/no_matchin/route/23'));
 	}
 	
 	public function testConcurrencyAsterisk()

@@ -14,7 +14,7 @@ class Header extends \ArrayObject
 		if (strncasecmp($key, 'etag', 4) == 0) {
 			$value = '"'.$value.'"';
 		}
-		return sprintf('%s: %s', $key, $value);
+		return sprintf('%s: %s', $key, (string) $value);
 	}
 	
 	public function __toString()

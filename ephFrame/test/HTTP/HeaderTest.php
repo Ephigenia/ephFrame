@@ -6,42 +6,59 @@ use ephFrame\HTTP\Header;
 
 class HeaderTest extends \PHPUnit_Framework_TestCase
 {
+	public function setUp()
+	{
+		$this->header = new Header(array(
+			'Content-Type' => 'text/html; charset=UTF-8',
+			'Content-Length' => 1000,
+			'Pragma' => 'none',
+			'ETag' => 'e64486',
+			'x-custom' => 'some free text field',
+		));
+	}
+	
 	public function testRendering()
 	{
-		$header = new Header(array(
-			'Content-Type' => 'text/html; charset=UTF-8',
-			'ETag' => 'content',
-		));
-		$this->assertEquals((string) $header, "Content-Type: text/html; charset=UTF-8\r\nETag: \"content\"");
+		$this->assertEquals((string) $this->header,
+			"Content-Type: text/html; charset=UTF-8\r\n".
+			"Content-Length: 1000\r\n".
+			"Pragma: none\r\n".
+			"ETag: \"e64486\"\r\n".
+			"x-custom: some free text field"
+		);
 	}
 	
-	public function testArrayAccess()
+	public function testArrayAccessRead()
 	{
-		$header = new Header(array(
-			'Content-Type' => 'text/html',
-			'Pragma' => 'no-cache',
-		));
-		$header['Content-Type'] = 'text/plain';
-		$header['Pragma'] = 'cache';
-		$this->assertEquals((string) $header, "Content-Type: text/plain\r\nPragma: cache");
+		$this->assertEquals($this->header['Content-Type'], 'text/html; charset=UTF-8');
 	}
 	
-	public function testSetters()
+	/**
+	 * @depends testArrayAccessRead
+	 */
+	public function testArrayAccessWrite()
 	{
-		$header = new Header();
-		$header->{'Content-Type'} = 'text/plain';
-		$header->Pragma = 'cache';
-		$this->assertEquals((string) $header, "Content-Type: text/plain\r\nPragma: cache");
+		$this->header['Content-Length'] = 2000;
+		$this->assertEquals($this->header['Content-Length'], 2000);
 	}
 	
-	public function testPropertyAccess()
+	public function testPropertyAccessRead()
 	{
-		$header = new Header(array(
-			'Pragma' => 'no-cache',
-		));
-		$this->assertEquals($header->Pragma, 'no-cache');
-		$this->assertEquals(isset($header['Pragma']), true);
-		$this->assertEquals(!empty($header->Pragma), true);
-		$this->assertEquals(!empty($header->Pragma), true);
+		$this->assertEquals($this->header->{'Content-Type'}, 'text/html; charset=UTF-8');
+	}
+	
+	/**
+	 * @depends testPropertyAccessRead
+	 */
+	public function testPropertyAccessWrite() 
+	{
+		$this->header->{'Content-Length'} = 3000;
+		$this->assertEquals($this->header->{'Content-Length'}, 3000);
+	}
+	
+	public function testSend() 
+	{
+		$this->header->send();
+		
 	}
 }
