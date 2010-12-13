@@ -6,25 +6,37 @@ use ephFrame\HTTP\StatusCode;
 
 class StatusCodeTest extends \PHPUnit_Framework_TestCase
 {
-	public function testMessage()
+	public function messageEqualValues()
 	{
-		foreach (array(
-			200 => 'OK',
-			StatusCode::OK => 'OK',
-			404 => 'Not Found',
-			500 => 'Internal Server Error',
-			) as $l => $r) {
-			$this->assertEquals(StatusCode::message($l), $r);
-		}
+		return array(
+			array(200, 'OK'),
+			array(StatusCode::OK, 'OK'),
+			array('200', 'OK'),
+			array(404, 'Not Found'),
+			array(500, 'Internal Server Error'),
+		);
 	}
 	
-	public function isError()
+	/**
+	 * @dataProvider messageEqualValues
+	 */
+	public function testMessage($status, $expectedResult)
 	{
-		foreach (array(
-			404 => true,
-			200 => false,
-			) as $l => $r) {
-			$this->assertEquals(StatusCode::isError($l), $r);
-		}
+		$this->assertEquals(StatusCode::message($status), $expectedResult);
+	}
+	
+	public function isErrorTrueValues()
+	{
+		return array(
+			array(400), array(401), array(501), array('400'), array('  401')
+		);
+	}
+	
+	/**
+	 * @dataProvider isErrorTrueValues
+	 */
+	public function testIsError($statusCode)
+	{
+		$this->assertTrue(StatusCode::isError($statusCode));
 	}
 }
