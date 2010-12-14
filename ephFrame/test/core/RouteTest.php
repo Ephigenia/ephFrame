@@ -11,19 +11,19 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 		$tests = array(
 			'/:controller' => array(
 				'/user' => array(
-					'controller' => 'user', 'action' => 'index',
+					'controller' => 'app\lib\controller\UserController', 'action' => 'index',
 				),
 				'/user/action' => false,
 				'/' => false,
 			),
 			'/:controller/:action' => array(
 				'/user/view' => array(
-					'controller' => 'user', 'action' => 'view',
+					'controller' => 'app\lib\controller\UserController', 'action' => 'view',
 				),
 			),
 			'/:controller/:id/:action' => array(
 				'/user/23/edit' => array(
-					'controller' => 'user', 'action' => 'edit', 'id' => '23',
+					'controller' => 'app\lib\controller\UserController', 'action' => 'edit', 'id' => '23',
 				),
 				'/user/edit' => false,
 				'/user/123' => false,
@@ -40,9 +40,9 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 	public function testParseWithRegexpRoute()
 	{
 		$route = new Route('/:controller/:username<\w+>');
-		$this->assertEquals($route->parse('/user/ephigenia'), array('username' => 'ephigenia', 'controller' => 'user', 'action' => 'index'));
+		$this->assertEquals($route->parse('/user/ephigenia'), array('username' => 'ephigenia', 'controller' => 'app\lib\controller\UserController', 'action' => 'index'));
 		$route = new Route('/:controller/:username<\w+>,:id<\d{2,}>.:format');
-		$this->assertEquals($route->parse('/user/ephigenia,15.json'), array('username' => 'ephigenia', 'controller' => 'user', 'action' => 'index', 'format' => 'json', 'id' => 15));
+		$this->assertEquals($route->parse('/user/ephigenia,15.json'), array('username' => 'ephigenia', 'controller' => 'app\lib\controller\UserController', 'action' => 'index', 'format' => 'json', 'id' => 15));
 	}
 	
 	public function testInsert()
@@ -98,25 +98,46 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 	{
 		$route = new Route('/:controller*');
 		$this->assertEquals(
-			$route->parse('/user/edit'), array('controller' => 'user', 'action' => 'index')
+			$route->parse('/user/edit'), array('controller' => 'app\lib\controller\UserController', 'action' => 'index')
 		);
 		$route = new Route('/:controller');
 		$this->assertFalse($route->parse('/user/edit'));
-		$this->assertEquals($route->parse('/user'), array('controller' => 'user', 'action' => 'index'));
+		$this->assertEquals($route->parse('/user'), array('controller' => 'app\lib\controller\UserController', 'action' => 'index'));
+	}
+	
+	public function testQuestionMarkNotation()
+	{
+		$route = new Route('/:controller/?:action?');
+		$this->assertEquals($route->parse('/user'), array('controller' => 'app\lib\controller\UserController', 'action' => 'index'));
+		$this->assertEquals($route->parse('/user/'), array('controller' => 'app\lib\controller\UserController', 'action' => 'index'));
+		$this->assertEquals($route->parse('/user/edit'), array('controller' => 'app\lib\controller\UserController', 'action' => 'edit'));
+	}
+	
+	public function testIdNotation()
+	{
+		$route = new Route('/:controller/:id/:action');
+		$this->assertEquals($route->parse('/user/23/edit'), array('controller' => 'app\lib\controller\UserController', 'action' => 'edit', 'id' => '23'));
+		$this->assertFalse($route->parse('/user/2s3/edit'));
+	}
+	
+	public function testIdFalseNotation()
+	{
+		$route = new Route('/:controller/:idOfUser/:action');
+		$this->assertFalse($route->parse('/user/23/edit'));
 	}
 	
 	public function testRootSlash()
 	{
 		$route = new Route('/:controller');
 		$this->assertEquals(
-			$route->parse('/abc'), array('controller' => 'abc', 'action' => 'index')
+			$route->parse('/abc'), array('controller' => 'app\lib\controller\AbcController', 'action' => 'index')
 		);
 		$route->template = ':controller/:action';
 		$this->assertEquals(
-			$route->parse('user/edit'), array('controller' => 'user', 'action' => 'edit')
+			$route->parse('user/edit'), array('controller' => 'app\lib\controller\UserController', 'action' => 'edit')
 		);
 		$this->assertEquals(
-			$route->parse('/abc/def'), array('controller' => 'abc', 'action' => 'def')
+			$route->parse('/abc/def'), array('controller' => 'app\lib\controller\AbcController', 'action' => 'def')
 		);
 	}
 	

@@ -6,30 +6,42 @@ use ephFrame\HTTP\Response;
 
 class ResponseTest extends \PHPUnit_Framework_TestCase
 {
-	public function testConstructor()
+	/**
+	 * @covers \ephFrame\HTTP\Response::__construct
+	 */	
+	public function setUp()
 	{
-		$response = new Response(404, null, 'NOT FOUND');
-		$this->assertEquals((string) $response, "HTTP 1.1 404 Not Found\r\n\r\nNOT FOUND");
+		$this->response = new Response(404, null, 'Not Found');
 	}
 	
-	public function testStatusChange()
+	public function test__toString()
 	{
-		$response = new Response(200);
-		$response->status = 404;
-		$this->assertEquals((string) $response, 'HTTP 1.1 404 Not Found');
+		$this->assertEquals((string) $this->response, "HTTP 1.1 404 Not Found\r\n\r\nNot Found");
 	}
 	
-	public function testProtocoll()
+	public function testBodyChange()
 	{
-		$response = new Response(200);
-		$response->protocol = 'HTTP 1.0';
-		$this->assertEquals((string) $response, 'HTTP 1.0 200 OK');
+		$this->response->body = 'Document was not found on the server';
+		$this->assertEquals((string) $this->response, "HTTP 1.1 404 Not Found\r\n\r\nDocument was not found on the server");
 	}
 	
-	public function testBodyAppend()
+	public function testBodyWithSpaces()
 	{
-		$response = new Response(200);
-		$response->body .= 'APPENDED';
-		$this->assertEquals((string) $response, "HTTP 1.1 200 OK\r\n\r\nAPPENDED");
+		$this->response->body = 'Document was not found on the server      ';
+		$this->assertEquals((string) $this->response, "HTTP 1.1 404 Not Found\r\n\r\nDocument was not found on the server");
+	}
+	
+	/**
+	 * @depends testBodyChange
+	 */
+	public function testHeaderAdd()
+	{
+		$this->response->header['Content-Length'] = strlen($this->response->body);
+		$this->assertEquals((string) $this->response,
+			"HTTP 1.1 404 Not Found\r\n".
+			"Content-Length: 9\r\n".
+			"\r\n".
+			"Not Found"
+		);
 	}
 }

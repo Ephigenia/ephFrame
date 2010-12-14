@@ -15,45 +15,38 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 	
 	public function testBase()
 	{
-		$Router = new Router();
 		$_SERVER['REQUEST_URI'] = '';
 		$this->assertTrue(is_string(Router::base()));
 	}
 	
+	public function setUp()
+	{
+		$this->router = new Router(array(
+			'scaffold' => new Route('/:controller/:action?'),
+			new Route('/static/:page'),
+			'home' => new Route('/'),
+		));
+	}
+
 	public function testRoutesAdd()
 	{
-		$Router = new Router();
-		$Router->addRoutes(array(
-			'namedroute' => new Route('/:controller/'),
-			new Route('/static/:page'),
+		$this->router->addRoutes(array(
+			'scaffold' => new Route('/:controller/:action?/'),
 		));
-		$this->assertEquals($Router->namedroute->template, '/:controller/');
-		// check if namedroute gets overwritten
-		$Router->addRoutes(array(
-			'secondname' => new Route('/'),
-			'namedroute' => new Route('/:action'),
-		));
-		$this->assertEquals($Router->namedroute->template, '/:action');
+		$this->assertEquals($this->router->scaffold->template, '/:controller/:action?/');
 	}
 	
 	public function testNamedRouteFind()
 	{
-		$Router = new Router(array(
-			'testRoute' => new Route('/:controller/:action')
-		));
-		$this->assertEquals($Router['testRoute']->template, '/:controller/:action');
-		$this->assertEquals($Router->testRoute->template, '/:controller/:action');
+		$this->assertEquals($this->router['scaffold']->template, '/:controller/:action?');
+		$this->assertEquals($this->router->scaffold->template, '/:controller/:action?');
 	}
 	
 	public function testParse()
 	{
-		$router = new Router(array(
-			new Route('/:controller/:action'),
-			new Route('/:controller'),
-		));
-		$this->assertEquals($router->parse('/user/edit'), array('controller' => 'user', 'action' => 'edit'));
-		$this->assertEquals($router->parse('/user'), array('controller' => 'user', 'action' => 'index'));
-		$this->assertFalse($router->parse('/no_matchin/route/23'));
+		$this->assertEquals($this->router->parse('/user/edit'), array('controller' => 'app\lib\controller\UserController', 'action' => 'edit'));
+		$this->assertEquals($this->router->parse('/user/'), array('controller' => 'app\lib\controller\UserController', 'action' => 'index'));
+		$this->assertFalse($this->router->parse('/no_matchin/route/23'));
 	}
 	
 	public function testConcurrencyAsterisk()
@@ -64,11 +57,11 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 		));
 		$this->assertEquals(
 			$Router->parse('/user/edit'), 
-			array('controller' => 'user', 'action' => 'index')
+			array('controller' => 'app\lib\controller\UserController', 'action' => 'index')
 		);
 		$this->assertEquals(
 			$Router->parse('/user'),
-			array('controller' => 'user', 'action' => 'index')
+			array('controller' => 'app\lib\controller\UserController', 'action' => 'index')
 		);
 	}
 }

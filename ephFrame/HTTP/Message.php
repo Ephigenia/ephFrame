@@ -14,5 +14,5 @@ abstract class Message
 	{
 		$this->header = $header ?: new Header();
 		$this->body = (string) $body;
-	}	
+	}
 }

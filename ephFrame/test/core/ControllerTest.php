@@ -8,8 +8,13 @@ use ephFrame\HTTP\Response;
 
 class ControllerTest extends \PHPUnit_Framework_TestCase
 {
+	public function setUp()
+	{
+		$this->controller = new Controller(new Request('GET', '/'));
+	}
+	
 	public function testResponseType()
 	{
-		$controller = new Controller(new Request());
+		
 	}
 }

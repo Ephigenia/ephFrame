@@ -7,12 +7,12 @@ class Library
 	protected static $paths = array(
 		'ephFrame' => '',
 	);
-	
+
 	public static function add($namespace, $path)
 	{
 		self::$paths[$namespace] = $path;
 	}
-	
+
 	public static function load($path)
 	{
 		foreach(self::$paths as $namespace => $libPath) {

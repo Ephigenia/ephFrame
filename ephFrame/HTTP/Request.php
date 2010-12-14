@@ -10,16 +10,12 @@ class Request extends Message
 	
 	public $path;
 	
-	public function __construct($method = null, Header $header = null, Array $data = array())
+	public function __construct($method = null, $path = null, Header $header = null, Array $data = array())
 	{
-		if (isset($_SERVER['REQUEST_URI'])) {
-			$this->path = $_SERVER['REQUEST_URI'];
-		}
-		if (isset($_SERVER['REQUEST_METHOD'])) {
-			$this->method = $_SERVER['REQUEST_METHOD'];
-		}
-		if (!empty($data)) {
-			$this->data += $data;
+		$this->path = $path ?: $_SERVER['REQUEST_URI'];
+		$this->method = $method ?: $_SERVER['REQUEST_METHOD'];
+		if ($data) {
+			$this->data = $data;
 		} else {
 			if ($this->method == RequestMethod::POST) {
 				$this->data = $_POST;
@@ -27,7 +23,7 @@ class Request extends Message
 				$this->data = $_GET;
 			}
 		}
-		if (!is_null($header)) {
+		if ($header instanceof Header) {
 			$this->header = $header;
 		} else {
 			$client = array();
@@ -36,5 +32,24 @@ class Request extends Message
 			}
 			$this->header = new Header($client);
 		}
+	}
+	
+	public function __toString()
+	{
+		$query = http_build_query($this->data);
+		$path = $this->path;
+		if (!empty($query)) {
+			if ($this->method == RequestMethod::GET) {
+				$path .= '?'.$query;
+				$query = '';
+			} else {
+				$query = "\r\n".$query;
+			}
+		}
+		return trim(
+			$this->method.' '.$path.' '.$this->protocol."\r\n".
+			(count($this->header) ? "\r\n".$this->header : '').
+			$query
+		);
 	}
 }

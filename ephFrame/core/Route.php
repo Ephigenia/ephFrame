@@ -19,13 +19,17 @@ class Route
 	
 	public function parse($url)
 	{
+		$result = false;
 		if (preg_match($this->compile(), (string) $url, $found)) {
 			foreach ($found as $index => $match) {
 				if (is_int($index)) unset($found[$index]);
 			}
-			return $found + $this->params;
+			$result = $found + $this->params;
+			if (!strstr($result['controller'], '\\')) {
+				$result['controller'] = 'app\lib\controller\\'.ucFirst($result['controller']).'Controller';
+			}
 		}
-		return false;
+		return $result;
 	}
 	
 	public function compile()
@@ -33,6 +37,10 @@ class Route
 		$regexp = $this->template;
 		// :var<regex>
 		$regexp = preg_replace('@:([\w]+)(?:<([^>]+)>)@U', '(?P<\\1>\\2)', $regexp);
+		// :id
+		$regexp = preg_replace('@:id@', '(?P<id>\d+)', $regexp);
+		// :var?
+		$regexp = preg_replace('@:([\w]+)\?@', '(?P<\\1>[^?\/]+)?', $regexp);
 		// :var
 		$regexp = preg_replace('@:([\w]+)@', '(?P<\\1>[^?\/]+)', $regexp);
 		// add regexp rules for beginning and end of route
