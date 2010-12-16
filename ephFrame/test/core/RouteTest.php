@@ -45,49 +45,64 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($route->parse('/user/ephigenia,15.json'), array('username' => 'ephigenia', 'controller' => 'app\lib\controller\UserController', 'action' => 'index', 'format' => 'json', 'id' => 15));
 	}
 	
-	public function testInsert()
+	
+	public function insertEqualValues()
 	{
-		$routes = array(
-			'/:controller/:id/:action' => array(
-				array(
-					array('controller' => 'user', 'action' => 'edit', 'id' => 123),
-					'/user/123/edit'
-				),
-				array(
-					array('controller' => 'user', 'id' => 123),
-					'/user/123/index',
-				),
-				array(
-					array('controller' => 'user'),
-					'/user/:id/index',
-				),
-				array(
-					array('controller' => 'user', 'action' => 'view'),
-					'/user/:id/view',
-				)
+		return array(
+			array(
+				'/:controller/:id/:action?', 
+				array('controller' => 'user', 'action' => 'edit', 'id' => 123),
+				'/user/123/edit',
 			),
-			'/:controller' => array(
-				array(
-					array('controller' => 'user'),
-					'/user',
-				),
-				array(
-					array('controller' => 'user', 'action' => 'index'),
-					'/user',
-				),
-			)
+			array(
+				'/:controller/:id/:action*', 
+				array('controller' => 'user', 'action' => 'edit', 'id' => 123),
+				'/user/123/edit',
+			),
+			array(
+				'/:controller/:id/:action?',
+				array('controller' => 'user', 'id' => 123),
+				'/user/123/index',
+			),
+			array(
+				'/:controller/:id/:action?',
+				array('controller' => 'user', 'action' => 'index'),
+				'/user/:id/index',
+			),
+			array(
+				'/:controller',
+				array('controller' => 'user'),
+				'/user',
+			),
+			array(
+				'/:controller',
+				array('controller' => 'user', 'action' => 'index'),
+				'/user',
+			),
 		);
-		foreach($routes as $route => $tests) {
-			$route = new Route($route);
-			foreach($tests as $test) {
-				$this->assertEquals($route->insert($test[0]), $test[1]);
-			}
-		}
 	}
 	
-	public function testInsertWithRegexp()
+	/**
+	 * @dataProvider insertEqualValues
+	 */
+	public function testInsert($route, Array $values, $expectedResult)
 	{
-		$route = new Route('/:username<[a+z0-9.-]{3,20}>,:id<\d+>/:action');
+		$route = new Route($route);
+		$this->assertEquals($route->insert($values), $expectedResult);
+	}
+	
+	public function testInsertWithRegexpPlaceholders()
+	{
+		$route = new Route('/:username<[a+z0-9.-]{3,20}>,:id<\d+>?/:action*');
+		$this->assertEquals(
+			$route->insert(array('username' => 'marceleichner', 'id' => 15, 'action' => 'edit')),
+			'/marceleichner,15/edit'
+		);
+	}
+	
+	public function testInsertWithCustomRegexp()
+	{
+		$route = new Route('/(?P<username>[a+z0-9.-]{3,20}),(?P<id>\d+)?/:action');
 		$this->assertEquals(
 			$route->insert(array('username' => 'marceleichner', 'id' => 15, 'action' => 'edit')),
 			'/marceleichner,15/edit'

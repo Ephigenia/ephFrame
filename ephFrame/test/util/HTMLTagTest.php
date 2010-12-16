@@ -36,4 +36,11 @@ class HTMLTagTest extends \PHPUnit_Framework_TestCase
 		$tag = new HTMLTag($tag, $label, $attributes);
 		$this->assertEquals((string) $tag, $result);
 	}
+	
+	public function testSimpleNested()
+	{
+		$tag1 = new HTMLTag('img', null, array('src' => 'image.jpg'));
+		$tag2 = new HTMLTag('a', $tag1, array('rel' => 'external'));
+		$this->assertEquals((string) $tag2, '<a rel="external"><img src="image.jpg" /></a>');
+	}
 }

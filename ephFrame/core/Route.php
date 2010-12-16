@@ -58,7 +58,10 @@ class Route
 	{
 		$result = $this->template;
 		foreach($array + $this->params as $key => $value) {
-			$result = preg_replace('@:'.preg_quote($key,'@').'(<[^>]+>)?@', $value, $result);
+			// replace :placeholder and :placeholder<regexp> notations
+			$result = preg_replace('@:'.preg_quote($key,'@').'(<[^>]+>)?\??@', $value, $result);
+			// replace custom regexps
+			$result = preg_replace('@\(\?P<'.preg_quote($key,'@').'>[^)]+\)\??@', $value, $result);
 		}
 		return rtrim($result, '/*');
 	}
