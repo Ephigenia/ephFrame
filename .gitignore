@@ -2,4 +2,4 @@
 p_*
 *.log
 *.tmp
-reports/*
+ephFrame/test/reports/*
