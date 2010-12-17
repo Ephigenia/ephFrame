@@ -32,6 +32,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
 	}
 	
 	/**
+	 * @covers ephFrame\HTTP\Response::__toString
 	 * @depends testBodyChange
 	 */
 	public function testHeaderAdd()

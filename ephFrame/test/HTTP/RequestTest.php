@@ -16,6 +16,20 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 		));
 	}
 	
+	public function testFillFromPost()
+	{
+		$_POST['test'] = 'testvalue';
+		$request = new Request(RequestMethod::POST, '/path/');
+		$this->assertEquals($request->data['test'], $_POST['test']);
+	}
+	
+	public function testFillFromGet()
+	{
+		$_GET['test2'] = 'testvalue';
+		$request = new Request(RequestMethod::GET, '/path/');
+		$this->assertEquals($request->data['test2'], $_GET['test2']);
+	}
+	
 	public function testRequestMethod()
 	{
 		$this->assertEquals($this->request->method, RequestMethod::POST);

@@ -10,6 +10,9 @@ class Library
 
 	public static function add($namespace, $path)
 	{
+		if (!is_dir($path)) {
+			throw new LibraryPathNotFoundException($path);
+		}
 		self::$paths[$namespace] = $path;
 	}
 
@@ -27,3 +30,13 @@ class Library
 
 spl_autoload_register('\ephFrame\core\Library::load');
 Library::add('ephFrame', realpath(dirname(__DIR__)));
+
+class LibraryException extends \Exception {}
+
+class LibraryPathNotFoundException extends LibraryException
+{
+	public function __construct($filename)
+	{
+		return parent::__construct(sprintf('Path "%s" could not be found.', $filename));
+	}
+}

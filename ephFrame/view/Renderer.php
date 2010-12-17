@@ -23,7 +23,8 @@ class RendererException extends \Exception {}
 
 class TemplateNotFoundException extends RendererException
 {
-	public function __construct($filename) {
+	public function __construct($filename)
+	{
 		return parent::__construct(sprintf('Template file "%s" could not be found.', $filename));
 	}
 }

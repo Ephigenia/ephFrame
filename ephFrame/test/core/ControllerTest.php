@@ -13,6 +13,11 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 		$this->controller = new Controller(new Request('GET', '/'));
 	}
 	
+	public function testAction()
+	{
+		$this->controller->action('index');
+	}
+	
 	public function testResponseType()
 	{
 		

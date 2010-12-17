@@ -25,6 +25,11 @@ class StatusCodeTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(StatusCode::message($status), $expectedResult);
 	}
 	
+	public function testNoMessage()
+	{
+		$this->assertFalse(StatusCode::message('asdlkj'));
+	}
+	
 	public function isErrorTrueValues()
 	{
 		return array(
