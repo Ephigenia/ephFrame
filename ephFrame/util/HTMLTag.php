@@ -16,7 +16,7 @@ class HTMLTag
 	
 	public function __construct($name, $value = null, Array $attributes = array())
 	{
-		$this->name = (string) $name;
+		$this->name = trim((string) $name);
 		$this->value = $value;
 		if (isset($attributes['escaped']) && !$attributes['escaped']) {
 			unset($attributes->escaped);
@@ -25,16 +25,28 @@ class HTMLTag
 		$this->attributes = new HTMLAttributes($attributes);
 	}
 	
+	public function openTag()
+	{
+		if (empty($this->value)) {
+			return '<'.trim($this->name.' '.(string) $this->attributes).' />';
+		} else {
+			return '<'.trim($this->name.' '.(string) $this->attributes).'>';
+		}
+	}
+	
+	public function closeTag()
+	{
+		return '</'.$this->name.'>';
+	}
+	
 	public function __toString()
 	{
-		$rendered = '<'.trim($this->name.' '.(string) $this->attributes); 
 		if (empty($this->value)) {
-			$rendered .= ' />';
+			return $this->openTag();
 		} elseif ($this->value instanceof HTMLTag || !$this->escaped) {
-			$rendered = $rendered.'>'.(string) $this->value.'</'.$this->name.'>';
+			return $this->openTag().(string) $this->value.$this->closeTag();
 		} else {
-			$rendered = $rendered.'>'.htmlspecialchars((string) $this->value, ENT_QUOTES, 'UTF-8', false).'</'.$this->name.'>';
+			return $this->openTag().htmlspecialchars((string) $this->value, ENT_QUOTES, 'UTF-8', false).$this->closeTag();
 		}
-		return $rendered;
 	}
 }
