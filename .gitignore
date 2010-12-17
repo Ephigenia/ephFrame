@@ -1,5 +1,5 @@
+.DS_Store
 p_*
-app/tmp/log/*.log
-vendor/simpletest/*
-vendor/ephDeploy/*
-ephFrame/test/reports/*
+*.log
+*.tmp
+reports/*

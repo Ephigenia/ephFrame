@@ -3,6 +3,11 @@
 	<testsuite name="ephFrame">
 		<directory>test/</directory>
 	</testsuite>
+	<filter>
+	    <blacklist>
+	        <directory>./core</directory>
+	    </blacklist>
+	</filter>
 	<logging>
 		<log type="coverage-html" target="test/reports/coverage" charset="UTF-8" yui="true" highlight="true" lowUpperBound="35" highLowerBound="70" />
 	</logging>
