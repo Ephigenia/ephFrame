@@ -12,6 +12,9 @@ class HTML extends \ephFrame\view\Helper
 	public function email($email, $label = null, Array $attributes = array())
 	{
 		$attributes['href'] = 'mailto:'.$email;
+		if ($label && !isset($attributes['title'])) {
+			$attributes['title'] = strip_tags($label);
+		}
 		return $this->tag('a', $label ?: $email, $attributes);
 	}
 	

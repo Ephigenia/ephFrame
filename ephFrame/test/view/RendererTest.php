@@ -18,4 +18,13 @@ class RendererTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->renderer->render('template that can not be found', array('crap' => 'data'));
 	}
+	
+	public function testRender()
+	{
+		$result = $this->renderer->render(
+			dirname(__FILE__).'/fixtures/template.html.php',
+			array('username' => 'Karl', 'template' => 'test')
+		);
+		$this->assertEquals($result, 'Hello my name is: Karl!');
+	}
 }
