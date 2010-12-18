@@ -43,11 +43,11 @@ class Controller
 	{
 		$this->action = $action;
 		$this->callbacks->call('beforeAction');
-		if (!method_exists($this, $this->action)) {
-			die('ACTION NOT FOUND');
+		if (method_exists($this, $this->action)) {
+			call_user_func_array(array($this, $this->action), $params);
 		}
 		$this->callbacks->call('afterAction');
-		return call_user_func_array(array($this, $this->action), $params);
+		return $this;
 	}
 	
 	public function __toString()

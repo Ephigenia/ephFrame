@@ -5,7 +5,7 @@
 	</testsuite>
 	<filter>
 	    <blacklist>
-	        <directory>./core</directory>
+	        <!-- <directory>./core</directory> -->
 			<file>./test/view/fixtures/template.html.php</file>
 	    </blacklist>
 	</filter>

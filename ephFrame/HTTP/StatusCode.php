@@ -21,7 +21,7 @@ class StatusCode
 	const SEE_OTHER = 303;
 	const NOT_MODIFIED = 304;
 	const USE_PROXY = 305;
-	const TEMPORARARY_REDIRECT = 306;
+	const TEMPORARY_REDIRECT = 306;
 	
 	const BAD_REQUEST = 400;
 	const UNAUTHORIZED = 401;
@@ -64,7 +64,7 @@ class StatusCode
 		self::SEE_OTHER => 'See Other',
 		self::NOT_MODIFIED => 'Not Modified',
 		self::USE_PROXY => 'Use Proxy',
-		self::TEMPORARARY_REDIRECT => 'Temporary Redirect',
+		self::TEMPORARY_REDIRECT => 'Temporary Redirect',
 		self::BAD_REQUEST => 'Bad Request',
 		self::UNAUTHORIZED => 'Unauthorized',
 		self::PAYMENT_REQUIRED => 'Payment Required',

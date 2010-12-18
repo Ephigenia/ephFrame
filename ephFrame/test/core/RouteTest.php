@@ -6,6 +6,43 @@ use ephFrame\core\Route;
 
 class RouteTest extends \PHPUnit_Framework_TestCase
 {
+	public function setUp()
+	{
+		$_SERVER['SERVER_NAME'] = 'localhost';
+		$_SERVER['REQUEST_URI'] = '/ephFrame/test';
+		$this->fixture = new Route('/:controller/:action', array(
+			'controller' => 'user',
+			'action' => 'index',
+		));
+	}
+	
+	public function tearDown()
+	{
+		unset($_SERVER['SERVER_NAME'], $_SERVER['REQUEST_URI']);
+	}
+	
+	public function testUrl()
+	{
+		$this->assertEquals(substr($this->fixture->url(), 0, 7), 'http://');
+	}
+	
+	public function testUrlHTTPS()
+	{
+		$_SERVER['HTTPS'] = 'on';
+		$this->assertEquals(substr($this->fixture->url(), 0, 8), 'https://');
+		unset($_SERVER['HTTPS']);
+	}
+	
+	public function testUri()
+	{
+		$this->assertEquals($this->fixture->uri(), '/user/index');
+	}
+	
+	public function test__toString()
+	{
+		$this->assertEquals((string) $this->fixture, '/:controller/:action');
+	}
+	
 	public function testParse()
 	{
 		$tests = array(
@@ -44,7 +81,6 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 		$route = new Route('/:controller/:username<\w+>,:id<\d{2,}>.:format');
 		$this->assertEquals($route->parse('/user/ephigenia,15.json'), array('username' => 'ephigenia', 'controller' => 'app\lib\controller\UserController', 'action' => 'index', 'format' => 'json', 'id' => 15));
 	}
-	
 	
 	public function insertEqualValues()
 	{
@@ -154,11 +190,5 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(
 			$route->parse('/abc/def'), array('controller' => 'app\lib\controller\AbcController', 'action' => 'def')
 		);
-	}
-	
-	public function test__toString()
-	{
-		$route = new Route('/:controller/:action');
-		$this->assertEquals((string) $route, '/:controller/:action');
 	}
 }

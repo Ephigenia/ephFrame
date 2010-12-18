@@ -14,6 +14,7 @@ class Library
 			throw new LibraryPathNotFoundException($path);
 		}
 		self::$paths[$namespace] = $path;
+		return true;
 	}
 
 	public static function load($path)

@@ -66,6 +66,20 @@ class Route
 		return rtrim($result, '/*');
 	}
 	
+	public function url(Array $params = Array())
+	{
+		if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
+			return 'https://'.$_SERVER['SERVER_NAME'].$this->uri($params);
+		} else {
+			return 'http://'.$_SERVER['SERVER_NAME'].$this->uri($params);
+		}
+	}
+	
+	public function uri(Array $params = Array())
+	{
+		return Router::base().$this->insert($params);
+	}
+	
 	public function __toString()
 	{
 		return $this->template;

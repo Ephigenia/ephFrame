@@ -13,7 +13,6 @@ class Dispatcher
 			$controller->action($result['action'], $result);
 			return $controller->__toString();
 		}
-		die('NOTING');
 		return false;
 	}
 }

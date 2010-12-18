@@ -13,4 +13,9 @@ class LibraryTest extends \PHPUnit_Framework_TestCase
 	{
 		Library::add('\test_namespace\path', '/directory/that/does_not_exist');
 	}
+	
+	public function testAdd()
+	{
+		$this->assertTrue(Library::add('\ephFrame\core', dirname(__FILE__).'/../../core/'));
+	}
 }
