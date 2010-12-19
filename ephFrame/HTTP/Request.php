@@ -17,11 +17,7 @@ class Request extends Message
 		if ($data) {
 			$this->data = $data;
 		} else {
-			if ($this->method == RequestMethod::POST) {
-				$this->data = $_POST;
-			} else {
-				$this->data = $_GET;
-			}
+			$this->data = array_merge($_GET, $_POST);
 		}
 		if ($header instanceof Header) {
 			$this->header = $header;

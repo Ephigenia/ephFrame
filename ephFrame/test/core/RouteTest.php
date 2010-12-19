@@ -38,6 +38,12 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($this->fixture->uri(), '/user/index');
 	}
 	
+	public function test__invoke()
+	{
+		$route = $this->fixture;
+		$this->assertEquals($route(array('controller' => 'news')), '/news/index');
+	}
+	
 	public function test__toString()
 	{
 		$this->assertEquals((string) $this->fixture, '/:controller/:action');

@@ -21,6 +21,8 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 	
 	public function setUp()
 	{
+		$_SERVER['SERVER_NAME'] = 'localhost';
+		$_SERVER['REQUEST_URI'] = '/ephFrame/test';
 		$this->router = new Router(array(
 			'scaffold' => new Route('/:controller/:action?'),
 			new Route('/static/:page'),
@@ -40,6 +42,19 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->assertEquals($this->router['scaffold']->template, '/:controller/:action?');
 		$this->assertEquals($this->router->scaffold->template, '/:controller/:action?');
+	}
+	
+	public function test__call()
+	{
+		$this->assertEquals($this->router->scaffold(array('controller' => 'user')), '/user/index');
+	}
+	
+	/**
+	 * @expectedException PHPUnit_Framework_Error
+	 */
+	public function test__callFail()
+	{
+		$this->assertEquals($this->router->nothing(array('controller' => 'user')), '/user/index');
 	}
 	
 	public function testParse()

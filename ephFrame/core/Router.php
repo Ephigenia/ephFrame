@@ -48,4 +48,9 @@ class Router extends \ArrayObject
 		}
 		return false;
 	}
+	
+	public function __call($name, $args)
+	{
+		return $this[$name]($args[0]);
+	}
 }

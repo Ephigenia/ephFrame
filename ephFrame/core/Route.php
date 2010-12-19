@@ -80,6 +80,11 @@ class Route
 		return Router::base().$this->insert($params);
 	}
 	
+	public function __invoke(Array $params = array())
+	{
+		return $this->uri($params);
+	}
+	
 	public function __toString()
 	{
 		return $this->template;
