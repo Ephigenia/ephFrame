@@ -1,6 +1,6 @@
 <?php
 
-namespace ephFrame\test\util;
+namespace ephFrame\test\view\helper;
 
 use ephFrame\view\helper\HTML;
 

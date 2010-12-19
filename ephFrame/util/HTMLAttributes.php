@@ -17,7 +17,7 @@ class HTMLAttributes extends \ArrayObject
 		$rendered = '';
 		foreach($this as $key => $value) {
 			if (is_array($value)) {
-				$value = implode(' ', $value);
+				$value = implode(' ', array_unique($value));
 			}
 			if (HTMLAttributes::$trimAttributeValues) {
 				$value = trim($value);
