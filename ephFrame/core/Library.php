@@ -21,7 +21,7 @@ class Library
 	{
 		foreach(self::$paths as $namespace => $libPath) {
 			if (strncasecmp($path, $namespace, strlen($namespace)) === 0) {
-				$path = dirname($libPath).DIRECTORY_SEPARATOR.str_replace('\\', DIRECTORY_SEPARATOR, $path).'.php';
+				$path = $libPath.DIRECTORY_SEPARATOR.substr(str_replace('\\', DIRECTORY_SEPARATOR, $path), strlen($namespace)+1).'.php';
 				break;
 			}
 		}

@@ -3,3 +3,4 @@ p_*
 *.log
 *.tmp
 ephFrame/test/reports/*
+deploy.sh

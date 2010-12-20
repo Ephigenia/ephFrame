@@ -41,7 +41,7 @@ class HTMLTag
 	
 	public function __toString()
 	{
-		if (empty($this->value)) {
+		if (empty($this->value) && !in_array($this->name, array('textarea'))) {
 			return $this->openTag();
 		} elseif ($this->value instanceof HTMLTag || !$this->escaped) {
 			return $this->openTag().(string) $this->value.$this->closeTag();

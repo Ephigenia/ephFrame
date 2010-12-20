@@ -63,7 +63,7 @@ class Route
 			// replace custom regexps
 			$result = preg_replace('@\(\?P<'.preg_quote($key,'@').'>[^)]+\)\??@', $value, $result);
 		}
-		return rtrim($result, '/*');
+		return rtrim($result, '/*?');
 	}
 	
 	public function url(Array $params = Array())
