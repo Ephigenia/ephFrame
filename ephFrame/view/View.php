@@ -14,9 +14,12 @@ class View
 	
 	public $renderer;
 	
+	public $rootPath;
+	
 	public function __construct(Renderer $Renderer = null)
 	{
 		$this->renderer = $Renderer ?: new \ephFrame\view\Renderer();
+		$this->rootPath = APP_ROOT.'/view/';
 	}
 	
 	public function render($part, $path, Array $data = array())
@@ -31,7 +34,11 @@ class View
 		switch($part) {
 			default:
 			case 'view':
-				return $this->renderer->render(APP_ROOT.'/view/'.$this->theme.'/'.$path.'.'.$this->type.'.php', $this->data + $data);
+				$prefix = implode(DIRECTORY_SEPARATOR, array_filter(array(
+					rtrim($this->rootPath, '/\\'),
+					$this->theme,
+				)));
+				return $this->renderer->render($prefix.DIRECTORY_SEPARATOR.$path.'.'.$this->type.'.php', $this->data + $data);
 				break;
 			case 'layout':
 				return $this->render(false, 'layout/'.$path, $this->data + $data);

@@ -33,8 +33,14 @@ class HTML extends \ephFrame\view\Helper
 		return $this->tag('a', $label, $attributes);
 	}
 	
-	public function __call($method, Array $args = array())
+	public function image($src, Array $attributes = array())
 	{
-		return $this->tag($method, $args[0], $args[1]);
+		return $this->tag('img', null, array_merge($attributes, array('src' => $src)));
+	}
+	
+	public function __call($tagName, Array $arguments = array())
+	{
+		array_unshift($arguments, $tagName);
+		return call_user_func_array(array($this, 'tag'), $arguments);
 	}
 }

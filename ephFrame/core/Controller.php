@@ -36,28 +36,29 @@ class Controller
 	
 	protected function index()
 	{
-		
+		return true;
 	}
 	
 	public function action($action, Array $params = array())
 	{
 		$this->action = $action;
 		$this->callbacks->call('beforeAction');
+		$this->callbacks->call($this->action, $params);
 		if (method_exists($this, $this->action)) {
-			call_user_func_array(array($this, $this->action), $params);
+			$result = call_user_func_array(array($this, $this->action), $params);
 		}
 		$this->callbacks->call('afterAction');
-		return $this;
+		return $result;
 	}
 	
 	public function __toString()
 	{
 		$this->callbacks->call('beforeRender');
-		$this->response->body = (string) $this->view->render('all', 
-			strtolower($this->name ?: 'app').'/'.$this->action
-		);
-		$this->response->header->send();
+		$this->response->body = $this->view->render('all', strtolower($this->name ?: 'app').'/'.$this->action);
 		$this->callbacks->call('afterRender');
+		$this->response->header->send();
 		return $this->response->body;
 	}
 }
+
+class ControllerException extends \Exception {}

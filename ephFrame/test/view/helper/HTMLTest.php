@@ -89,4 +89,22 @@ class HTMLTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->assertEquals((string) call_user_func_array(array($this->HTML, 'link'), $args), $expectedResult);
 	}
+	
+	public function testImageEqualValues()
+	{
+		return array(
+			array(
+				array('/static/img/logo.gif'),
+				'<img src="/static/img/logo.gif" />',
+			),
+		);
+	}
+	
+	/**
+	 * @dataProvider testImageEqualValues
+	 */
+	public function testImage($args, $expectedResult)
+	{
+		$this->assertEquals((string) call_user_func_array(array($this->HTML, 'image'), $args), $expectedResult);
+	}
 }

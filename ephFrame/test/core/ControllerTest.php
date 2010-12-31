@@ -10,16 +10,19 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 {
 	public function setUp()
 	{
-		$this->controller = new Controller(new Request('GET', '/'));
+		$this->fixture = new Controller(new Request('GET', '/'));
 	}
 	
 	public function testAction()
 	{
-		$this->controller->action('index');
+		$this->assertTrue($this->fixture->action('index'));
 	}
 	
-	public function testResponseType()
+	/**
+	 * @expectedException \ephFrame\view\TemplateNotFoundException
+	 */
+	public function test__toString()
 	{
-		
+		$this->fixture->__toString();
 	}
 }
