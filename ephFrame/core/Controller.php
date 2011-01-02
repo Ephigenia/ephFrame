@@ -46,6 +46,8 @@ class Controller
 		$this->callbacks->call($this->action, $params);
 		if (method_exists($this, $this->action)) {
 			$result = call_user_func_array(array($this, $this->action), $params);
+		} else {
+			$result = true;
 		}
 		$this->callbacks->call('afterAction');
 		return $result;
