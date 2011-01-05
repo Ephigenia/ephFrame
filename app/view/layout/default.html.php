@@ -4,7 +4,7 @@
 	<title><?php echo @$pageTitle ?: '[no title]' ?></title>
 	<base href="<?php echo \ephFrame\core\Router::base(); ?>" />
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
-	<link rel="stylesheet" type="text/css" href="<?php echo ephFrame\core\Router::base(); ?>/<?php echo $theme; ?>/css/app.css" />
+	<link rel="stylesheet" type="text/css" href="<?php echo ephFrame\core\Router::base(); ?>/css/app.css" />
 </head>
 <body>
 	<div id="app">

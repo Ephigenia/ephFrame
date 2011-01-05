@@ -1,6 +1,6 @@
 <?php
 
-namespace app\lib\controller;
+namespace app\controller;
 
 class Controller extends \ephFrame\core\Controller
 {

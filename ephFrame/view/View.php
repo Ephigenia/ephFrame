@@ -8,8 +8,6 @@ class View
 	
 	public $type = 'html';
 	
-	public $theme = 'default';
-	
 	public $layout = 'default';
 	
 	public $renderer;
@@ -28,17 +26,12 @@ class View
 		$this->data += array(
 			'path' => $path,
 			'type' => $this->type,
-			'theme' => $this->theme,
 		);
 		$this->renderer->view = $this; //@todo clear this
 		switch($part) {
 			default:
 			case 'view':
-				$prefix = implode(DIRECTORY_SEPARATOR, array_filter(array(
-					rtrim($this->rootPath, '/\\'),
-					$this->theme,
-				)));
-				return $this->renderer->render($prefix.DIRECTORY_SEPARATOR.$path.'.'.$this->type.'.php', $this->data + $data);
+				return $this->renderer->render($this->rootPath.DIRECTORY_SEPARATOR.$path.'.'.$this->type.'.php', $this->data + $data);
 				break;
 			case 'layout':
 				return $this->render(false, 'layout/'.$path, $this->data + $data);

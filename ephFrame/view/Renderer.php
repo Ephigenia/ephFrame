@@ -5,7 +5,7 @@ namespace ephFrame\view;
 class Renderer
 {
 	public $view;
-	
+
 	public function render($__template, Array $data = array())
 	{
 		if (!is_file($__template)) {
