@@ -2,5 +2,5 @@
 p_*
 *.log
 *.tmp
-ephFrame/test/reports/*
+ephFrame/test/report/*
 deploy.sh

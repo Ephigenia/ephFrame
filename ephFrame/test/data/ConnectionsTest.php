@@ -15,4 +15,12 @@ class ConnectionsTest extends \PHPUnit_Framework_TestCase
 		$connection = Connections::get('test_connections');
 		$this->assertInstanceOf('\ephFrame\data\source\adapter\MySQL', $connection);
 	}
+	
+	/**
+	 * @expectedException ephFrame\data\ConnectionsConnectionNotFoundException
+	 */
+	public function testGetFailure()
+	{
+		Connections::get('not_existent');
+	}
 }

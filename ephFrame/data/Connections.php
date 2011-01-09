@@ -19,6 +19,9 @@ class Connections
 	
 	public static function get($name)
 	{
+		if (!isset(static::$connections[$name])) {
+			throw new ConnectionsConnectionNotFoundException($name);
+		}
 		if (!isset(static::$connections[$name]['object'])) {
 			extract(static::$connections[$name]);
 			$connection = new $adapter();
@@ -26,5 +29,13 @@ class Connections
 			static::$connections[$name]['object'] = $connection;
 		}
 		return static::$connections[$name]['object'];
+	}
+}
+
+class ConnectionsException extends \Exception {}
+class ConnectionsConnectionNotFoundException extends ConnectionsException
+{
+	public function __construct($name) {
+		return parent::__construct(sprintf('No connection "%s" found', $name));
 	}
 }
