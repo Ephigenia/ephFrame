@@ -59,8 +59,8 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 	
 	public function testParse()
 	{
-		$this->assertEquals($this->router->parse('/user/edit'), array('controller' => 'app\lib\controller\UserController', 'action' => 'edit'));
-		$this->assertEquals($this->router->parse('/user/'), array('controller' => 'app\lib\controller\UserController', 'action' => 'index'));
+		$this->assertEquals($this->router->parse('/user/edit'), array('controller' => 'app\controller\UserController', 'action' => 'edit'));
+		$this->assertEquals($this->router->parse('/user/'), array('controller' => 'app\controller\UserController', 'action' => 'index'));
 		$this->assertFalse($this->router->parse('/no_matchin/route/23'));
 	}
 	
@@ -72,11 +72,11 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 		));
 		$this->assertEquals(
 			$Router->parse('/user/edit'), 
-			array('controller' => 'app\lib\controller\UserController', 'action' => 'index')
+			array('controller' => 'app\controller\UserController', 'action' => 'index')
 		);
 		$this->assertEquals(
 			$Router->parse('/user'),
-			array('controller' => 'app\lib\controller\UserController', 'action' => 'index')
+			array('controller' => 'app\controller\UserController', 'action' => 'index')
 		);
 	}
 }

@@ -2,34 +2,52 @@
 
 namespace ephFrame\data\source;
 
-class Database extends \ephFrame\data\Source
+use PDO;
+
+abstract class Database extends \ephFrame\data\Source
 {
 	protected $connection;
 	
-	public function connect()
+	public $logger = array();
+	
+	public $lastQuery;
+	
+	public function connect($dsn, $username = '', $password = '', Array $options = array())
 	{
-		
+		$options += array(
+			\PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+			\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES UTF8;',
+		);
+		$this->connection = new PDO($dsn, $username, $password, $options);
 	}
 	
 	public function disconnect()
 	{
-		
-	}
-	
-	public function describe()
-	{
-		
+		if ($this->isConnected()) {
+			unset($this->connection);
+		}
+		return $this;
 	}
 	
 	public function isConnected()
 	{
-		return $this->connection;
+		return !empty($this->connection);
+	}
+	
+	public function query($query)
+	{
+		$this->lastQuery = $query;
+		foreach($this->logger as $logger) $logger->log($query);
+		$statement = $this->connection->prepare($query);
+		$statement->execute();
+		return $statement;
 	}
 	
 	public function __destruct()
 	{
-		if ($this->isConnected()) {
-			$this->disconnect();
-		}
+		$this->disconnect();
 	}
 }
+
+class DatabaseException {}
+class DatabaseConnectionException extends DatabaseException {}

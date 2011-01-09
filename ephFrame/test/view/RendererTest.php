@@ -22,7 +22,7 @@ class RendererTest extends \PHPUnit_Framework_TestCase
 	public function testRender()
 	{
 		$result = $this->renderer->render(
-			dirname(__FILE__).'/fixtures/template.html.php',
+			__DIR__.'/../fixtures/view/template.html.php',
 			array('username' => 'Karl', 'template' => 'test')
 		);
 		$this->assertEquals($result, 'Hello my name is: Karl!');

@@ -7,7 +7,7 @@ class Route
 	public $template;
 	
 	public $params = array(
-		'controller' => 'app\lib\controller\Controller',
+		'controller' => 'app\controller\Controller',
 		'action' => 'index',
 	);
 	
@@ -26,7 +26,7 @@ class Route
 			}
 			$result = $found + $this->params;
 			if (!strstr($result['controller'], '\\')) {
-				$result['controller'] = 'app\lib\controller\\'.ucFirst($result['controller']).'Controller';
+				$result['controller'] = 'app\controller\\'.ucFirst($result['controller']).'Controller';
 			}
 		}
 		return $result;
