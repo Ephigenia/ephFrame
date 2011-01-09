@@ -1,13 +1,21 @@
 <?php
 
-namespace ephFrame\test\core;
+namespace ephFrame\test\data;
 
-use ephFrame\source\Model;
+use ephFrame\data\Model;
 
 class ModelTest extends \PHPUnit_Framework_TestCase
 {
-	public function test__call()
+	public function setUp()
 	{
-		
+		$this->fixture = new Model();
+		$this->fixture->connection = 'test';
+		$this->fixture->tablename = 'posts';
+	}
+	
+	public function testFind()
+	{
+		$this->fixture->findAll();
+		$this->assertEquals(1,1);
 	}
 }

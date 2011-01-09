@@ -19,6 +19,7 @@ abstract class Database extends \ephFrame\data\Source
 			\PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES UTF8;',
 		);
 		$this->connection = new PDO($dsn, $username, $password, $options);
+		return $this;
 	}
 	
 	public function disconnect()

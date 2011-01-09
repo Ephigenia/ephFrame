@@ -20,7 +20,7 @@
           <table cellpadding="1" border="0" width="100%">
             <tr>
               <td class="headerItem" width="20%">Current file:</td>
-              <td class="headerValue" width="80%"><a href="index.html">/Users/ephigenia/Dropbox/Websites/ephFrame/trunc_0.3/ephFrame</a>/<a href="data.html">data</a>/<a href="data_source.html">source</a>/<a href="data_source_adapter.html">adapter</a>/<a href="data_source_adapter_MySQL.php.html">MySQL.php</a></td>
+              <td class="headerValue" width="80%"><a href="index.html">/Users/ephigenia/Dropbox/Websites/ephFrame/trunc_0.3/ephFrame</a>/<a href="data.html">data</a>/<a href="data_source.html">source</a>/<a href="data_source_adapter.html">adapter</a>/<a href="data_source_adapter_SQLite.php.html">SQLite.php</a></td>
             </tr>
             <tr>
               <td class="legendItem" width="20%">Legend:</td>
@@ -89,7 +89,7 @@
           <td class="tableHead" colspan="11">&nbsp;</td>
         </tr>
         <tr>
-          <td class="coverItem"><b><a href="#5">MySQL</a></b></td>
+          <td class="coverItem"><b><a href="#5">SQLite</a></b></td>
           <td class="coverBar" align="center" width="100">
             <table border="0" cellspacing="0" cellpadding="1">
               <tr>
@@ -133,12 +133,13 @@
       <tr>
         <td>
 <pre class="source">
-<span class="lineNum" id="container1"><a name="1"></a><a href="#1" id="line1">       1</a> </span>                : <span class="default">&lt;?php</span>                                             
-<span class="lineNum" id="container2"><a name="2"></a><a href="#2" id="line2">       2</a> </span>                :                                                   
-<span class="lineNum" id="container3"><a name="3"></a><a href="#3" id="line3">       3</a> </span>                : <span class="keyword">namespace</span><span class="default">&nbsp;</span><span class="default">ephFrame</span><span class="default">\</span><span class="default">data</span><span class="default">\</span><span class="default">source</span><span class="default">\</span><span class="default">adapter</span><span class="keyword">;</span>           
-<span class="lineNum" id="container4"><a name="4"></a><a href="#4" id="line4">       4</a> </span>                :                                                   
-<span class="lineNum" id="container5"><a name="5"></a><a href="#5" id="line5">       5</a> </span>                : <span class="keyword">class</span><span class="default">&nbsp;</span><span class="default">MySQL</span><span class="default">&nbsp;</span><span class="keyword">extends</span><span class="default">&nbsp;</span><span class="default">\</span><span class="default">ephFrame</span><span class="default">\</span><span class="default">data</span><span class="default">\</span><span class="default">source</span><span class="default">\</span><span class="default">Database</span>
-<span class="lineNum" id="container6"><a name="6"></a><a href="#6" id="line6">       6</a> </span><span class="lineCov">              1 : <span class="keyword">{</span>                                                 </span>
+<span class="lineNum" id="container1"><a name="1"></a><a href="#1" id="line1">       1</a> </span>                : <span class="default">&lt;?php</span>                                              
+<span class="lineNum" id="container2"><a name="2"></a><a href="#2" id="line2">       2</a> </span>                :                                                    
+<span class="lineNum" id="container3"><a name="3"></a><a href="#3" id="line3">       3</a> </span>                : <span class="keyword">namespace</span><span class="default">&nbsp;</span><span class="default">ephFrame</span><span class="default">\</span><span class="default">data</span><span class="default">\</span><span class="default">source</span><span class="default">\</span><span class="default">adapter</span><span class="keyword">;</span>            
+<span class="lineNum" id="container4"><a name="4"></a><a href="#4" id="line4">       4</a> </span>                :                                                    
+<span class="lineNum" id="container5"><a name="5"></a><a href="#5" id="line5">       5</a> </span>                : <span class="keyword">class</span><span class="default">&nbsp;</span><span class="default">SQLite</span><span class="default">&nbsp;</span><span class="keyword">extends</span><span class="default">&nbsp;</span><span class="default">\</span><span class="default">ephFrame</span><span class="default">\</span><span class="default">data</span><span class="default">\</span><span class="default">source</span><span class="default">\</span><span class="default">Database</span>
+<span class="lineNum" id="container6"><a name="6"></a><a href="#6" id="line6">       6</a> </span><span class="lineCov">              1 : <span class="keyword">{</span>                                                  </span>
+<span class="lineNum" id="container7"><a name="7"></a><a href="#7" id="line7">       7</a> </span>                :                                                    
 
 </pre>
         </td>
@@ -159,7 +160,7 @@
       YAHOO.phpunit.container.panelsData = {
         "panel6": {
           "header": "1 test covers line 6",
-          "body": "<ul><li class=\"testPassed\">ephFrame\\test\\data\\ConnectionsTest::testAdd</li></ul>",
+          "body": "<ul><li class=\"testPassed\">ephFrame\\test\\data\\source\\adapter\\SQLiteTest::testQuery</li></ul>",
           "footer": ""
         },
       "dummy": ""

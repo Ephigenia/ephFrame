@@ -2,7 +2,7 @@
 
 namespace ephFrame\data;
 
-class Model extends 
+class Model extends \ArrayObject
 {
 	public $connection = 'default';
 	
@@ -26,7 +26,7 @@ class Model extends
 	
 	public function __construct(Array $data = array())
 	{
-		return parent::__construct($array, \ArrayObject::ARRAY_AS_PROPS);
+		return parent::__construct($data, \ArrayObject::ARRAY_AS_PROPS);
 	}
 	
 	public function find(Array $params = array())
@@ -35,11 +35,13 @@ class Model extends
 			'limit' => 1,
 			'count' => 1,
 		);
+		return $this->findAll($params);
 	}
 	
 	public function findAll(Array $params = array())
 	{
-		
+		$connection = Connections::get($this->connection);
+		var_dump($connection);
 	}
 	
 	public function update(Array $values, Array $conditions = array())
