@@ -25,7 +25,6 @@ class View
 		// add current view information to view variables to use in the view
 		$this->data += array(
 			'path' => $path,
-			'type' => $this->type,
 		);
 		$this->renderer->view = $this; //@todo clear this
 		switch($part) {

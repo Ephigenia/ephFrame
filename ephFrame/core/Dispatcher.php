@@ -10,7 +10,7 @@ class Dispatcher
 		$uri = substr($request->path, strlen(Router::base()));
 		try {
 			if ($result = Router::getInstance()->parse($uri)) {
-				$controller = new $result['controller']($request);
+				$controller = new $result['controller']($request, $result);
 				$controller->action($result['action'], $result);
 				return $controller->__toString();
 			}

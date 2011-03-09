@@ -5,6 +5,7 @@ namespace ephFrame\core;
 use ephFrame\HTTP\Request;
 use ephFrame\HTTP\Response;
 use ephFrame\view\View;
+use ephFrame\HTTP\Header;
 
 class Controller
 {
@@ -51,6 +52,42 @@ class Controller
 		}
 		$this->callbacks->call('afterAction');
 		return $result;
+	}
+	
+	public function beforeAction()
+	{
+		if (isset($this->params['type'])) {
+			$this->view->type = $this->params['type'];
+		}
+		if (empty($this->response->header->{'Content-Type'})) {
+			switch($this->view->type) {
+				case 'html':
+				case 'rss':
+				case 'atom':
+				case 'xml':
+				case 'txt':
+				case 'js':
+				case 'json':
+					$this->response->header->{'Content-Type'} = \ephFrame\util\MimeType::get($this->view->type).'; charset: UTF-8';
+					break;
+			}
+		}
+	}
+	
+	public function beforeRender()
+	{
+		// setting some default variables
+		$this->view->data += array(
+			'controller' => substr(strrchr(get_class($this), '\\'), 1, -10),
+			'action' => $this->action,
+			'baseUri' => \ephFrame\core\Router::base(),
+			'Router' => \ephFrame\core\Router::getInstance(),
+		);
+	}
+	
+	public function afterRender()
+	{
+		
 	}
 	
 	public function __toString()

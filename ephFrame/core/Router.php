@@ -25,6 +25,9 @@ class Router extends \ArrayObject
 	{
 		$base = '';
 		$filename = $_SERVER['PHP_SELF'];
+		if (!isset($_SERVER['REQUEST_URI'])) {
+			return '/';
+		}
 		$uri = $_SERVER['REQUEST_URI'];
 		for ($i = strlen($filename); $i >= 0; $i--) {
 			if (strncasecmp($filename, $uri, $i) === 0) {

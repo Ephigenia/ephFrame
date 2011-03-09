@@ -71,6 +71,13 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 				'/user/edit' => false,
 				'/user/123' => false,
 			),
+			'/blog/page-:page<\d+>' => array(
+				'/blog/page-666' => array(
+					'controller' => 'app\controller\Controller', 'action' => 'index', 'page' => 666,
+				),
+				'/blog/page-string' => false,
+				'/blog/' => false,
+			),
 		);
 		foreach($tests as $route => $test) {
 			$route = new Route($route);

@@ -1,3 +1,4 @@
+app/doc/*
 .DS_Store
 p_*
 *.log

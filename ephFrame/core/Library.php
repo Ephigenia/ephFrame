@@ -24,8 +24,12 @@ class Library
 				$path = $libPath.DIRECTORY_SEPARATOR.substr(str_replace('\\', DIRECTORY_SEPARATOR, $path), strlen($namespace)+1).'.php';
 				break;
 			}
-		}	
-		require $path;
+		}
+		if (file_exists($path)) {
+			require $path;
+			return true;
+		}
+		return false;
 	}
 }
 
