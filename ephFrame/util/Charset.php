@@ -17,7 +17,7 @@ namespace ephFrame\util;
  */
 class Charset
 {
-	const UTF_8 = 'utf-8';
+	const UTF_8 = 'UTF-8';
 	const UTF_16_Big_Endian = 2;
 	const UTF_16_Little_Endian = 3;
 	const UTF_32_Big_Endian = 4;
@@ -49,24 +49,6 @@ class Charset
 	 */
 	public static function isUTF8($string)
 	{
-		if (function_exists('iconv')) {
-			return (@iconv('UTF-8//IGNORE', 'UTF-8//IGNORE', $string) == $string);
-		} else {
-			$regexp = '[\xC0-\xDF](^\x80-\xBF]|$)'.
-				'|[\xE0-\xEF].{0,1}([^\x80-\xBF]|$)'.
-				'|[\xF0-\xF7].{0,2}([^\x80-\xBF]|$)'.
-				'|[\xF8-\xFB].{0,3}([^\x80-\xBF]|$)'.
-				'|[\xFC-\xFD].{0,4}([^\x80-\xBF]|$)'.
-				'|[\xFE-\xFE].{0,5}([^\x80-\xBF]|$)'.
-				'|[\x00-\x7F][\x80-\xBF]'.
-				'|[\xC0-\xDF].[\x80-\xBF]'.
-				'|[\xE0-\xEF]..[\x80-\xBF]'.
-				'|[\xF0-\xF7]...[\x80-\xBF]'.
-				'|[\xF8-\xFB]....[\x80-\xBF]'.
-				'|[\xFC-\xFD].....[\x80-\xBF]'.
-				'|[\xFE-\xFE]......[\x80-\xBF]'.
-				'|^[\x80-\xBF]';
-			return preg_match('!'.$regexp.'!', $string);
-		}
+		return (mb_detect_encoding($string, self::UTF_8) == self::UTF_8);
 	}
 }
