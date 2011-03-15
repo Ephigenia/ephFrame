@@ -5,9 +5,14 @@ namespace ephFrame\view;
 class Renderer
 {
 	public $view;
+	
+	public $extension = 'php';
 
 	public function render($__template, Array $data = array())
 	{
+		if (!empty($this->extension)) {
+			$__template .= '.'.$this->extension;
+		}
 		if (!is_file($__template)) {
 			throw new TemplateNotFoundException($__template);
 		}

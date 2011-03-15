@@ -6,18 +6,29 @@ class View
 {
 	public $data = array();
 	
-	public $type = 'html';
-	
 	public $layout = 'default';
 	
 	public $renderer;
 	
 	public $rootPath;
 	
+	public $type = 'html';
+	
 	public function __construct(Renderer $Renderer = null)
 	{
-		$this->renderer = $Renderer ?: new \ephFrame\view\Renderer();
-		$this->rootPath = APP_ROOT.'/view/';
+		$this->renderer['default'] = $Renderer ?: new \ephFrame\view\Renderer();
+		$this->rootPath = APP_ROOT.DIRECTORY_SEPARATOR.'view'.DIRECTORY_SEPARATOR;
+	}
+	
+	protected function renderer($part)
+	{
+		if (isset($this->renderer[$part])) {
+			$renderer = $this->renderer[$part];
+		} else {
+			$renderer = $this->renderer['default'];
+		}
+		$renderer->view = $this; //@todo clear this
+		return $renderer;
 	}
 	
 	public function render($part, $path, Array $data = array())
@@ -26,11 +37,11 @@ class View
 		$this->data += array(
 			'path' => $path,
 		);
-		$this->renderer->view = $this; //@todo clear this
+		$renderer = $this->renderer($part, $path, $data);
 		switch($part) {
 			default:
 			case 'view':
-				return $this->renderer->render($this->rootPath.DIRECTORY_SEPARATOR.$path.'.'.$this->type.'.php', $this->data + $data);
+				return $renderer->render($this->rootPath.$path.'.'.$this->type, $this->data + $data);
 				break;
 			case 'layout':
 				return $this->render(false, 'layout/'.$path, $this->data + $data);
@@ -39,7 +50,7 @@ class View
 			case 'all':
 				return $this->render('layout', $this->layout, array(
 					'content' => $this->render('view', $path)
-				));
+				) + $data);
 		}
 	}
 }

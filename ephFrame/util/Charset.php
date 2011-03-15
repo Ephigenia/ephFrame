@@ -18,13 +18,6 @@ namespace ephFrame\util;
 class Charset
 {
 	const UTF_8 = 'UTF-8';
-	const UTF_16_Big_Endian = 2;
-	const UTF_16_Little_Endian = 3;
-	const UTF_32_Big_Endian = 4;
-	const UTF_32_Little_Endian = 5;
-	const SCSU = 6;
-	const UTF_EBCDIC = 7;
-	const BOCU_1 = 8;
 	const ISO_8859_1 = 'ISO-8859-1';
 
 	/**
@@ -32,7 +25,8 @@ class Charset
 	 * @param string $string
 	 * @return boolean
 	 */
-	public static function isASCII($string) {
+	public static function isASCII($string)
+	{
 		return (bool) (preg_match('/^[\\x00-\\x7A]*$/', $string));
 	}
 	

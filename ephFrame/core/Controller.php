@@ -61,6 +61,9 @@ class Controller
 		}
 		if (empty($this->response->header->{'Content-Type'})) {
 			switch($this->view->type) {
+				case 'markdown':
+					$this->response->header->{'Content-Type'} = 'text/html; charset: UTF-8';
+					break;
 				case 'html':
 				case 'rss':
 				case 'atom':

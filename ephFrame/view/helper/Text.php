@@ -2,6 +2,8 @@
 
 namespace ephFrame\view\helper;
 
+use \ephFrame\util\String;
+
 class Text extends \ephFrame\view\Helper
 {
 	public function autoURL($text, $attributes = '')
@@ -24,6 +26,53 @@ class Text extends \ephFrame\view\Helper
 		);
 	}
 	
+	
+	/**
+	 * Trims a $text till the <!--more--> marks like in wordpress and replaces
+	 * it with the optional $label and using $title as link title
+	 * 
+	 * <code>
+	 * echo $Text->more($BlogPost->text, $BlogPost->detailPageUri(), 'more …');
+	 * </code>
+	 * 
+	 * @param string $text
+	 * @param string $url link targeting url
+	 * @param string $label
+	 * @param string $title
+	 * @return string Returns the resulting string
+	 */
+	public function more($text, $url, $label = false, $title = null)
+	{
+		$regexp = '@<!--(.+)-->.*@is';
+		if (preg_match($regexp, $text, $found)) {
+			if (!empty($found[1]) && !in_array(strtolower($found[1]), array('more', 'mehr'))) {
+				$label = $found[1];
+			}
+			$HTML = new \ephFrame\view\helper\HTML();
+			$replace = $HTML->link($url, $label, array('title' => $title, 'class' => 'more'));
+			$text = preg_replace($regexp, $replace, $text);
+		}
+		return $text;
+	}
+	
+	/**
+	 * Return the first $count sentences from a $text
+	 * 
+	 * @param string $text
+	 * @param integer $count
+	 * @return string
+	 */
+	public static function excerpt($text, $count = 1)
+	{
+		$sentenceCount = preg_match_all('@[^0-9][.!?]{1,}\s*@', $text, $found, PREG_OFFSET_CAPTURE);
+		if ($count > $sentenceCount) {
+			return $text;
+		}
+		$excerpt = substr($text, 0, $found[0][$count-1][1] + 2);
+		return String::closeTags($excerpt);
+	}
+	
+	
 	/**
 	 * Normalizing the brakes in a string to UNIX Brakes
 	 * they are displayable on Mac, Linux and PC. All Line Brakes are
@@ -34,8 +83,7 @@ class Text extends \ephFrame\view\Helper
 	public function normalizeBrakes($string)
 	{
 		return preg_replace('!(\r\n|\r)!', PHP_EOL, $string);
-	}
-	
+	}	
 	
 	/**
 	 * Counts all words in a text and returns the words and their count
