@@ -33,6 +33,9 @@ class Controller
 		$this->callbacks->add('afterAction', array($this, 'afterAction'));
 		$this->callbacks->add('beforeRender', array($this, 'beforeRender'));
 		$this->callbacks->add('afterRender', array($this, 'afterRender'));
+		if (method_exists($this, 'afterConstruct')) {
+			$this->afterConstruct();
+		}
 	}
 	
 	protected function index()

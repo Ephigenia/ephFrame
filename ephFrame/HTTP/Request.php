@@ -24,11 +24,25 @@ class Request extends Message
 		} else {
 			$client = array();
 			foreach($_SERVER as $k => $v) {
-				if (strncasecmp($k, 'http_', 5) == 0) $client[substr($k, 5)] = $v;
+				if (strncasecmp($k, 'http_', 5) == 0) $client[substr(strtr(strtolower($k), '_', '-'), 5)] = $v;
 			}
 			$this->header = new Header($client);
 		}
 	}
+	
+	public function isSecure()
+	{
+		return (
+            	(isset($this->header['https']) && (strncmp($this->header['https'], 'on', 2) == 0 || $this->header['https'] == 1))
+			||	(isset($this->header['ssl-https']) && (strncmp($this->header['ssl-https'], 'on', 2) == 0 || $this->header['ssl-https'] == 1))
+			||	(isset($this->header['x-forwarded-proto']) && strncmp($this->header['x-forwarded-proto'], 'https', 5))
+        );
+	}
+	
+	public function isAjax()
+    {
+        return isset($this->headers['x-requested-with']) && $this->headers['x-requested-with'] == 'XMLHttpRequest';
+    }
 	
 	public function __toString()
 	{

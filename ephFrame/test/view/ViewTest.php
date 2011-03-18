@@ -21,7 +21,7 @@ class ViewTest extends \PHPUnit_Framework_TestCase
 	
 	public function testRender()
 	{
-		$this->fixture->rootPath = __DIR__.'/../fixtures/view';
+		$this->fixture->rootPath = __DIR__.'/../fixtures/view/';
 		$this->fixture->theme = false;
 		$this->assertEquals(
 			$this->fixture->render('view', 'template', array('username' => 'Marcel')),
