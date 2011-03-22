@@ -11,6 +11,46 @@ class TextTest extends \PHPUnit_Framework_TestCase
 		$this->fixture = new Text();
 	}
 	
+	public function testMore()
+	{
+		$text = 'Lorem Ipsum <!--more--> doloret';
+		$url = '#';
+		$this->assertEquals($this->fixture->more($text, $url),
+			'Lorem Ipsum <a href="#">more</a>'
+		);
+		$text = 'Lorem Ipsum <!--more--> doloret';
+		$url = '#';
+		$this->assertEquals($this->fixture->more($text, $url, 'alternate'),
+			'Lorem Ipsum <a title="alternate" href="#">alternate</a>'
+		);
+		
+		$text = 'Lorem Ipsum <!--Read more after the click--> doloret';
+		$this->assertEquals($this->fixture->more($text, $url),
+			'Lorem Ipsum <a href="#">Read more after the click</a>'
+		);
+		
+		$text = 'Lorem Ipsum <!--This is kind-of tricky>>--> doloret';
+		$this->assertEquals($this->fixture->more($text, $url),
+			'Lorem Ipsum <a href="#">This is kind-of tricky&gt;&gt;</a>'
+		);
+		
+		$text = 'Lorem Ipsum <!-- Read & Learn…--> doloret';
+		$this->assertEquals($this->fixture->more($text, $url),
+			'Lorem Ipsum <a href="#"> Read &amp; Learn…</a>'
+		);
+		
+		$text = 'Lorem Ipsum <!--morelabel--> doloret';
+		$this->assertEquals($this->fixture->more($text, $url, $defaultLabel = 'go on reading…'),
+			'Lorem Ipsum <a title="go on reading…" href="#">morelabel</a>'
+		);
+		
+		// test not - escaping of label
+		$text = 'Lorem Ipsum <!--go on <em>reading</em>--> doloret';
+		$this->assertEquals($this->fixture->more($text, $url, false, array('escaped' => false)),
+			'Lorem Ipsum <a href="#">go on <em>reading</em></a>'
+		);
+	}
+	
 	public function testAutoURLEqualValues()
 	{
 		return array(
@@ -32,7 +72,7 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @dataProvider testAutoURLEqualValues
 	 */
-	public function testAutoURL($input, $expectedResult)
+	public function testSimpleAutoURL($input, $expectedResult)
 	{
 		$this->assertEquals($this->fixture->autoURL($input), $expectedResult);
 	}

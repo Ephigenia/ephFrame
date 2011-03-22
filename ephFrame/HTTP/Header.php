@@ -17,11 +17,6 @@ class Header extends \ArrayObject
 		return sprintf('%s: %s', $key, (string) $value);
 	}
 	
-	public function __get($var)
-	{
-		
-	}
-	
 	public function __toString()
 	{
 		$lines = array();
