@@ -10,7 +10,7 @@ class Attributes extends \ArrayObject
 	
 	public function __construct(Array $array = array())
 	{
-		return parent::__construct(array_unique($array), \ArrayObject::ARRAY_AS_PROPS);
+		return parent::__construct($array, \ArrayObject::ARRAY_AS_PROPS);
 	}
 	
 	public function __toString()
@@ -20,10 +20,10 @@ class Attributes extends \ArrayObject
 			if (is_array($value)) {
 				$value = implode(' ', array_unique($value));
 			}
-			if (HTMLAttributes::$trimAttributeValues) {
+			if (self::$trimAttributeValues) {
 				$value = trim($value);
 			}
-			if (empty($value) && !HTMLAttributes::$renderEmptyAttributeValues) {
+			if (empty($value) && !self::$renderEmptyAttributeValues) {
 				continue;
 			}
 			$rendered .= $key.'="'.htmlspecialchars($value, ENT_QUOTES, 'UTF-8', false).'" ';

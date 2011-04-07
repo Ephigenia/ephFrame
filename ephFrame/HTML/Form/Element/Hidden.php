@@ -2,9 +2,11 @@
 
 namespace ephFrame\HTML\Form\Element;
 
-class Number extends Element
+class Hidden extends Element
 {
 	public $attributes = array(
-		'type' => 'number',
+		'type' => 'hidden',
 	);
+	
+	public $decorators = false;
 }

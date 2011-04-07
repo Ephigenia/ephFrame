@@ -2,6 +2,8 @@
 
 namespace ephFrame\HTML;
 
+use \ephFrame\HTML\Attributes;
+
 class Tag
 {
 	public $name;
@@ -24,7 +26,7 @@ class Tag
 			unset($attributes->escaped);
 			$this->escaped = false;
 		}
-		$this->attributes = new  ephFrame\HTML\Attributes($attributes + $this->attributes);
+		$this->attributes = new Attributes($attributes + $this->attributes);
 	}
 	
 	public function openTag()

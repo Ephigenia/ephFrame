@@ -2,7 +2,9 @@
 
 namespace ephFrame\HTML\Form\Element;
 
-class Element extends \ephFrame\HTML\Tag
+use \ephFrame\HTML\Tag;
+
+class Element extends Tag
 {
 	public $required;
 	
@@ -12,6 +14,8 @@ class Element extends \ephFrame\HTML\Tag
 	
 	public $description;
 	
+	public $label;
+	
 	public function __construct($name, $value = null, Array $options = array())
 	{
 		$options = array('attributes' => array(
@@ -19,17 +23,13 @@ class Element extends \ephFrame\HTML\Tag
 			'value' => $value,
 		)) + $options;
 		parent::__construct($this->name, false, $options['attributes']);
-		$this->decorators = array(
-			'prepend' => array(
-				'label' => new ephFrame\HTML\Form\Decorator\Label($this, $options),
-			),
-			'append' => array(
-				'description' => new ephFrame\HTML\Form\Decorator\Description($this, $options),
-			),
-			'wrap' => array(
-				new ephFrame\HTML\Form\Decorator\HTMLTag($this, $options),
-			),
-		);
+		if ($this->decorators !== false) {
+			$this->decorators = array(
+				'label' => new \ephFrame\HTML\Form\Decorator\Label($this),
+				'description' => new \ephFrame\HTML\Form\Decorator\Description($this),
+				'wrap' => new \ephFrame\HTML\Form\Decorator\HTMLTag($this),
+			);
+		}
 		foreach($options as $k => $v) {
 			if (property_exists($this, $k) && $k !== 'attributes') $this->{$k} = $v;
 		}
@@ -38,23 +38,9 @@ class Element extends \ephFrame\HTML\Tag
 	public function __toString()
 	{
 		$rendered = parent::__toString();
-		foreach($this->decorators as $placement => $decorators) {
-			switch($placement) {
-				default:
-				case 'prepend':
-					$rendered = implode(PHP_EOL, $decorators).$rendered;
-					break;
-				case 'wrap':
-					foreach($decorators as $decorator) {
-						$decorator->options['value'] = $rendered;
-						$rendered = (string) $decorator;
-					}
-					break;
-				case 'append':
-					$rendered .= implode(PHP_EOL, $decorators);
-					break;
-			}
+		if (is_array($this->decorators)) foreach($this->decorators as $decorator) {
+			$rendered = $decorator->decorate($rendered);
 		}
-		return $rendered;
+		return (string) $rendered;
 	}
 }

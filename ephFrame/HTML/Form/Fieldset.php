@@ -2,6 +2,12 @@
 
 namespace ephFrame\HTML\Form;
 
-class Fieldset
+use \ephFrame\HTML\Tag
+
+class Fieldset extends Tag
 {
+	public $name = 'fieldset';
+	
+	public $fields = array();
+	
 }

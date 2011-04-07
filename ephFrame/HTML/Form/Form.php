@@ -11,7 +11,7 @@ class Form
 		return implode(PHP_EOL, $this->elements);
 	}
 	
-	public function add(\app\component\Form\Element\Element $element)
+	public function add(\ephFrame\HTML\Form\Element\Element $element)
 	{
 		$this->elements[] = $element;
 	}

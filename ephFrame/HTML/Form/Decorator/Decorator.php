@@ -2,15 +2,37 @@
 
 namespace ephFrame\HTML\Form\Decorator;
 
+use \ephFrame\HTML\Form\Element\Element;
+
 class Decorator
 {
 	public $element;
 	
-	public $options = array();
+	public $position = DecoratorPosition::APPEND;
 	
-	public function __construct($element, Array $options = array())
+	public function __construct(Element $element, Array $options = array())
 	{
 		$this->element = $element;
-		$this->options += $options;
+		foreach($options as $k => $v) {
+			if (is_array($this->{$k})) {
+				$this->{$k} += $v;
+			} else {
+				$this->{$k} = $v;
+			}
+		}
+	}
+	
+	public function decorate($content)
+	{
+		switch($this->position) {
+			default:
+			case DecoratorPosition::APPEND:
+				return $content.$this;
+			case DecoratorPosition::WRAP:
+				$this->value = $content;
+				return $this;
+			case DecoratorPosition::PREPEND:
+				return $this.$content;
+		}
 	}
 }

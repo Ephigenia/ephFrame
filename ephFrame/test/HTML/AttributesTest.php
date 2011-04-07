@@ -56,6 +56,13 @@ class AttributesTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals((string) $this->attributes, 'href="url" target="_blank" title="&quot;attribute&quot; &amp; value" class="selected red"');
 	}
 	
+	public function testValueDoubledValueWithDifferentKeys()
+	{
+		$this->attributes->class = 'selected';
+		$this->attributes->id = 'selected';
+		$this->assertEquals((string) $this->attributes, 'href="url" target="_blank" title="&quot;attribute&quot; &amp; value" class="selected" id="selected"');
+	}
+	
 	public function testChange()
 	{
 		$this->attributes->href = 'http://www.ephigenia.de';

@@ -6,16 +6,21 @@ use \ephFrame\HTML\Tag;
 
 class HTMLTag extends Decorator
 {
-	public $options = array(
-		'tag' => 'div',
-		'value' => false,
-		'attributes' => array(
-			'escaped' => false,
-		),
+	public $tag = 'div';
+	
+	public $value = false;
+
+	public $attributes = array(
+		'escaped' => false,
 	);
+	
+	public $position = DecoratorPosition::WRAP;
 	
 	public function __toString()
 	{
-		return (string) new Tag($this->options['tag'], $this->options['value'], $this->options['attributes']);
+		if (empty($this->value)) {
+			return '';
+		}
+		return (string) new Tag($this->tag, $this->value, $this->attributes);
 	}
 }
