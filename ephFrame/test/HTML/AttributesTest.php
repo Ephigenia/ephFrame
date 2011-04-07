@@ -1,14 +1,14 @@
 <?php
 
-namespace ephFrame\test\util;
+namespace ephFrame\test\HTML;
 
-use ephFrame\util\HTMLAttributes;
+use ephFrame\HTML\Attributes;
 
-class HTMLAttributesTest extends \PHPUnit_Framework_TestCase
+class AttributesTest extends \PHPUnit_Framework_TestCase
 {
 	public function setUp()
 	{
-		$this->attributes = new HTMLAttributes(array(
+		$this->attributes = new Attributes(array(
 			'href' => 'url',
 			'target' => '_blank',
 			'title' => '"attribute" & value',
@@ -22,7 +22,7 @@ class HTMLAttributesTest extends \PHPUnit_Framework_TestCase
 	
 	public function testEmptyAttributeValue()
 	{
-		$attributes = new HTMLAttributes(array(
+		$attributes = new Attributes(array(
 			'empty' => '',
 			'filled' => 'value',
 			'emptyarray' => array(' ')

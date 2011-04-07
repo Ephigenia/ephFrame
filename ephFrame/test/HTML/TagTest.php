@@ -1,10 +1,10 @@
 <?php
 
-namespace ephFrame\test\util;
+namespace ephFrame\test\HTML;
 
-use ephFrame\util\HTMLTag;
+use ephFrame\HTML\Tag;
 
-class HTMLTagTest extends \PHPUnit_Framework_TestCase
+class TagTest extends \PHPUnit_Framework_TestCase
 {
 	public function toStringComparisonValues()
 	{
@@ -33,14 +33,14 @@ class HTMLTagTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function test__toString($tag, $label, $attributes, $result)
 	{
-		$tag = new HTMLTag($tag, $label, $attributes);
+		$tag = new Tag($tag, $label, $attributes);
 		$this->assertEquals((string) $tag, $result);
 	}
 	
 	public function testSimpleNested()
 	{
-		$tag1 = new HTMLTag('img', null, array('src' => 'image.jpg'));
-		$tag2 = new HTMLTag('a', $tag1, array('rel' => 'external'));
+		$tag1 = new Tag('img', null, array('src' => 'image.jpg'));
+		$tag2 = new Tag('a', $tag1, array('rel' => 'external'));
 		$this->assertEquals((string) $tag2, '<a rel="external"><img src="image.jpg" /></a>');
 	}
 }

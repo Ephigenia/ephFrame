@@ -1,10 +1,11 @@
 <?php
 
-namespace ephFrame\util;
+namespace ephFrame\HTML;
 
-class HTMLAttributes extends \ArrayObject
+class Attributes extends \ArrayObject
 {
 	public static $renderEmptyAttributeValues = false;
+	
 	public static $trimAttributeValues = true;
 	
 	public function __construct(Array $array = array())

@@ -15,7 +15,7 @@ class Controller
 	
 	protected $view;
 	
-	protected $params = array();
+	public $params = array();
 	
 	protected $action = 'index';
 	

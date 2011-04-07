@@ -1,10 +1,8 @@
 <?php
 
-namespace ephFrame\util;
+namespace ephFrame\HTML;
 
-use ephFrame\util\HTMLAttributes;
-
-class HTMLTag
+class Tag
 {
 	public $name;
 	
@@ -14,15 +12,19 @@ class HTMLTag
 	
 	public $escaped = true;
 	
-	public function __construct($name, $value = null, Array $attributes = array())
+	public function __construct($name = null, $value = null, Array $attributes = array())
 	{
-		$this->name = trim((string) $name);
-		$this->value = $value;
+		if (func_num_args() >= 1) {
+			$this->name = trim((string) $name);
+		}
+		if (func_num_args() >= 2) {
+			$this->value = $value;
+		}
 		if (isset($attributes['escaped']) && !$attributes['escaped']) {
 			unset($attributes->escaped);
 			$this->escaped = false;
 		}
-		$this->attributes = new HTMLAttributes($attributes);
+		$this->attributes = new  ephFrame\HTML\Attributes($attributes + $this->attributes);
 	}
 	
 	public function openTag()
@@ -43,7 +45,7 @@ class HTMLTag
 	{
 		if (empty($this->value) && !in_array($this->name, array('textarea'))) {
 			return $this->openTag();
-		} elseif ($this->value instanceof HTMLTag || !$this->escaped) {
+		} elseif ($this->value instanceof Tag || !$this->escaped) {
 			return $this->openTag().(string) $this->value.$this->closeTag();
 		} else {
 			return $this->openTag().htmlspecialchars((string) $this->value, ENT_QUOTES, 'UTF-8', false).$this->closeTag();

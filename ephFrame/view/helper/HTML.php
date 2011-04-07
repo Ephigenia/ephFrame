@@ -6,7 +6,7 @@ class HTML extends \ephFrame\view\Helper
 {
 	public function tag($name, $content, Array $attributes = array())
 	{
-		return new \ephFrame\util\HTMLTag((string) $name, $content, $attributes);
+		return new \ephFrame\HTML\Tag((string) $name, $content, $attributes);
 	}
 	
 	public function email($email, $label = null, Array $attributes = array())
