@@ -25,6 +25,10 @@ class TagTest extends \PHPUnit_Framework_TestCase
 				'meta', null, array('href' => 'style.css', 'type' => 'text/css'),
 				'<meta href="style.css" type="text/css" />',
 			),
+			array(
+				'strong', 'Hänsel und Gretel', array(),
+				'<strong>Hänsel und Gretel</strong>',
+			),
 		);
 	}
 	

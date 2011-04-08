@@ -13,8 +13,14 @@ class Label extends Decorator
 	public function __toString()
 	{
 		if (empty($this->attributes['for'])) {
-			$this->attributes['for'] = $this->element->name;
+			$this->attributes['for'] = $this->element->attributes['name'];
 		}
- 		return (string) new Tag('label', @$this->element->label ?: $this->element->attributes['name'], $this->attributes);
+		$label = false;
+		if (empty($this->element->label) && $this->element->label !== false) {
+			$label = $this->element->attributes['name'];
+		} else {
+			$label = $this->element->label;
+		}
+ 		return (string) new Tag('label', $label, $this->attributes);
 	}
 }

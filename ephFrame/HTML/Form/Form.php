@@ -4,15 +4,24 @@ namespace ephFrame\HTML\Form;
 
 class Form
 {
-	protected $elements = array();
+	public $fieldsets = array();
+	
+	public $attributes = array();
+	
+	public function __construct(Array $attributes = array())
+	{
+		$this->fieldsets[] = new Fieldset();
+		$this->attributes += $attributes;
+		$this->configure();
+	}
+	
+	public function tag()
+	{
+		return new \ephFrame\HTML\Tag('form', implode(PHP_EOL, $this->fieldsets), $this->attributes + array('escaped' => false));
+	}
 	
 	public function __toString()
 	{
-		return implode(PHP_EOL, $this->elements);
-	}
-	
-	public function add(\ephFrame\HTML\Form\Element\Element $element)
-	{
-		$this->elements[] = $element;
+		return (string) $this->tag();
 	}
 }

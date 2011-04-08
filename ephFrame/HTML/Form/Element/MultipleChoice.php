@@ -4,7 +4,7 @@ namespace ephFrame\HTML\Form\Element;
 
 class MultipleChoice extends Element
 {
-	public $name = 'select';
+	protected $tag = 'select';
 	
-	public $attributes = array();
+	public $options = array();
 }

@@ -47,10 +47,16 @@ class Tag
 	{
 		if (empty($this->value) && !in_array($this->name, array('textarea'))) {
 			return $this->openTag();
-		} elseif ($this->value instanceof Tag || !$this->escaped) {
-			return $this->openTag().(string) $this->value.$this->closeTag();
-		} else {
-			return $this->openTag().htmlspecialchars((string) $this->value, ENT_QUOTES, 'UTF-8', false).$this->closeTag();
+		} else {	
+			if (is_array($this->value)) {
+				$value = implode('', $this->value);
+			} else {
+				$value = $this->value;
+			}
+			if ($this->escaped && !$this->value instanceOf Tag) {
+				$value = htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8', false);
+			}
+			return $this->openTag().$value.$this->closeTag();
 		}
 	}
 }

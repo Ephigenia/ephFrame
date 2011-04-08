@@ -23,7 +23,7 @@ class Attributes extends \ArrayObject
 			if (self::$trimAttributeValues) {
 				$value = trim($value);
 			}
-			if (empty($value) && !self::$renderEmptyAttributeValues) {
+			if ($value == '' && !self::$renderEmptyAttributeValues) {
 				continue;
 			}
 			$rendered .= $key.'="'.htmlspecialchars($value, ENT_QUOTES, 'UTF-8', false).'" ';

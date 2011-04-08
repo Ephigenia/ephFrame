@@ -3,5 +3,5 @@ app/doc/*
 p_*
 *.log
 *.tmp
-ephFrame/test/report/*
+report/*
 deploy.sh
