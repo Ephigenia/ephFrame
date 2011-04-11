@@ -16,10 +16,10 @@ class Label extends Decorator
 			$this->attributes['for'] = $this->element->attributes['name'];
 		}
 		$label = false;
-		if (empty($this->element->label) && $this->element->label !== false) {
-			$label = $this->element->attributes['name'];
-		} else {
+		if (!empty($this->element->label)) {
 			$label = $this->element->label;
+		} elseif ($this->element->label !== false) {
+			$label = $this->element->attributes['name'];
 		}
  		return (string) new Tag('label', $label, $this->attributes);
 	}

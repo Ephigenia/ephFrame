@@ -17,7 +17,6 @@ class PHP extends \ArrayObject
 	
 	public function start()
 	{
-		var_dump($this->options);
 		extract($this->options);
 		session_name($name);
 		session_cache_limiter(false);

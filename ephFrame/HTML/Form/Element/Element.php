@@ -6,9 +6,13 @@ use \ephFrame\HTML\Tag;
 
 class Element
 {
-	public $required;
-	
 	public $decorators = array();
+	
+	public $validators = array();
+	
+	public $filters = array();
+	
+	public $errors = array();
 	
 	protected $tag = 'input';
 	
@@ -26,25 +30,62 @@ class Element
 			'name' => $name,
 		);
 		foreach($options as $k => $v) {
-			if (is_array($this->{$k}) && is_array($k)) {
+			if (is_array($this->{$k}) && is_array($v)) {
 				$this->{$k} += $v;
 			} else {
 				$this->{$k} = $v;
 			}
 		}
-		// decorators
 		if ($this->decorators !== false && empty($this->decorators)) {
-			$this->decorators = array(
-				'label' => new \ephFrame\HTML\Form\Decorator\Label($this),
-				'description' => new \ephFrame\HTML\Form\Decorator\Description($this),
-				'wrap' => new \ephFrame\HTML\Form\Decorator\HTMLTag($this),
-			);
+			$this->decorators = $this->defaultDecorators();
 		}
+		if ($this->validators !== false && empty($this->validators)) {
+			$this->validators = $this->defaultValidators();
+		}
+	}
+	
+	protected function defaultDecorators()
+	{
+		return array(
+			'label' => new \ephFrame\HTML\Form\Decorator\Label($this),
+			'description' => new \ephFrame\HTML\Form\Decorator\Description($this),
+			'wrap' => new \ephFrame\HTML\Form\Decorator\HTMLTag($this),
+		);
+	}
+	
+	protected function defaultValidators()
+	{
+		return array();
+	}
+	
+	public function hasError()
+	{
+		return count($this->errors) > 0;
+	}
+	
+	public function validate()
+	{
+		if (is_array($this->validators)) foreach($this->validators as $validator) {
+			if (!$validator->validate($this->data)) {
+				$this->errors[] = $validator->message();
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public function submit($data)
+	{
+		$this->data = $data;
+		foreach($this->filters as $filter) {
+			$this->data = $filter->filter($this->data);
+		}
+		return $this;
 	}
 	
 	public function tag()
 	{
-		$this->attributes['value'] = $this->value;
+		$this->attributes['value'] = $this->data;
 		return new \ephFrame\HTML\Tag($this->tag, null, $this->attributes);
 	}
 	

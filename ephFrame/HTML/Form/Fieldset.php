@@ -14,13 +14,14 @@ class Fieldset extends \ArrayObject
 		'escaped' => false,
 	);
 	
-	public function __construct(Array $attributes = array())
+	public function __construct(Array $elements = array(), Array $attributes = array())
 	{
 		if (isset($attributes['visible'])) {
 			$this->visible = (bool) $attributes['visible'];
 			unset($attributes['visible']);
 		}
 		$this->attributes += $attributes;
+		return parent::__construct($elements, \ArrayObject::ARRAY_AS_PROPS);
 	}
 	
 	public function tag()

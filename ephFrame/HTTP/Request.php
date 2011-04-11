@@ -8,6 +8,8 @@ class Request extends Message
 
 	public $data = array();
 	
+	public $query = array();
+	
 	public $path;
 	
 	public function __construct($method = null, $path = null, Header $header = null, Array $data = array())
@@ -17,7 +19,8 @@ class Request extends Message
 		if ($data) {
 			$this->data = $data;
 		} else {
-			$this->data = array_merge($_GET, $_POST);
+			$this->data = $_POST;
+			$this->query = $_GET;
 		}
 		if ($header instanceof Header) {
 			$this->header = $header;

@@ -28,7 +28,6 @@ class Adaptable extends \ArrayObject
 	
 	protected function adapter()
 	{
-		var_dump('OK');
 		if (!isset($this->adapter)) {
 			$this->adapter = new self::$options['adapter'](self::$options);
 			$this->adapter->start();
