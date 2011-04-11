@@ -1,5 +1,7 @@
 <?php
 
+namespace ephFrame\Filter;
+
 class PregReplace extends Filter
 {
 	public $regexp;
@@ -8,6 +10,6 @@ class PregReplace extends Filter
 	
 	public function apply($value)
 	{
-		return preg_replace($this->regexp, $this->replace, $value);
+		return preg_replace($this->regexp, $this->replace, (string) $value);
 	}
 }

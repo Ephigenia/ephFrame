@@ -2,12 +2,8 @@
 
 namespace ephFrame\Filter;
 
-class Numeric extends PregRepllace
+class Numeric extends Alpha
 {
-	public $unicode = true;
-	
-	public $whitespace = true;
-	
 	public function apply($value)
 	{
 		$whitespace = $this->whitespace ? '\s' : '';

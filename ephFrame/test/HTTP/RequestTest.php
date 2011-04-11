@@ -27,7 +27,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 	{
 		$_GET['test2'] = 'testvalue';
 		$request = new Request(RequestMethod::GET, '/path/');
-		$this->assertEquals($request->data['test2'], $_GET['test2']);
+		$this->assertEquals($request->query['test2'], $_GET['test2']);
 	}
 	
 	public function testRequestMethod()

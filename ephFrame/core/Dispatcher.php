@@ -11,7 +11,10 @@ class Dispatcher
 		try {
 			if ($result = Router::getInstance()->parse($uri)) {
 				$controller = new $result['controller']($request, $result);
-				$controller->action($result['action'], $result);
+				$response = $controller->action($result['action'], $result);
+				if ($response instanceof \ephFrame\core\Controller) {
+					$controller = $response;
+				}
 				return $controller->__toString();
 			}
 		} catch (\Exception $exception) {

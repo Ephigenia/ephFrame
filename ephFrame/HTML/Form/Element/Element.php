@@ -42,12 +42,16 @@ class Element
 		if ($this->validators !== false && empty($this->validators)) {
 			$this->validators = $this->defaultValidators();
 		}
+		if ($this->filters !== false && empty($this->filters)) {
+			$this->filters = $this->defaultFilters();
+		}
 	}
 	
 	protected function defaultDecorators()
 	{
 		return array(
 			'label' => new \ephFrame\HTML\Form\Decorator\Label($this),
+			'error' => new \ephFrame\HTML\Form\Decorator\Error($this),
 			'description' => new \ephFrame\HTML\Form\Decorator\Description($this),
 			'wrap' => new \ephFrame\HTML\Form\Decorator\HTMLTag($this),
 		);
@@ -55,7 +59,17 @@ class Element
 	
 	protected function defaultValidators()
 	{
-		return array();
+		
+	}
+	
+	protected function defaultFilters()
+	{
+		return array(
+			'StripTags' => new \ephFrame\Filter\StripTags(),
+			'Trim' => new \ephFrame\Filter\Trim(),
+			'StripWhiteSpace' => new \ephFrame\Filter\StripWhiteSpace(),
+			'StripNewlinews' => new \ephFrame\Filter\StripNewlines(),
+		);
 	}
 	
 	public function hasError()
@@ -78,7 +92,7 @@ class Element
 	{
 		$this->data = $data;
 		foreach($this->filters as $filter) {
-			$this->data = $filter->filter($this->data);
+			$this->data = $filter->apply($this->data);
 		}
 		return $this;
 	}

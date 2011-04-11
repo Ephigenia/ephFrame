@@ -17,13 +17,13 @@ class StripTags extends Filter
 		$value = preg_replace(array_keys($r), array_values($r), $value);
 		// then strip not allowed tags
 		if (empty($this->allowed)) {
-			return strip_tags($string);
+			return strip_tags($value);
 		} else {
 			$allowed = '';
 			foreach($this->allowed as $name) {
 				$allowed .= '<'.$name.'></'.$name.'>';
 			}
-			return strip_tags($string, $allowed);
+			return strip_tags($value, $allowed);
 		}
 	}
 }

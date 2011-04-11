@@ -7,4 +7,11 @@ class Number extends Element
 	public $attributes = array(
 		'type' => 'number',
 	);
+	
+	protected function defaultValidators()
+	{
+		return array(
+			new \ephFrame\Validator\Integer(),
+		);
+	}
 }
