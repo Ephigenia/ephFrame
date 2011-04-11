@@ -9,6 +9,16 @@ class URL extends Element
 		'maxlength' => 255,
 	);
 	
+	public $defaultProtocol = 'http';
+	
+	public function submit($data)
+	{
+		if (!empty($data) && $this->defaultProtocol && !preg_match('~^\w+://~', $data)) {
+			$data = $this->defaultProtocol.'://'.$data;
+		}
+		parent::submit($data);
+	}
+	
 	protected function defaultValidators()
 	{
 		return array(
