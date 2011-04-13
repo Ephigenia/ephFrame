@@ -65,10 +65,10 @@ class Element
 	protected function defaultFilters()
 	{
 		return array(
-			'StripTags' => new \ephFrame\Filter\StripTags(),
 			'Trim' => new \ephFrame\Filter\Trim(),
 			'StripWhiteSpace' => new \ephFrame\Filter\StripWhiteSpace(),
 			'StripNewlinews' => new \ephFrame\Filter\StripNewlines(),
+			'StripTags' => new \ephFrame\Filter\StripTags(),
 		);
 	}
 	

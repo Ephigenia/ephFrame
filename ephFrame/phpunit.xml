@@ -14,11 +14,10 @@
 	<filter>
 		<whitelist>
 			<directory suffix=".php">./</directory>
+			<exclude>
+				<directory>test/</directory>
+			</exclude>
 		</whitelist>
-	    <blacklist>
-			<directory>test/</directory>
-			<directory>./test/fixtures</directory>
-	    </blacklist>
 	</filter>
 	<logging>
 		<log type="coverage-html" target="../report/ephFrame/coverage"

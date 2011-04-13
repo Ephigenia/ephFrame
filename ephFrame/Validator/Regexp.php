@@ -10,6 +10,6 @@ class Regexp extends Validator
 	
 	public function validate($value)
 	{
-		return preg_match($this->regexp, (string) $value);
+		return (bool) preg_match($this->regexp, (string) $value);
 	}
 }

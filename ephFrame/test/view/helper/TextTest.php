@@ -51,6 +51,21 @@ class TextTest extends \PHPUnit_Framework_TestCase
 		);
 	}
 	
+	public function testMoreWithAttributes()
+	{
+		$text = 'Lorem Ipsum <!--morelabel--> doloret';
+		$url = '#';
+		$attributes = array('class' => 'morelink');
+		$this->assertEquals($this->fixture->more($text, $url, $defaultLabel = 'go on reading…', $attributes),
+			'Lorem Ipsum <a class="morelink" title="go on reading…" href="#">morelabel</a>'
+		);
+		
+		$attributes['title'] = 'my new title';
+		$this->assertEquals($this->fixture->more($text, $url, $defaultLabel = 'go on reading…', $attributes),
+			'Lorem Ipsum <a class="morelink" title="my new title" href="#">morelabel</a>'
+		);
+	}
+	
 	public function testAutoURLEqualValues()
 	{
 		return array(
@@ -125,5 +140,41 @@ class TextTest extends \PHPUnit_Framework_TestCase
 			$this->fixture->autoEmail('love@ephigenia.de', 'class="email"'),
 			'<a href="mailto:love@ephigenia.de" class="email">love@ephigenia.de</a>'
 		);
+	}
+	
+	public function testExcerptValues() 
+	{
+		$text = 'Hello My Name is charly. I’m your Father!   '.PHP_EOL.'What do you think?';
+		return array(
+			array($text, 1, 'Hello My Name is charly.'),
+			array($text, 2, 'Hello My Name is charly. I’m your Father!'),
+			array($text, 3, $text),
+			array($text, 5, $text),
+		);
+	}
+	
+	/**
+	 * @dataProvider testExcerptValues()
+	 */
+	public function testExcerpt($text, $count, $result)
+	{
+		$this->assertEquals($this->fixture->excerpt($text, $count), $result);
+	}
+	
+	public function testCountParagraphsValues()
+	{
+		return array(
+			array('', 0),
+			array('1'.PHP_EOL, 1),
+			array('1'.PHP_EOL.PHP_EOL, 2),
+		);
+	}
+	
+	/**
+	 * @dataProvider testCountParagraphsValues()
+	 */
+	public function testCountParagraphs($string, $result)
+	{
+		$this->assertEquals($this->fixture->countParagraphs($string), $result);
 	}
 }

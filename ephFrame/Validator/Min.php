@@ -4,12 +4,12 @@ namespace ephFrame\Validator;
 
 class Min extends Validator
 {
-	public $min;
+	public $limit;
 	
-	public $message = 'This value should be :min or less';
+	public $message = 'This value should be :limit or less';
 	
 	public function validate($value)
 	{
-		return $value > $this->min;
+		return $value >= $this->limit;
 	}
 }

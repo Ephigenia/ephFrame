@@ -10,6 +10,6 @@ class PregReplace extends Filter
 	
 	public function apply($value)
 	{
-		return preg_replace($this->regexp, $this->replace, (string) $value);
+		return parent::apply(preg_replace($this->regexp, $this->replace, (string) $value));
 	}
 }

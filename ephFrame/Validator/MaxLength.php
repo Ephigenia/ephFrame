@@ -6,12 +6,12 @@ use ephFrame\util\String;
 
 class MaxLength extends Validator
 {
-	public $length = 0;
+	public $limit = 0;
 	
-	public $message = 'This value is too long. It should have :length characters or less';
+	public $message = 'This value is too long. It should have :limit characters or less';
 	
 	public function validate($value)
 	{
-		return String::length((string) $value <= $this->length;
+		return parent::validate(String::length((string) $value) <= $this->limit);
 	}
 }

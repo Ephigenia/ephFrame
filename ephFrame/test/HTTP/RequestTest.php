@@ -47,11 +47,15 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 	public function testIsSecure()
 	{
 		$this->assertFalse($this->request->isSecure());
+		$this->request->header['https'] = 'on';
+		$this->assertTrue($this->request->isSecure());
 	}
 	
 	public function testIsAjax()
 	{
-		$this->assertFalse($this->request->isSecure());
+		$this->assertFalse($this->request->isAjax());
+		$this->request->header['x-requested-with'] = 'XMLHttpRequest';
+		$this->assertTrue($this->request->isAjax());
 	}
 	
 	public function testGetRendering()

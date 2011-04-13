@@ -19,9 +19,13 @@ class StripTags extends Filter
 		if (empty($this->allowed)) {
 			return strip_tags($value);
 		} else {
-			$allowed = '';
-			foreach($this->allowed as $name) {
-				$allowed .= '<'.$name.'></'.$name.'>';
+			if (!is_array($this->allowed)) {
+				$allowed = $this->allowed;
+			} else {
+				$allowed = '';
+				foreach($this->allowed as $name) {
+					$allowed .= '<'.$name.'></'.$name.'>';
+				}
 			}
 			return strip_tags($value, $allowed);
 		}

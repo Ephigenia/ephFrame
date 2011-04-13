@@ -45,7 +45,7 @@ class Text extends \ephFrame\view\Helper
 	public function more($text, $url = false, $label = false, Array $attributes = array())
 	{
 		$attributes += array(
-			'title' => $label,
+			'title' => $label
 		);
 		$HTML = new \ephFrame\view\helper\HTML();
 		if (preg_match(self::$moreRegexp, $text, $found)) {
@@ -74,48 +74,6 @@ class Text extends \ephFrame\view\Helper
 		}
 		$excerpt = substr($text, 0, $found[0][$count-1][1] + 2);
 		return String::closeTags($excerpt);
-	}
-	
-	
-	/**
-	 * Normalizing the brakes in a string to UNIX Brakes
-	 * they are displayable on Mac, Linux and PC. All Line Brakes are
-	 * converted to UNIX line brakes - \n
-	 * @param string	$string
-	 * @return string
-	 */
-	public function normalizeBrakes($string)
-	{
-		return preg_replace('!(\r\n|\r)!', PHP_EOL, $string);
-	}	
-	
-	/**
-	 * Counts all words in a text and returns the words and their count
-	 * as indexed array. This will cut every html code and ignores it.
-	 * <code>
-	 * $text = 'I\'m a text that has some words!';
-	 * var_dump(String::countWords($text, 3));
-	 * // ['I\'m'] = 1, ['text'] = 1, ['that'] = 1 ... 
-	 * </code>
-	 * // todo this does not seem to work like the docu sais!? wtf?
-	 * @param string $input
-	 * @param integer $minLenght Minimum length of words to be counted
-	 * @return array(mixed)
-	 */
-	public static function countWords($input, $minLength = null)
-	{
-		$string = strip_tags($input);
-		if ($minLength === null) {
-			$regexp = '/([\p{L}\p{N}]+-?(\p{L}\p{N}+)?)/';
-		} else {
-			$regexp = '/([\p{L}\p{N}]{'.$minLength.',}-?(\p{L}\p{N}+)?)/';
-		}
-		$foundWords = array();
-		$foundKeywordsNum = preg_match_all($regexp, $string, $foundWords);
-		if (!isset($foundWords[0])) {
-			return $foundWords;
-		}
-		return $foundWords;
 	}
 	
 	/**

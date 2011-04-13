@@ -2,7 +2,7 @@
 
 namespace ephFrame\Validator;
 
-class IP extends RegexpValidator
+class IP extends Regexp
 {
 	public $message = 'This is not a valid IP address';
 	

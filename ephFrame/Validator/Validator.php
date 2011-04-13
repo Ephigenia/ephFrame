@@ -4,7 +4,7 @@ namespace ephFrame\Validator;
 
 use ephFrame\util\String;
 
-class Validator
+abstract class Validator
 {
 	public $message;
 	
@@ -22,6 +22,6 @@ class Validator
 	
 	public function validate($value)
 	{
-		return true;
+		return (bool) $value;
 	}
 }

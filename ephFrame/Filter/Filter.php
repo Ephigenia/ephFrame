@@ -2,7 +2,7 @@
 
 namespace ephFrame\Filter;
 
-class Filter
+abstract class Filter
 {
 	public function __construct(Array $options = array())
 	{
@@ -14,5 +14,10 @@ class Filter
 	public function apply($value)
 	{
 		return $value;
+	}
+	
+	public function __invoke($value)
+	{
+		return $this->apply($value);
 	}
 }

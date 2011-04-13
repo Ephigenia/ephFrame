@@ -17,9 +17,19 @@ class AlphaTest extends \PHPUnit_Framework_TestCase
 		$this->assertFalse($this->fixture->whitespace);
 	}
 	
+	public function testInvoke()
+	{
+		$r = $this->fixture;
+		$this->assertEquals($r('1abc3'), 'abc');
+	}
+	
 	public function testSimpleValues()
 	{
 		return array(
+			array(false, ''),
+			array(123, ''),
+			array(0x0, ''),
+			array(0xFE, ''),
 			array('abc', 'abc'),
 			array(' abc', 'abc'),
 			array("\t_d. a", 'da'),
