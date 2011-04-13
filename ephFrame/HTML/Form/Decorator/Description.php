@@ -4,12 +4,8 @@ namespace ephFrame\HTML\Form\Decorator;
 
 use \ephFrame\HTML\Tag;
 
-class Description extends Decorator
+class Description extends Error
 {
-	public $tag = 'p';
-	
-	public $position = DecoratorPosition::APPEND;
-	
 	public $attributes = array(
 		'class' => 'description',
 	);
