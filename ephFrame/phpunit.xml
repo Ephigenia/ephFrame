@@ -2,14 +2,21 @@
 <phpunit bootstrap="test/bootstrap.php"
 	colors="true"
 	stopOnFailure="false"
-	syntaxCheck="true">
+	syntaxCheck="true"
+	convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true">
 	<testsuites>
 		<testsuite name="ephFrame">
 			<directory>test/</directory>
 		</testsuite>
 	</testsuites>
 	<filter>
+		<whitelist>
+			<directory suffix=".php">./</directory>
+		</whitelist>
 	    <blacklist>
+			<directory>test/</directory>
 			<directory>./test/fixtures</directory>
 	    </blacklist>
 	</filter>
