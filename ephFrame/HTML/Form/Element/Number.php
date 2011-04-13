@@ -6,6 +6,8 @@ class Number extends Element
 {
 	public $attributes = array(
 		'type' => 'number',
+		'step' => 1,
+		'min' => 0,
 	);
 	
 	protected function defaultValidators()

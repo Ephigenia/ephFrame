@@ -18,10 +18,18 @@ class ElementTest extends \PHPUnit_Framework_TestCase
 			)
 		));
 	}
+	
 	public function testAttributesInConstructor()
 	{
 		$this->assertEquals($this->fixture->attributes['class'], 'pink');
 		$this->assertEquals($this->fixture->attributes['name'], 'fieldname');
+	}
+	
+	public function testAttributesAdd()
+	{
+		$value = '1px solid red';
+		$this->fixture->attributes['style'] = $value;
+		$this->assertEquals($this->fixture->attributes['style'], $value);
 	}
 	
 	public function testValidate()

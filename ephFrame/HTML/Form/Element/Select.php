@@ -15,14 +15,21 @@ class Select extends MultipleChoice
 			$this->attributes['multiple'] = 'multiple';
 		}
 		foreach($this->options as $value => $label) {
-			$attributes = array(
+			$optionAttributes = array(
 				'value' => $value,
 			);
-			if ($this->data == $value || (is_array($this->data) && in_array($value, $this->data))) {
-				$attributes['selected'] = 'selected';
+			if (!isset($this->data)) {
+				if ($this->attributes['value'] == $value || (is_array($this->attributes['value']) && in_array($value, $this->attributes['value']))) {
+					$optionAttributes['selected'] = 'selected';
+				}
+			} else {
+				if ($this->data == $value || (is_array($this->data) && in_array($value, $this->data))) {
+					$optionAttributes['selected'] = 'selected';
+				}
 			}
-			$options[] = new \ephFrame\HTML\Tag('option', $label, $attributes);
+			$options[] = new \ephFrame\HTML\Tag('option', $label, $optionAttributes);
 		}
+		unset($this->attributes['value']);
 		return new \ephFrame\HTML\Tag($this->tag, $options, $this->attributes + array('escaped' => false));
 	}
 }

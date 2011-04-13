@@ -20,6 +20,11 @@ class AttributesTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals((string) $this->attributes, 'href="url" target="_blank" title="&quot;attribute&quot; &amp; value"');
 	}
 	
+	public function testPropertyAccess()
+	{
+		$this->assertEquals($this->attributes->href, 'url');
+	}
+	
 	public function testEmptyAttributeValue()
 	{
 		$attributes = new Attributes(array(
