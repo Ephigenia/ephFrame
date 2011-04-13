@@ -41,6 +41,15 @@ class TagTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals((string) $tag, $result);
 	}
 	
+	public function testValueAsArray()
+	{
+		$tag = new Tag('p', array(
+			new Tag('strong', 'text'),
+			new Tag('em', 'something'),
+		));
+		$this->assertEquals((string) $tag, '<p><strong>text</strong><em>something</em></p>');
+	}
+	
 	public function testSimpleNested()
 	{
 		$tag1 = new Tag('img', null, array('src' => 'image.jpg'));

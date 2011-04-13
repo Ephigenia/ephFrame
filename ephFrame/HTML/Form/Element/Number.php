@@ -11,7 +11,17 @@ class Number extends Element
 	protected function defaultValidators()
 	{
 		return array(
-			new \ephFrame\Validator\Integer(),
+			new \ephFrame\Validator\Number(),
+		);
+	}
+	
+	protected function defaultFilters()
+	{
+		return array(
+			new \ephFrame\Filter\Number(array(
+				'unicode' => true,
+				'whitespace' => false,
+			)),
 		);
 	}
 }

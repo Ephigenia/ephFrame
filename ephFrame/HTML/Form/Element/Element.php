@@ -28,6 +28,7 @@ class Element
 	{
 		$this->attributes += array(
 			'name' => $name,
+			'value' => $value
 		);
 		foreach($options as $k => $v) {
 			if (is_array($this->{$k}) && is_array($v)) {
@@ -59,7 +60,7 @@ class Element
 	
 	protected function defaultValidators()
 	{
-		
+		return array();
 	}
 	
 	protected function defaultFilters()
@@ -72,18 +73,26 @@ class Element
 		);
 	}
 	
-	public function hasError()
+	public function error()
 	{
-		return count($this->errors) > 0;
+		if (count($this->errors) > 0) {
+			return $this->errors;
+		} else {
+			return false;
+		}
 	}
 	
-	public function validate()
+	public function ok()
+	{
+		return !((bool) $this->error());
+	}
+	
+	public function validate($value)
 	{
 		if (is_array($this->validators)) foreach($this->validators as $validator) {
-			if (!$validator->validate($this->data)) {
-				$this->errors[] = $validator->message();
-				return false;
-			}
+			if ($validator->validate($value)) continue;
+			$this->errors[] = $validator->message();
+			return false;
 		}
 		return true;
 	}
@@ -91,9 +100,10 @@ class Element
 	public function submit($data)
 	{
 		$this->data = $data;
-		foreach($this->filters as $filter) {
+		if (is_array($this->filters)) foreach($this->filters as $filter) {
 			$this->data = $filter->apply($this->data);
 		}
+		$this->validate($this->data);
 		return $this;
 	}
 	
@@ -107,6 +117,7 @@ class Element
 	{
 		$rendered = $this->tag();
 		if (is_array($this->decorators)) foreach($this->decorators as $decorator) {
+			$decorator->element = $this;
 			$rendered = $decorator->decorate($rendered);
 		}
 		return (string) $rendered;

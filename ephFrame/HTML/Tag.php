@@ -52,9 +52,9 @@ class Tag
 				$value = implode('', $this->value);
 			} else {
 				$value = $this->value;
-			}
-			if ($this->escaped && !$this->value instanceOf Tag) {
-				$value = htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8', false);
+				if ($this->escaped && !$this->value instanceOf Tag) {
+					$value = htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8', false);
+				}
 			}
 			return $this->openTag().$value.$this->closeTag();
 		}

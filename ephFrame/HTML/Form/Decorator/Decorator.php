@@ -4,15 +4,17 @@ namespace ephFrame\HTML\Form\Decorator;
 
 use \ephFrame\HTML\Form\Element\Element;
 
-class Decorator
+abstract class Decorator
 {
 	public $element;
 	
 	public $position = DecoratorPosition::APPEND;
 	
-	public function __construct(Element $element, Array $options = array())
+	public function __construct(Element $element = null, Array $options = array())
 	{
-		$this->element = $element;
+		if ($element) {
+			$this->element = $element;
+		}
 		foreach($options as $k => $v) {
 			if (is_array($this->{$k})) {
 				$this->{$k} += $v;

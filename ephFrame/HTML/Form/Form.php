@@ -17,6 +17,19 @@ class Form extends \ArrayObject
 	
 	public function configure() { }
 	
+	public function offsetSet($key, $element)
+	{
+		if (!($element instanceof \ephFrame\HTML\Form\Element\Element)) {
+			throw new \InvalidArgumentException();
+		}
+		foreach($this->fieldsets as $i => $fieldset) foreach($fieldset as $j => $element) {
+			if ($element->attributes['name'] != $key) continue;
+			$this->fieldset[$i][$j] = $element;
+		}
+		$this->fieldset[0][] = $element;
+		exit;
+	}
+	
 	public function offsetGet($key)
 	{
 		foreach($this->fieldsets as $fieldset) foreach($fieldset as $element) {

@@ -16,7 +16,7 @@ class Error extends Decorator
 	
 	public function __toString()
 	{
-		if (empty($this->element->errors)) {
+		if (!$this->element->error()) {
 			return '';
 		}
  		return (string) new Tag($this->tag, implode(PHP_EOL, $this->element->errors), $this->attributes);
