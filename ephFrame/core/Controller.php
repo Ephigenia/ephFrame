@@ -29,6 +29,7 @@ class Controller
 		$this->params = array_merge_recursive($this->params, $params);
 		$this->name = preg_replace('@(.+)\\\(\w*)Controller$@', '\\2', get_class($this));
 		$this->callbacks = new \ephFrame\core\CallbackHandler();
+		$this->callbacks->add('init', array($this, 'init'));
 		$this->callbacks->add('beforeAction', array($this, 'beforeAction'));
 		$this->callbacks->add('afterAction', array($this, 'afterAction'));
 		$this->callbacks->add('beforeRender', array($this, 'beforeRender'));
@@ -36,6 +37,7 @@ class Controller
 		if (method_exists($this, 'afterConstruct')) {
 			$this->afterConstruct();
 		}
+		$this->callbacks->call('init');
 	}
 	
 	protected function index()
@@ -83,12 +85,10 @@ class Controller
 	public function beforeRender()
 	{
 		// setting some default variables
-		$this->view->data += array(
-			'controller' => substr(strrchr(get_class($this), '\\'), 1, -10),
-			'action' => $this->action,
-			'baseUri' => \ephFrame\core\Router::base(),
-			'Router' => \ephFrame\core\Router::getInstance(),
-		);
+		$this->view->controller = substr(strrchr(get_class($this), '\\'), 1, -10);
+		$this->view->action = $this->action;
+		$this->view->baseUri = \ephFrame\core\Router::base();
+		$this->view->Router = \ephFrame\core\Router::getInstance();
 	}
 	
 	public function afterRender()
