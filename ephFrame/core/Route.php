@@ -7,8 +7,9 @@ class Route
 	public $template;
 	
 	public $params = array(
-		'controller' => 'app\controller\Controller',
+		'controller' => 'Controller',
 		'action' => 'index',
+		'namespace' => 'app\controller',
 	);
 	
 	public function __construct($template, Array $params = array())
@@ -26,7 +27,7 @@ class Route
 			}
 			$result = $found + $this->params;
 			if (!strstr($result['controller'], '\\')) {
-				$result['controller'] = 'app\controller\\'.ucFirst($result['controller']).'Controller';
+				$result['controller'] = trim($result['namespace'], '\\').'\\'.ucFirst($result['controller']).'Controller';
 			}
 		}
 		return $result;

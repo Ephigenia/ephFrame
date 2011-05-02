@@ -10,18 +10,34 @@ class Fieldset extends \ArrayObject
 	
 	public $decorators = array();
 	
+	public $legend = false;
+	
 	public $attributes = array(
 		'escaped' => false,
 	);
 	
 	public function __construct(Array $elements = array(), Array $attributes = array())
 	{
-		if (isset($attributes['visible'])) {
-			$this->visible = (bool) $attributes['visible'];
-			unset($attributes['visible']);
+		foreach(array('visible', 'legend', 'decorators') as $varname) if (isset($attributes[$varname])) {
+			if (is_array($this[$varname])) {
+				$this->{$varname} += $attributes[$varname];
+			} else {
+				$this->{$varname} = $attributes[$varname];
+			}
+			unset($attributes[$varname]);
 		}
 		$this->attributes += $attributes;
+		if ($this->decorators !== false && empty($this->decorators)) {
+			$this->decorators = $this->defaultDecorators();
+		}
 		return parent::__construct($elements, \ArrayObject::ARRAY_AS_PROPS);
+	}
+	
+	protected function defaultDecorators()
+	{
+		return array(
+			'legend' => new \ephFrame\HTML\Form\Decorator\Legend($this),
+		);
 	}
 	
 	public function tag()
@@ -32,7 +48,11 @@ class Fieldset extends \ArrayObject
 	public function __toString()
 	{
 		if ($this->visible) {
-			return (string) $this->tag();
+			$rendered = $this->tag();
+			foreach($this->decorators as $Decorator) {
+				$rendered = $Decorator->decorate($rendered);
+			}
+			return (string) $rendered;
 		} else {
 			return '';
 		}

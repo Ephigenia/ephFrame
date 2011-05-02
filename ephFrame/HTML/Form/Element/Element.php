@@ -24,8 +24,11 @@ class Element
 	
 	public $attributes = array();
 	
-	public function __construct($name, $value = null, Array $options = array())
+	public function __construct($name = null, $value = null, Array $options = array())
 	{
+		if ($name === null) {
+			$this->name = \ephFrame\util\String::lower(get_class($this));
+		}
 		$this->attributes += array(
 			'name' => $name,
 			'value' => $value

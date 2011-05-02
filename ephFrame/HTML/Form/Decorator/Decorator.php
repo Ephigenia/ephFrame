@@ -10,7 +10,7 @@ abstract class Decorator
 	
 	public $position = DecoratorPosition::APPEND;
 	
-	public function __construct(Element $element = null, Array $options = array())
+	public function __construct($element = null, Array $options = array())
 	{
 		if ($element) {
 			$this->element = $element;

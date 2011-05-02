@@ -6,7 +6,10 @@ class Form extends \ArrayObject
 {
 	public $fieldsets = array();
 	
-	public $attributes = array();
+	public $attributes = array(
+		'method' => 'post',
+		'accept-charset' => 'utf-8',
+	);
 	
 	public function __construct(Array $attributes = array())
 	{

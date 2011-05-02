@@ -42,7 +42,7 @@ class Text extends \ephFrame\view\Helper
 	 * @param array(string) $attributes
 	 * @return string Returns the resulting string
 	 */
-	public function more($text, $url = false, $label = false, Array $attributes = array())
+	public static function more($text, $url = false, $label = false, Array $attributes = array())
 	{
 		$attributes += array(
 			'title' => $label
