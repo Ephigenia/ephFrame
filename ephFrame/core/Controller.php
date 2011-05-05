@@ -13,7 +13,7 @@ class Controller
 	
 	protected $response;
 	
-	protected $view;
+	public $view;
 	
 	public $params = array();
 	
@@ -95,9 +95,9 @@ class Controller
 	
 	public function __toString()
 	{
-		$this->callbacks->call('beforeRender');
+		$this->callbacks->call('beforeRender', array($this));
 		$this->response->body = $this->view->render('all', strtolower($this->name ?: 'app').'/'.$this->action);
-		$this->callbacks->call('afterRender');
+		$this->callbacks->call('afterRender', array($this));
 		$this->response->header->send();
 		return $this->response->body;
 	}

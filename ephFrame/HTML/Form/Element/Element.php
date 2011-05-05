@@ -55,8 +55,8 @@ class Element
 	{
 		return array(
 			'label' => new \ephFrame\HTML\Form\Decorator\Label($this),
-			'error' => new \ephFrame\HTML\Form\Decorator\Error($this),
 			'description' => new \ephFrame\HTML\Form\Decorator\Description($this),
+			'error' => new \ephFrame\HTML\Form\Decorator\Error($this),
 			'wrap' => new \ephFrame\HTML\Form\Decorator\HTMLTag($this),
 		);
 	}
@@ -118,10 +118,17 @@ class Element
 	
 	public function __toString()
 	{
-		$rendered = $this->tag();
-		if (is_array($this->decorators)) foreach($this->decorators as $decorator) {
-			$decorator->element = $this;
-			$rendered = $decorator->decorate($rendered);
+		$rendered = '';
+		if (is_array($this->decorators)) {
+			foreach($this->decorators as $decorator) {
+				$decorator->element = $this;
+			}
+			$rendered = $this->tag();
+			foreach($this->decorators as $decorator) {
+				$rendered = $decorator->decorate($rendered);
+			}
+		} else {
+			$rendered = $this->tag();
 		}
 		return (string) $rendered;
 	}

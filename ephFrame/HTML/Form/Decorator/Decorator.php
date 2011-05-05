@@ -4,36 +4,38 @@ namespace ephFrame\HTML\Form\Decorator;
 
 use \ephFrame\HTML\Form\Element\Element;
 
-abstract class Decorator
+abstract class Decorator extends \ephFrame\core\Configurable
 {
 	public $element;
 	
-	public $position = DecoratorPosition::APPEND;
+	public $position = Position::APPEND;
 	
 	public function __construct($element = null, Array $options = array())
 	{
 		if ($element) {
 			$this->element = $element;
 		}
-		foreach($options as $k => $v) {
-			if (is_array($this->{$k})) {
-				$this->{$k} += $v;
-			} else {
-				$this->{$k} = $v;
-			}
-		}
+		return parent::__construct($options);
 	}
 	
 	public function decorate($content)
 	{
 		switch($this->position) {
 			default:
-			case DecoratorPosition::APPEND:
+			case Position::APPEND:
 				return $content.$this;
-			case DecoratorPosition::WRAP:
+			case Position::WRAP:
 				$this->value = $content;
 				return $this;
-			case DecoratorPosition::PREPEND:
+			case Position::INSERT_AFTER:
+				$content->escaped = false;
+				$content->value = $content->value.$this;
+				return $content;
+			case Position::INSERT_BEFORE:
+				$content->escaped = false;
+				$content->value = $this.$content->value;
+				return $content;
+			case Position::PREPEND:
 				return $this.$content;
 		}
 	}

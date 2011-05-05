@@ -8,12 +8,15 @@ class Label extends Decorator
 {
 	public $attributes = array();
 	
-	public $position = DecoratorPosition::PREPEND;
+	public $position = Position::PREPEND;
 	
 	public function __toString()
 	{
 		if (empty($this->attributes['for'])) {
-			$this->attributes['for'] = $this->element->attributes['name'];
+			if (empty($this->element->attributes['id'])) {
+				$this->element->attributes['id'] = 'element-';
+			}
+			$this->attributes['for'] = $this->element->attributes['id'];
 		}
 		$label = false;
 		if (!empty($this->element->label)) {

@@ -12,7 +12,7 @@ class Error extends Decorator
 	
 	public $tag = 'p';
 	
-	public $position = DecoratorPosition::APPEND;
+	public $position = Position::APPEND;
 	
 	public function __toString()
 	{

@@ -14,7 +14,7 @@ class HTMLTag extends Decorator
 		'escaped' => false,
 	);
 	
-	public $position = DecoratorPosition::WRAP;
+	public $position = Position::WRAP;
 	
 	public function __toString()
 	{

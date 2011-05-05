@@ -19,7 +19,7 @@ class Fieldset extends \ArrayObject
 	public function __construct(Array $elements = array(), Array $attributes = array())
 	{
 		foreach(array('visible', 'legend', 'decorators') as $varname) if (isset($attributes[$varname])) {
-			if (is_array($this[$varname])) {
+			if (is_array($this->{$varname})) {
 				$this->{$varname} += $attributes[$varname];
 			} else {
 				$this->{$varname} = $attributes[$varname];

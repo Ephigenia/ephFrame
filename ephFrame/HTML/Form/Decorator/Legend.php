@@ -8,7 +8,7 @@ class Legend extends Decorator
 {
 	public $attributes = array();
 	
-	public $position = DecoratorPosition::PREPEND;
+	public $position = Position::PREPEND;
 	
 	public function decorate($tag)
 	{

@@ -3,7 +3,7 @@
 namespace ephFrame\test\HTML\Form\Decorator;
 
 use ephFrame\HTML\Form\Decorator\Error;
-use ephFrame\HTML\Form\Decorator\DecoratorPosition;
+use ephFrame\HTML\Form\Decorator\Position;
 use ephFrame\HTML\Form\Element\Text;
 
 class ErrorTest extends \PHPUnit_Framework_TestCase
@@ -20,7 +20,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 		$this->fixture->errors[] = 'this is an error message';
 		$this->fixture->decorators = array(
 			new Error($this->fixture, array(
-				'position' => DecoratorPosition::PREPEND,
+				'position' => Position::PREPEND,
 				'attributes' => array(
 					'style' => 'border: 1px solid red;',
 					'class' => 'error'
@@ -56,7 +56,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 	public function testPositionChange()
 	{
 		$this->fixture->errors[] = 'this is an error message';
-		$this->fixture->position = DecoratorPosition::PREPEND;
+		$this->fixture->position = Position::PREPEND;
 		$this->fixture->attributes['style'] = 'border: 1px solid red;';
 		$this->assertEquals(
 			(string) $this->fixture,

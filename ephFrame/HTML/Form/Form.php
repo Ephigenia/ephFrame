@@ -11,11 +11,33 @@ class Form extends \ArrayObject
 		'accept-charset' => 'utf-8',
 	);
 	
+	public $decorators = array();
+	
+	public $errors = array();
+	
 	public function __construct(Array $attributes = array())
 	{
 		$this->fieldsets[] = new Fieldset();
 		$this->attributes += $attributes;
+		$this->decorators += $this->defaultDecorators();
 		$this->configure();
+	}
+	
+	public function error()
+	{
+		if (count($this->errors) > 0) {
+			return $this->errors;
+		} else {
+			return false;
+		}
+	}
+	
+	public function defaultDecorators()
+	{
+		return array(
+			'error' => new \ephFrame\HTML\Form\Decorator\Error($this, array('position' => \ephFrame\HTML\Form\Decorator\Position::INSERT_BEFORE)),
+			'description' => new \ephFrame\HTML\Form\Decorator\Description($this),
+		);
 	}
 	
 	public function configure() { }
@@ -86,6 +108,11 @@ class Form extends \ArrayObject
 	
 	public function __toString()
 	{
-		return (string) $this->tag();
+		$rendered = $this->tag();
+		if (is_array($this->decorators)) foreach($this->decorators as $decorator) {
+			$decorator->element = $this;
+			$rendered = $decorator->decorate($rendered);
+		}
+		return (string) $rendered;
 	}
 }
