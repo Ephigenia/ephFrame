@@ -2,18 +2,14 @@
 
 namespace ephFrame\Validator;
 
-use ephFrame\util\String;
+use 
+	ephFrame\util\String,
+	ephFrame\core\Configurable
+;
 
-abstract class Validator
+abstract class Validator extends Configurable
 {
 	public $message;
-	
-	public function __construct(Array $options = array())
-	{
-		foreach($options as $k => $v) {
-			$this->{$k} = $v;
-		}
-	}
 	
 	public function message()
 	{

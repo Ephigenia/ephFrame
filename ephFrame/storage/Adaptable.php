@@ -6,7 +6,7 @@ class Adaptable extends \ArrayObject
 {
 	protected $adapter;
 	
-	protected static $options = array();
+	public static $options = array();
 	
 	public static function config(Array $options = array())
 	{
@@ -26,10 +26,21 @@ class Adaptable extends \ArrayObject
 		return $this->adapter()->set($key, $value);
 	}
 	
+	public function offsetExists($key)
+	{
+		return $this->adapter()->offsetExists($key);
+	}
+	
+	public function offsetUnset($key)
+	{
+		return $this->adapter()->offsetUnset($key);
+	}
+	
 	protected function adapter()
 	{
 		if (!isset($this->adapter)) {
-			$this->adapter = new self::$options['adapter'](self::$options);
+			$class = get_class($this);
+			$this->adapter = new $class::$options['adapter'](self::$options);
 			$this->adapter->start();
 		}
 		return $this->adapter;

@@ -4,7 +4,7 @@ namespace ephFrame\storage;
 
 class Session extends Adaptable
 {
-	protected static $options = array(
+	public static $options = array(
 		'adapter' => 'ephFrame\storage\session\adapter\PHP',
 	);
 	
