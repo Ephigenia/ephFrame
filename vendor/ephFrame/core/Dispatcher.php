@@ -7,9 +7,8 @@ class Dispatcher
 	public static function dispatch($url = null)
 	{
 		$request = new \ephFrame\HTTP\Request();
-		$uri = substr($request->path, strlen(Router::base()));
 		try {
-			if ($result = Router::getInstance()->parse($uri)) {
+			if ($result = Router::getInstance()->parse($request)) {
 				$controller = new $result['controller']($request, $result);
 				$response = $controller->action($result['action'], $result);
 				if ($response instanceof \ephFrame\core\Controller) {

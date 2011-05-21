@@ -15,6 +15,8 @@ class Form extends \ArrayObject
 	
 	public $errors = array();
 	
+	public $description;
+	
 	public function __construct(Array $attributes = array())
 	{
 		$this->fieldsets[] = new Fieldset();
@@ -36,7 +38,7 @@ class Form extends \ArrayObject
 	{
 		return array(
 			'error' => new \ephFrame\HTML\Form\Decorator\Error($this, array('position' => \ephFrame\HTML\Form\Decorator\Position::INSERT_BEFORE)),
-			'description' => new \ephFrame\HTML\Form\Decorator\Description($this),
+			'description' => new \ephFrame\HTML\Form\Decorator\Description($this, array('position' => \ephFrame\HTML\Form\Decorator\Position::INSERT_BEFORE)),
 		);
 	}
 	
@@ -57,10 +59,20 @@ class Form extends \ArrayObject
 	
 	public function offsetGet($key)
 	{
-		foreach($this->fieldsets as $fieldset) foreach($fieldset as $element) {
-			if ($element->attributes['name'] == $key) return $element;
+		foreach($this->fieldsets as $fieldset) {
+			if (isset($fieldset[$key])) {
+				return $fieldset[$key];
+			}
+			foreach($fieldset as $element) {
+				if ($element->attributes['name'] == $key) return $element;
+			}
 		}
 		throw new \InvalidArgumentException(sprintf('Form field "%s" does not exist.', $key));
+	}
+	
+	public function __get($key)
+	{
+		return $this->offsetGet($key);
 	}
 	
 	public function offsetUnset($key)
@@ -84,10 +96,18 @@ class Form extends \ArrayObject
 		return $this;
 	}
 	
+	public function ok()
+	{
+		foreach($this->fieldsets as $fieldset) foreach($fieldset as $element) {
+			if (!empty($element->errors)) return false;
+		}
+		return true;
+	}
+	
 	public function isValid()
 	{
 		foreach($this->fieldsets as $fieldset) foreach($fieldset as $element) {
-			if (!$element->validate()) return false;
+			if (!$element->validate($element->data)) return false;
 		}
 		return true;
 	}

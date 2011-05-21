@@ -1,7 +1,6 @@
-app/doc/*
+doc/*
+tmp/cache/*
+tmp/session/*
 .DS_Store
-p_*
 *.log
 *.tmp
-report/*
-deploy.sh

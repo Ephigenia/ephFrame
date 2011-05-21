@@ -4,7 +4,7 @@ namespace ephFrame\storage;
 
 class Cache extends Adaptable
 {
-	protected static $options = array(
+	public static $options = array(
 		'adapter' => 'ephFrame\storage\cache\File',
 	);
 }

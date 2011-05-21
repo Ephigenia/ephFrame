@@ -2,8 +2,15 @@
 
 namespace ephFrame\test\core;
 
-use ephFrame\core\Route;
+use ephFrame\core\Route,
+	ephFrame\HTTP\Request,
+	ephFrame\HTTP\RequestMethod,
+	ephFrame\HTTP\Header
+	;
 
+/**
+ * @group Routing
+ */
 class RouteTest extends \PHPUnit_Framework_TestCase
 {
 	public function setUp()
@@ -82,7 +89,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 		foreach($tests as $route => $test) {
 			$route = new Route($route);
 			foreach($test as $uri => $expectedResult) {
-				$this->assertEquals($route->parse($uri), $expectedResult);
+				$this->assertEquals($route->parse(new Request(RequestMethod::GET, $uri)), $expectedResult);
 			}
 		}
 	}
@@ -90,9 +97,15 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 	public function testParseWithRegexpRoute()
 	{
 		$route = new Route('/:controller/:username<\w+>');
-		$this->assertEquals($route->parse('/user/ephigenia'), array('username' => 'ephigenia', 'controller' => 'app\controller\UserController', 'action' => 'index'));
+		$this->assertEquals(
+			$route->parse(new Request(RequestMethod::GET,'/user/ephigenia')),
+			array('username' => 'ephigenia', 'controller' => 'app\controller\UserController', 'action' => 'index')
+		);
 		$route = new Route('/:controller/:username<\w+>,:id<\d{2,}>.:format');
-		$this->assertEquals($route->parse('/user/ephigenia,15.json'), array('username' => 'ephigenia', 'controller' => 'app\controller\UserController', 'action' => 'index', 'format' => 'json', 'id' => 15));
+		$this->assertEquals($route->parse(
+			new Request(RequestMethod::GET,'/user/ephigenia,15.json')),
+			array('username' => 'ephigenia', 'controller' => 'app\controller\UserController', 'action' => 'index', 'format' => 'json', 'id' => 15)
+		);
 	}
 	
 	public function insertEqualValues()
@@ -162,46 +175,87 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 	{
 		$route = new Route('/:controller*');
 		$this->assertEquals(
-			$route->parse('/user/edit'), array('controller' => 'app\controller\UserController', 'action' => 'index')
+			$route->parse(new Request(RequestMethod::GET, '/user/edit')),
+			array('controller' => 'app\controller\UserController', 'action' => 'index')
 		);
 		$route = new Route('/:controller');
-		$this->assertFalse($route->parse('/user/edit'));
-		$this->assertEquals($route->parse('/user'), array('controller' => 'app\controller\UserController', 'action' => 'index'));
+		$this->assertFalse($route->parse(new Request(RequestMethod::GET, '/user/edit')));
+		$this->assertEquals(
+			$route->parse(new Request(RequestMethod::GET, '/user')),
+			array('controller' => 'app\controller\UserController', 'action' => 'index')
+		);
 	}
 	
 	public function testQuestionMarkNotation()
 	{
 		$route = new Route('/:controller/?:action?');
-		$this->assertEquals($route->parse('/user'), array('controller' => 'app\controller\UserController', 'action' => 'index'));
-		$this->assertEquals($route->parse('/user/'), array('controller' => 'app\controller\UserController', 'action' => 'index'));
-		$this->assertEquals($route->parse('/user/edit'), array('controller' => 'app\controller\UserController', 'action' => 'edit'));
+		$this->assertEquals(
+			$route->parse(new Request(RequestMethod::GET,'/user')),
+			array('controller' => 'app\controller\UserController', 'action' => 'index')
+		);
+		$this->assertEquals(
+			$route->parse(new Request(RequestMethod::GET,'/user/')),
+			array('controller' => 'app\controller\UserController', 'action' => 'index')
+		);
+		$this->assertEquals(
+			$route->parse(new Request(RequestMethod::GET,'/user/edit')),
+			array('controller' => 'app\controller\UserController', 'action' => 'edit')
+		);
 	}
 	
 	public function testIdNotation()
 	{
 		$route = new Route('/:controller/:id/:action');
-		$this->assertEquals($route->parse('/user/23/edit'), array('controller' => 'app\controller\UserController', 'action' => 'edit', 'id' => '23'));
-		$this->assertFalse($route->parse('/user/2s3/edit'));
+		$this->assertEquals(
+			$route->parse(new Request(RequestMethod::GET,'/user/23/edit')),
+			array('controller' => 'app\controller\UserController', 'action' => 'edit', 'id' => '23')
+		);
+		$this->assertFalse($route->parse(new Request(RequestMethod::GET,'/user/2s3/edit')));
 	}
 	
 	public function testIdFalseNotation()
 	{
 		$route = new Route('/:controller/:idOfUser/:action');
-		$this->assertFalse($route->parse('/user/23/edit'));
+		$this->assertFalse($route->parse(new Request(RequestMethod::GET,'/user/23/edit')));
 	}
 	
 	public function testRootSlash()
 	{
 		$route = new Route('/:controller');
 		$this->assertEquals(
-			$route->parse('/abc'), array('controller' => 'app\controller\AbcController', 'action' => 'index')
+			$route->parse(new Request(RequestMethod::GET,'/abc')),
+			array('controller' => 'app\controller\AbcController', 'action' => 'index')
 		);
 		$route->template = ':controller/:action';
 		$this->assertEquals(
-			$route->parse('user/edit'), array('controller' => 'app\controller\UserController', 'action' => 'edit')
+			$route->parse(new Request(RequestMethod::GET,'user/edit')),
+			array('controller' => 'app\controller\UserController', 'action' => 'edit')
 		);
 		$this->assertEquals(
-			$route->parse('/abc/def'), array('controller' => 'app\controller\AbcController', 'action' => 'def')
+			$route->parse(new Request(RequestMethod::GET,'/abc/def')),
+			array('controller' => 'app\controller\AbcController', 'action' => 'def')
 		);
+	}
+	
+	public function testRequiredMethods()
+	{
+		$route = new Route('/:controller/create', array(), array('method' => array(
+			RequestMethod::PUT,
+		)));
+		$this->assertFalse(
+			$route->parse(new Request(RequestMethod::GET, '/user/create'))
+		);
+		$this->assertTrue(
+			(bool) $route->parse(new Request(RequestMethod::PUT, '/user/create'))
+		);
+	}
+	
+	public function testRequirementSecure()
+	{
+		$route = new Route('/user/login', array(), array('secure' => true));
+		$request = new Request(RequestMethod::GET, '/user/login');
+		$this->assertFalse($route->parse($request));
+		$request->header->https = true;
+		$this->assertTrue((bool) $route->parse($request));
 	}
 }

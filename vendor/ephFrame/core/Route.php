@@ -12,24 +12,48 @@ class Route
 		'namespace' => 'app\controller',
 	);
 	
-	public function __construct($template, Array $params = array())
+	public $secure = false;
+	
+	public $method = array(
+		\ephFrame\HTTP\RequestMethod::POST, 
+		\ephFrame\HTTP\RequestMethod::GET,
+	);
+	
+	public function __construct($template, Array $params = array(), Array $requirements = array())
 	{
 		$this->template = (string) $template;
 		$this->params = $params + $this->params;
+		foreach($requirements as $k => $v) {
+			$this->{$k} = $v;
+		}
 	}
 	
-	public function parse($url)
+	public function parse($request)
 	{
-		$result = false;
-		if (preg_match($this->compile(), (string) $url, $found)) {
-			foreach ($found as $index => $match) {
-				if (is_int($index)) unset($found[$index]);
-			}
-			$result = $found + $this->params;
-			if (!strstr($result['controller'], '\\')) {
-				$result['controller'] = trim($result['namespace'], '\\').'\\'.ucFirst($result['controller']).'Controller';
-			}
+		if ($this->method && !$request->isMethod($this->method)) {
+			return false;
 		}
+		if ($this->secure && !$request->isSecure()) {
+			return false;
+		}
+		// parse url stuff
+		$uri = substr($request->path, strlen(Router::base()));
+		if (!preg_match($this->compile(), (string) $uri, $found)) {
+			return false;
+		}
+		foreach ($found as $index => $match) {
+			if (is_int($index)) unset($found[$index]);
+		}
+		$result = $found + $this->params;
+		if (!strstr($result['controller'], '\\')) {
+			if ($result['controller'] !== 'Controller') {
+				$append = 'Controller';
+			} else {
+				$append = '';
+			}
+			$result['controller'] = trim($result['namespace'], '\\').'\\'.ucFirst($result['controller']).$append;
+		}
+		unset($result['namespace']);
 		return $result;
 	}
 	

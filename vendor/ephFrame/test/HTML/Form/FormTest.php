@@ -17,7 +17,7 @@ class FormTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->assertEquals(
 			(string) $this->fixture,
-			'<form action="myaction"><fieldset /></form>'
+			'<form method="post" accept-charset="utf-8" action="myaction"><fieldset /></form>'
 		);
 	}
 	

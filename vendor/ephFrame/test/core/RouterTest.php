@@ -2,10 +2,15 @@
 
 namespace ephFrame\test\core;
 
-use ephFrame\HTTP\Request;
-use ephFrame\core\Router;
-use ephFrame\core\Route;
+use ephFrame\HTTP\Request,
+	ephFrame\HTTP\RequestMethod,
+	ephFrame\core\Router,
+	ephFrame\core\Route
+	;
 
+/**
+ * @group Routing
+ */
 class RouterTest extends \PHPUnit_Framework_TestCase
 {
 	public function testGetInstance()
@@ -57,11 +62,31 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($this->router->nothing(array('controller' => 'user')), '/user/index');
 	}
 	
-	public function testParse()
+	public function testParseValues()
 	{
-		$this->assertEquals($this->router->parse('/user/edit'), array('controller' => 'app\controller\UserController', 'action' => 'edit'));
-		$this->assertEquals($this->router->parse('/user/'), array('controller' => 'app\controller\UserController', 'action' => 'index'));
-		$this->assertFalse($this->router->parse('/no_matchin/route/23'));
+		return array(
+			array(
+				new Request(RequestMethod::GET, '/user/edit'), 
+				array('controller' => 'app\controller\UserController', 'action' => 'edit')
+			),
+			array(
+				new Request(RequestMethod::GET, '/user/'), 
+				array('controller' => 'app\controller\UserController', 'action' => 'index')
+			),
+		);
+	}
+	
+	/**
+	 * @dataProvider testParseValues()
+	 */
+	public function testParse($request, $expectedResult)
+	{
+		$this->assertEquals($this->router->parse($request), $expectedResult);
+	}
+	
+	public function testParseFail()
+	{
+		$this->assertFalse($this->router->parse(new Request(RequestMethod::GET, '/no_matchin/route/23')));
 	}
 	
 	public function testConcurrencyAsterisk()
@@ -71,11 +96,11 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 			new Route('/:controller/:action'),
 		));
 		$this->assertEquals(
-			$Router->parse('/user/edit'), 
+			$Router->parse(new Request(RequestMethod::GET, '/user/edit')), 
 			array('controller' => 'app\controller\UserController', 'action' => 'index')
 		);
 		$this->assertEquals(
-			$Router->parse('/user'),
+			$Router->parse(new Request(RequestMethod::GET, '/user')),
 			array('controller' => 'app\controller\UserController', 'action' => 'index')
 		);
 	}

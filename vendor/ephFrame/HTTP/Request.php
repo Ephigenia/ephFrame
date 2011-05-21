@@ -33,6 +33,15 @@ class Request extends Message
 		}
 	}
 	
+	public function isMethod($method)
+	{
+		if (is_array($method)) {
+			return in_array($this->method, $method);
+		} else {
+			return $this->method == $method;
+		}
+	}
+	
 	public function isSecure()
 	{
 		return (

@@ -22,9 +22,9 @@ class Tag
 		if (func_num_args() >= 2) {
 			$this->value = $value;
 		}
-		if (isset($attributes['escaped']) && !$attributes['escaped']) {
-			unset($attributes->escaped);
-			$this->escaped = false;
+		if (isset($attributes['escaped'])) {
+			$this->escaped = (bool) $attributes['escaped'];
+			unset($attributes['escaped']);
 		}
 		$this->attributes = new Attributes($attributes + $this->attributes);
 	}
@@ -53,7 +53,7 @@ class Tag
 			} else {
 				$value = $this->value;
 				if ($this->escaped && !$this->value instanceOf Tag) {
-					$value = htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8', false);
+					$value = nl2br(htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8', false));
 				}
 			}
 			return $this->openTag().$value.$this->closeTag();

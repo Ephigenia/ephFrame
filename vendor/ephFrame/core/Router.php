@@ -44,10 +44,10 @@ class Router extends \ArrayObject
 		return $this;
 	}
 	
-	public function parse($url)
+	public function parse(\ephFrame\HTTP\Request $request)
 	{
 		foreach($this as $route) {
-			if ($result = $route->parse($url)) return $result;
+			if ($result = $route->parse($request)) return $result;
 		}
 		return false;
 	}

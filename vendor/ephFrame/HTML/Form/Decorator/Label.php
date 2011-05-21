@@ -10,6 +10,8 @@ class Label extends Decorator
 	
 	public $position = Position::PREPEND;
 	
+	public $format = '%s:';
+	
 	public function __toString()
 	{
 		if (empty($this->attributes['for'])) {
@@ -24,6 +26,6 @@ class Label extends Decorator
 		} elseif ($this->element->label !== false) {
 			$label = $this->element->attributes['name'];
 		}
- 		return (string) new Tag('label', $label, $this->attributes);
+ 		return (string) new Tag('label', sprintf($this->format, $label), $this->attributes);
 	}
 }

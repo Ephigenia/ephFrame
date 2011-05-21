@@ -13,7 +13,7 @@ class Configurable
 	{
 		foreach($options as $k => $v) {
 			if (is_array($this->{$k}) && is_array($v)) {
-				$this->{$k} += $v;
+				$this->{$k} = $v + $this->{$k};
 			} else {
 				$this->{$k} = $v;
 			}

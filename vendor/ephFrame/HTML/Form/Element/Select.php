@@ -14,6 +14,7 @@ class Select extends MultipleChoice
 		if (isset($this->attributes['multiple']) && $this->attributes['multiple']) {
 			$this->attributes['multiple'] = 'multiple';
 		}
+		$options = array();
 		foreach($this->options as $value => $label) {
 			$optionAttributes = array(
 				'value' => $value,
