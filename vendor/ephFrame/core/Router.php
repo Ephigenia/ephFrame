@@ -8,6 +8,10 @@ class Router extends \ArrayObject
 {
 	private static $instance;
 	
+	public $defaults = array(
+		
+	);
+	
 	public function __construct(Array $array = array())
 	{
 		return parent::__construct($array, \ArrayObject::ARRAY_AS_PROPS);
@@ -54,6 +58,6 @@ class Router extends \ArrayObject
 	
 	public function __call($name, $args)
 	{
-		return $this[$name]($args[0]);
+		return $this[$name]($args[0] + $this->defaults);
 	}
 }

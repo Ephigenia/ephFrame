@@ -8,7 +8,7 @@ class Description extends Error
 {
 	public $attributes = array(
 		'class' => 'description',
-		'escaped' => true,
+		'escaped' => false,
 	);
 	
 	public function __toString()
