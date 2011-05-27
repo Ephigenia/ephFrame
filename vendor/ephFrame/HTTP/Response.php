@@ -17,6 +17,14 @@ class Response extends Message
 		return parent::__construct($body, $header);
 	}
 	
+	public function send()
+	{
+		header($this->protocol.' '.$this->status.' '.StatusCode::message($this->status), true, $this->status);
+		$this->header->send(true);
+		echo $this->body;
+		return $this;
+	}
+	
 	public function __toString()
 	{
 		return trim(

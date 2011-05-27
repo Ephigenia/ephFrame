@@ -17,14 +17,17 @@ class PHP extends \ArrayObject
 	
 	public function start()
 	{
-		extract(self::$options);
-		session_name($name);
-		session_cache_limiter(false);
-		session_set_cookie_params($lifetime, $path, $domain, $secure, $httponly);
-		if (isset($id) && $id != $this->id()) {
-            session_id($id);
-        }
-		$result = session_start();
+		$result = true;
+		if (!isset($_SESSION)) {
+			extract(self::$options);
+			session_name($name);
+			session_cache_limiter(false);
+			session_set_cookie_params($lifetime, $path, $domain, $secure, $httponly);
+			if (isset($id) && $id != $this->id()) {
+	            session_id($id);
+	        }
+			$result = session_start();
+		}
 		$this->exchangeArray($_SESSION);
 		return $result;
 	}

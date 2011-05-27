@@ -93,6 +93,17 @@ class Controller
 		
 	}
 	
+	public function redirect($url, $status = \ephFrame\HTTP\StatusCode::FOUND, $exit = true)
+	{
+		$this->response = new \ephFrame\HTTP\Response($status, new \ephFrame\HTTP\Header(array(
+			'location' => $url,
+		)));
+		$this->response->send();
+		if ($exit) {
+			exit;
+		}
+	}
+	
 	public function __toString()
 	{
 		$this->callbacks->call('beforeRender', array($this));

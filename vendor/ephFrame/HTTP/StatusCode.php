@@ -21,7 +21,7 @@ class StatusCode
 	const SEE_OTHER = 303;
 	const NOT_MODIFIED = 304;
 	const USE_PROXY = 305;
-	const TEMPORARY_REDIRECT = 306;
+	const TEMPORARY_REDIRECT = 307;
 	
 	const BAD_REQUEST = 400;
 	const UNAUTHORIZED = 401;
