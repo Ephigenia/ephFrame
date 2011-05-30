@@ -56,8 +56,11 @@ class Router extends \ArrayObject
 		return false;
 	}
 	
-	public function __call($name, $args)
+	public function __call($name, Array $params = array())
 	{
-		return $this[$name]((isset($args[0]) ? $args[0] : array()) + $this->defaults);
+		if (!isset($params[0])) {
+			$params[0] = array();
+		}
+		return $this[$name]($params[0] + $this->defaults);
 	}
 }
