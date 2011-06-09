@@ -2,10 +2,12 @@
 
 namespace ephFrame\core;
 
-use ephFrame\HTTP\Request;
-use ephFrame\HTTP\Response;
-use ephFrame\view\View;
-use ephFrame\HTTP\Header;
+use 
+	ephFrame\HTTP\Request,
+	ephFrame\HTTP\Response,
+	ephFrame\view\View,
+	ephFrame\HTTP\Header
+	;
 
 class Controller
 {
@@ -93,10 +95,10 @@ class Controller
 		
 	}
 	
-	public function redirect($url, $status = \ephFrame\HTTP\StatusCode::FOUND, $exit = true)
+	public function redirect($url, $status = \ephFrame\HTTP\StatusCode::MOVED_PERMANENTLY, $exit = true)
 	{
 		$this->response = new \ephFrame\HTTP\Response($status, new \ephFrame\HTTP\Header(array(
-			'location' => $url,
+			'Location' => $url,
 		)));
 		$this->response->send();
 		if ($exit) {

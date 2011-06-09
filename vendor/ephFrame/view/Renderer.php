@@ -8,7 +8,7 @@ class Renderer
 	
 	public $extension = 'php';
 
-	public function render($__template, Array $data = array())
+	public function render($__template, Array $__data = array())
 	{
 		if (!empty($this->extension)) {
 			$__template .= '.'.$this->extension;
@@ -16,7 +16,7 @@ class Renderer
 		if (!is_file($__template)) {
 			throw new TemplateNotFoundException($__template);
 		}
-		extract($data, EXTR_OVERWRITE);
+		extract($__data, EXTR_OVERWRITE);
 		ob_start();
 		require $__template;
 		return ob_get_clean();

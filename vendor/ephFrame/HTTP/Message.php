@@ -8,7 +8,7 @@ abstract class Message
 	
 	public $body;
 	
-	public $protocol = 'HTTP 1.1';
+	public $protocol = 'HTTP/1.1';
 	
 	public function __construct($body, Header $header = null)
 	{

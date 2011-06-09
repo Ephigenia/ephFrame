@@ -14,6 +14,12 @@ class EmailTest extends \PHPUnit_Framework_TestCase
 	public function testInvalidValues()
 	{
 		return array(
+			array('nothing'),
+			array('@yahoo.de'),
+			array('me@.de'),
+			array('me.de'),
+			array('-@-'),
+			array('me@.de.de'),
 			array('stupid@email@addy.com'),
 		);
 	}
