@@ -4,6 +4,9 @@ namespace ephFrame\test\util;
 
 use ephFrame\util\Collection;
 
+/**
+ * @group Util
+ */
 class CollectionTest extends \PHPUnit_Framework_TestCase
 {
 	public function testConstructor()

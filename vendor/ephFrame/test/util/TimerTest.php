@@ -4,6 +4,9 @@ namespace ephFrame\test\util;
 
 use ephFrame\util\Timer;
 
+/**
+ * @group Util
+ */
 class TimerTest extends \PHPUnit_Framework_TestCase
 {
 	public function setUp()

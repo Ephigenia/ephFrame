@@ -22,7 +22,7 @@ class DescriptionTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->assertEquals(
 			(string) $this->fixture,
-			'<input type="text" maxlength="255" name="field1" /><span class="description">describe &amp; explain</span>'
+			'<input type="text" maxlength="255" name="field1" /><span class="description">describe & explain</span>'
 		);
 	}
 	

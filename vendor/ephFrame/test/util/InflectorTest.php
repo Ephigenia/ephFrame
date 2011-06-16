@@ -4,6 +4,9 @@ namespace ephFrame\test\util;
 
 use ephFrame\util\Inflector;
 
+/**
+ * @group Util
+ */
 class InflectorTest extends \PHPUnit_Framework_TestCase
 {
 	public function pluralizeEqualValues()

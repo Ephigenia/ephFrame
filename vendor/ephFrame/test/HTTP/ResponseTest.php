@@ -16,19 +16,19 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
 	
 	public function test__toString()
 	{
-		$this->assertEquals((string) $this->response, "HTTP 1.1 404 Not Found\r\n\r\nNot Found");
+		$this->assertEquals((string) $this->response, "HTTP/1.1 404 Not Found\r\n\r\nNot Found");
 	}
 	
 	public function testBodyChange()
 	{
 		$this->response->body = 'Document was not found on the server';
-		$this->assertEquals((string) $this->response, "HTTP 1.1 404 Not Found\r\n\r\nDocument was not found on the server");
+		$this->assertEquals((string) $this->response, "HTTP/1.1 404 Not Found\r\n\r\nDocument was not found on the server");
 	}
 	
 	public function testBodyWithSpaces()
 	{
 		$this->response->body = 'Document was not found on the server      ';
-		$this->assertEquals((string) $this->response, "HTTP 1.1 404 Not Found\r\n\r\nDocument was not found on the server");
+		$this->assertEquals((string) $this->response, "HTTP/1.1 404 Not Found\r\n\r\nDocument was not found on the server");
 	}
 	
 	/**
@@ -39,7 +39,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->response->header['Content-Length'] = strlen($this->response->body);
 		$this->assertEquals((string) $this->response,
-			"HTTP 1.1 404 Not Found\r\n".
+			"HTTP/1.1 404 Not Found\r\n".
 			"Content-Length: 9\r\n".
 			"\r\n".
 			"Not Found"

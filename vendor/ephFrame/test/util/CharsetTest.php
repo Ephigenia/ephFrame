@@ -4,6 +4,9 @@ namespace ephFrame\test\util;
 
 use ephFrame\util\Charset;
 
+/**
+ * @group Util
+ */
 class CharsetTest extends \PHPUnit_Framework_TestCase
 {
 	public function testIsUTF8()

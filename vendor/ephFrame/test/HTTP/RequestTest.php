@@ -38,7 +38,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 	public function test__construct()
 	{
 		$this->assertEquals((string) $this->request, 
-			"POST /path with space/ HTTP 1.1\r\n".
+			"POST /path with space/ HTTP/1.1\r\n".
 			"\r\n".
 			"param1=value1&param2=spaced+value"
 		);
@@ -62,7 +62,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->request->method = RequestMethod::GET;
 		$this->assertEquals((string) $this->request, 
-			"GET /path with space/?param1=value1&param2=spaced+value HTTP 1.1"
+			"GET /path with space/?param1=value1&param2=spaced+value HTTP/1.1"
 		);
 	}
 }

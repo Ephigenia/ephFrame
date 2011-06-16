@@ -4,6 +4,9 @@ namespace ephFrame\test\util;
 
 use ephFrame\util\MimeType;
 
+/**
+ * @group Util
+ */
 class MimeTypeTest extends \PHPUnit_Framework_TestCase
 {
 	public function testGetByFilenameValues()

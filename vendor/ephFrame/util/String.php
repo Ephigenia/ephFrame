@@ -177,10 +177,13 @@ class String
 			$arr = array($arr);
 		}
 		$result = $template;
-		foreach($found[0] as $index => $foundKey) {
-			if (array_key_exists($found[1][$index], $arr)) {
-				$result = str_replace($foundKey, $arr[$found[1][$index]], $result);
-			}
+		uksort($arr, function($a, $b) {
+			if (strlen($a) == strlen($b)) return 0;
+			if (strlen($a) > strlen($b)) return -1;
+			return 1;
+		});
+		foreach($arr as $key => $value) {
+			$result = preg_replace('@:'.$key.'@', $value, $result);
 		}
 		return $result;
 	}

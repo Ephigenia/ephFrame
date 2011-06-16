@@ -8,11 +8,13 @@ class Request extends Message
 
 	public $data = array();
 	
+	public $files = array();
+	
 	public $query = array();
 	
 	public $path;
 	
-	public function __construct($method = null, $path = null, Header $header = null, Array $data = array())
+	public function __construct($method = null, $path = null, Header $header = null, Array $data = array(), Array $files = array())
 	{
 		$this->path = $path ?: $_SERVER['REQUEST_URI'];
 		$this->method = $method ?: $_SERVER['REQUEST_METHOD'];
@@ -21,6 +23,11 @@ class Request extends Message
 		} else {
 			$this->data = $_POST;
 			$this->query = $_GET;
+		}
+		if ($files) {
+			$this->files = $files;
+		} else {
+			$this->files = $_FILES;
 		}
 		if ($header instanceof Header) {
 			$this->header = $header;

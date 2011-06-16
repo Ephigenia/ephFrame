@@ -4,6 +4,9 @@ namespace ephFrame\test\util;
 
 use ephFrame\util\String;
 
+/**
+ * @group Util
+ */
 class StringTest extends \PHPUnit_Framework_TestCase
 {
 	public function testLeft() 
@@ -75,6 +78,26 @@ class StringTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(
 			String::substitute(':1 of :2 pages, you are on page :1', 1, 2),
 			$expectedResultMultiple);
+		// more complex placeholders
+		$this->assertEquals(
+			String::substitute(':action_:id/:param-name-token', array(
+				'action' => 'register',
+				'id' => 1,
+				'param-name' => 'super',
+			)),
+			'register_1/super-token'
+		);
+	}
+	
+	public function testSubstituteSimilarKeys()
+	{
+		$this->assertEquals(
+			String::substitute('/:ids/:id', array(
+				'id' => 1,
+				'ids' => '1,2,3',
+			)),
+			'1,2,3/1'
+		);
 	}
 	
 	public function testIndent() 
