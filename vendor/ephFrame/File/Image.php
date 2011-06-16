@@ -10,6 +10,10 @@ class Image extends File
 	
 	protected $height;
 	
+	public $antialiased = true;
+	
+	public $thickness = 1;
+	
 	public function __construct($filenameOrWidth, $height = null)
 	{
 		if (is_int($filenameOrWidth)) {
@@ -83,7 +87,7 @@ class Image extends File
 			}
 		}
 		$newHandle = imagecreatetruecolor($targetWidth, $targetHeight);
-		imagecopyresampled($newHandle, $this->handle(), 0, 0, 0, 0, round($targetWidth), round($targetHeight), $this->width, $this->height);
+		imagecopyresampled($newHandle, $this->handle(), 0, 0, 0, 0, $targetWidth, $targetHeight, $this->width, $this->height);
 		$this->handle = $newHandle;
 		$this->width = $targetWidth;
 		$this->height = $targetHeight;
@@ -110,6 +114,77 @@ class Image extends File
 		$this->handle = $newHandle;
 		$this->width = $width;
 		$this->height = $height;
+		return $this;
+	}
+	
+	public function crop($x1, $y1, $x2, $y2)
+	{
+		$width = $x2 - $x1;
+		$height = $y2 - $y1;
+		$newHandle = imagecreatetruecolor($width, $height);
+		imagecopyresampled($newHandle, $this->handle(), 0, 0, $x1, $y1, $width, $height, $width, $height);
+		$this->handle = $newHandle;
+		$this->width = $width;
+		$this->height = $height;
+		return $this;
+	}
+	
+	public function pixel($x, $y, $color = null)
+	{
+		if ($color) {
+			imagesetpixel($this->handle(), $x, $y, $color);
+		} else {
+			return imagecolorat($this->handle(), $x, $y);
+		}
+	}
+	
+	public function border($color, $width = 1, $padding = 0)
+	{
+		for($i = 0; $i < $width; $i++) {
+			$this->rect($i + $padding, $i + $padding, $this->width - $i - 1 - $padding, $this->height - $i - 1 - $padding, $color);
+		}
+		return $this;
+	}
+	
+	public function rectangle($x1, $y1, $x1, $y2, $borderColor, $backgroundColor = null, $thickness = 1, $antialiased = null)
+	{
+		$thickness = $thickness ?: $this->thickness;
+		$antialias = $antialias ?: $this->antialias;
+		$this->thickness($thickness);
+		$this->antialias($antialiased);
+		if ($backgroundColor) {
+			imagefilledrectangle($this->handle(), $x1, $y1, $x2, $y2, $backgroundColor);
+		} else {
+			imagerectangle($this->handle(), $x1, $y1, $x2, $y2, $borderColor);
+		}
+		$this->thickness($this->thickness);
+		$this->antialias($this->antialias);
+		return $this;
+	}
+	
+	public function line($x1, $y1, $x2, $y2, $color, $thickness = null, $antialiased = null)
+	{
+		$thickness = $thickness ?: $this->thickness;
+		$antialias = $antialias ?: $this->antialias;
+		$this->thickness($thickness);
+		$this->antialias($antialiased);
+		imageline($this->handle(), $x1, $y1, $x2, $y2, $color);
+		$this->thickness($this->thickness);
+		$this->antialias($this->antialias);
+		return $this;
+	}
+	
+	public function antialias($antialias)
+	{
+		if ($antialias && function_exists('imageantialias')) {
+			imageantialias($this->handle(), $antialias);
+		}
+		return $this;
+	}
+	
+	public function thickness($thickness)
+	{
+		imagesetthickness($this->handle(), $thickness);
 		return $this;
 	}
 	
