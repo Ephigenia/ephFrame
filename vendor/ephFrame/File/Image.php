@@ -27,7 +27,7 @@ class Image extends File
 		}
 	}
 	
-	protected function handle()
+	public function handle()
 	{
 		if (!$this->handle) {
 			if ($this->exists()) {
@@ -94,8 +94,11 @@ class Image extends File
 		return $this;
 	}
 	
-	public function cropScale($width, $height)
+	public function cropScale($width = null, $height = null)
 	{
+		if ($width === null && $height == null) {
+			return $this;
+		}
 		$width = $width ?: $this->width;
 		$height = $height ?: $this->height;
 		$srcX = $srcY = 0;
