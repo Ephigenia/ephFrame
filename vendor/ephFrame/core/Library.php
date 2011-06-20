@@ -10,6 +10,7 @@ class Library
 
 	public static function add($namespace, $path)
 	{
+		$path = realpath($path);
 		if (!is_dir($path)) {
 			throw new LibraryPathNotFoundException($path);
 		}
@@ -25,6 +26,7 @@ class Library
 				break;
 			}
 		}
+		
 		if (file_exists($path)) {
 			require $path;
 			return true;
@@ -34,7 +36,6 @@ class Library
 }
 
 spl_autoload_register('\ephFrame\core\Library::load');
-Library::add('ephFrame', realpath(dirname(__DIR__)));
 
 class LibraryException extends \Exception {}
 
