@@ -10,11 +10,11 @@ class Library
 
 	public static function add($namespace, $path)
 	{
-		$path = realpath($path);
-		if (!is_dir($path)) {
+		$realpath = realpath($path);
+		if (!is_dir($realpath)) {
 			throw new LibraryPathNotFoundException($path);
 		}
-		self::$paths[$namespace] = $path;
+		self::$paths[$namespace] = $realpath;
 		return true;
 	}
 
