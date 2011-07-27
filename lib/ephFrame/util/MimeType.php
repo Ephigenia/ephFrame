@@ -149,6 +149,7 @@ class MimeType
 		'html'	=> 'text/html',
 		'shtml'	=> 'text/html',
 		'js'	=> 'text/javascript',
+		'json'	=> 'application/json',
 		'txt'	=> 'text/plain',
 		'rtf'	=> 'text/rtf',
 		'xml'	=> 'text/xml',
