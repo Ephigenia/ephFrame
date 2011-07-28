@@ -83,6 +83,10 @@ class Route
 	{
 		$result = $this->template;
 		foreach($array + $this->params as $key => $value) {
+			// cut 'controoler' and namespace from controller
+			if ($key == 'controller') {
+				$value = substr(strrchr('\\'.$value, '\\'), 1, strlen('Controller')-1);
+			}
 			// replace :placeholder and :placeholder<regexp> notations
 			$result = preg_replace('@:'.preg_quote($key,'@').'(<[^>]+>)?\??@', $value, $result);
 			// replace custom regexps
