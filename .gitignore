@@ -1,5 +1,6 @@
 tmp/cache/*
 tmp/session/*
+doc/*
 .DS_Store
 *.log
 *.tmp
