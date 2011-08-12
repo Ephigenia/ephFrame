@@ -4,6 +4,9 @@ namespace ephFrame\test\HTML\Form;
 
 use ephFrame\HTML\Form\Element\Select;
 
+/**
+ * @group Element
+ */
 class SelectTest extends \PHPUnit_Framework_TestCase
 {
 	public function setUp()
@@ -12,9 +15,6 @@ class SelectTest extends \PHPUnit_Framework_TestCase
 			'options' => array(
 				1 => 'one',
 				2 => 'two',
-			),
-			'attributes' => array(
-				'multiple' => true,
 			),
 			'decorators' => false,
 		));

@@ -2,9 +2,11 @@
 
 namespace ephFrame\test\core;
 
-use ephFrame\core\Controller;
-use ephFrame\HTTP\Request;
-use ephFrame\HTTP\Response;
+use 
+	\ephFrame\core\Controller,
+	\ephFrame\HTTP\Request,
+	\ephFrame\HTTP\Response
+	;
 
 class ControllerTest extends \PHPUnit_Framework_TestCase
 {
@@ -16,13 +18,5 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
 	public function testAction()
 	{
 		$this->assertTrue($this->fixture->action('index'));
-	}
-	
-	/**
-	 * @expectedException \ephFrame\view\TemplateNotFoundException
-	 */
-	public function test__toString()
-	{
-		$this->fixture->__toString();
 	}
 }

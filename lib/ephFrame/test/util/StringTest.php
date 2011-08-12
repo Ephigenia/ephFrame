@@ -96,7 +96,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
 				'id' => 1,
 				'ids' => '1,2,3',
 			)),
-			'1,2,3/1'
+			'/1,2,3/1'
 		);
 	}
 	

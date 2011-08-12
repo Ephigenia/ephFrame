@@ -5,6 +5,9 @@ namespace ephFrame\test\HTML\Form;
 use ephFrame\HTML\Form\Element\Element;
 use ephFrame\Validator\Integer;
 
+/**
+ * @group Element
+ */
 class ElementTest extends \PHPUnit_Framework_TestCase
 {
 	public function setUp()
@@ -17,6 +20,30 @@ class ElementTest extends \PHPUnit_Framework_TestCase
 				new Integer(),
 			)
 		));
+	}
+	
+	public function testRequiredWithEmptyData()
+	{
+		$this->assertFalse($this->fixture->submit(Null)->ok());
+	}
+	
+	public function testRequiredWithValue()
+	{
+		$this->fixture->required = false;
+		$this->assertTrue($this->fixture->submit('value')->ok());
+	}
+	
+	public function testTrim()
+	{
+		$this->assertEquals($this->fixture->submit('  trim me ')->data, 'trim me');
+	}
+	
+	public function testStripTags()
+	{
+		$this->assertEquals(
+			$this->fixture->submit('<em><strong>strong</strong> value</em>')->data,
+			'strong value'
+		);
 	}
 	
 	public function testAttributesInConstructor()

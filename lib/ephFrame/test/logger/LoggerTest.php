@@ -17,7 +17,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
 	
 	public function setUp()
 	{
-		$this->filename = APP_ROOT.'/fixtures/logtest_actual.txt';
+		$this->filename = __DIR__.'/../fixtures/logtest_actual.txt';
 		$writer = new \ephFrame\Logger\adapter\File($this->filename);
 		$writer->formater = new Simple('(:priority) :message');
 		$this->fixture = new \ephFrame\Logger\Logger(
@@ -29,7 +29,7 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->fixture->error('this is an example error message');
 		$this->assertFileExists($this->filename);
-		$this->assertFileEquals($this->filename, APP_ROOT.'/fixtures/logtest_expected.txt');
+		$this->assertFileEquals($this->filename, __DIR__.'/../fixtures/logtest_actual.txt');
 	}
 	
 	public function tearDown()

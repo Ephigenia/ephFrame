@@ -4,6 +4,9 @@ namespace ephFrame\test\HTML\Form;
 
 use ephFrame\HTML\Form\Element\Text;
 
+/**
+ * @group Element
+ */
 class TextTest extends \PHPUnit_Framework_TestCase
 {
 	public function setUp()
@@ -11,8 +14,8 @@ class TextTest extends \PHPUnit_Framework_TestCase
 		$this->fixture = new Text('number', 'my value', array(
 			'decorators' => false,
 			'attributes' => array(
-				'max_length' => 50,
-				'size' => 10,
+				'maxlength' => 50,
+				'size' => 5,
 			),
 		));
 	}
@@ -21,7 +24,7 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->assertEquals(
 			(string) $this->fixture,
-			'<input type="text" maxlength="255" name="number" max_length="50" size="10" />'
+			'<input maxlength="50" size="5" type="text" name="number" />'
 		);
 	}
 }
