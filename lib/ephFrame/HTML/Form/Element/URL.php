@@ -13,7 +13,7 @@ class URL extends Element
 	
 	public function submit($data)
 	{
-		if (!empty($data) && $this->defaultProtocol && !preg_match('~^\w+://~', $data)) {
+		if (!empty($data) && !empty($this->defaultProtocol) && !preg_match('@^\w+://@', $data)) {
 			$data = $this->defaultProtocol.'://'.$data;
 		}
 		parent::submit($data);

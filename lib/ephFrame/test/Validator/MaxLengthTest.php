@@ -4,6 +4,9 @@ namespace ephFrame\test\Validator;
 
 use ephFrame\Validator\MaxLength;
 
+/**
+ * @group Validator
+ */
 class MaxLengthTest extends \PHPUnit_Framework_TestCase 
 {
 	public function setUp()

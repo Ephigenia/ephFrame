@@ -4,6 +4,9 @@ namespace ephFrame\test\Validator;
 
 use ephFrame\Validator\Blank;
 
+/**
+ * @group Validator
+ */
 class BlankTest extends \PHPUnit_Framework_TestCase 
 {
 	public function setUp()

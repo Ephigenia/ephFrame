@@ -4,6 +4,9 @@ namespace ephFrame\test\Validator;
 
 use ephFrame\Validator\Regexp;
 
+/**
+ * @group Validator
+ */
 class RegexpTest extends \PHPUnit_Framework_TestCase 
 {
 	public function setUp()

@@ -4,6 +4,9 @@ namespace ephFrame\test\Validator;
 
 use ephFrame\Validator\Email;
 
+/**
+ * @group Validator
+ */
 class EmailTest extends \PHPUnit_Framework_TestCase 
 {
 	public function setUp()

@@ -2,13 +2,18 @@
 
 namespace ephFrame\HTML\Form\Element;
 
-use \ephFrame\HTML\Tag;
+use 
+	\ephFrame\HTML\Tag,
+	\ephFrame\core\Configurable
+	;
 
-class Element
+class Element extends Configurable
 {
 	public $decorators = array();
 	
 	public $validators = array();
+	
+	public $required = true;
 	
 	public $filters = array();
 	
@@ -33,13 +38,6 @@ class Element
 			'name' => $name,
 			'value' => $value
 		);
-		foreach($options as $k => $v) {
-			if (is_array($this->{$k}) && is_array($v)) {
-				$this->{$k} += $v;
-			} else {
-				$this->{$k} = $v;
-			}
-		}
 		if ($this->decorators !== false && empty($this->decorators)) {
 			$this->decorators = $this->defaultDecorators();
 		}
@@ -49,6 +47,7 @@ class Element
 		if ($this->filters !== false && empty($this->filters)) {
 			$this->filters = $this->defaultFilters();
 		}
+		return parent::__construct($options);
 	}
 	
 	protected function defaultDecorators()
@@ -63,7 +62,9 @@ class Element
 	
 	protected function defaultValidators()
 	{
-		return array();
+		return array(
+			'notEmpty' => new \ephFrame\validator\NotEmpty(),
+		);
 	}
 	
 	protected function defaultFilters()
@@ -106,7 +107,9 @@ class Element
 		if (is_array($this->filters)) foreach($this->filters as $filter) {
 			$this->data = $filter->apply($this->data);
 		}
-		$this->validate($this->data);
+		if ($this->required) {
+			$this->validate($this->data);
+		}
 		return $this;
 	}
 	

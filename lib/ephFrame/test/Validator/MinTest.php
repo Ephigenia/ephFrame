@@ -4,6 +4,9 @@ namespace ephFrame\test\Validator;
 
 use ephFrame\Validator\Min;
 
+/**
+ * @group Validator
+ */
 class MinTest extends \PHPUnit_Framework_TestCase 
 {
 	public function setUp()

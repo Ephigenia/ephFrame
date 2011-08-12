@@ -17,12 +17,14 @@ class Form extends \ArrayObject
 	
 	public $description;
 	
-	public function __construct(Array $attributes = array())
+	public function __construct(Array $attributes = array(), Array $data = array())
 	{
 		$this->fieldsets[] = new Fieldset();
 		$this->attributes += $attributes;
 		$this->decorators += $this->defaultDecorators();
 		$this->configure();
+		$this->bind($data);
+		return $this;
 	}
 	
 	public function error()

@@ -56,9 +56,11 @@ class HeaderTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($this->header->{'Content-Length'}, 3000);
 	}
 	
+	/**
+	 * @expectedException PHPUnit_Framework_Error
+	 */
 	public function testSend() 
 	{
 		$this->header->send();
-		
 	}
 }

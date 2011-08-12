@@ -88,11 +88,20 @@ class Route
 				$value = substr(strrchr('\\'.$value, '\\'), 1, strlen('Controller')-1);
 			}
 			// replace :placeholder and :placeholder<regexp> notations
-			$result = preg_replace('@:'.preg_quote($key,'@').'(<[^>]+>)?\??@', $value, $result);
+			$result = preg_replace('@:'.preg_quote($key,'@').'(<[^>]+>)?\??@', $value, $result, -1, $matched1);
 			// replace custom regexps
-			$result = preg_replace('@\(\?P<'.preg_quote($key,'@').'>[^)]+\)\??@', $value, $result);
+			$result = preg_replace('@\(\?P<'.preg_quote($key,'@').'>[^)]+\)\??@', $value, $result, -1, $matched2);
+			// add other route parameters defined as query
+			if ($matched1 + $matched2 == 0 && array_key_exists($key, $this->params) && $value !== null
+				&& !in_array($key, array('namespace', 'controller', 'action'))) {
+				$query[$key] = $value;
+			}
 		}
-		return rtrim($result, '/*?');
+		$uri = rtrim($result, '/*?');
+		if (!empty($query)) {
+			$uri .= '?'.http_build_query($query);
+		}
+		return $uri;
 	}
 	
 	public function url(Array $params = Array())

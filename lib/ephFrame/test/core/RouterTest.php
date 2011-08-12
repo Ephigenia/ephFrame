@@ -2,7 +2,8 @@
 
 namespace ephFrame\test\core;
 
-use ephFrame\HTTP\Request,
+use
+	ephFrame\HTTP\Request,
 	ephFrame\HTTP\RequestMethod,
 	ephFrame\core\Router,
 	ephFrame\core\Route

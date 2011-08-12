@@ -4,6 +4,9 @@ namespace ephFrame\test\Validator;
 
 use ephFrame\Validator\URL;
 
+/**
+ * @group Validator
+ */
 class URLTest extends \PHPUnit_Framework_TestCase 
 {
 	public function setUp()
