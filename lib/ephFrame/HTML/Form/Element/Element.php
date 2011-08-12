@@ -3,11 +3,10 @@
 namespace ephFrame\HTML\Form\Element;
 
 use 
-	\ephFrame\HTML\Tag,
-	\ephFrame\core\Configurable
+	\ephFrame\HTML\Tag
 	;
 
-class Element extends Configurable
+class Element
 {
 	public $decorators = array();
 	
@@ -38,6 +37,13 @@ class Element extends Configurable
 			'name' => $name,
 			'value' => $value
 		);
+		foreach($options as $k => $v) {
+			if (is_array($this->{$k}) && is_array($v)) {
+				$this->{$k} = $v + $this->{$k};
+			} else {
+				$this->{$k} = $v;
+			}
+		}
 		if ($this->decorators !== false && empty($this->decorators)) {
 			$this->decorators = $this->defaultDecorators();
 		}
@@ -47,7 +53,7 @@ class Element extends Configurable
 		if ($this->filters !== false && empty($this->filters)) {
 			$this->filters = $this->defaultFilters();
 		}
-		return parent::__construct($options);
+		return $this;
 	}
 	
 	protected function defaultDecorators()
