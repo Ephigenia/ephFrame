@@ -10,4 +10,12 @@ class Textarea extends Element
 	{
 		return new \ephFrame\HTML\Tag($this->tag, $this->data, $this->attributes);
 	}
+	
+	protected function defaultFilters()
+	{
+		return array(
+			'Trim' => new \ephFrame\Filter\Trim(),
+			'StripWhiteSpace' => new \ephFrame\Filter\StripWhiteSpace(),
+		);
+	}
 }

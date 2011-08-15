@@ -45,7 +45,7 @@ class Tag
 	
 	public function __toString()
 	{
-		if (empty($this->value) && !in_array($this->name, array('textarea'))) {
+		if (empty($this->value) && !in_array($this->name, array('textarea', 'select'))) {
 			return $this->openTag();
 		} else {	
 			if (is_array($this->value)) {
