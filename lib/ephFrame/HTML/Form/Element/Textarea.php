@@ -15,7 +15,6 @@ class Textarea extends Element
 	{
 		return array(
 			'Trim' => new \ephFrame\Filter\Trim(),
-			'StripWhiteSpace' => new \ephFrame\Filter\StripWhiteSpace(),
 		);
 	}
 }
