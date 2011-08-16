@@ -10,6 +10,7 @@ use
 	;
 
 /**
+ * @group core
  * @group Routing
  */
 class RouterTest extends \PHPUnit_Framework_TestCase

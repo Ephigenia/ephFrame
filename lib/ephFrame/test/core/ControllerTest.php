@@ -8,6 +8,9 @@ use
 	\ephFrame\HTTP\Response
 	;
 
+/**
+ * @group core
+ */
 class ControllerTest extends \PHPUnit_Framework_TestCase
 {
 	public function setUp()

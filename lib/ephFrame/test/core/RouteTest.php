@@ -9,6 +9,7 @@ use ephFrame\core\Route,
 	;
 
 /**
+ * @group core
  * @group Routing
  */
 class RouteTest extends \PHPUnit_Framework_TestCase
@@ -31,6 +32,15 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 	public function testUrl()
 	{
 		$this->assertEquals(substr($this->fixture->url(), 0, 7), 'http://');
+	}
+	
+	public function testAddParamsToQuery()
+	{
+		$route = new Route('/event/:id/', array(
+			'page' => 10,
+			'perPage' => 30, // should be ignored when not defined in param array
+		));
+		$this->assertEquals($route->uri(array('id' => 21, 'page' => 30)), '/event/21?page=30');
 	}
 	
 	public function testUrlHTTPS()

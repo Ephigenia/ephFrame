@@ -2,7 +2,7 @@
 
 namespace ephFrame\core;
 
-class Configurable
+abstract class Configurable
 {
 	public function __construct(Array $options = array())
 	{

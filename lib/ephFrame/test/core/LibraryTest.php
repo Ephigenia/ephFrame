@@ -4,6 +4,9 @@ namespace ephFrame\test\core;
 
 use \ephFrame\core\Library;
 
+/**
+ * @group core
+ */
 class LibraryTest extends \PHPUnit_Framework_TestCase
 {
 	/**

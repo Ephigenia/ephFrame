@@ -93,7 +93,8 @@ class Route
 			$result = preg_replace('@\(\?P<'.preg_quote($key,'@').'>[^)]+\)\??@', $value, $result, -1, $matched2);
 			// add other route parameters defined as query
 			if ($matched1 + $matched2 == 0 && array_key_exists($key, $this->params) && $value !== null
-				&& !in_array($key, array('namespace', 'controller', 'action'))) {
+				&& !in_array($key, array('namespace', 'controller', 'action'))
+				&& $this->params[$key] != $value) {
 				$query[$key] = $value;
 			}
 		}

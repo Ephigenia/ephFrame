@@ -4,6 +4,9 @@ namespace ephFrame\test\core;
 
 use ephFrame\core\CallbackHandler;
 
+/**
+ * @group core
+ */
 class CallbackHandlerTest extends \PHPUnit_Framework_TestCase
 {
 	public function setUp()
