@@ -19,9 +19,9 @@ class Controller
 	
 	public $params = array();
 	
-	protected $action = 'index';
+	public $action = 'index';
 	
-	protected $callbacks;
+	public $callbacks;
 	
 	public function __construct(Request $request, Array $params = array())
 	{
