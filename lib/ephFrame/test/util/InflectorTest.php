@@ -8,7 +8,47 @@ use ephFrame\util\Inflector;
  * @group Util
  */
 class InflectorTest extends \PHPUnit_Framework_TestCase
-{
+{	
+	public function singularizeEqualValues()
+	{
+		return array(
+			array('Languages', 'Language'),
+			array('users', 'user'),
+			array('Countries', 'Country'),
+			array('kisses', 'kiss'),
+			array('judges', 'judge'),
+			array('noplural', 'noplural'),
+		);
+	}
+	
+	/**
+	 * @dataProvider singularizeEqualValues
+	 */
+	public function testSingularize($left, $right) 
+	{
+		$this->assertEquals(Inflector::singularize($left), $right);
+	}
+	
+	public function pluralizeValues()
+	{
+		return array(
+			array('Language', 'Languages'),
+			array('Fish', 'Fishes'),
+			array('People', 'Peoples'),
+			array('Country', 'Countries'),
+			array('Kiss', 'Kisses'),
+			array('Judge', 'Judges'),
+		);
+	}
+	
+	/**
+	 * @dataProvider pluralizeValues
+	 */
+	public function testPluralize($k, $v) 
+	{
+		$this->assertEquals(Inflector::pluralize($k), $v);
+	}
+	
 	public function pluralizeEqualValues()
 	{
 		return array(
@@ -36,28 +76,9 @@ class InflectorTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @dataProvider pluralizeEqualValues
 	 */
-	public function testPluralize($k, $v) 
+	public function testPluralizeEqualValues($k, $v) 
 	{ 
 		$this->assertEquals(Inflector::pluralize($k), $v);
-	}
-	
-	public function singularizeEqualValues()
-	{
-		return array(
-			array('users', 'user'),
-			array('Countries', 'Country'),
-			array('kisses', 'kiss'),
-			array('judges', 'judge'),
-			array('noplural', 'noplural'),
-		);
-	}
-	
-	/**
-	 * @dataProvider singularizeEqualValues
-	 */
-	public function testSingularize($left, $right) 
-	{
-		$this->assertEquals(Inflector::singularize($left), $right);
 	}
 	
 	public function camelizeEqualValues() 

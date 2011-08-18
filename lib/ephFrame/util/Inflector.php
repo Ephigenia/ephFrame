@@ -18,8 +18,8 @@ class Inflector
 		'@(.+(sh|ch))$@' => '\\1es',
 		// -se (phase),
 		'@se$@i' => 'ses',
-		// -dge|ge (judge)
-		'@(?:dge|ge)$@i' => '\\1s',
+		// -dge (judge)
+		'@dge$@i' => 'dges',
 		// calf -> calves
 		'@f$@i' => '\\1ves',
 		// life -> lives
