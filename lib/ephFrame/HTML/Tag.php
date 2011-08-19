@@ -14,6 +14,8 @@ class Tag
 	
 	public $escaped = true;
 	
+	public static $emptyClose = ' />';
+	
 	public function __construct($name = null, $value = null, Array $attributes = array())
 	{
 		if (func_num_args() >= 1) {
@@ -32,7 +34,7 @@ class Tag
 	public function openTag()
 	{
 		if (empty($this->value)) {
-			return '<'.trim($this->name.' '.(string) $this->attributes).' />';
+			return '<'.trim($this->name.' '.(string) $this->attributes).self::$emptyClose;
 		} else {
 			return '<'.trim($this->name.' '.(string) $this->attributes).'>';
 		}
