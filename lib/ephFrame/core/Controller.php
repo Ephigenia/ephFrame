@@ -97,9 +97,10 @@ class Controller
 	
 	public function redirect($url, $status = \ephFrame\HTTP\StatusCode::TEMPORARY_REDIRECT, $exit = true)
 	{
-		$this->response = new \ephFrame\HTTP\Response($status, new \ephFrame\HTTP\Header(array(
-			'Location' => $url,
-		)));
+		$this->response['Location'] = $url;
+		// $this->response = new \ephFrame\HTTP\Response($status, new \ephFrame\HTTP\Header(array(
+		// 	'Location' => $url,
+		// )));
 		$this->response->send();
 		if ($exit) {
 			exit;
