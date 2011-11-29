@@ -17,6 +17,9 @@ class Request extends Message
 	public function __construct($method = null, $path = null, Header $header = null, Array $data = array(), Array $files = array())
 	{
 		$this->path = $path ?: $_SERVER['REQUEST_URI'];
+		if ($queryStringStart = strpos($this->path, '?')) {
+			$this->path = substr($this->path, 0, $queryStringStart);
+		}
 		$this->method = $method ?: $_SERVER['REQUEST_METHOD'];
 		if ($data) {
 			$this->data = $data;
