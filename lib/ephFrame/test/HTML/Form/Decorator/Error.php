@@ -49,7 +49,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(
 			(string) $this->fixture,
 			'<input type="text" name="inputfield1" value="value" />'.
-			'<span class="errormsg">this is an error message</span>',
+			'<span class="errormsg">this is an error message</span>'
 		);
 	}
 	
