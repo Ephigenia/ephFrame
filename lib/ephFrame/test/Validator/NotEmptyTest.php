@@ -2,7 +2,7 @@
 
 namespace ephFrame\test\Validator;
 
-use ephFrame\Validator\NotEmpty;
+use ephFrame\validator\NotEmpty;
 
 /**
  * @group Validator
