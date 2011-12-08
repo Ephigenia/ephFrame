@@ -100,6 +100,18 @@ class StringTest extends \PHPUnit_Framework_TestCase
 		);
 	}
 	
+	public function testSubstituteRegexp()
+	{
+		$this->assertEquals(
+			String::substitute('/:user-name/:user.id', array(
+				'user.name' => 'wrong',
+				'user-name' => 'ephigenia',
+				'user.id' => 23,
+			)),
+			'/ephigenia/23'
+		);
+	}
+	
 	public function testIndent() 
 	{
 		$this->assertEquals(String::indent('indent me!'), "\tindent me!");

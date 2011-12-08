@@ -183,7 +183,7 @@ class String
 			return 1;
 		});
 		foreach($arr as $key => $value) {
-			$result = preg_replace('@:'.$key.'@', $value, $result);
+			$result = preg_replace('@:'.preg_quote($key, '@').'@', $value, $result);
 		}
 		return $result;
 	}
