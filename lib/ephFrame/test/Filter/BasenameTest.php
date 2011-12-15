@@ -25,21 +25,21 @@ class BasenameTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSimple($left, $right)
 	{
-		$this->assertEquals($this->fixture->apply($left), $right);
+		$this->assertEquals($right, $this->fixture->apply($left));
 	}
 	
 	public function testLongFilename()
 	{
 		$longFilename = str_repeat('a', 300);
 		$result = str_repeat('a', 255);
-		$this->assertEquals($this->fixture->apply($longFilename), $result);
+		$this->assertEquals($result, $this->fixture->apply($longFilename));
 	}
 	
 	public function testLongFilenameWithExtension()
 	{
 		$longFilename = str_repeat('a', 300).'.css.html';
 		$result = str_repeat('a', 255 - 9).'.css.html';
-		$this->assertEquals($this->fixture->apply($longFilename), $result);
+		$this->assertEquals($result, $this->fixture->apply($longFilename));
 	}
 	
 	public function testInvalidCharactersValues()
@@ -56,7 +56,7 @@ class BasenameTest extends \PHPUnit_Framework_TestCase
 	public function testInvalidCharacters($left, $right)
 	{
 		$this->paranoid = false;
-		$this->assertEquals($this->fixture->apply($left), $right);
+		$this->assertEquals($right, $this->fixture->apply($left));
 	}
 	
 	public function testParanoidValues()
@@ -73,6 +73,6 @@ class BasenameTest extends \PHPUnit_Framework_TestCase
 	public function testParanoid($left, $right)
 	{
 		$this->fixture->paranoid = true;
-		$this->assertEquals($this->fixture->apply($left), $right);
+		$this->assertEquals($right, $this->fixture->apply($left));
 	}
 }

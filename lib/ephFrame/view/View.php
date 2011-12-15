@@ -16,6 +16,12 @@ class View extends \ArrayObject
 	{
 		$this->renderer['default'] = $Renderer ?: new \ephFrame\view\Renderer();
 		$this->rootPath = APP_ROOT.DIRECTORY_SEPARATOR.'view'.DIRECTORY_SEPARATOR;
+		if (isset($data['layout'])) {
+			$this->layout = $data['layout'];
+		}
+		if (isset($data['rootPath'])) {
+			$this->rootPath = $data['rootPath'];
+		}
 		return parent::__construct($data, \ArrayObject::ARRAY_AS_PROPS);
 	}
 	

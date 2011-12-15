@@ -25,20 +25,20 @@ class TrimTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSimple($left, $right)
 	{
-		$this->assertEquals($this->fixture->apply($left), $right);
+		$this->assertEquals($right, $this->fixture->apply($left));
 	}
 	
 	public function testCharsArray()
 	{
 		$this->fixture->chars = array('a', 'c');
-		$this->assertEquals($this->fixture->apply('abcSTAYac'), 'bcSTAY');
+		$this->assertEquals('bcSTAY',$this->fixture->apply('abcSTAYac'));
 	}
 	
 	public function testCharsString()
 	{
 		$this->fixture->chars = 'ac';
-		$this->assertEquals($this->fixture->apply('abcSTAYac'), 'bcSTAY');
+		$this->assertEquals('bcSTAY', $this->fixture->apply('abcSTAYac'));
 		$this->fixture->chars = 'acY';
-		$this->assertEquals($this->fixture->apply('abcSTAYac'), 'bcSTA');
+		$this->assertEquals('bcSTA', $this->fixture->apply('abcSTAYac'));
 	}
 }

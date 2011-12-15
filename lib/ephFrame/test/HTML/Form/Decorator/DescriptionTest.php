@@ -2,9 +2,15 @@
 
 namespace ephFrame\test\HTML\Form\Decorator;
 
-use ephFrame\HTML\Form\Decorator\Description;
-use ephFrame\HTML\Form\Element\Text;
+use 
+	ephFrame\HTML\Form\Decorator\Description,
+	ephFrame\HTML\Form\Element\Text
+	;
 
+/**
+ * @group Form
+ * @group FormDecorator
+ */
 class DescriptionTest extends \PHPUnit_Framework_TestCase
 {
 	public function setUp() {
@@ -21,8 +27,8 @@ class DescriptionTest extends \PHPUnit_Framework_TestCase
 	public function test__toString()
 	{
 		$this->assertEquals(
-			(string) $this->fixture,
-			'<input type="text" maxlength="255" name="field1" /><span class="description">describe & explain</span>'
+			'<input type="text" maxlength="255" name="field1" /><span class="description">describe & explain</span>',
+			(string) $this->fixture
 		);
 	}
 	
@@ -30,8 +36,8 @@ class DescriptionTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->fixture->description = false;
 		$this->assertEquals(
-			(string) $this->fixture,
-			'<input type="text" maxlength="255" name="field1" />'
+			'<input type="text" maxlength="255" name="field1" />',
+			(string) $this->fixture
 		);
 	}
 }

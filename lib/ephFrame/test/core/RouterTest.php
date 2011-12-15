@@ -42,18 +42,21 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 		$this->router->addRoutes(array(
 			'scaffold' => new Route('/:controller/:action?/'),
 		));
-		$this->assertEquals($this->router->scaffold->template, '/:controller/:action?/');
+		$this->assertEquals('/:controller/:action?/', $this->router->scaffold->template);
 	}
 	
 	public function testNamedRouteFind()
 	{
-		$this->assertEquals($this->router['scaffold']->template, '/:controller/:action?');
-		$this->assertEquals($this->router->scaffold->template, '/:controller/:action?');
+		$this->assertEquals('/:controller/:action?', $this->router['scaffold']->template);
+		$this->assertEquals('/:controller/:action?', $this->router->scaffold->template);
 	}
 	
 	public function test__call()
 	{
-		$this->assertEquals($this->router->scaffold(array('controller' => 'user')), '/user/index');
+		$this->assertEquals(
+			'/user/index',
+			$this->router->scaffold(array('controller' => 'user'))
+		);
 	}
 	
 	/**
@@ -61,7 +64,10 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function test__callFail()
 	{
-		$this->assertEquals($this->router->nothing(array('controller' => 'user')), '/user/index');
+		$this->assertEquals(
+			'/user/index',
+			$this->router->nothing(array('controller' => 'user'))
+		);
 	}
 	
 	public function testParseValues()
@@ -83,7 +89,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testParse($request, $expectedResult)
 	{
-		$this->assertEquals($this->router->parse($request), $expectedResult);
+		$this->assertEquals($expectedResult, $this->router->parse($request));
 	}
 	
 	public function testParseFail()
@@ -98,12 +104,12 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 			new Route('/:controller/:action'),
 		));
 		$this->assertEquals(
-			$Router->parse(new Request(RequestMethod::GET, '/user/edit')), 
-			array('controller' => 'app\controller\UserController', 'action' => 'index')
+			array('controller' => 'app\controller\UserController', 'action' => 'index'),
+			$Router->parse(new Request(RequestMethod::GET, '/user/edit'))
 		);
 		$this->assertEquals(
-			$Router->parse(new Request(RequestMethod::GET, '/user')),
-			array('controller' => 'app\controller\UserController', 'action' => 'index')
+			array('controller' => 'app\controller\UserController', 'action' => 'index'),
+			$Router->parse(new Request(RequestMethod::GET, '/user'))
 		);
 	}
 }

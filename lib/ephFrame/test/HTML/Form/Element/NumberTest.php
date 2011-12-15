@@ -30,6 +30,6 @@ class NumberTest extends \PHPUnit_Framework_TestCase
 	{
 		$field = new Number('number', '1', array());
 		$field->submit(' 12.13 ');
-		$this->assertEquals($field->data, '12.13');
+		$this->assertEquals('12.13', $field->data);
 	}
 }

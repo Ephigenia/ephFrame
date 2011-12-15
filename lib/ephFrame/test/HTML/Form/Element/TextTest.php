@@ -23,8 +23,8 @@ class TextTest extends \PHPUnit_Framework_TestCase
 	public function test__toString()
 	{
 		$this->assertEquals(
-			(string) $this->fixture,
-			'<input maxlength="50" size="5" type="text" name="number" />'
+			'<input maxlength="50" size="5" type="text" name="number" />',
+			(string) $this->fixture
 		);
 	}
 }

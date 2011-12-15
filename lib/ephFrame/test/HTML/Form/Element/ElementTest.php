@@ -6,6 +6,7 @@ use ephFrame\HTML\Form\Element\Element;
 use ephFrame\Validator\Integer;
 
 /**
+ * @group Form
  * @group Element
  */
 class ElementTest extends \PHPUnit_Framework_TestCase
@@ -35,7 +36,10 @@ class ElementTest extends \PHPUnit_Framework_TestCase
 	
 	public function testTrim()
 	{
-		$this->assertEquals($this->fixture->submit('  trim me ')->data, 'trim me');
+		$this->assertEquals(
+			'trim me',
+			$this->fixture->submit('  trim me ')->data
+		);
 	}
 	
 	public function testStripTags()
@@ -48,15 +52,15 @@ class ElementTest extends \PHPUnit_Framework_TestCase
 	
 	public function testAttributesInConstructor()
 	{
-		$this->assertEquals($this->fixture->attributes['class'], 'pink');
-		$this->assertEquals($this->fixture->attributes['name'], 'fieldname');
+		$this->assertEquals('pink', $this->fixture->attributes['class']);
+		$this->assertEquals('fieldname', $this->fixture->attributes['name']);
 	}
 	
 	public function testAttributesAdd()
 	{
 		$value = '1px solid red';
 		$this->fixture->attributes['style'] = $value;
-		$this->assertEquals($this->fixture->attributes['style'], $value);
+		$this->assertEquals($value, $this->fixture->attributes['style']);
 	}
 	
 	public function testValidate()
@@ -82,6 +86,6 @@ class ElementTest extends \PHPUnit_Framework_TestCase
 		$element = new Element('field1', true, array('decorators' => false));
 		$this->assertTrue(empty($element->data));
 		$element->submit('myvalue');
-		$this->assertEquals($element->data, 'myvalue');
+		$this->assertEquals('myvalue', $element->data);
 	}
 }
