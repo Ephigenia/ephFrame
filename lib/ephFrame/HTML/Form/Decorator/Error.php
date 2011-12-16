@@ -8,6 +8,7 @@ class Error extends Decorator
 {
 	public $attributes = array(
 		'class' => 'error',
+		'escaped' => false,
 	);
 	
 	public $tag = 'p';
