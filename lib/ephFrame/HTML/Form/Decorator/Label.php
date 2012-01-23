@@ -21,6 +21,7 @@ class Label extends Decorator
 			$this->attributes['for'] = $this->element->attributes['id'];
 		}
 		$label = false;
+		// @TODO add $label = false on form element creation renders no label
 		if (!empty($this->element->label)) {
 			$label = $this->element->label;
 		} elseif ($this->element->label !== false) {

@@ -200,4 +200,22 @@ class StringTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->assertEquals(String::insert('ADEFG', -4, 'BC'), 'ABCDEFG');
 	}
+	
+	public function testRandom()
+	{
+		$this->assertRegExp('@^[a-zA-Z0-9]{50}$@', String::random(50));
+		$this->assertRegExp('@^[1-9]{10}$@', String::random(10, '1-9'));
+		$this->assertRegExp('@^[abc]{10}$@', String::random(10, 'abc'));
+	}
+	
+	public function testGeneratePassword()
+	{
+		$this->assertRegExp('@^[a-z0-9]{2}$@i', String::generatePassword(2, 'ABCDEFG'));
+		$this->assertRegExp('@^[a-z0-9]{20}$@i', String::generatePassword(20, 'human'));
+	}
+	
+	public function testGenerateHumanReadablePassword()
+	{
+		$this->assertRegExp('@^[a-z]{20}$@i', String::generateHumanReadablePassword(20));
+	}
 }

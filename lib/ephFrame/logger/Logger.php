@@ -1,6 +1,6 @@
 <?php
 
-namespace ephFrame\Logger;
+namespace ephFrame\logger;
 
 class Logger
 {
