@@ -65,7 +65,7 @@ class File
 	
 	public function saveAs($path, $createDirs = true)
 	{
-		return $this->copy($oath, $createDirs);
+		return $this->copy($path, $createDirs);
 	}
 	
 	public function move($path, $createDirs = true)

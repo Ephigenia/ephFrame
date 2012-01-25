@@ -35,11 +35,13 @@ class Request extends Message
 		if ($header instanceof Header) {
 			$this->header = $header;
 		} else {
-			$client = array();
+			$this->header = new Header();
 			foreach($_SERVER as $k => $v) {
-				if (strncasecmp($k, 'http_', 5) == 0) $client[substr(strtr(strtolower($k), '_', '-'), 5)] = $v;
+				if (strncasecmp($k, 'http_', 5) != 0) {
+					continue;
+				}
+				$this->header[substr(strtr(strtolower($k), '_', '-'), 5)] = $v;
 			}
-			$this->header = new Header($client);
 		}
 	}
 	

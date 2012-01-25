@@ -7,6 +7,9 @@ class PHP extends \ArrayObject
 	public static $options = array(
 		'name' => 'SESSID',
 		'httponly' => false,
+		'lifetime' => 3600 * 24,
+		'domain' => null,
+		'secure' => false,
 	);
 	
 	public function __construct(Array $options = array())
