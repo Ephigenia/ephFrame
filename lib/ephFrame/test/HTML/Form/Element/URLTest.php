@@ -43,7 +43,7 @@ class URLTest extends \PHPUnit_Framework_TestCase
 	{
 		$field = new URL('url', null, array());
 		$field->submit('www.ephigenia.de');
-		$this->assertEquals($field->data, 'http://www.ephigenia.de');
+		$this->assertEquals('http://www.ephigenia.de', $field->data);
 	}
 	
 	public function testAddDefault()
@@ -52,20 +52,20 @@ class URLTest extends \PHPUnit_Framework_TestCase
 			'defaultProtocol' => 'http',
 		));
 		$field->submit('ftp://www.ephigenia.de');
-		$this->assertEquals($field->data, 'ftp://www.ephigenia.de');
+		$this->assertEquals('ftp://www.ephigenia.de', $field->data);
 	}
 	
 	public function testAddNoDefaultEmpty()
 	{
 		$field = new URL('url', null, array('defaultProtocol' => null));
 		$field->submit('www.ephigenia.de');
-		$this->assertEquals($field->data, 'www.ephigenia.de');
+		$this->assertEquals('www.ephigenia.de', $field->data);
 	}
 	
 	public function testAddNoDefaultFalse()
 	{
 		$field = new URL('url', null, array('defaultProtocol' => false));
 		$field->submit('www.ephigenia.de');
-		$this->assertEquals($field->data, 'www.ephigenia.de');
+		$this->assertEquals('www.ephigenia.de', $field->data);
 	}
 }

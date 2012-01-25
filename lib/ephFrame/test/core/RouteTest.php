@@ -31,7 +31,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 	
 	public function testUrl()
 	{
-		$this->assertEquals(substr($this->fixture->url(), 0, 7), 'http://');
+		$this->assertEquals('http://', substr($this->fixture->url(), 0, 7));
 	}
 	
 	public function testAddParamsToQuery()
@@ -40,30 +40,45 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 			'page' => 10,
 			'perPage' => 30, // should be ignored when not defined in param array
 		));
-		$this->assertEquals($route->uri(array('id' => 21, 'page' => 30)), '/event/21?page=30');
+		$this->assertEquals(
+			 '/event/21?page=30',
+			$route->uri(array('id' => 21, 'page' => 30))
+		);
 	}
 	
 	public function testUrlHTTPS()
 	{
 		$_SERVER['HTTPS'] = 'on';
-		$this->assertEquals(substr($this->fixture->url(), 0, 8), 'https://');
+		$this->assertEquals(
+			'https://',
+			substr($this->fixture->url(), 0, 8)
+		);
 		unset($_SERVER['HTTPS']);
 	}
 	
 	public function testUri()
 	{
-		$this->assertEquals($this->fixture->uri(), '/user/index');
+		$this->assertEquals(
+			'/user/index',
+			$this->fixture->uri()
+		);
 	}
 	
 	public function test__invoke()
 	{
 		$route = $this->fixture;
-		$this->assertEquals($route(array('controller' => 'news')), '/news/index');
+		$this->assertEquals(
+			'/news/index',
+			$route(array('controller' => 'news'))
+		);
 	}
 	
 	public function test__toString()
 	{
-		$this->assertEquals((string) $this->fixture, '/:controller/:action');
+		$this->assertEquals(
+			'/:controller/:action',
+			(string) $this->fixture
+		);
 	}
 	
 	public function testParse()
@@ -99,7 +114,10 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 		foreach($tests as $route => $test) {
 			$route = new Route($route);
 			foreach($test as $uri => $expectedResult) {
-				$this->assertEquals($route->parse(new Request(RequestMethod::GET, $uri)), $expectedResult);
+				$this->assertEquals(
+					$expectedResult,
+					$route->parse(new Request(RequestMethod::GET, $uri))
+				);
 			}
 		}
 	}
@@ -108,13 +126,13 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 	{
 		$route = new Route('/:controller/:username<\w+>');
 		$this->assertEquals(
-			$route->parse(new Request(RequestMethod::GET,'/user/ephigenia')),
-			array('username' => 'ephigenia', 'controller' => 'app\controller\UserController', 'action' => 'index')
+			array('username' => 'ephigenia', 'controller' => 'app\controller\UserController', 'action' => 'index'),
+			$route->parse(new Request(RequestMethod::GET,'/user/ephigenia'))
 		);
 		$route = new Route('/:controller/:username<\w+>,:id<\d{2,}>.:format');
-		$this->assertEquals($route->parse(
-			new Request(RequestMethod::GET,'/user/ephigenia,15.json')),
-			array('username' => 'ephigenia', 'controller' => 'app\controller\UserController', 'action' => 'index', 'format' => 'json', 'id' => 15)
+		$this->assertEquals(
+			array('username' => 'ephigenia', 'controller' => 'app\controller\UserController', 'action' => 'index', 'format' => 'json', 'id' => 15),
+			$route->parse(new Request(RequestMethod::GET,'/user/ephigenia,15.json'))
 		);
 	}
 	
@@ -160,15 +178,15 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 	public function testInsert($route, Array $values, $expectedResult)
 	{
 		$route = new Route($route);
-		$this->assertEquals($route->insert($values), $expectedResult);
+		$this->assertEquals($expectedResult, $route->insert($values));
 	}
 	
 	public function testInsertWithRegexpPlaceholders()
 	{
 		$route = new Route('/:username<[a+z0-9.-]{3,20}>,:id<\d+>?/:action*');
 		$this->assertEquals(
-			$route->insert(array('username' => 'marceleichner', 'id' => 15, 'action' => 'edit')),
-			'/marceleichner,15/edit'
+			'/marceleichner,15/edit',
+			$route->insert(array('username' => 'marceleichner', 'id' => 15, 'action' => 'edit'))
 		);
 	}
 	
@@ -176,8 +194,8 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 	{
 		$route = new Route('/(?P<username>[a+z0-9.-]{3,20}),(?P<id>\d+)?/:action');
 		$this->assertEquals(
-			$route->insert(array('username' => 'marceleichner', 'id' => 15, 'action' => 'edit')),
-			'/marceleichner,15/edit'
+			'/marceleichner,15/edit',
+			$route->insert(array('username' => 'marceleichner', 'id' => 15, 'action' => 'edit'))
 		);
 	}
 	
@@ -185,14 +203,14 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 	{
 		$route = new Route('/:controller*');
 		$this->assertEquals(
-			$route->parse(new Request(RequestMethod::GET, '/user/edit')),
-			array('controller' => 'app\controller\UserController', 'action' => 'index')
+			array('controller' => 'app\controller\UserController', 'action' => 'index'),
+			$route->parse(new Request(RequestMethod::GET, '/user/edit'))
 		);
 		$route = new Route('/:controller');
 		$this->assertFalse($route->parse(new Request(RequestMethod::GET, '/user/edit')));
 		$this->assertEquals(
-			$route->parse(new Request(RequestMethod::GET, '/user')),
-			array('controller' => 'app\controller\UserController', 'action' => 'index')
+			array('controller' => 'app\controller\UserController', 'action' => 'index'),
+			$route->parse(new Request(RequestMethod::GET, '/user'))
 		);
 	}
 	
@@ -200,16 +218,16 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 	{
 		$route = new Route('/:controller/?:action?');
 		$this->assertEquals(
-			$route->parse(new Request(RequestMethod::GET,'/user')),
-			array('controller' => 'app\controller\UserController', 'action' => 'index')
+			array('controller' => 'app\controller\UserController', 'action' => 'index'),
+			$route->parse(new Request(RequestMethod::GET,'/user'))
 		);
 		$this->assertEquals(
-			$route->parse(new Request(RequestMethod::GET,'/user/')),
-			array('controller' => 'app\controller\UserController', 'action' => 'index')
+			array('controller' => 'app\controller\UserController', 'action' => 'index'),
+			$route->parse(new Request(RequestMethod::GET,'/user/'))
 		);
 		$this->assertEquals(
-			$route->parse(new Request(RequestMethod::GET,'/user/edit')),
-			array('controller' => 'app\controller\UserController', 'action' => 'edit')
+			array('controller' => 'app\controller\UserController', 'action' => 'edit'),
+			$route->parse(new Request(RequestMethod::GET,'/user/edit'))
 		);
 	}
 	
@@ -217,8 +235,8 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 	{
 		$route = new Route('/:controller/:id/:action');
 		$this->assertEquals(
-			$route->parse(new Request(RequestMethod::GET,'/user/23/edit')),
-			array('controller' => 'app\controller\UserController', 'action' => 'edit', 'id' => '23')
+			array('controller' => 'app\controller\UserController', 'action' => 'edit', 'id' => '23'),
+			$route->parse(new Request(RequestMethod::GET,'/user/23/edit'))
 		);
 		$this->assertFalse($route->parse(new Request(RequestMethod::GET,'/user/2s3/edit')));
 	}
@@ -233,17 +251,17 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 	{
 		$route = new Route('/:controller');
 		$this->assertEquals(
-			$route->parse(new Request(RequestMethod::GET,'/abc')),
-			array('controller' => 'app\controller\AbcController', 'action' => 'index')
+			array('controller' => 'app\controller\AbcController', 'action' => 'index'),
+			$route->parse(new Request(RequestMethod::GET,'/abc'))
 		);
 		$route->template = ':controller/:action';
 		$this->assertEquals(
-			$route->parse(new Request(RequestMethod::GET,'user/edit')),
-			array('controller' => 'app\controller\UserController', 'action' => 'edit')
+			array('controller' => 'app\controller\UserController', 'action' => 'edit'),
+			$route->parse(new Request(RequestMethod::GET,'user/edit'))
 		);
 		$this->assertEquals(
-			$route->parse(new Request(RequestMethod::GET,'/abc/def')),
-			array('controller' => 'app\controller\AbcController', 'action' => 'def')
+			array('controller' => 'app\controller\AbcController', 'action' => 'def'),
+			$route->parse(new Request(RequestMethod::GET,'/abc/def'))
 		);
 	}
 	

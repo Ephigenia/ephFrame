@@ -31,8 +31,8 @@ class CallbackHandlerTest extends \PHPUnit_Framework_TestCase
 	public function testCallWithArguments()
 	{
 		$this->fixture->call('afterTest2', array('arg1', 'arg2'));
-		$this->assertEquals($this->arg1, 'arg1');
-		$this->assertEquals($this->arg2, 'arg2');
+		$this->assertEquals('arg1', $this->arg1);
+		$this->assertEquals('arg2', $this->arg2);
 	}
 	
 	public function callbackAfterTestArguments($arg1, $arg2)
@@ -44,7 +44,7 @@ class CallbackHandlerTest extends \PHPUnit_Framework_TestCase
 	public function testCallWithReturnValue()
 	{
 		$return = $this->fixture->call('afterTest3', array('return value'));
-		$this->assertEquals($return, 'return value');
+		$this->assertEquals('return value', $return);
 	}
 	
 	public function callbackWithReturnValue($arg1)

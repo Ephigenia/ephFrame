@@ -6,6 +6,9 @@ use ephFrame\HTML\Form\Form;
 
 use ephFrame\HTML\Form\Element\Text;
 
+/**
+ * @group Form
+ */
 class FormTest extends \PHPUnit_Framework_TestCase
 {
 	public function setUp()

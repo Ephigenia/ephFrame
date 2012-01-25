@@ -25,6 +25,6 @@ class NormalizeLineBrakesTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSimple($left, $right)
 	{
-		$this->assertEquals($this->fixture->apply($left), $right);
+		$this->assertEquals($right,$this->fixture->apply($left));
 	}
 }

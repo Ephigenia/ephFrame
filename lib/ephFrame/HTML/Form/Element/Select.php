@@ -45,7 +45,7 @@ class Select extends MultipleChoice
 			'value' => $value,
 		);
 		if (!isset($this->data) && isset($this->attributes['value'])) {
-			if ($this->attributes['value'] == $value || (is_array($this->attributes['value']) && in_array($value, $this->attributes['value']))) {
+			if ($this->attributes['value'] === $value || (is_array($this->attributes['value']) && in_array($value, $this->attributes['value']))) {
 				$optionAttributes['selected'] = 'selected';
 			}
 		} else {

@@ -20,7 +20,7 @@ class AlphaTest extends \PHPUnit_Framework_TestCase
 	public function testInvoke()
 	{
 		$r = $this->fixture;
-		$this->assertEquals($r('1abc3'), 'abc');
+		$this->assertEquals('abc', $r('1abc3'));
 	}
 	
 	public function testSimpleValues()
@@ -43,7 +43,7 @@ class AlphaTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSimple($input, $output)
 	{
-		$this->assertEquals($this->fixture->apply($input), $output);
+		$this->assertEquals($output, $this->fixture->apply($input));
 	}
 	
 	public function testUnicodeValues()
@@ -62,7 +62,7 @@ class AlphaTest extends \PHPUnit_Framework_TestCase
 	public function testUnicode($input, $output)
 	{
 		$this->fixture->unicode = true;
-		$this->assertEquals($this->fixture->apply($input), $output);
+		$this->assertEquals($output, $this->fixture->apply($input));
 	}
 	
 	public function testUnicodeWhiteSpaceValues()
@@ -80,7 +80,7 @@ class AlphaTest extends \PHPUnit_Framework_TestCase
 	public function testUnicodeWhiteSpace($input, $output)
 	{
 		$this->fixture->unicode = $this->fixture->whitespace = true;
-		$this->assertEquals($this->fixture->apply($input), $output);
+		$this->assertEquals($output, $this->fixture->apply($input));
 	}
 	
 	public function testAdditionalCharsValues()
@@ -101,6 +101,6 @@ class AlphaTest extends \PHPUnit_Framework_TestCase
 		$this->fixture->unicode = true;
 		$this->fixture->whitespace = false;
 		$this->fixture->chars = array('€', '®', '#', ']');
-		$this->assertEquals($this->fixture->apply($input), $output);
+		$this->assertEquals($output, $this->fixture->apply($input));
 	}	
 }

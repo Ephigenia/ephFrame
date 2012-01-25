@@ -35,10 +35,10 @@ class TagTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * @dataProvider toStringComparisonValues
 	 */
-	public function test__toString($tag, $label, $attributes, $result)
+	public function test__toString($tag, $label, $attributes, $expected)
 	{
 		$tag = new Tag($tag, $label, $attributes);
-		$this->assertEquals((string) $tag, $result);
+		$this->assertEquals($expected, (string) $tag);
 	}
 	
 	public function testValueAsArray()
@@ -47,13 +47,19 @@ class TagTest extends \PHPUnit_Framework_TestCase
 			new Tag('strong', 'text'),
 			new Tag('em', 'something'),
 		));
-		$this->assertEquals((string) $tag, '<p><strong>text</strong><em>something</em></p>');
+		$this->assertEquals(
+			'<p><strong>text</strong><em>something</em></p>',
+			(string) $tag
+		);
 	}
 	
 	public function testSimpleNested()
 	{
 		$tag1 = new Tag('img', null, array('src' => 'image.jpg'));
 		$tag2 = new Tag('a', $tag1, array('rel' => 'external'));
-		$this->assertEquals((string) $tag2, '<a rel="external"><img src="image.jpg" /></a>');
+		$this->assertEquals(
+			'<a rel="external"><img src="image.jpg" /></a>',
+			(string) $tag2
+		);
 	}
 }

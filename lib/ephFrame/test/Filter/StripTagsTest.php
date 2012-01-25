@@ -30,7 +30,7 @@ class StripTagsTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSimple($left, $right)
 	{
-		$this->assertEquals($this->fixture->apply($left), $right);
+		$this->assertEquals($right, $this->fixture->apply($left));
 	}
 	
 	public function testXSSValues()
@@ -63,7 +63,7 @@ class StripTagsTest extends \PHPUnit_Framework_TestCase
 	public function testAllowedTags($left, $tags, $right) 
 	{
 		$this->fixture->allowed = $tags;
-		$this->assertEquals($this->fixture->apply($left), $right);
+		$this->assertEquals($right, $this->fixture->apply($left));
 	}
 	
 	/**
@@ -71,7 +71,7 @@ class StripTagsTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testXSS($left, $right)
 	{
-		$this->assertEquals($this->fixture->apply($left), $right);
+		$this->assertEquals($right, $this->fixture->apply($left));
 	}
 	
 	public function testNotClosedHTMLTagValues()
@@ -87,6 +87,6 @@ class StripTagsTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testNotClosedHTMLTag($left, $right)
 	{
-		$this->assertEquals($this->fixture->apply($left), $right);
+		$this->assertEquals($right, $this->fixture->apply($left));
 	}
 }

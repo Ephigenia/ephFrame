@@ -27,7 +27,7 @@ class NumberTest extends \PHPUnit_Framework_TestCase
 	public function testSimple($left, $right)
 	{
 		$this->fixture->unicode = false;
-		$this->assertEquals($this->fixture->apply($left), $right);
+		$this->assertEquals($right, $this->fixture->apply($left));
 	}
 	
 	public function testUnicodeNumericValues()
@@ -46,11 +46,11 @@ class NumberTest extends \PHPUnit_Framework_TestCase
 	public function testUnicodeNumeric($left, $right)
 	{
 		$this->fixture->unicode = true;
-		$this->assertEquals($this->fixture->apply($left), $right);
+		$this->assertEquals($right, $this->fixture->apply($left));
 	}
 	
 	public function testWhitespace()
 	{
-		$this->assertEquals($this->fixture->apply('   char1chars'), '   1');
+		$this->assertEquals('   1', $this->fixture->apply('   char1chars'));
 	}
 }

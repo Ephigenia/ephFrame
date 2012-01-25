@@ -23,8 +23,8 @@ class SelectTest extends \PHPUnit_Framework_TestCase
 	public function test__toString()
 	{
 		$this->assertEquals(
-			(string) $this->fixture,
-			'<select size="1" name="fieldname"><option value="1">one</option><option value="2" selected="selected">two</option></select>'
+			'<select size="1" name="fieldname"><option value="1">one</option><option value="2" selected="selected">two</option></select>',
+			(string) $this->fixture
 		);
 	}
 	
@@ -32,8 +32,8 @@ class SelectTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->fixture->submit(1);
 		$this->assertEquals(
-			(string) $this->fixture,
-			'<select size="1" name="fieldname"><option value="1" selected="selected">one</option><option value="2">two</option></select>'
+			'<select size="1" name="fieldname"><option value="1" selected="selected">one</option><option value="2">two</option></select>',
+			(string) $this->fixture
 		);
 	}
 	
@@ -41,8 +41,8 @@ class SelectTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->fixture->attributes['multiple'] = true;
 		$this->assertEquals(
-			(string) $this->fixture,
-			'<select multiple="multiple" size="1" name="fieldname"><option value="1">one</option><option value="2" selected="selected">two</option></select>'
+			'<select multiple="multiple" size="1" name="fieldname"><option value="1">one</option><option value="2" selected="selected">two</option></select>',
+			(string) $this->fixture
 		);
 	}
 	
@@ -53,8 +53,8 @@ class SelectTest extends \PHPUnit_Framework_TestCase
 			'Letters' => array('a', 'b', 3 => 'c')
 		);
 		$this->assertEquals(
-			(string) $this->fixture,
-			'<select size="1" name="fieldname"><optgroup label="tree"><option value="0">one</option><option value="1">two</option><option value="2" selected="selected">tree</option></optgroup><optgroup label="c"><option value="0">a</option><option value="1">b</option><option value="3">c</option></optgroup></select>'
+			'<select size="1" name="fieldname"><optgroup label="tree"><option value="0">one</option><option value="1">two</option><option value="2" selected="selected">tree</option></optgroup><optgroup label="c"><option value="0">a</option><option value="1">b</option><option value="3">c</option></optgroup></select>',
+			(string) $this->fixture
 		);
 	}
 }

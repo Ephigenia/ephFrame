@@ -33,7 +33,7 @@ class AlphaNumericTest extends \PHPUnit_Framework_TestCase
 	 */
 	public function testSimple($input, $output)
 	{
-		$this->assertEquals($this->fixture->apply($input), $output);
+		$this->assertEquals($output, $this->fixture->apply($input));
 	}
 	
 	public function testUnicodeNumericValues()
@@ -54,12 +54,12 @@ class AlphaNumericTest extends \PHPUnit_Framework_TestCase
 		$this->fixture->unicode = true;
 		$this->fixture->whitespace = true;
 		$this->fixture->chars = array(':');
-		$this->assertEquals($this->fixture->apply($left), $right);
+		$this->assertEquals($right, $this->fixture->apply($left));
 	}
 	
 	public function testArray()
 	{
 		$array = array('a', 'b', 'c', 1, 2, 3);
-		$this->assertEquals($this->fixture->apply($array), $array);
+		$this->assertEquals($array, $this->fixture->apply($array));
 	}
 }
