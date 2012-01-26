@@ -6,7 +6,7 @@ use
 	ephFrame\logger\Event
 	;
 
-class Priority extends Filter
+class Priority implements Filter
 {
 	protected $priority;
 	
@@ -15,7 +15,9 @@ class Priority extends Filter
 	public function __construct($priority, $operator = null)
 	{
 		$this->priority = (int) $priority;
-		$this->operator = (string) ($operator ?: $this->operator);
+		if ($operator) {
+			$this->operator = $operator;
+		}
 	}
 	
 	public function accept(Event $event)

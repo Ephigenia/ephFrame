@@ -455,9 +455,7 @@ class String
 	{
 		$stringLength = self::length($string);
 		$saltLength = self::length($salt);
-		if ($stringLength == 0) {
-			return $salt;
-		} elseif ($stringLength == 1) {
+		if ($stringLength <= 1) {
 			return $string.$salt;
 		}
 		// enhance salt with salt if to short

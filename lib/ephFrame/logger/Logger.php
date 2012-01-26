@@ -15,7 +15,7 @@ class Logger
 	
 	protected $adapters = array();
 	
-	protected $filters = array();
+	public $filters = array();
 	
 	protected $priorities = array();
 	
@@ -28,7 +28,7 @@ class Logger
 	
 	public function write($priority, $message, Array $options = array())
 	{
-		$event = new Event($priority, strtolower($this->priorities[$priority]), $message);
+		$event = new Event($priority, $message);
 		foreach($this->filters as $filter) {
 			if (!$filter->accept($event)) {
 				return false;

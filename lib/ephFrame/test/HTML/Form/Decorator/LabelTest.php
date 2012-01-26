@@ -23,8 +23,9 @@ class LabelTest extends \PHPUnit_Framework_TestCase
 	
 	public function test__toString()
 	{
+		$this->fixture->attributes['id'] = 'myId';
 		$this->assertEquals(
-			'<label>fieldname:</label><input type="text" maxlength="255" name="fieldname" />',
+			'<label for="myId">fieldname:</label><input type="text" maxlength="255" name="fieldname" id="myId" />',
 			(string) $this->fixture
 		);
 	}
@@ -43,6 +44,15 @@ class LabelTest extends \PHPUnit_Framework_TestCase
 		$this->fixture->decorators['label']->attributes['onclick'] = 'javascript';
 		$this->assertEquals(
 			'<label onclick="javascript">fieldname:</label><input type="text" maxlength="255" name="fieldname" />',
+			(string) $this->fixture
+		);
+	}
+	
+	public function testNotEmptyElementLabel()
+	{
+		$this->fixture->label = 'Other Label';
+		$this->assertEquals(
+			'<label>Other Label:</label><input type="text" maxlength="255" name="fieldname" />',
 			(string) $this->fixture
 		);
 	}

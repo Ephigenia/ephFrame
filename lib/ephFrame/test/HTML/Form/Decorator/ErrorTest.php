@@ -16,8 +16,13 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 {
 	public function setUp()
 	{
+		$this->decorator = new Error(null, array(
+			'attributes' => array(
+				'class' => 'errormsg'
+			)
+		));
 		$this->fixture = new Text('inputfield1', 'value', array(
-			'decorators' => new Error(null, array('class' => 'errormsg')),
+			'decorators' => array($this->decorator)
 		));
 	}
 	
@@ -34,8 +39,8 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 			))
 		);
 		$this->assertEquals(
-			'<p class="error" style="border: 1px solid red;">this is an error message</p>'.
-			'<input type="text" name="inputfield1" value="value" />',
+			'<p style="border: 1px solid red;" class="error">this is an error message</p>'.
+			'<input type="text" maxlength="255" name="inputfield1" />',
 			(string) $this->fixture
 		);
 	}
@@ -43,7 +48,7 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 	public function testNoErrorRendering()
 	{
 		$this->assertEquals(
-			'<input type="text" name="inputfield1" value="value" />',
+			'<input type="text" maxlength="255" name="inputfield1" />',
 			(string) $this->fixture
 		);
 	}
@@ -51,9 +56,9 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 	public function testErrorRendering()
 	{
 		$this->fixture->errors[] = 'this is an error message';
-		$this->fixture->tag = 'span';
+		$this->decorator->tag = 'span';
 		$this->assertEquals(
-			'<input type="text" name="inputfield1" value="value" />'.
+			'<input type="text" maxlength="255" name="inputfield1" />'.
 			'<span class="errormsg">this is an error message</span>',
 			(string) $this->fixture
 		);
@@ -63,10 +68,9 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->fixture->errors[] = 'this is an error message';
 		$this->fixture->position = Position::PREPEND;
-		$this->fixture->attributes['style'] = 'border: 1px solid red;';
 		$this->assertEquals(
-			'<p class="errormsg" style="border: 1px solid red;">this is an error message</p>'.
-			'<input type="text" name="inputfield1" value="value" />',
+			'<input type="text" maxlength="255" name="inputfield1" />'.
+			'<p class="errormsg">this is an error message</p>',
 			(string) $this->fixture
 		);
 	}

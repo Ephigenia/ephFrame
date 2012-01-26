@@ -20,7 +20,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(String::right('Scheiß', 2), 'iß');
 		$this->assertEquals(String::right('Scheiß', -2), '');
 	}
-	
+
 	public function testUpper() 
 	{
 		$this->assertEquals(String::upper('Mähdrescher'), 'MÄHDRESCHER');
@@ -158,6 +158,12 @@ class StringTest extends \PHPUnit_Framework_TestCase
 	public function testTruncateWithHTML()
 	{
 		$this->assertEquals(String::truncate('<em>Lorem</em> <strong>Ipsum doloret</strong> something', 13, '…'), '<em>Lorem</em> <strong>Ipsum</strong>…');
+	}
+	
+	public function testSalt()
+	{
+		$this->assertEquals('A', String::salt('', 'A'));
+		$this->assertRegExp('@[ephFrameA]+@i', String::salt('ephFrame', 'A'));
 	}
 		
 	public function testHex() 

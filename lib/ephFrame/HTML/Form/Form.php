@@ -52,11 +52,13 @@ class Form extends \ArrayObject
 			throw new \InvalidArgumentException();
 		}
 		foreach($this->fieldsets as $i => $fieldset) foreach($fieldset as $j => $element) {
-			if ($element->attributes['name'] != $key) continue;
-			$this->fieldset[$i][$j] = $element;
+			if ($element->attributes['name'] != $key) {
+				continue;
+			}
+			$this->fieldsets[$i][$j] = $element;
 		}
-		$this->fieldset[0][] = $element;
-		exit;
+		$this->fieldsets[0][$key] = $element;
+		return $this;
 	}
 	
 	public function offsetGet($key)
@@ -66,7 +68,9 @@ class Form extends \ArrayObject
 				return $fieldset[$key];
 			}
 			foreach($fieldset as $element) {
-				if ($element->attributes['name'] == $key) return $element;
+				if ($element->attributes['name'] == $key) {
+					return $element;
+				}
 			}
 		}
 		throw new \InvalidArgumentException(sprintf('Form field "%s" does not exist.', $key));
@@ -79,10 +83,16 @@ class Form extends \ArrayObject
 	
 	public function offsetUnset($key)
 	{
-		foreach($this->fieldsets as $fieldset) foreach($fieldset as $index => $element) {
-			if ($element->attributes['name'] == $key) {
-				unset($fieldset[$index]);
+		foreach($this->fieldsets as $fieldset) {
+			if (isset($fieldset[$key])) {
+				unset($fieldset[$key]);
 				return $this;
+			}
+			foreach($fieldset as $index => $element) {
+				if ($element->attributes['name'] == $key) {
+					unset($fieldset[$index]);
+					return $this;
+				}
 			}
 		}
 		throw new \InvalidArgumentException(sprintf('Form field "%s" does not exist.', $key));

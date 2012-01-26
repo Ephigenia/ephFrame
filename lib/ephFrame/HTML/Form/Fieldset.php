@@ -47,14 +47,13 @@ class Fieldset extends \ArrayObject
 	
 	public function __toString()
 	{
-		if ($this->visible) {
-			$rendered = $this->tag();
-			foreach($this->decorators as $Decorator) {
-				$rendered = $Decorator->decorate($rendered);
-			}
-			return (string) $rendered;
-		} else {
+		if (!$this->visible) {
 			return '';
 		}
+		$rendered = $this->tag();
+		foreach($this->decorators as $Decorator) {
+			$rendered = $Decorator->decorate($rendered);
+		}
+		return (string) $rendered;
 	}
 }

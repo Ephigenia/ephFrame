@@ -10,14 +10,20 @@ use
 
 /**
  * @group Logger
- * @group LoggerFilter
  */
 class MessageTest extends \PHPUnit_Framework_TestCase
 {	
 	public function testSimpleAccept()
 	{
 		$filter = new Message('@testmessage@');
-		$event = new Event(1, 'alert', 'this is just a testmessage');
+		$event = new Event(1, 'this is just a testmessage');
 		$this->assertTrue($filter->accept($event));
+	}
+	
+	public function testSimpleIgnore()
+	{
+		$filter = new Message('@testmessage@');
+		$event = new Event(1, 'this is not a match');
+		$this->assertFalse($filter->accept($event));
 	}
 }

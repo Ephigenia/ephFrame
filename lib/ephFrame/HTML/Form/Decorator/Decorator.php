@@ -23,20 +23,26 @@ abstract class Decorator extends \ephFrame\core\Configurable
 		switch($this->position) {
 			default:
 			case Position::APPEND:
-				return $content.$this;
+				$return = $content.$this;
+				break;
 			case Position::WRAP:
 				$this->value = $content;
-				return $this;
+				$return = $this;
+				break;
 			case Position::INSERT_AFTER:
 				$content->escaped = false;
 				$content->value = $content->value.$this;
-				return $content;
+				$return = $content;
+				break;
 			case Position::INSERT_BEFORE:
 				$content->escaped = false;
 				$content->value = $this.$content->value;
-				return $content;
+				$return = $content;
+				break;
 			case Position::PREPEND:
-				return $this.$content;
+				$return = $this.$content;
+				break;
 		}
+		return $return;
 	}
 }

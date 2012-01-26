@@ -17,10 +17,10 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
 	public function testFormat()
 	{
 		$Formater = new Simple(':date :message :priority');
-		$Event = new Event(Logger::WARNING, 'warning', 'testmessage content');
+		$Event = new Event(Logger::WARNING, 'simple log message');
 		$this->assertEquals(
 			$Formater->format($Event),
-			date('Y-m-d').' testmessage content 4'
+			date('Y-m-d').' simple log message 4'
 		);
 	}
 }
