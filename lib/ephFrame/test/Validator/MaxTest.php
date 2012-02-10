@@ -1,8 +1,8 @@
 <?php
 
-namespace ephFrame\test\Validator;
+namespace ephFrame\test\validator;
 
-use ephFrame\Validator\Max;
+use ephFrame\validator\Max;
 
 /**
  * @group Validator

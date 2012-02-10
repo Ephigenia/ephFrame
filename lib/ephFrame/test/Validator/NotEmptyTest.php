@@ -1,6 +1,6 @@
 <?php
 
-namespace ephFrame\test\Validator;
+namespace ephFrame\test\validator;
 
 use ephFrame\validator\NotEmpty;
 

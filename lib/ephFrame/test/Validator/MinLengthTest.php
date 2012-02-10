@@ -1,8 +1,8 @@
 <?php
 
-namespace ephFrame\test\Validator;
+namespace ephFrame\test\validator;
 
-use ephFrame\Validator\MinLength;
+use ephFrame\validator\MinLength;
 
 /**
  * @group Validator

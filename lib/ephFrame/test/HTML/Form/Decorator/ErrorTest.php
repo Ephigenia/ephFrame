@@ -26,6 +26,17 @@ class ErrorTest extends \PHPUnit_Framework_TestCase
 		));
 	}
 	
+	public function testMultipleMessages()
+	{
+		$this->fixture->errors[] = 1;
+		$this->fixture->errors[] = 2;
+		$this->assertEquals(
+			'<input type="text" maxlength="255" name="inputfield1" />'.
+			'<p class="errormsg">1'.PHP_EOL.'2</p>',
+			(string) $this->fixture
+		);
+	}
+	
 	public function testOptionsMergeConstruct()
 	{
 		$this->fixture->errors[] = 'this is an error message';

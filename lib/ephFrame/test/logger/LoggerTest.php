@@ -19,9 +19,9 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
 	public function setUp()
 	{
 		$this->filename = __DIR__.'/../fixtures/logtest_actual.txt';
-		$writer = new \ephFrame\Logger\adapter\File($this->filename);
+		$writer = new \ephFrame\logger\adapter\File($this->filename);
 		$writer->formater = new Simple('(:priority) :message');
-		$this->fixture = new \ephFrame\Logger\Logger(
+		$this->fixture = new \ephFrame\logger\Logger(
 			$writer
 		);
 	}

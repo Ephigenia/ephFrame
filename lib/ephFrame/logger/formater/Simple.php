@@ -3,7 +3,7 @@
 namespace ephFrame\logger\formater;
 
 use
-	\ephFrame\logger\Event
+	ephFrame\logger\Event
 	;
 
 class Simple
