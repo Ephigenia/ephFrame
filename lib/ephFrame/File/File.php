@@ -2,47 +2,42 @@
 
 namespace ephFrame\File;
 
-class File
+class File extends \SPLFileInfo
 {
 	protected $path;
 	
 	protected $mimeType;
 	
-	public function __construct($path)
-	{
-		$this->path = $path;
-	}
-	
 	public function basename()
 	{
-		return basename($this->path);
+		return parent::getBasename();
 	}
 	
 	public function filename()
 	{
-		return pathinfo(basename($this->path), \PATHINFO_FILENAME);
+		return parent::getFilename();
 	}
 	
 	public function exists()
 	{
-		return file_exists($this->path) && is_file($this->path);
+		return is_file((string) $this);
 	}
 	
 	public function readable()
 	{
-		return is_readable($this->path);
+		return parent::isReadable();
 	}
 	
 	public function writable()
 	{
-		return is_writable($this->path);
+		return parent::isWritable();
 	}
 	
 	public function mimeType()
 	{
 		if (empty($this->mimeType)) {
 			$finfo = finfo_open(FILEINFO_MIME_TYPE);
-			$this->mimeType = finfo_file($finfo, $this->path);
+			$this->mimeType = finfo_file($finfo, (string) $this);
 			finfo_close($finfo);
 		}
 		return $this->mimeType;
@@ -50,17 +45,42 @@ class File
 	
 	public function extension()
 	{
-		return pathinfo($this->basename(), \PATHINFO_EXTENSION);
+		return parent::getExtension();
 	}
 	
-	public function directory()
+	public function path()
 	{
-		return dirname($this->path);
+		return parent::getPathname();
+	}
+	
+	public function realPath()
+	{
+		return parent::getRealPath();
+	}
+	
+	public function aTime()
+	{
+		return parent::getATime();
+	}
+	
+	public function mTime()
+	{
+		return parent::getMTime();
+	}
+	
+	public function cTime()
+	{
+		return parent::getCTime();
+	}
+	
+	public function owner()
+	{
+		return parent::getOwner();
 	}
 	
 	public function size()
 	{
-		return filesize($this->path);
+		return parent::getSize();
 	}
 	
 	public function saveAs($path, $createDirs = true)
@@ -70,11 +90,14 @@ class File
 	
 	public function move($path, $createDirs = true)
 	{
+		if (!$this->exists()) {
+			throw new FileNotFoundException();
+		}
 		if ($createDirs && !is_dir(dirname($path))) {
 			mkdir(dirname($path), 0755, true);
 		}
-		if (!rename($this->path, $path)) {
-			throw new Exception(sprintf('Could not move file %s to %s', $this->path, $path));
+		if (!rename((string) $this, $path)) {
+			throw new Exception(sprintf('Could not move file %s to %s', (string) $this, $path));
 		}
 		$this->path = $path;
 		return $this;
@@ -82,11 +105,14 @@ class File
 	
 	public function copy($path, $createDirs = true)
 	{
+		if (!$this->exists()) {
+			throw new FileNotFoundException();
+		}
 		if ($createDirs && !is_dir(dirname($path))) {
 			mkdir(dirname($path), 0755, true);
 		}
-		if (copy($this->path, $path)) {
-			throw new Exception(sprintf('Could not copy file %s to %s', $this->path, $path));
+		if (copy((string) $this, $path)) {
+			throw new Exception(sprintf('Could not copy file %s to %s', (string) $this, $path));
 		}
 		$class = get_class($this);
 		return new $class($path);
@@ -94,13 +120,15 @@ class File
 	
 	public function delete()
 	{
-		return unlink($this->path);
-	}
-	
-	public function __toString()
-	{
-		return $this->path;
+		if (!$this->exists()) {
+			throw new FileNotFoundException();
+		}
+		return unlink((string) $this);
 	}
 }
 
 class Exception extends \Exception {}
+
+class FileNotFoundException extends Exception {}
+
+class FileNotReadableException extends Exception {}
