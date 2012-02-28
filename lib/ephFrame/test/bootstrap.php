@@ -5,8 +5,3 @@ define('APP_ROOT', realpath(__DIR__));
 
 require EPHFRAME_PATH.'/core/Library.php';
 \ephFrame\core\Library::add('ephFrame',	EPHFRAME_PATH);
-
-// \ephFrame\data\Connections::add('test', array(
-// 	'dsn' => 'sqlite:'.__DIR__.'/fixtures/test.db',
-// 	'adapter' => 'ephFrame\data\source\adapter\MySQL',
-// ));
