@@ -4,8 +4,6 @@ namespace ephFrame\File;
 
 class File extends \SPLFileInfo
 {
-	protected $path;
-	
 	protected $mimeType;
 	
 	public function basename()
@@ -15,7 +13,12 @@ class File extends \SPLFileInfo
 	
 	public function filename()
 	{
-		return parent::getFilename();
+		return $this->getFilename();
+	}
+	
+	public function getFilename()
+	{
+		return pathinfo((string) $this, PATHINFO_FILENAME);
 	}
 	
 	public function exists()
@@ -45,7 +48,7 @@ class File extends \SPLFileInfo
 	
 	public function extension()
 	{
-		return parent::getExtension();
+		return pathinfo((string) $this, PATHINFO_EXTENSION);
 	}
 	
 	public function path()
@@ -76,6 +79,11 @@ class File extends \SPLFileInfo
 	public function owner()
 	{
 		return parent::getOwner();
+	}
+	
+	public function group()
+	{
+		return parent::getGroup();
 	}
 	
 	public function size()
