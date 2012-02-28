@@ -29,7 +29,7 @@ class Header extends \ArrayObject
 	public function send($overwrite = true)
 	{
 		foreach($this as $k => $v) {
-			header($this->statement($k, $v), true);
+			header($this->statement($k, $v), $overwrite);
 		}
 		return $this;
 	}

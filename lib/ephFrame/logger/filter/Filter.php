@@ -6,10 +6,7 @@ use
 	ephFrame\logger\Event
 	;
 
-abstract class Filter
+interface Filter
 {
-	public function accept(Event $event)
-	{
-		return true;
-	}
+	public function accept(Event $event);
 }

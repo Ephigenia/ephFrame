@@ -2,7 +2,7 @@
 
 namespace ephFrame\test\Validator;
 
-use ephFrame\Validator\URL;
+use ephFrame\validator\URL;
 
 /**
  * @group Validator

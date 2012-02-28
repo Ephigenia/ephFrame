@@ -1,17 +1,17 @@
 <?php
 
-namespace ephFrame\test\Validator;
+namespace ephFrame\test\validator;
 
-use ephFrame\validator\NotEmpty;
+use ephFrame\validator\NotBlank;
 
 /**
  * @group Validator
  */
-class NotEmptyTest extends \PHPUnit_Framework_TestCase 
+class NotBlankTest extends \PHPUnit_Framework_TestCase 
 {
 	public function setUp()
 	{
-		$this->fixture = new NotEmpty();
+		$this->fixture = new NotBlank();
 	}
 	
 	public function testInvalidValues()
@@ -19,8 +19,6 @@ class NotEmptyTest extends \PHPUnit_Framework_TestCase
 		return array(
 			array(''),
 			array(null),
-			array(false),
-			array('  '),
 		);
 	}
 	
@@ -36,8 +34,8 @@ class NotEmptyTest extends \PHPUnit_Framework_TestCase
 	{
 		return array(
 			array('a'), 
-			array(true),
-			array(array('1')),
+			array(false),
+			array(array())
 		);
 	}
 	

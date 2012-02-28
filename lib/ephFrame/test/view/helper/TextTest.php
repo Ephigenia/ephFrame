@@ -40,7 +40,7 @@ class TextTest extends \PHPUnit_Framework_TestCase
 		);
 		
 		$text = 'Lorem Ipsum <!--morelabel--> doloret';
-		$this->assertEquals($this->fixture->more($text, $url, $defaultLabel = 'go on reading…'),
+		$this->assertEquals($this->fixture->more($text, $url, 'go on reading…'),
 			'Lorem Ipsum <a title="go on reading…" href="#">morelabel</a>'
 		);
 		

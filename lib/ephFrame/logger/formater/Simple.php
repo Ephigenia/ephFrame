@@ -3,12 +3,12 @@
 namespace ephFrame\logger\formater;
 
 use
-	\ephFrame\logger\Event
+	ephFrame\logger\Event
 	;
 
 class Simple
 {
-	protected $format = ":timestamp :priorityName (:priority) :message\n";
+	protected $format = ":timestamp :priority :message\n";
 	
 	public function __construct($format = null)
 	{
@@ -19,7 +19,6 @@ class Simple
 	{
 		return \ephFrame\util\String::substitute($this->format, array(
 			'priority' => $Event->priority,
-			'priorityName' => $Event->priorityName,
 			'timestamp' => $Event->created->getTimeStamp(),
 			'date' => $Event->created->format('Y-m-d'),
 			'time' => $Event->created->format('h:m:s'),

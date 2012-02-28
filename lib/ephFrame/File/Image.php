@@ -220,6 +220,6 @@ class ImageInvalidMimeTypeException extends Exception
 {
 	public function __construct($mimeType)
 	{
-		parent::__construct(sprintf('Image class was unable to create a handle for the "%s" mimetype', $mimetype));
+		parent::__construct(sprintf('Image class was unable to create a handle for the "%s" mimetype', $mimeType));
 	}
 }

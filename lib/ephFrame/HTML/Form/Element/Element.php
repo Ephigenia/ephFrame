@@ -31,12 +31,12 @@ class Element
 	public function __construct($name = null, $value = null, Array $options = array())
 	{
 		if ($name === null) {
-			$this->name = \ephFrame\util\String::lower(get_class($this));
+			$name = strtolower(substr(strrchr(get_class($this), '\\'), 1));
 		}
-		$this->attributes += array(
+		$this->attributes = array_merge($this->attributes, array(
 			'name' => $name,
 			'value' => $value
-		);
+		));
 		foreach($options as $k => $v) {
 			if (is_array($this->{$k}) && is_array($v)) {
 				$this->{$k} = $v + $this->{$k};

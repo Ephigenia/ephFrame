@@ -1,8 +1,8 @@
 <?php
 
-namespace ephFrame\test\Validator;
+namespace ephFrame\test\validator;
 
-use ephFrame\Validator\Null;
+use ephFrame\validator\Null;
 
 /**
  * @group Validator

@@ -1,8 +1,8 @@
 <?php
 
-namespace ephFrame\test\Validator;
+namespace ephFrame\test\validator;
 
-use ephFrame\Validator\Email;
+use ephFrame\validator\Email;
 
 /**
  * @group Validator

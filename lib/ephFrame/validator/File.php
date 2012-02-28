@@ -36,6 +36,48 @@ class File extends Validator
 		return parent::__construct($options);
 	}
 	
+	public function validateSize()
+	{
+		if (isset($this->maxSize) && $file->size() > $this->maxSize) {
+			$this->size = $file->size();
+			$this->message = $this->messages['MAXSIZE'];
+			return false;
+		}
+		if (isset($this->minSize) && $file->size() < $this->minSize) {
+			$this->size = $file->size();
+			$this->message = $this->messages['MINSIZE'];
+			return false;
+		}
+		return true;
+	}
+	
+	public function validateMimeType()
+	{
+		if (!empty($this->mimeTypes) && !in_array($file->mimeType(), $this->mimeTypes)) {
+			$this->mimeType = $file->mimeType();
+			$this->types = implode(', ', $this->mimeTypes);
+			$this->message = $this->messages['MIMETYPE'];
+			return false;
+		}
+		return true;
+	}
+	
+	public function validateUploadError()
+	{
+		switch($file->error) {
+			case UPLOAD_ERR_INI_SIZE:
+			case UPLOAD_ERR_FORM_SIZE:
+			case UPLOAD_ERR_NO_TMP_DIR:
+			case UPLOAD_ERR_PARTIAL:
+            case UPLOAD_ERR_CANT_WRITE:
+            case UPLOAD_ERR_EXTENSION:
+				$this->message = $this->messages[$file->error];
+				return false;
+				break;
+		}
+		return true;
+	}
+	
 	public function validate($file)
 	{
 		if (is_array($file) && isset($file['tmp_name'])) {
@@ -52,32 +94,13 @@ class File extends Validator
 			$this->message = $this->messages['NOT_READABLE'];
 			return false;
 		}
-		if ($file instanceof \ephFrame\File\UploadedFile) {
-			switch($file->error) {
-				case UPLOAD_ERR_INI_SIZE:
-				case UPLOAD_ERR_FORM_SIZE:
-				case UPLOAD_ERR_NO_TMP_DIR:
-				case UPLOAD_ERR_PARTIAL:
-                case UPLOAD_ERR_CANT_WRITE:
-                case UPLOAD_ERR_EXTENSION:
-					$this->message = $this->messages[$file->error];
-					break;
-			}
-		}
-		if (isset($this->maxSize) && $file->size() > $this->maxSize) {
-			$this->size = $file->size();
-			$this->message = $this->messages['MAXSIZE'];
+		if ($file instanceof \ephFrame\File\UploadedFile && !$this->validateUploadError()) {
 			return false;
 		}
-		if (isset($this->minSize) && $file->size() < $this->minSize) {
-			$this->size = $file->size();
-			$this->message = $this->messages['MINSIZE'];
+		if (!$this->validateSize()) {
 			return false;
 		}
-		if (!empty($this->mimeTypes) && !in_array($file->mimeType(), $this->mimeTypes)) {
-			$this->mimeType = $file->mimeType();
-			$this->types = implode(', ', $this->mimeTypes);
-			$this->message = $this->messages['MIMETYPE'];
+		if (!$this->validateMimeTypes()) {
 			return false;
 		}
 		return true;

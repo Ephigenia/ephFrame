@@ -2,8 +2,10 @@
 
 namespace ephFrame\test\HTML\Form;
 
-use ephFrame\HTML\Form\Element\Element;
-use ephFrame\Validator\Integer;
+use
+	ephFrame\HTML\Form\Element\Element,
+	ephFrame\validator\Integer
+	;
 
 /**
  * @group Form

@@ -6,7 +6,7 @@ use
 	ephFrame\logger\Event
 	;
 
-class Message extends Filter
+class Message implements Filter
 {
 	protected $regexp;
 	

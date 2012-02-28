@@ -13,6 +13,7 @@ class Number extends Regexp
 	public function validate($value)
 	{
 		$whitespace = $this->whitespace ? '\s' : '';
+		// unicode characters for numerals can be 2/5 i.e. ⅖
 		if ($this->unicode) {
 			$this->regexp = '@^[\p{N}.'.$whitespace.']+$@u';
 		} else {

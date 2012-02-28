@@ -6,16 +6,13 @@ class Event
 {
 	public $priority;
 	
-	public $priorityName;
-	
 	public $message;
 	
 	public $created;
 	
-	public function __construct($priority, $priorityName, $message)
+	public function __construct($priority, $message)
 	{
 		$this->priority = $priority;
-		$this->priorityName = $priorityName;
 		$this->message = $message;
 		$this->created = new \DateTime();
 	}

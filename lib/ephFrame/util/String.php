@@ -455,9 +455,7 @@ class String
 	{
 		$stringLength = self::length($string);
 		$saltLength = self::length($salt);
-		if ($stringLength == 0) {
-			return $salt;
-		} elseif ($stringLength == 1) {
+		if ($stringLength <= 1) {
 			return $string.$salt;
 		}
 		// enhance salt with salt if to short
@@ -490,13 +488,13 @@ class String
 		$length = (int) abs($length);
 		if (empty($salt)) $salt = 'A-Za-z0-9';
 		// custom salt with patterns
-		if ($salt % 3 == 0) {
+		if (strlen($salt) % 3 == 0) {
 			$salt = strtr($salt, array(
-					'a-z' => 'abcdefghijklmnopqrstuvwxyz',
-					'A-Z' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-					'0-9' => '0123456789',
-					'1-9' => '123456789'
-				));
+				'a-z' => 'abcdefghijklmnopqrstuvwxyz',
+				'A-Z' => 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+				'0-9' => '0123456789',
+				'1-9' => '123456789',
+			));
 		}
 		// create random string
 		srand((double) microtime() * 1000000); // start the random generator
@@ -511,16 +509,16 @@ class String
 	 * Creates a Password using {@link randomString} or you
 	 * pass 'human' or 'humanreadable' as $salt and then {@link $genereateHumanReadablePassword} is used
 	 * 
-	 * @param integer	$length length of password
-	 * @param string	$salt	Salt String, linke {@link randomString} or 'human'
+	 * @param integer $length length of password
+	 * @param string $salt	Salt String, linke {@link randomString} or 'human'
 	 * @return string
 	 */
 	public static function generatePassword($length, $salt = null)
 	{
 		if (in_array($salt, array('human', 'humanreadable', 'readable'))) {
-			return self::generateHumanReadablePassword();
+			return self::generateHumanReadablePassword($length);
 		} else {
-			return self::randomString($length, $salt);
+			return self::random($length, $salt);
 		}
 	}
 	
@@ -531,10 +529,10 @@ class String
 	 * 
 	 * This method is from the 'PHP Sicherheit' Book, published by dpunkt
 	 * 
-	 * @param integer	$length
+	 * @param integer $length
 	 * @return string
 	 */
-	public static function generateHumanReadablePassword($length = 8)
+	public static function generateHumanReadablePassword($length = 12)
 	{
 		$vocals = array('a', 'e', 'i', 'o', 'u', 'ae', 'ou', 'io', 'ea', 'ou', 'ia', 'ai');
 		$consonants = array('b', 'c', 'd', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p',
