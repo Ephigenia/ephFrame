@@ -7,7 +7,7 @@ class PHP extends \ArrayObject
 	public static $options = array(
 		'name' => 'SESSID',
 		'httponly' => false,
-		'lifetime' => 3600 * 24,
+		'lifetime' => 86400, // 24 hours
 		'domain' => null,
 		'secure' => false,
 	);
