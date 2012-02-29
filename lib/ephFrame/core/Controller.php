@@ -88,11 +88,12 @@ class Controller
 		$this->view->action = $this->action;
 		$this->view->baseUri = \ephFrame\core\Router::base();
 		$this->view->Router = \ephFrame\core\Router::getInstance();
+		return true;
 	}
 	
 	public function afterRender()
 	{
-		
+		return true;
 	}
 	
 	public function redirect($url, $status = \ephFrame\HTTP\StatusCode::FOUND, $exit = true)
