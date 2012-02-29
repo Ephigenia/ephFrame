@@ -51,13 +51,21 @@ class Form extends \ArrayObject
 		if (!($element instanceof \ephFrame\HTML\Form\Element\Element)) {
 			throw new \InvalidArgumentException();
 		}
-		foreach($this->fieldsets as $i => $fieldset) foreach($fieldset as $j => $element) {
-			if ($element->attributes['name'] != $key) {
-				continue;
+		// search in all fieldsets for an element with $key as name attribute
+		foreach($this->fieldsets as $i => $fieldset) {
+			if (isset($fieldset[$key])) {
+				$this->fieldsets[$i][$key] = $element;
+				return $this;
 			}
-			$this->fieldsets[$i][$j] = $element;
+			foreach($fieldset as $j => $element) {
+				if ($element->attributes['name'] == $key) {
+					$this->fieldsets[$i][$j] = $element;
+					return $this;
+				}
+			}
 		}
-		$this->fieldsets[0][$key] = $element;
+		// fallback adds element to the last fieldset
+		$this->fieldsets[count($this->fieldsets) - 1][$key] = $element;
 		return $this;
 	}
 	
@@ -113,7 +121,7 @@ class Form extends \ArrayObject
 		foreach($this->fieldsets as $fieldset) foreach($fieldset as $element) {
 			if (!empty($element->errors)) return false;
 		}
-		return true;
+		return !$this->error();
 	}
 	
 	public function isValid()

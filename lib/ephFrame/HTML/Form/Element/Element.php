@@ -5,7 +5,7 @@ namespace ephFrame\HTML\Form\Element;
 use 
 	\ephFrame\HTML\Tag
 	;
-
+	
 class Element
 {
 	public $decorators = array();
@@ -30,8 +30,8 @@ class Element
 	
 	public function __construct($name = null, $value = null, Array $options = array())
 	{
-		if ($name === null) {
-			$name = strtolower(substr(strrchr(get_class($this), '\\'), 1));
+		if (!$name) {
+			$name = strtolower(preg_replace('@.+\\\@', '', get_class($this)));
 		}
 		$this->attributes = array_merge($this->attributes, array(
 			'name' => $name,

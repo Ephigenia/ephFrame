@@ -24,6 +24,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
 	public function testUpper() 
 	{
 		$this->assertEquals(String::upper('Mähdrescher'), 'MÄHDRESCHER');
+		$this->assertEquals(String::upper(chr(0xf6)), chr(0xd6)); // ISO-8859-1 ö -> Ö
 	}
 
 	public function testUcFirst() 
@@ -34,6 +35,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
 	public function testLower() 
 	{
 		$this->assertEquals(String::lower('MÄHDRESCHER'), 'mähdrescher');
+		$this->assertEquals(String::lower(chr(0xd6)), chr(0xf6)); // ISO-8859-1 Ö -> ö
 	}
 	
 	public function testLcFirst() 
@@ -123,8 +125,11 @@ class StringTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->assertEquals(String::length('Waschbär'), 8);
 		$this->assertEquals(String::length('Wa    är'), 8);
+		$this->assertEquals(String::length('Wa    är '), 9);
+		$this->assertEquals(String::length(' Wa    är '), 10);
 		$this->assertEquals(String::length('”'), 1);
 		$this->assertEquals(String::length('…'), 1);
+		$this->assertEquals(String::length(chr(0xE4).chr(0xF6)), 2); // iso öä
 	}
 	
 	public function testSubstr() 
@@ -140,6 +145,8 @@ class StringTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(String::substr($t, -2, 0), '');
 		$this->assertEquals(String::substr($t, 0, 0), '');
 		$this->assertEquals(String::substr($t, 1, 0), '');
+		$this->assertEquals(String::substr(chr(0xE4).chr(0xF6).chr(0xE4), 1, 1), chr(0xF6));
+		$this->assertEquals(String::substr(chr(0xE4).chr(0xF6).chr(0xE4), 1), chr(0xF6).chr(0xE4));
 	}
 	
 	public function testTruncateSingleLine()
@@ -158,6 +165,86 @@ class StringTest extends \PHPUnit_Framework_TestCase
 	public function testTruncateWithHTML()
 	{
 		$this->assertEquals(String::truncate('<em>Lorem</em> <strong>Ipsum doloret</strong> something', 13, '…'), '<em>Lorem</em> <strong>Ipsum</strong>…');
+	}
+	
+	public function wrapValues()
+	{
+		return array(
+			// simple tests
+			array(
+				'ABCDEF', 2,
+				'AB'.PHP_EOL.'CD'.PHP_EOL.'EF',
+			),
+			array(
+				'ABCDEF', 3,
+				'ABC'.PHP_EOL.'DEF',
+			),
+			array(
+				'ABCDEF', 4,
+				'ABCD'.PHP_EOL.'EF',
+			),
+			// tests that should not break
+			array(
+				'AB CD EF', 2,
+				'AB CD EF',
+			),
+			// tests with html tags
+			array(
+				'<strong>ABCDEF</strong>', 2,
+				'<strong>AB'.PHP_EOL.'CD'.PHP_EOL.'EF</strong>',
+			),
+		);
+	}
+	
+	/**
+	 * @dataProvider wrapValues()
+	 */
+	public function testWrap($input, $maxLength, $expectedResult)
+	{
+		$this->assertEquals($expectedResult, String::wrap($input, $maxLength));
+	}
+	
+	public function closeTagsValues()
+	{
+		return array(
+			array('', ''),
+			array(
+				'This is a test',
+				'This is a test',
+			),
+			// short tags
+			array(
+				'This <i>is a test',
+				'This <i>is a test</i>',
+			),
+			array(
+				'This <i>is',
+				'This <i>is</i>',
+			),
+			// longer tags
+			array(
+				'This <strong>Bold',
+				'This <strong>Bold</strong>',
+			),
+			// tags with attributes
+			array(
+				'This <a href="http://www.marceleichner.de" target="_blank">Bold',
+				'This <a href="http://www.marceleichner.de" target="_blank">Bold</a>',
+			),
+			// encapsulated tags
+			array(
+				'This <strong><a href="http://www.marceleichner.de" target="_blank">Bold</strong>',
+				'This <strong><a href="http://www.marceleichner.de" target="_blank">Bold</strong></a>',
+			),
+		);
+	}
+	
+	/**
+	 * @dataProvider closeTagsValues()
+	 */
+	public function testCloseTags($input, $expectedResult)
+	{
+		$this->assertEquals($expectedResult, String::closeTags($input));
 	}
 	
 	public function testSalt()
@@ -188,9 +275,19 @@ class StringTest extends \PHPUnit_Framework_TestCase
 	
 	public function testHtmlOrdEncode()
 	{
+		$this->assertEquals(String::htmlOrdEncode(''), '');
+		$this->assertEquals(String::htmlOrdEncode('l'), '&#108;');
 		$this->assertEquals(String::htmlOrdEncode('love@ephigenia.de'), '&#108;&#111;&#118;&#101;&#64;&#101;&#112;&#104;&#105;&#103;&#101;&#110;&#105;&#97;&#46;&#100;&#101;');
 		$this->assertEquals(String::htmlOrdEncode('Märchen'), '&#77;&#228;&#114;&#99;&#104;&#101;&#110;');
+		// $this->assertEquals('&#246;', String::htmlOrdEncode(chr(0xf6)));
 	}
+	
+	// public function testOrd()
+	// {
+	// 	$this->assertEquals(String::ord("\xC2\xA2"), 49826);
+	// 	$this->assertEquals(String::ord("\xE2\x82\xAc"), 14844588);
+	// 	$this->assertEquals(String::ord("\xF0\xA4\xAD\xA2"), 4037324194);
+	// }
 	
 	public function testSqueeze()
 	{

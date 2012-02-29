@@ -16,17 +16,6 @@ use
  */
 class RouterTest extends \PHPUnit_Framework_TestCase
 {
-	public function testGetInstance()
-	{
-		$this->assertInstanceOf('\ephFrame\core\Router',  Router::getInstance());
-	}
-	
-	public function testBase()
-	{
-		$_SERVER['REQUEST_URI'] = '';
-		$this->assertTrue(is_string(Router::base()));
-	}
-	
 	public function setUp()
 	{
 		$_SERVER['SERVER_NAME'] = 'localhost';
@@ -36,6 +25,19 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 			new Route('/static/:page'),
 			'home' => new Route('/'),
 		));
+	}
+	
+	public function testGetInstance()
+	{
+		$this->assertInstanceOf('\ephFrame\core\Router', Router::getInstance());
+	}
+	
+	public function testBase()
+	{
+		$_SERVER['REQUEST_URI'] = '';
+		$this->assertTrue(is_string(Router::base()));
+		unset($_SERVER['REQUEST_URI']);
+		$this->assertEquals('/', Router::base());
 	}
 
 	public function testRoutesAdd()
@@ -57,6 +59,10 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(
 			'/user/index',
 			$this->router->scaffold(array('controller' => 'user'))
+		);
+		$this->assertEquals(
+			'',
+			$this->router->home()
 		);
 	}
 	

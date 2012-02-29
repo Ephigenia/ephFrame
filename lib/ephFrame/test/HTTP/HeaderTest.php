@@ -4,6 +4,9 @@ namespace ephFrame\test\HTTP;
 
 use ephFrame\HTTP\Header;
 
+/**
+ * @group HTTP
+ */
 class HeaderTest extends \PHPUnit_Framework_TestCase
 {
 	public function setUp()
@@ -58,9 +61,10 @@ class HeaderTest extends \PHPUnit_Framework_TestCase
 	
 	/**
 	 * @expectedException PHPUnit_Framework_Error
+	 * @covers \ephFrame\HTTP\Header::send
 	 */
 	public function testSend() 
 	{
-		$this->header->send();
+		$this->assertEquals($this->header, $this->header->send());
 	}
 }

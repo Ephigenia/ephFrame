@@ -4,6 +4,9 @@ namespace ephFrame\test\HTTP;
 
 use ephFrame\HTTP\StatusCode;
 
+/**
+ * @group HTTP
+ */
 class StatusCodeTest extends \PHPUnit_Framework_TestCase
 {
 	public function messageEqualValues()
