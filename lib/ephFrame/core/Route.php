@@ -108,10 +108,16 @@ class Route
 	public function url(Array $params = Array())
 	{
 		if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') {
-			return 'https://'.$_SERVER['SERVER_NAME'].$this->uri($params);
+			$scheme = 'https';
 		} else {
-			return 'http://'.$_SERVER['SERVER_NAME'].$this->uri($params);
+			$scheme = 'http';
 		}
+		$url = $scheme.'://'.$_SERVER['SERVER_NAME'];
+		if (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] !== 80) {
+			$url .= ':'.$_SERVER['SERVER_PORT'];
+		}
+		$url .= $this->uri($params);
+		return $url;
 	}
 	
 	public function uri(Array $params = Array())

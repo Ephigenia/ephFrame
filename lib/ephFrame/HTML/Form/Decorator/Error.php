@@ -13,6 +13,8 @@ class Error extends Decorator
 	
 	public $tag = 'p';
 	
+	public $glue = PHP_EOL;
+	
 	public $position = Position::APPEND;
 	
 	public function __toString()
@@ -20,6 +22,6 @@ class Error extends Decorator
 		if (!$this->element->error()) {
 			return '';
 		}
- 		return (string) new Tag($this->tag, implode(PHP_EOL, $this->element->errors), $this->attributes);
+ 		return (string) new Tag($this->tag, implode($this->glue, $this->element->errors), $this->attributes);
 	}
 }

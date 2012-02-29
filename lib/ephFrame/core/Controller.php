@@ -6,7 +6,8 @@ use
 	ephFrame\HTTP\Request,
 	ephFrame\HTTP\Response,
 	ephFrame\view\View,
-	ephFrame\HTTP\Header
+	ephFrame\HTTP\Header,
+	ephFrame\core\CallbackHandler
 	;
 
 class Controller
@@ -29,14 +30,20 @@ class Controller
 		$this->response = new Response();
 		$this->view = new View();
 		$this->params = array_merge_recursive($this->params, $params);
-		$this->name = preg_replace('@(.+)\\\(\w*)Controller$@', '\\2', get_class($this));
-		$this->callbacks = new \ephFrame\core\CallbackHandler();
-		$this->callbacks->add('init', array($this, 'init'));
-		$this->callbacks->add('beforeAction', array($this, 'beforeAction'));
-		$this->callbacks->add('afterAction', array($this, 'afterAction'));
-		$this->callbacks->add('beforeRender', array($this, 'beforeRender'));
-		$this->callbacks->add('afterRender', array($this, 'afterRender'));
+		$this->name = preg_replace('@.+\\\(\w*)Controller$@', '\\1', get_class($this));
+		$this->callbacks = $this->getCallbacks();
 		$this->callbacks->call('init');
+	}
+	
+	protected function getCallbacks()
+	{
+		$callbacks = new CallbackHandler();
+		$callbacks->add('init', array($this, 'init'));
+		$callbacks->add('beforeAction', array($this, 'beforeAction'));
+		$callbacks->add('afterAction', array($this, 'afterAction'));
+		$callbacks->add('beforeRender', array($this, 'beforeRender'));
+		$callbacks->add('afterRender', array($this, 'afterRender'));
+		return $callbacks;
 	}
 	
 	protected function index()
@@ -79,12 +86,13 @@ class Controller
 					break;
 			}
 		}
+		return true;
 	}
 	
 	public function beforeRender()
 	{
 		// setting some default variables
-		$this->view->controller = substr(strrchr(get_class($this), '\\'), 1, -10);
+		$this->view->controller = $this->name;
 		$this->view->action = $this->action;
 		$this->view->baseUri = \ephFrame\core\Router::base();
 		$this->view->Router = \ephFrame\core\Router::getInstance();
@@ -105,6 +113,7 @@ class Controller
 		if ($exit) {
 			exit;
 		}
+		return true;
 	}
 	
 	public function __toString()
