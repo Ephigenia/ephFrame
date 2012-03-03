@@ -51,9 +51,11 @@ class View extends \ArrayObject
 			case 'element':
 				return $this->render(false, 'element/'.$path, (array) $this + $data);
 			case 'all':
-				return $this->render('layout', $this->layout, array(
-					'content' => $this->render('view', $path)
-				) + $data);
+				$content = $this->render('view', $path, $data);
+				if ($this->layout) {
+					return $this->render('layout', $this->layout, array('content' => $content) + $data);
+				}
+				return $content;
 		}
 	}
 }
