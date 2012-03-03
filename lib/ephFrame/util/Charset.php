@@ -42,6 +42,6 @@ class Charset
 	 */
 	public static function isUTF8($string)
 	{
-		return (mb_detect_encoding($string, self::UTF_8) == self::UTF_8);
+		return (bool) mb_check_encoding($string, self::UTF_8);
 	}
 }

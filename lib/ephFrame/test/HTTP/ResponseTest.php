@@ -4,6 +4,9 @@ namespace ephFrame\test\HTTP;
 
 use ephFrame\HTTP\Response;
 
+/**
+ * @group HTTP
+ */
 class ResponseTest extends \PHPUnit_Framework_TestCase
 {
 	/**

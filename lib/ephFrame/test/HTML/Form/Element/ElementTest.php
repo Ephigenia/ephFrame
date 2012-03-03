@@ -25,6 +25,12 @@ class ElementTest extends \PHPUnit_Framework_TestCase
 		));
 	}
 	
+	public function testAutoName()
+	{
+		$field = new Element(null, 'myvalue');
+		$this->assertEquals($field->attributes['name'], 'element');
+	}
+	
 	public function testRequiredWithEmptyData()
 	{
 		$this->assertFalse($this->fixture->submit(Null)->ok());

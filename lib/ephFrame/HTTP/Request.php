@@ -16,27 +16,35 @@ class Request extends Message
 	
 	public function __construct($method = null, $path = null, Header $header = null, Array $data = array(), Array $files = array())
 	{
-		$this->path = $path ?: $_SERVER['REQUEST_URI'];
+		if ($path) {
+			$this->path = $path;
+		} elseif (isset($_SERVER['REQUEST_URI'])) {
+			$this->path = $_SERVER['REQUEST_URI'];
+		}
 		if ($queryStringStart = strpos($this->path, '?')) {
 			$this->path = substr($this->path, 0, $queryStringStart);
 		}
-		$this->method = $method ?: $_SERVER['REQUEST_METHOD'];
+		if ($method) {
+			$this->method = $method;
+		} elseif (isset($_SERVER['REQUEST_METHOD'])) {
+			$this->method = $_SERVER['REQUEST_METHOD'];
+		}
 		if ($data) {
 			$this->data = $data;
-		} else {
+		} elseif (isset($_POST) && isset($_GET)) {
 			$this->data = $_POST;
 			$this->query = $_GET;
 		}
 		if ($files) {
 			$this->files = $files;
-		} else {
+		} elseif (isset($_FILES)) {
 			$this->files = $_FILES;
 		}
 		if ($header instanceof Header) {
 			$this->header = $header;
 		} else {
 			$this->header = new Header();
-			foreach($_SERVER as $k => $v) {
+			if (isset($_SERVER)) foreach($_SERVER as $k => $v) {
 				if (strncasecmp($k, 'http_', 5) != 0) {
 					continue;
 				}

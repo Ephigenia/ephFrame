@@ -5,6 +5,7 @@ namespace ephFrame\test\core;
 use
 	ephFrame\HTTP\Request,
 	ephFrame\HTTP\RequestMethod,
+	ephFrame\HTTP\Header,
 	ephFrame\core\Router,
 	ephFrame\core\Route
 	;
@@ -15,17 +16,6 @@ use
  */
 class RouterTest extends \PHPUnit_Framework_TestCase
 {
-	public function testGetInstance()
-	{
-		$this->assertInstanceOf('\ephFrame\core\Router',  Router::getInstance());
-	}
-	
-	public function testBase()
-	{
-		$_SERVER['REQUEST_URI'] = '';
-		$this->assertTrue(is_string(Router::base()));
-	}
-	
 	public function setUp()
 	{
 		$_SERVER['SERVER_NAME'] = 'localhost';
@@ -35,6 +25,19 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 			new Route('/static/:page'),
 			'home' => new Route('/'),
 		));
+	}
+	
+	public function testGetInstance()
+	{
+		$this->assertInstanceOf('\ephFrame\core\Router', Router::getInstance());
+	}
+	
+	public function testBase()
+	{
+		$_SERVER['REQUEST_URI'] = '';
+		$this->assertTrue(is_string(Router::base()));
+		unset($_SERVER['REQUEST_URI']);
+		$this->assertEquals('/', Router::base());
 	}
 
 	public function testRoutesAdd()
@@ -56,6 +59,10 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals(
 			'/user/index',
 			$this->router->scaffold(array('controller' => 'user'))
+		);
+		$this->assertEquals(
+			'',
+			$this->router->home()
 		);
 	}
 	
@@ -95,6 +102,26 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 	public function testParseFail()
 	{
 		$this->assertFalse($this->router->parse(new Request(RequestMethod::GET, '/no_matchin/route/23')));
+	}
+	
+	public function testRequiredMethod()
+	{
+		$Router = new Router(array(
+			new Route('/user', array(), array('method' => \ephFrame\HTTP\RequestMethod::POST)),
+		));
+		$this->assertFalse($Router->parse(new Request(RequestMethod::GET, '/user')));
+		$this->assertTrue((bool) $Router->parse(new Request(RequestMethod::POST, '/user')));
+	}
+	
+	public function testRequiredSecure()
+	{
+		$Router = new Router(array(
+			new Route('/user', array(), array('secure' => true)),
+		));
+		$SSLRequest = new Request(RequestMethod::GET, '/user', new Header(array('https' => true)));
+		$NormalRequest = new Request(RequestMethod::GET, '/user');
+		$this->assertTrue((bool) $Router->parse($SSLRequest));
+		$this->assertFalse((bool) $Router->parse($NormalRequest));
 	}
 	
 	public function testConcurrencyAsterisk()

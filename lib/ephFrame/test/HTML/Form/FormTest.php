@@ -33,21 +33,73 @@ class FormTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($element, $this->fixture->text);
 		$this->fixture['field1'] = $element;
 		$this->assertEquals($element, $this->fixture->field1);
+		
+		$this->fixture->fieldsets[0][] = new Text('newname', 'value');
+		$this->assertTrue((bool) $this->fixture['newname']);
+		
+		$this->fixture->fieldsets[0]['textfield'] = $textField = new Text('textfield');
+		$this->fixture['textfield'] = $newTextField =  new Text('newname');
+		$this->assertEquals($newTextField, $this->fixture['textfield']);
 	}
 	
-	/**
-	 * @expectedException InvalidArgumentException
-	 */
+	public function testError()
+	{
+		$this->fixture->errors[] = 'Something bad';
+		$this->assertTrue((bool) $this->fixture->error());
+	}
+	
+	public function testOk()
+	{
+		$this->assertTrue($this->fixture->ok());
+	}
+	
+	public function testFieldError()
+	{
+		$textField = new Text('text');
+		$this->fixture['text'] = $textField;
+		$textField->submit('');
+		$this->assertFalse($this->fixture->ok());
+		// test with now valid field
+		$textField->submit('OK');
+		$this->fixture->errors[] = 'But there is still something missing';
+		$this->assertFalse($this->fixture->ok());
+	}
+	
+	public function testFieldInvalidates()
+	{
+		$textField = new Text('text');
+		$this->fixture['text'] = $textField;
+		$textField->submit('');
+		$this->assertFalse($this->fixture->isValid());
+		$textField->submit('OK');
+		$this->assertTrue($this->fixture->isValid());
+	}
+	
 	public function testOffsetUnset()
 	{
 		$element = new Text('field1', 'value');
 		$this->fixture['text'] = $element;
 		unset($this->fixture['text']);
-		$this->fixture['text'];
-		$element = new Text('field1', 'value');
-		$this->fixture['text'] = $element;
-		unset($this->fixture['field1']);
-		$this->fixture['field1'];
+	}
+	
+	public function testOffsetUnsetByName()
+	{
+		$element = new Text('text');
+		$this->fixture->fieldsets[0][] = $element;
+		unset($this->fixture['text']);
+	}
+	
+	/**
+	 * @expectedException InvalidArgumentException
+	 */
+	public function testOffsetUnsetException()
+	{
+		unset($this->fixture['not_existent_field']);
+	}
+	
+	public function testOffsetSetByName()
+	{
+		
 	}
 	
 	/**

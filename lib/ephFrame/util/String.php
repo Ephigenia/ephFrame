@@ -286,7 +286,7 @@ class String
 	 * @param string	$end
 	 * @param boolean	$force
 	 */
-	public static function truncate($string, $targetLength, $end = '', $force = false, $calculateWidths = false)
+	public static function truncate($string, $targetLength, $end = '', $force = false)
 	{
 		$strLength = self::length($string);
 		if ($strLength <= $targetLength) return $string;
@@ -306,17 +306,13 @@ class String
 				if (preg_match('/\s/', $char)) {
 					$lastSpace = $i;
 				}
-				if (!$calculateWidths) {
-					$truncatePos += 1;
-				} else {
-					$truncatePos = self::charWidth($char);
-				}
+				$truncatePos += 1;
 			}
 		}
 		if (empty($lastSpace) || $force) {
-			$truncated = String::substr($string, 0, $truncatePos);
+			$truncated = self::substr($string, 0, $truncatePos);
 		} else {
-			$truncated = String::substr($string, 0, $lastSpace);
+			$truncated = self::substr($string, 0, $lastSpace);
 		}
 		return self::closeTags($truncated).$end;
 	}
@@ -333,32 +329,34 @@ class String
 	 */
 	public static function closeTags($html)
 	{
-		#put all opened tags into an array
-		  preg_match_all('#<([a-z]+)(?: .*)?(?<![/|/ ])>#iU', $html, $result);
-		  $openedtags = $result[1];
-
-		  #put all closed tags into an array
-		  preg_match_all('#</([a-z]+)>#iU', $html, $result);
-		  $closedtags = $result[1];
-		  $len_opened = count($openedtags);
-		  # all tags are closed
-		  if (count($closedtags) == $len_opened) {
-		    return $html;
-		  }
-		  $openedtags = array_reverse($openedtags);
-		  # close tags
-		  for ($i=0; $i < $len_opened; $i++) {
-		    if (!in_array($openedtags[$i], $closedtags)){
-		      $html .= '</'.$openedtags[$i].'>';
-		    } else {
-		      unset($closedtags[array_search($openedtags[$i], $closedtags)]);
-		    }
-		  }
-		  return $html;
+		// put all opened tags into an array
+		preg_match_all('@<([a-z]+)(?: .*)?(?<![/|/ ])>@iU', $html, $result);
+		$openedtags = $result[1];
+		$len_opened = count($openedtags);
+		
+		// put all closed tags into an array
+		preg_match_all('@</([a-z]+)>@iU', $html, $result);
+		$closedtags = $result[1];
+		
+		// all tags are closed
+		if (count($closedtags) == $len_opened) {
+			return $html;
+		}
+		
+		$openedtags = array_reverse($openedtags);
+		// close tags
+		for ($i = 0; $i < $len_opened; $i++) {
+			if (!in_array($openedtags[$i], $closedtags)){
+				$html .= '</'.$openedtags[$i].'>';
+			} else {
+				unset($closedtags[array_search($openedtags[$i], $closedtags)]);
+			}
+		}
+		return $html;
 	}
 	
 	/**
-	 * Adds line brakes to strings that have very long words in it. This
+	 * Adds line breakes to strings that have very long words in it. This
 	 * will add line brakes to very long words or phrases with no spaces
 	 * between that are longer than $maxLineLength.
 	 * 
@@ -372,11 +370,11 @@ class String
 	 * </code>
 	 * 
 	 * @param string $string	
-	 * @param integer $length maximum length of not-line-braked strings
+	 * @param integer $length maximum length of not-line-breaked strings
 	 * @param boolean $calculateWidths dynamic calculate character widths
 	 * @return string
 	 */
-	public static function wrap($string, $maxLineLength, $calculateWidths = true)
+	public static function wrap($string, $maxLineLength = 80)
 	{
 		$strLength = self::length($string); 
 		if ($strLength <= $maxLineLength) return $string;
@@ -386,17 +384,13 @@ class String
 		$cutPosition = $maxLineLength;
 		for ($i = 0; $i < $strLength; $i++) {
 			$char = self::substr($string, $i, 1);
-			$wrapped .= $char;
 			if ($char == '<') {
 				$intag = true;
 			} elseif ($char == '>') {
 				$intag = false;
 			} elseif (!$intag) {
-				if ($calculateWidths) {
-					$cutPosition += self::charWidth($char);
-				}
 				if (preg_match('/\s/', $char)) {
-					$charsSinceLastBreak = 0;
+					$charsSinceLastBreak = -1;
 					$cutPosition = $maxLineLength;
 				} elseif ($charsSinceLastBreak >= $cutPosition) {
 					$charsSinceLastBreak = 0;
@@ -405,31 +399,9 @@ class String
 				}
 				$charsSinceLastBreak++;
 			}
+			$wrapped .= $char;
 		}
 		return $wrapped;
-	}
-	
-	/**
-	 * Characters have different width. some are very broad, some a thin.
-	 * This method tries to return an aproximate with value for a character.
-	 * @param string $char
-	 * @return integer
-	 */
-	public static function charWidth($char)
-	{
-		// super wide characters
-		if (preg_match('/[©@®@—]/', $char)) {
-			return -1.2;
-		// wide characters
-		} elseif (preg_match('/[WQTZMDGOÖÓÒÔHUÜÚÙÛÄÁÀÂ]/i', $char)) {
-			return -0.8;
-		// thin characters
-		} elseif (preg_match('/[ilt1j\.,;:´`!\(\)\'*()\|\[\]]/', $char)) {
-			return +0.3;
-		// all others
-		} else {
-			return 0;
-		}
 	}
 	
 	/**
@@ -617,7 +589,7 @@ class String
 	 * @return integer
 	 */
 	public static function ord($c)
-	{
+	{		
 		$h = ord($c{0});
 		if ($h <= 0x7F) {
 			return $h;

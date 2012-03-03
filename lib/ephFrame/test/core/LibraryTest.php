@@ -21,4 +21,9 @@ class LibraryTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->assertTrue(Library::add('\ephFrame\core', dirname(__FILE__).'/../../core/'));
 	}
+	
+	public function testLoadFail()
+	{
+		$this->assertFalse(Library::load('some\stupid\namespace'));
+	}
 }
