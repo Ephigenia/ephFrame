@@ -36,25 +36,25 @@ class File extends Validator
 		return parent::__construct($options);
 	}
 	
-	public function validateSize()
+	public function validateSize(\ephFrame\File\UploadedFile $File)
 	{
-		if (isset($this->maxSize) && $file->size() > $this->maxSize) {
-			$this->size = $file->size();
+		if (isset($this->maxSize) && $File->size() > $this->maxSize) {
+			$this->size = $File->size();
 			$this->message = $this->messages['MAXSIZE'];
 			return false;
 		}
-		if (isset($this->minSize) && $file->size() < $this->minSize) {
-			$this->size = $file->size();
+		if (isset($this->minSize) && $File->size() < $this->minSize) {
+			$this->size = $File->size();
 			$this->message = $this->messages['MINSIZE'];
 			return false;
 		}
 		return true;
 	}
 	
-	public function validateMimeType()
+	public function validateMimeType(\ephFrame\File\UploadedFile $File)
 	{
 		if (!empty($this->mimeTypes) && !in_array($file->mimeType(), $this->mimeTypes)) {
-			$this->mimeType = $file->mimeType();
+			$this->mimeType = $File->mimeType();
 			$this->types = implode(', ', $this->mimeTypes);
 			$this->message = $this->messages['MIMETYPE'];
 			return false;
@@ -62,45 +62,45 @@ class File extends Validator
 		return true;
 	}
 	
-	public function validateUploadError()
+	public function validateUploadError(\ephFrame\File\UploadedFile $File)
 	{
-		switch($file->error) {
+		switch($File->error) {
 			case UPLOAD_ERR_INI_SIZE:
 			case UPLOAD_ERR_FORM_SIZE:
 			case UPLOAD_ERR_NO_TMP_DIR:
 			case UPLOAD_ERR_PARTIAL:
             case UPLOAD_ERR_CANT_WRITE:
             case UPLOAD_ERR_EXTENSION:
-				$this->message = $this->messages[$file->error];
+				$this->message = $this->messages[$File->error];
 				return false;
 				break;
 		}
 		return true;
 	}
 	
-	public function validate($file)
+	public function validate($File)
 	{
-		if (is_array($file) && isset($file['tmp_name'])) {
-			$file = new \ephFrame\File\File((string) $file['tmp_name']);
+		if (is_array($File) && isset($file['tmp_name'])) {
+			$File = new \ephFrame\File\File((string) $file['tmp_name']);
 		}
-		if (!$file instanceof \ephFrame\File\File) {
-			$file = new \ephFrame\File\File((string) $file);
+		if (!$File instanceof \ephFrame\File\File) {
+			$File = new \ephFrame\File\File((string) $file);
 		}
-		if (!$file->exists()) {
+		if (!$File->exists()) {
 			$this->message = $this->messages['NOT_FOUND'];
 			return false;
 		}
-		if (!$file->readable()) {
+		if (!$File->readable()) {
 			$this->message = $this->messages['NOT_READABLE'];
 			return false;
 		}
-		if ($file instanceof \ephFrame\File\UploadedFile && !$this->validateUploadError()) {
+		if ($File instanceof \ephFrame\File\UploadedFile && !$this->validateUploadError($File)) {
 			return false;
 		}
-		if (!$this->validateSize()) {
+		if (!$this->validateSize($File)) {
 			return false;
 		}
-		if (!$this->validateMimeTypes()) {
+		if (!$this->validateMimeType($File)) {
 			return false;
 		}
 		return true;

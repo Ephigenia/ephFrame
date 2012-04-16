@@ -6,19 +6,17 @@ class File extends \SPLFileInfo
 {
 	protected $mimeType;
 	
-	public function basename()
+	public function basename($suffix = true)
 	{
-		return parent::getBasename();
+		if ($suffix == false) {
+			return pathinfo($this->pathName(), PATHINFO_FILENAME);
+		}
+		return parent::getBasename($suffix);
 	}
 	
-	public function filename()
+	public function filename($suffix = true)
 	{
-		return $this->getFilename();
-	}
-	
-	public function getFilename()
-	{
-		return pathinfo((string) $this, PATHINFO_FILENAME);
+		return $this->basename($suffix);
 	}
 	
 	public function exists()
@@ -51,9 +49,14 @@ class File extends \SPLFileInfo
 		return pathinfo((string) $this, PATHINFO_EXTENSION);
 	}
 	
-	public function path()
+	public function pathname()
 	{
 		return parent::getPathname();
+	}
+	
+	public function path()
+	{
+		return parent::getPath();
 	}
 	
 	public function realPath()

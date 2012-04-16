@@ -33,13 +33,13 @@ class Image extends File
 			if ($this->exists()) {
 				switch($this->mimeType()) {
 					case 'image/jpeg':
-						$this->handle = imagecreatefromjpeg($this->path);
+						$this->handle = imagecreatefromjpeg($this->pathName());
 						break;
 					case 'image/gif':
-						$this->handle = imagecreatefromgif($this->path);
+						$this->handle = imagecreatefromgif($this->pathName());
 						break;
 					case 'image/png':
-						$this->handle = imagecreatefrompng($this->path);
+						$this->handle = imagecreatefrompng($this->pathName());
 						break;
 					default:
 						throw new ImageInvalidMimeTypeException($this->mimeType());

@@ -23,8 +23,8 @@ class CallbackHandler extends \ArrayObject
 			if (!method_exists($callback[0], $callback[1])) {
 				continue;
 			}
-			call_user_func_array(array($callback[0], $callback[1]), $arguments);
+			$result = call_user_func_array(array($callback[0], $callback[1]), $arguments);
 		}
-		return true;
+		return $result;
 	}
 }

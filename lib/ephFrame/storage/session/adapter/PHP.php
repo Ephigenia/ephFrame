@@ -12,10 +12,10 @@ class PHP extends \ArrayObject
 		'secure' => false,
 	);
 	
-	public function __construct(Array $data = array(), Array $options = array())
+	public function __construct(Array $options = array())
 	{
 		self::$options += $options + session_get_cookie_params();
-		return parent::__construct($data, \ArrayObject::ARRAY_AS_PROPS);
+		return parent::__construct(array(), \ArrayObject::ARRAY_AS_PROPS);
 	}
 	
 	public function start()
@@ -47,14 +47,7 @@ class PHP extends \ArrayObject
 	
 	public function set($key, $value)
 	{
-		if (is_array($value)) {
-			$value = new self($value);
-		}
-		if ($key == null) {
-			$_SESSION[] = $value;
-		} else {
-			$_SESSION[$key] = $value;
-		}
+		$_SESSION[$key] = $value;
 		return parent::offsetSet($key, $value);
 	}
 	
@@ -72,21 +65,6 @@ class PHP extends \ArrayObject
 		$this->exchangeArray($_SESSION = array());
 		return $this;
 	}
-	
-	public function toArray() { 
-		$data = $this->data; 
-		foreach ($data as $key => $value) {
-			if ($value instanceof self) {
-				$data[$key] = $value->toArray();
-			}
-		}
-		return $data; 
-	}
-	
-    public function __clone()
-	{ 
-        foreach ($this->data as $key => $value) if ($value instanceof self) $this[$key] = clone $value; 
-    }
 	
 	public function __destroy() 
 	{

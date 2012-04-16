@@ -35,6 +35,11 @@ class CallbackHandlerTest extends \PHPUnit_Framework_TestCase
 		$this->assertEquals('arg2', $this->arg2);
 	}
 	
+	public function callbackWithReturnValue($arg1)
+	{
+		return $arg1;
+	}
+	
 	public function callbackAfterTestArguments($arg1, $arg2)
 	{
 		$this->arg1 = $arg1;
@@ -45,11 +50,6 @@ class CallbackHandlerTest extends \PHPUnit_Framework_TestCase
 	{
 		$return = $this->fixture->call('afterTest3', array('return value'));
 		$this->assertEquals('return value', $return);
-	}
-	
-	public function callbackWithReturnValue($arg1)
-	{
-		return $arg1;
 	}
 	
 	public function testNonExistingCallback()
