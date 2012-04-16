@@ -107,8 +107,8 @@ class File extends \SPLFileInfo
 		if ($createDirs && !is_dir(dirname($path))) {
 			mkdir(dirname($path), 0755, true);
 		}
-		if (!rename((string) $this, $path)) {
-			throw new Exception(sprintf('Could not move file %s to %s', (string) $this, $path));
+		if (!rename($this->pathName(), $path)) {
+			throw new Exception(sprintf('Could not move file %s to %s', $this->pathName(), $path));
 		}
 		$this->path = $path;
 		return $this;
@@ -122,8 +122,8 @@ class File extends \SPLFileInfo
 		if ($createDirs && !is_dir(dirname($path))) {
 			mkdir(dirname($path), 0755, true);
 		}
-		if (copy((string) $this, $path)) {
-			throw new Exception(sprintf('Could not copy file %s to %s', (string) $this, $path));
+		if (copy($this->pathName(), $path)) {
+			throw new Exception(sprintf('Could not copy file %s to %s', $this->pathName(), $path));
 		}
 		$class = get_class($this);
 		return new $class($path);
