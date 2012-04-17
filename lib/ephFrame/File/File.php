@@ -104,14 +104,17 @@ class File extends \SPLFileInfo
 		if (!$this->exists()) {
 			throw new FileNotFoundException();
 		}
-		if ($createDirs && !is_dir(dirname($path))) {
-			mkdir(dirname($path), 0755, true);
+		$dirname = dirname($path);
+		if ($createDirs && !is_dir($dirname) && mkdir($dirname, 0755, true) === false) {
+			throw new Exception(sprintf('Unable to create the "%s" directory', $dirname));
+		}
+		if (!is_writable($dirname)) {
+			throw new Exception(sprintf('Unable to write to "%s"', $dirname));
 		}
 		if (!rename($this->pathName(), $path)) {
-			throw new Exception(sprintf('Could not move file %s to %s', $this->pathName(), $path));
+			throw new Exception(sprintf('Could not move file from %s to %s (%s)', $this->pathName(), $path, error_get_last()));
 		}
-		$this->path = $path;
-		return $this;
+		return new File($path);
 	}
 	
 	public function copy($path, $createDirs = true)
@@ -119,14 +122,17 @@ class File extends \SPLFileInfo
 		if (!$this->exists()) {
 			throw new FileNotFoundException();
 		}
-		if ($createDirs && !is_dir(dirname($path))) {
-			mkdir(dirname($path), 0755, true);
+		$dirname = dirname($path);
+		if ($createDirs && !is_dir($dirname) && mkdir($dirname, 0755, true) === false) {
+			throw new Exception(sprintf('Unable to create the "%s" directory', $dirname));
 		}
-		if (copy($this->pathName(), $path)) {
-			throw new Exception(sprintf('Could not copy file %s to %s', $this->pathName(), $path));
+		if (!is_writable($dirname)) {
+			throw new Exception(sprintf('Unable to write to "%s"', $dirname));
 		}
-		$class = get_class($this);
-		return new $class($path);
+		if (!copy($this->pathName(), $path)) {
+			throw new Exception(sprintf('Could not copy file %s to %s (%s)', $this->pathName(), $path, error_get_last()));
+		}
+		return new File($path);
 	}
 	
 	public function delete()

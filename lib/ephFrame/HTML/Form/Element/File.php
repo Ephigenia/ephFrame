@@ -26,7 +26,7 @@ class File extends Element
 	{
 		if (is_array($data) && $data['error'] != UPLOAD_ERR_NO_FILE) {
 			return parent::submit(
-				new $this->uploadedFileClassname($data)
+				new $this->uploadedFileClassname($data['tmp_name'], $data['name'], $data['type'], $data['error'])
 			);
 		}
 		return true;

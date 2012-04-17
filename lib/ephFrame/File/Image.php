@@ -211,8 +211,8 @@ class Image extends File
 				imagegif($this->handle(), $path);
 				break;
 		}
-		$this->path = $path;
-		return $this;
+		$classname = get_class($this);
+		return new $classname($path);
 	}
 }
 

@@ -30,7 +30,7 @@ class Element
 	
 	public function __construct($name = null, $value = null, Array $options = array())
 	{
-		if (!$name) {
+		if ($name === null) {
 			$name = strtolower(preg_replace('@.+\\\@', '', get_class($this)));
 		}
 		$this->attributes = array_merge($this->attributes, array(
