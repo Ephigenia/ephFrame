@@ -44,16 +44,18 @@ class View extends \ArrayObject
 		switch($part) {
 			default:
 			case 'view':
-				return $renderer->render($this->rootPath.$path.'.'.$this->type, (array) $this + $data);
+				return $renderer->render($this->rootPath.$path.'.'.$this->type, $data + (array) $this);
 				break;
 			case 'layout':
-				return $this->render(false, 'layout/'.$path, (array) $this + $data);
+				return $this->render(false, 'layout/'.$path, $data + (array) $this);
 			case 'element':
-				return $this->render(false, 'element/'.$path, (array) $this + $data);
+				return $this->render(false, 'element/'.$path, $data + (array) $this);
 			case 'all':
-				return $this->render('layout', $this->layout, array(
-					'content' => $this->render('view', $path)
-				) + $data);
+				$content = $this->render('view', $path, $data + (array) $this);
+				if ($this->layout) {
+					return $this->render('layout', $this->layout, $data + array('content' => $content));
+				}
+				return $content;
 		}
 	}
 }

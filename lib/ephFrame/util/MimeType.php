@@ -157,6 +157,8 @@ class MimeType
 		'atom'	=> 'application/atom+xml',
 		'c'		=> 'text/plain',
 		'htc'	=> 'text/x-component',
+		'vcf'	=> 'text/vcard',
+		'vcard' => 'text/vcard',
 	
 		// video types
 		'mpg'	=> 'video/mpeg',

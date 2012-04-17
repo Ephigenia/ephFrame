@@ -70,19 +70,13 @@ class Controller
 		if (isset($this->params['type'])) {
 			$this->view->type = $this->params['type'];
 		}
-		if (empty($this->response->header->{'Content-Type'})) {
+		if (empty($this->response->header['Content-Type'])) {
 			switch($this->view->type) {
 				case 'markdown':
-					$this->response->header->{'Content-Type'} = 'text/html; charset: UTF-8';
+					$this->response->header['Content-Type'] = 'text/html; charset: UTF-8';
 					break;
-				case 'html':
-				case 'rss':
-				case 'atom':
-				case 'xml':
-				case 'txt':
-				case 'js':
-				case 'json':
-					$this->response->header->{'Content-Type'} = \ephFrame\util\MimeType::get($this->view->type).'; charset: UTF-8';
+				default:
+					$this->response->header['Content-Type'] = \ephFrame\util\MimeType::get($this->view->type).'; charset: UTF-8';
 					break;
 			}
 		}
@@ -91,7 +85,6 @@ class Controller
 	
 	public function beforeRender()
 	{
-		// setting some default variables
 		$this->view->controller = $this->name;
 		$this->view->action = $this->action;
 		$this->view->baseUri = \ephFrame\core\Router::base();

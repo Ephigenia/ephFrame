@@ -33,8 +33,8 @@ class Select extends MultipleChoice
 	protected function optGroup($label, Array $options = array())
 	{
 		$optionTags = array();
-		foreach($options as $value => $label) {
-			$optionTags[] = $this->optionTag($label, $value);
+		foreach($options as $value => $optionLabel) {
+			$optionTags[] = $this->optionTag($optionLabel, $value);
 		}
 		return new Tag('optgroup', $optionTags, array('label' => $label));
 	}
