@@ -24,7 +24,6 @@ class StringTest extends \PHPUnit_Framework_TestCase
 	public function testUpper() 
 	{
 		$this->assertEquals(String::upper('Mähdrescher'), 'MÄHDRESCHER');
-		$this->assertEquals(String::upper(chr(0xf6)), chr(0xd6)); // ISO-8859-1 ö -> Ö
 	}
 
 	public function testUcFirst() 
@@ -35,7 +34,6 @@ class StringTest extends \PHPUnit_Framework_TestCase
 	public function testLower() 
 	{
 		$this->assertEquals(String::lower('MÄHDRESCHER'), 'mähdrescher');
-		$this->assertEquals(String::lower(chr(0xd6)), chr(0xf6)); // ISO-8859-1 Ö -> ö
 	}
 	
 	public function testLcFirst() 
