@@ -53,7 +53,18 @@ class SelectTest extends \PHPUnit_Framework_TestCase
 			'Letters' => array('a', 'b', 3 => 'c')
 		);
 		$this->assertEquals(
-			'<select size="1" name="fieldname"><optgroup label="tree"><option value="0">one</option><option value="1">two</option><option value="2" selected="selected">tree</option></optgroup><optgroup label="c"><option value="0">a</option><option value="1">b</option><option value="3">c</option></optgroup></select>',
+			'<select size="1" name="fieldname">'.
+				'<optgroup label="Numbers">'.
+					'<option value="0">one</option>'.
+					'<option value="1">two</option>'.
+					'<option value="2" selected="selected">tree</option>'.
+				'</optgroup>'.
+				'<optgroup label="Letters">'.
+					'<option value="0">a</option>'.
+					'<option value="1">b</option>'.
+					'<option value="3">c</option>'.
+				'</optgroup>'.
+			'</select>',
 			(string) $this->fixture
 		);
 	}
