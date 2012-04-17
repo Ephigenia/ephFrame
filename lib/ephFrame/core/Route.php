@@ -113,7 +113,7 @@ class Route
 			$scheme = 'http';
 		}
 		$url = $scheme.'://'.$_SERVER['SERVER_NAME'];
-		if (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] !== 80) {
+		if (isset($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != 80) {
 			$url .= ':'.$_SERVER['SERVER_PORT'];
 		}
 		$url .= $this->uri($params);
