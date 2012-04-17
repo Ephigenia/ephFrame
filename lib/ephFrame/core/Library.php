@@ -31,6 +31,11 @@ class Library
 		}
 		return false;
 	}
+	
+	public static function register()
+	{
+		spl_autoload_register(array($this, 'load'), true, true);
+	}
 }
 
 spl_autoload_register('\ephFrame\core\Library::load');
