@@ -53,7 +53,7 @@ class File extends Validator
 	
 	public function validateMimeType(\ephFrame\File\UploadedFile $File)
 	{
-		if (!empty($this->mimeTypes) && !in_array($file->mimeType(), $this->mimeTypes)) {
+		if (!empty($this->mimeTypes) && !in_array($File->mimeType(), $this->mimeTypes)) {
 			$this->mimeType = $File->mimeType();
 			$this->types = implode(', ', $this->mimeTypes);
 			$this->message = $this->messages['MIMETYPE'];
