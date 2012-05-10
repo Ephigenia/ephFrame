@@ -12,7 +12,7 @@ class MimeTypeTest extends \PHPUnit_Framework_TestCase
 	public function testGetByFilenameValues()
 	{
 		return array(
-			array('myfilename.csv','text/comma-separated-values'),
+			array('myfilename.csv','text/csv'),
 			array('multiple.ext.txt', 'text/plain'),
 			array('txt', 'text/plain'),
 			array('.txt', 'text/plain'),
