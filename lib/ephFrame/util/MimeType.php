@@ -143,7 +143,7 @@ class MimeType
 		'wrl'	=> 'model/vrml',
 	
 		// textual types
-		'csv'	=> 'text/comma-separated-values',
+		'csv'	=> 'text/csv',
 		'css'	=> 'text/css',
 		'htm'	=> 'text/html',
 		'html'	=> 'text/html',
