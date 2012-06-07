@@ -26,7 +26,7 @@ class StatusCode
 	const BAD_REQUEST = 400;
 	const UNAUTHORIZED = 401;
 	const PAYMENT_REQUIRED = 402;
-	const FORBIDDDDEN = 403;
+	const FORBIDDEN = 403;
 	const NOT_FOUND = 404;
 	const METHOD_NOT_ALLOWED = 405;
 	const NOT_ACCEPTABLE = 406;
@@ -68,7 +68,7 @@ class StatusCode
 		self::BAD_REQUEST => 'Bad Request',
 		self::UNAUTHORIZED => 'Unauthorized',
 		self::PAYMENT_REQUIRED => 'Payment Required',
-		self::FORBIDDDDEN => 'Forbidden',
+		self::FORBIDDEN => 'Forbidden',
 		self::NOT_FOUND => 'Not Found',
 		self::METHOD_NOT_ALLOWED => 'Method Not Allowed',
 		self::NOT_ACCEPTABLE => 'Not Acceptable',
