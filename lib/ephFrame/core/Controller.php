@@ -112,10 +112,15 @@ class Controller
 	public function __toString()
 	{
 		$this->callbacks->call('beforeRender', array($this));
-		$this->response->body = $this->view->render('all', strtolower($this->name ?: 'app').'/'.$this->action);
+		$body = $this->view->render('all', strtolower($this->name ?: 'app').'/'.$this->action);
 		$this->callbacks->call('afterRender', array($this));
-		$this->response->header->send();
-		return $this->response->body;
+		return $body;
+	}
+	
+	public function getResponse()
+	{
+		$this->response->body = (string) $this;
+		return $this->response;
 	}
 }
 
