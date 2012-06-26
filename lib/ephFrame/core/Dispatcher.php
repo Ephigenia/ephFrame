@@ -14,7 +14,7 @@ class Dispatcher
 				if ($response instanceof \ephFrame\core\Controller) {
 					$controller = $response;
 				}
-				return $controller->__toString();
+				return $controller->getResponse()->send();
 			}
 		} catch (\Exception $exception) {
 			$controller = new \ephFrame\core\ErrorController($request);

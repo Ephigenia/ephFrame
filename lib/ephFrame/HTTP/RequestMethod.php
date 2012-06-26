@@ -8,4 +8,6 @@ class RequestMethod
 	const POST = 'POST';
 	const PUT = 'PUT';
 	const DELETE = 'DELETE';
+	const HEAD = 'HEAD';
+	const OPTIONS = 'OPTIONS';
 }

@@ -53,7 +53,7 @@ class File extends Validator
 	
 	public function validateMimeType(\ephFrame\File\UploadedFile $File)
 	{
-		if (!empty($this->mimeTypes) && !in_array($file->mimeType(), $this->mimeTypes)) {
+		if (!empty($this->mimeTypes) && !in_array($File->mimeType(), $this->mimeTypes)) {
 			$this->mimeType = $File->mimeType();
 			$this->types = implode(', ', $this->mimeTypes);
 			$this->message = $this->messages['MIMETYPE'];
@@ -86,15 +86,15 @@ class File extends Validator
 		if (!$File instanceof \ephFrame\File\File) {
 			$File = new \ephFrame\File\File((string) $file);
 		}
+		if ($File instanceof \ephFrame\File\UploadedFile && !$this->validateUploadError($File)) {
+			return false;
+		}
 		if (!$File->exists()) {
 			$this->message = $this->messages['NOT_FOUND'];
 			return false;
 		}
 		if (!$File->readable()) {
 			$this->message = $this->messages['NOT_READABLE'];
-			return false;
-		}
-		if ($File instanceof \ephFrame\File\UploadedFile && !$this->validateUploadError($File)) {
 			return false;
 		}
 		if (!$this->validateSize($File)) {

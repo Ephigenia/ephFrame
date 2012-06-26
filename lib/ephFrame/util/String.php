@@ -182,6 +182,7 @@ class String
 			if (strlen($a) > strlen($b)) return -1;
 			return 1;
 		});
+		$arr = array_map('strval', $arr);
 		foreach($arr as $key => $value) {
 			$result = preg_replace('@:'.preg_quote($key, '@').'@', $value, $result);
 		}
