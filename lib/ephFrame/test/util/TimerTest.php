@@ -21,7 +21,7 @@ class TimerTest extends \PHPUnit_Framework_TestCase
 		$this->assertTrue($elapsed1 > 0.0001);
 		$this->timer->step('second');
 		$this->assertTrue($this->timer->elapsed > $elapsed1);
-		$this->assertTrue(count($this->timer->steps) == 2);
+		$this->assertCount(2, $this->timer->steps);
 		$this->assertInternalType('float', $this->timer->steps['second']);
 	}
 	
