@@ -19,7 +19,7 @@ class Dispatcher
 		} catch (\Exception $exception) {
 			$controller = new \ephFrame\core\ErrorController($request);
 			$controller->handleException($exception);
-			return $controller->__toString();
+			return $controller->getResponse()->send();
 		}
 		return false;
 	}
