@@ -109,7 +109,7 @@ class Controller
 		return true;
 	}
 	
-	public function __toString()
+	public function render()
 	{
 		$this->callbacks->call('beforeRender', array($this));
 		$body = $this->view->render('all', strtolower($this->name ?: 'app').'/'.$this->action);
@@ -119,7 +119,7 @@ class Controller
 	
 	public function getResponse()
 	{
-		$this->response->body = (string) $this;
+		$this->response->body = $this->render();
 		return $this->response;
 	}
 }
