@@ -20,10 +20,11 @@ class CallbackHandler extends \ArrayObject
 		if (!isset($this[$name])) return true;
 		$result = true;
 		foreach($this[$name] as $callback) {
-			if (!method_exists($callback[0], $callback[1])) {
-				continue;
+			if ($callback[0] instanceof \Closure) {
+				$result = call_user_func_array($callback[0], $callback[1]);
+			} elseif (method_exists($callback[0], $callback[1])) {
+				$result = call_user_func_array(array($callback[0], $callback[1]), $arguments);
 			}
-			$result = call_user_func_array(array($callback[0], $callback[1]), $arguments);
 		}
 		return $result;
 	}
