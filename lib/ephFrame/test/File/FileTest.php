@@ -40,7 +40,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
 	
 	public function testMimeType()
 	{
-		$this->assertEquals('text/x-php', $this->fixture->mimeType());
+		$this->assertEquals('text/x-c++', $this->fixture->mimeType());
 	}
 	
 	public function testSize()
