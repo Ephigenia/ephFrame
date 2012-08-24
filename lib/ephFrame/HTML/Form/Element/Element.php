@@ -99,9 +99,15 @@ class Element
 	
 	public function validate($value)
 	{
-		if (is_array($this->validators)) foreach($this->validators as $validator) {
+		if (!is_array($this->validators)) {
+			return true;
+		}
+		foreach($this->validators as $validator) {
 			if ($validator->validate($value)) continue;
-			$this->errors[] = $validator->message();
+			$message = $validator->message();
+			if (!in_array($message, $this->errors)) {
+				$this->errors[] = $message;
+			}
 			return false;
 		}
 		return true;
