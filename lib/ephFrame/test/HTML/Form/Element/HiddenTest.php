@@ -18,6 +18,6 @@ class HiddenTest extends \PHPUnit_Framework_TestCase
 	public function testToString()
 	{
 		$rendered = (string) $this->fixture;
-		$this->assertEquals('<input type="hidden" name="isEnabled" value="yes" />', $rendered);
+		$this->assertEquals('<input type="hidden" name="isEnabled" />', $rendered);
 	}
 }
