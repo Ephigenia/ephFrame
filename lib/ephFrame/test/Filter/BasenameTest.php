@@ -4,6 +4,9 @@ namespace ephFrame\test\Filter;
 
 use ephFrame\Filter\Basename;
 
+/**
+ * @group Filter
+ */
 class BasenameTest extends \PHPUnit_Framework_TestCase
 {
 	public function setUp()

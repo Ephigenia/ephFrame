@@ -4,6 +4,9 @@ namespace ephFrame\test\Filter;
 
 use \ephFrame\Filter\HTMLEntities;
 
+/**
+ * @group Filter
+ */
 class HTMLEntitiesTest extends \PHPUnit_Framework_TestCase 
 {
 	public function setUp()

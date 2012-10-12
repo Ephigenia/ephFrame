@@ -4,6 +4,9 @@ namespace ephFrame\test\Filter;
 
 use ephFrame\Filter\StripNewlines;
 
+/**
+ * @group Filter
+ */
 class StripNewlinesTest extends \PHPUnit_Framework_TestCase 
 {
 	public function setUp()

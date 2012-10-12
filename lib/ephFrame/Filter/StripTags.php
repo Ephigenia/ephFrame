@@ -10,9 +10,9 @@ class StripTags extends Filter
 	{
 		// first replace various encodings of < and > back to < and >
 		$r = array(
-			'@%3C|&gt;?|&#0*60;?|&#x0*3C;?|\\\x3C|\\\u003C@' => '<',
-			'@&(?!(amp;|#\d{2,}))@i' => '>',
-			'@%3E|&lt;?|&#0*62;?|&#x0*3E;?|\\\x3E|\\\u003E@' => '&amp;',
+			'@%3C|&gt;?|&#0\*60;?|&#x0\*3C;?|\\\x3C|\\\u003C@i' => '<',
+			'@%3E|&lt;?|&#0\*62;?|&#x0\*3E;?|\\\x3E|\\\u003E@i' => '>',
+			'@&(?!(amp;|#\d{2,}))@i' => '&',
 		);
 		$value = preg_replace(array_keys($r), array_values($r), $value);
 		// then strip not allowed tags

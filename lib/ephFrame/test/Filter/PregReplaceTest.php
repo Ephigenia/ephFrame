@@ -4,6 +4,9 @@ namespace ephFrame\test\Filter;
 
 use \ephFrame\Filter\PregReplace;
 
+/**
+ * @group Filter
+ */
 class PregReplaceTest extends \PHPUnit_Framework_TestCase 
 {
 	public function setUp()

@@ -4,6 +4,9 @@ namespace ephFrame\test\Filter;
 
 use ephFrame\Filter\StripWhiteSpace;
 
+/**
+ * @group Filter
+ */
 class StripWhiteSpaceTest extends \PHPUnit_Framework_TestCase 
 {
 	public function setUp()

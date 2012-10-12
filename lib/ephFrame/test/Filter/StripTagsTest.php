@@ -4,6 +4,9 @@ namespace ephFrame\test\Filter;
 
 use ephFrame\Filter\StripTags;
 
+/**
+ * @group Filter
+ */
 class StripTagsTest extends \PHPUnit_Framework_TestCase 
 {
 	public function setUp()
@@ -21,6 +24,7 @@ class StripTagsTest extends \PHPUnit_Framework_TestCase
 			array('<em>highlight</em>', 'highlight'),
 			array('<em class="test me">highlight</em>', 'highlight'),
 			array('<<em class="test me">double</em>', ''),
+			array('Oiltanking & Something else', 'Oiltanking & Something else'),
 			// array('<no entity at all', 'no html entity at all'), // @todo make this work!
 		);
 	}
@@ -40,7 +44,7 @@ class StripTagsTest extends \PHPUnit_Framework_TestCase
 			array('<SCRIPT>alert("XSS");//</SCRIPT>', 'alert("XSS");//'),
 			array('<BODY BACKGROUND="javascript:alert(\'XSS\')">', ''),
 			array('<BODY BACKGROUND="javascript:alert(\'XSS\')" />', ''),
-			array('%3Cbold&#0*62;?test', '#0*62;?test'),
+			array('%3Cbold&#0*62;test', 'test'),
 			array('</TITLE><SCRIPT>alert("XSS");</SCRIPT>', 'alert("XSS");'),
 			array('<SCRIPT =">" SRC="http://ha.ckers.org/xss.js"></SCRIPT>', ''),
 		);

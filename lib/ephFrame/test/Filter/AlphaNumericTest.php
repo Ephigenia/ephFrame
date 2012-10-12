@@ -4,6 +4,9 @@ namespace ephFrame\test\Filter;
 
 use ephFrame\Filter\AlphaNumeric;
 
+/**
+ * @group Filter
+ */
 class AlphaNumericTest extends \PHPUnit_Framework_TestCase
 {
 	public function setUp()

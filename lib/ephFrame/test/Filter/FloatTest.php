@@ -4,6 +4,9 @@ namespace ephFrame\test\Filter;
 
 use \ephFrame\Filter\Float;
 
+/**
+ * @group Filter
+ */
 class FloatTest extends \PHPUnit_Framework_TestCase 
 {
 	public function setUp()

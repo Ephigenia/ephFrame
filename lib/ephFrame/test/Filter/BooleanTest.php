@@ -4,6 +4,9 @@ namespace ephFrame\test\Filter;
 
 use ephFrame\Filter\Boolean;
 
+/**
+ * @group Filter
+ */
 class BooleanTest extends \PHPUnit_Framework_TestCase 
 {
 	public function setUp()
