@@ -15,6 +15,27 @@ class Tag
 	public $escaped = true;
 	
 	public static $emptyClose = ' />';
+
+	public static $selfClosingTags = array(
+		'area',
+		'base',
+		'basefont',
+		'br',
+		'col',
+		'command',
+		'embed',
+		'frame',
+		'hr',
+		'img',
+		'input',
+		'keygen',
+		'link',
+		'meta',
+		'param',
+		'source',
+		'track',
+		'wbr',
+	);
 	
 	public function __construct($name = null, $value = null, Array $attributes = array())
 	{
@@ -33,7 +54,7 @@ class Tag
 	
 	public function openTag()
 	{
-		if (empty($this->value)) {
+		if (empty($this->value) && in_array($this->name, self::$selfClosingTags)) {
 			return '<'.trim($this->name.' '.(string) $this->attributes).self::$emptyClose;
 		} else {
 			return '<'.trim($this->name.' '.(string) $this->attributes).'>';
@@ -47,7 +68,7 @@ class Tag
 	
 	public function __toString()
 	{
-		if (empty($this->value) && !in_array($this->name, array('textarea', 'select'))) {
+		if (empty($this->value) && in_array($this->name, self::$selfClosingTags)) {
 			return $this->openTag();
 		} else {	
 			if (is_array($this->value)) {

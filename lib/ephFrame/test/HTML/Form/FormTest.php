@@ -20,8 +20,8 @@ class FormTest extends \PHPUnit_Framework_TestCase
 	public function test__toString()
 	{
 		$this->assertEquals(
-			(string) $this->fixture,
-			'<form method="post" accept-charset="utf-8" action="myaction"><fieldset /></form>'
+			'<form method="post" accept-charset="utf-8" action="myaction"><fieldset></fieldset></form>',
+			(string) $this->fixture
 		);
 	}
 	
