@@ -1,7 +1,7 @@
 {
 	"name": "ephigenia/ephFrame",
 	"description": "a MVC PHP5.3+ Framework",
-	"keywords": [ "framework", "mvc", "controller", "view", ],
+	"keywords": [ "framework", "microframework", "mvc", "controller", "view", "router", "HTTP" ],
 	"type": "library",
 	"license": "MIT",
 	"version": "0.3-alpha1",
@@ -20,7 +20,7 @@
 		"source": "https://github.com/Ephigenia/ephFrame/"
 	},
 	"require": {
-        "php": ">=5.3.3",
+        "php": ">=5.3.3"
     },
     "autoload": {
     	"psr-0": {
