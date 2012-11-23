@@ -1,0 +1,30 @@
+{
+	"name": "ephigenia/ephFrame",
+	"description": "a MVC PHP5.3+ Framework",
+	"keywords": [ "framework", "mvc", "controller", "view", ],
+	"type": "library",
+	"license": "MIT",
+	"version": "0.3-alpha1",
+	"authors": [
+		{
+			"name": "Marcel Eichner",
+			"email": "love@ephigenia.de",
+			"homepage": "http://www.marceleichner.de",
+			"role": "Developer"
+		}
+	],
+	"homepage": "https://github.com/Ephigenia/ephFrame",
+	"support": {
+		"issues": "https://github.com/Ephigenia/ephFrame/issues",
+		"email": "love@ephigenia.de",
+		"source": "https://github.com/Ephigenia/ephFrame/"
+	},
+	"require": {
+        "php": ">=5.3.3",
+    },
+    "autoload": {
+    	"psr-0": {
+    		"ephFrame": "lib/ephFrame/"
+    	}
+    }
+}
