@@ -1,5 +1,5 @@
 {
-	"name": "ephigenia/ephFrame",
+	"name": "ephigenia/ephframe",
 	"description": "a MVC PHP5.3+ Framework",
 	"keywords": [ "framework", "microframework", "mvc", "controller", "view", "router", "HTTP" ],
 	"type": "library",
