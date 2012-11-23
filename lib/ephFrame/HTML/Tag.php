@@ -76,7 +76,7 @@ class Tag
 			} else {
 				$value = $this->value;
 				if ($this->escaped && !$this->value instanceOf Tag) {
-					$value = nl2br(htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8', false));
+					$value = htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8', false);
 				}
 			}
 			return $this->openTag().$value.$this->closeTag();

@@ -38,6 +38,13 @@ class TextareaTest extends \PHPUnit_Framework_TestCase
 
 	public function testHTMLEncoding()
 	{
-
+		// test if line breaks in the value get converted to <br />
+		$content = "Something else\n<a href=\"url\"><img src=\"image.jpg\" />My HTML</a>";
+		$Textarea = new Textarea('text', $content, array(
+			'decorators' => false,
+			'attributes' => array()
+		));
+		$expected = '<textarea name="text">'.htmlspecialchars($content).'</textarea>';
+		$this->assertEquals($expected, (string) $Textarea);
 	}
 }
