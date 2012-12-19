@@ -4,6 +4,9 @@ namespace ephFrame\test\view\helper;
 
 use ephFrame\view\helper\Text;
 
+/**
+ * @group helper
+ */
 class TextTest extends \PHPUnit_Framework_TestCase
 {
 	public function setUp()
@@ -140,6 +143,12 @@ class TextTest extends \PHPUnit_Framework_TestCase
 			$this->fixture->autoEmail('love@ephigenia.de', 'class="email"'),
 			'<a href="mailto:love@ephigenia.de" class="email">love@ephigenia.de</a>'
 		);
+	}
+
+	public function testAutoEmailWithLongDomainBug()
+	{
+		$text = 'https://www.abcdefghijklm.com';
+		$this->assertEquals($this->fixture->autoEmail($text), $text);
 	}
 	
 	public function testExcerptValues() 

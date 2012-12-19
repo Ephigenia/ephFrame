@@ -20,7 +20,7 @@ class Text extends \ephFrame\view\Helper
 			$attributes = ' '.trim((string) $attributes);
 		}
 		return preg_replace(
-			'/([0-9a-zA-Z]([-.\w]*[0-9a-zA-Z])*@([0-9a-zA-Z][-\w]*[0-9a-zA-Z]\.)+[a-zA-Z]{2,9})/im',
+			'/([_\.0-9a-z-\w]+@([0-9a-z][0-9a-z-\w]+\.)+[a-z]{2,3})/im',
 			'<a href="mailto:\1"'.$attributes.'>\1</a>',
 			$text
 		);
