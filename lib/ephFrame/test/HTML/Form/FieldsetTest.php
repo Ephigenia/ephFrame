@@ -3,7 +3,8 @@
 namespace ephFrame\test\HTML\Form;
 
 use
-	ephFrame\HTML\Form\Fieldset
+	ephFrame\HTML\Form\Fieldset,
+	ephFrame\HTML\Form\Element\Text
 	;
 
 /**
@@ -31,5 +32,14 @@ class FieldsetTest extends \PHPUnit_Framework_TestCase
 	{
 		$this->fixture->visible = false;
 		$this->assertEquals('', (string) $this->fixture);
+	}
+
+	public function testPrepend()
+	{
+		$this->fixture[] = new Text('first', '');
+		$this->fixture->prepend(new Text('second', ''));
+		// the second field should be the "first" field now
+		$secondField = $this->fixture[1];
+		$this->assertEquals($secondField->attributes['name'], 'first');
 	}
 }

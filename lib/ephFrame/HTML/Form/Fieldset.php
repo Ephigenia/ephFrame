@@ -32,6 +32,14 @@ class Fieldset extends \ArrayObject
 		}
 		return parent::__construct($elements, \ArrayObject::ARRAY_AS_PROPS);
 	}
+
+	public function prepend($element)
+	{
+		$tmp = $this->getArrayCopy();
+		array_unshift($tmp, $element);
+		$this->exchangeArray($tmp);
+		return $this;
+	}
 	
 	protected function defaultDecorators()
 	{
